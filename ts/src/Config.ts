@@ -200,7 +200,7 @@ class Config {
     base: "https://api.linear.app/graphql",
 
     auth: {
-      prefix: 'Bearer',
+      prefix: '',
     },
 
     headers: {

@@ -150,7 +150,7 @@ func MakeConfig() map[string]any {
 		"options": map[string]any{
 			"base": "https://api.linear.app/graphql",
 			"auth": map[string]any{
-				"prefix": "Bearer",
+				"prefix": "",
 			},
 			"headers": map[string]any{
 				"content-type": "application/json",

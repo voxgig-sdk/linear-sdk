@@ -12,7 +12,8 @@
 <a href="../guides/first-call.html">Make your first API call</a>
 <a href="../guides/errors.html">Handle errors</a>
 <a href="../guides/concepts.html">Entities, SDKs, and tools</a></details>
-<details><summary>SDKs</summary><a href="../sdks/go.html">Golang</a>
+<details><summary>SDKs</summary><a href="../sdks/c.html">C</a>
+<a href="../sdks/go.html">Golang</a>
 <a href="../sdks/lua.html">Lua</a>
 <a href="../sdks/php.html">PHP</a>
 <a href="../sdks/py.html">Python</a>
@@ -28,6 +29,14 @@
 <a href="../features/retry.html">Automatic retry of transient failures with exponential backoff</a>
 <a href="../features/test.html">In-memory mock transport for testing without a live server</a>
 <a href="../features/timeout.html">Per-request timeout with transport abort</a></details></nav><main id="content"><div class="page-context"><span class="section-dot" aria-hidden="true"></span>Guides</div><h1 id="authentication">Authentication</h1>
-<p>No authentication scheme is documented.</p>
+<p>Configure credentials for the scheme described by the API model. Keep credentials outside source control.</p>
+<pre><code class="language-json">{
+  &quot;in&quot;: &quot;header&quot;,
+  &quot;name&quot;: &quot;Authorization&quot;,
+  &quot;prefix&quot;: &quot;&quot;,
+  &quot;scheme&quot;: &quot;apikey&quot;,
+  &quot;type&quot;: &quot;apiKey&quot;
+}
+</code></pre>
 </main></div>
 <script src="../assets/search.js" defer></script></body></html>

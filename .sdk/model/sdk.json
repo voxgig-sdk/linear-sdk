@@ -707,6 +707,9 @@
           "plugin": {},
           "spec": {},
           "target": {
+            "c": {
+              "deps": {}
+            },
             "go": {
               "deps": {}
             },
@@ -813,6 +816,9 @@
           "plugin": {},
           "spec": {},
           "target": {
+            "c": {
+              "deps": {}
+            },
             "go": {
               "deps": {}
             },
@@ -919,6 +925,9 @@
           "plugin": {},
           "spec": {},
           "target": {
+            "c": {
+              "deps": {}
+            },
             "go": {
               "deps": {}
             },
@@ -1020,6 +1029,9 @@
           "plugin": {},
           "spec": {},
           "target": {
+            "c": {
+              "deps": {}
+            },
             "go": {
               "deps": {}
             },
@@ -1117,6 +1129,9 @@
           "plugin": {},
           "spec": {},
           "target": {
+            "c": {
+              "deps": {}
+            },
             "go": {
               "deps": {}
             },
@@ -1225,6 +1240,9 @@
           "plugin": {},
           "spec": {},
           "target": {
+            "c": {
+              "deps": {}
+            },
             "go": {
               "deps": {}
             },
@@ -1328,6 +1346,9 @@
           "plugin": {},
           "spec": {},
           "target": {
+            "c": {
+              "deps": {}
+            },
             "go": {
               "deps": {}
             },
@@ -1424,6 +1445,9 @@
           "plugin": {},
           "spec": {},
           "target": {
+            "c": {
+              "deps": {}
+            },
             "go": {
               "deps": {}
             },
@@ -1595,6 +1619,13 @@
       },
       "info": {
         "description": "The linear API.",
+        "security": {
+          "in": "header",
+          "name": "Authorization",
+          "prefix": "",
+          "scheme": "apikey",
+          "type": "apiKey"
+        },
         "servers": [
           {
             "url": "https://api.linear.app/graphql"
@@ -1652,6 +1683,74 @@
         "path": ""
       },
       "target": {
+        "c": {
+          "active": true,
+          "author": {
+            "name": "",
+            "url": ""
+          },
+          "base": "node_modules/@voxgig/sdkgen/project/.sdk",
+          "comment": {
+            "line": "//"
+          },
+          "deps": {},
+          "ext": "c",
+          "feature": {
+            "fullset": [
+              "tests/feature_test.c",
+              "tests/sdk_pipeline_test.c"
+            ],
+            "trim": true
+          },
+          "module": {
+            "goversion": "",
+            "name": "linear",
+            "package": "",
+            "path": ""
+          },
+          "name": "c",
+          "origname": "",
+          "output": {
+            "adopt": false,
+            "create": true,
+            "path": "",
+            "repo": "",
+            "sdkrel": ""
+          },
+          "package": "@voxgig/sdkgen",
+          "provides": {
+            "sekreto": true
+          },
+          "publish": {
+            "registry": {
+              "active": false,
+              "name": "none",
+              "package": "",
+              "state": "pending",
+              "url": "",
+              "vault": {
+                "alias": "none",
+                "env": "NONE",
+                "recipe": ""
+              }
+            },
+            "tag": {
+              "active": true,
+              "prefix": "",
+              "vault": {
+                "alias": "github",
+                "recipe": "github"
+              },
+              "via": "port"
+            },
+            "version": "0.0.1"
+          },
+          "srcfeature": false,
+          "superseded": [
+            "tests/runner.h"
+          ],
+          "title": "C"
+        },
         "go": {
           "active": true,
           "author": {

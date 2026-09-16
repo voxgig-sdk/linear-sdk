@@ -1,4 +1,4 @@
 # Entity Models
 
-@"issue.aon"
-@"team.aon"
+@"./issue.aon"
+@"./team.aon"

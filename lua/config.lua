@@ -146,7 +146,7 @@ local function make_config()
     options = {
       base = "https://api.linear.app/graphql",
       auth = {
-        prefix = "Bearer",
+        prefix = "",
       },
       headers = {
         ["content-type"] = "application/json",

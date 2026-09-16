@@ -34,7 +34,7 @@
     "@voxgig/struct": ">=0.2",
     "@voxgig/util": ">=0.5",
     "aontu": ">=0.52",
-    "graphql": "^17.0.2",
+    "graphql": "17.0.2",
     "jostraca": ">=0.33.1",
     "typescript": ">=6.0"
   }
