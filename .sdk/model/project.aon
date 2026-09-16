@@ -22,3 +22,33 @@
 # A published package name that does not follow the derivation:
 #
 #   main: kit: target: ts: publish: registry: package: '@scope/name'
+
+
+# AUTHENTICATION, DECLARED HERE BECAUSE GRAPHQL CANNOT CARRY IT.
+#
+# apidef derives `main.kit.info.security` from an OpenAPI security scheme.
+# A GraphQL schema has no such construct — SDL describes types, not
+# transport — so the generated api-info.aon carries no security block at
+# all, and the SDK had no way to authenticate. The publishing gate caught
+# it as
+#
+#   C16-auth  readme def has NO auth but READMEs show apikey
+#
+# which is the right complaint: the READMEs promised an apikey the client
+# could not send.
+#
+# Linear takes a personal API key in a bare `Authorization` header, with NO
+# `Bearer` prefix (OAuth access tokens use Bearer; personal keys do not).
+# That is why `prefix` is empty rather than absent.
+#
+# project.aon, not config.aon: `main.kit.config.auth` carries only `prefix`
+# and `basic`, which are runtime options. WHERE the credential goes — header
+# or query, and under what name — lives in `info.security`, and this file is
+# the one place a project-specific fact survives regeneration.
+main: kit: info: security: {
+  in: 'header'
+  name: 'Authorization'
+  prefix: ''
+  scheme: 'apikey'
+  type: 'apiKey'
+}
