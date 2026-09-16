@@ -1,0 +1,20 @@
+{
+  point: "warning"
+  err: {
+    name: "Error"
+    message: "@voxgig/apidef: parse: GraphQL: an endpoint option is required (a GraphQL schema declares no server URL) (./def/linear-issues-only.graphql)"
+    stack: `Error: @voxgig/apidef: parse: GraphQL: an endpoint option is required (a GraphQL schema declares no server URL) (./def/linear-issues-only.graphql)
+    at parseGraphQL (/home/richard/Projects/voxgig-sdk/linear-sdk/.sdk/node_modules/@voxgig/apidef/dist/parse/graphql.js:178:15)
+    at parse (/home/richard/Projects/voxgig-sdk/linear-sdk/.sdk/node_modules/@voxgig/apidef/dist/parse.js:46:58)
+    at Object.generate (/home/richard/Projects/voxgig-sdk/linear-sdk/.sdk/node_modules/@voxgig/apidef/dist/apidef.js:181:49)
+    at Object.build [as action] (/home/richard/Projects/voxgig-sdk/linear-sdk/.sdk/node_modules/@voxgig/apidef/dist/apidef.js:406:29)
+    at Object.local_producer [as build] (/home/richard/Projects/voxgig-sdk/linear-sdk/.sdk/node_modules/@voxgig/model/dist/producer/local.js:60:40)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async BuildImpl.run (/home/richard/Projects/voxgig-sdk/linear-sdk/.sdk/node_modules/@voxgig/model/dist/build.js:60:30)
+    at async Watch.run (/home/richard/Projects/voxgig-sdk/linear-sdk/.sdk/node_modules/@voxgig/model/dist/watch.js:168:22)
+    at async generate (/home/richard/Projects/voxgig-sdk/linear-sdk/.sdk/node_modules/@voxgig/model/bin/voxgig-model:258:16)
+    at async run (/home/richard/Projects/voxgig-sdk/linear-sdk/.sdk/node_modules/@voxgig/model/bin/voxgig-model:46:5)`
+  }
+
+  note: "!! BUILD FAILED !! @voxgig/apidef: parse: GraphQL: an endpoint option is required (a GraphQL schema declares no server URL) (./def/linear-issues-only.graphql)"
+}

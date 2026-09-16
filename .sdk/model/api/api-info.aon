@@ -1,0 +1,19 @@
+# API Information
+
+
+main: {
+  kit: {
+    info: {
+      description: "The linear API."
+      servers: [
+        {
+          url: "https://api.linear.app/graphql"
+        }
+      ]
+      title: "linear"
+      version: ""
+      website: "https://linear.app"
+    }
+  }
+}
+

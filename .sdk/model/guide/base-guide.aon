@@ -1,0 +1,39 @@
+# Guide
+
+guide: {
+  metrics: count: entity: 2
+  metrics: count: path: 0
+  metrics: count: method: 0
+  metrics: count: field: 6
+
+  entity: issue: {
+    field: "issue": {
+      op: load: method: *POST
+      op: load: optype: *query
+    }
+    field: "issueCreate": {
+      op: create: method: *POST
+      op: create: optype: *mutation
+    }
+    field: "issueUpdate": {
+      op: update: method: *POST
+      op: update: optype: *mutation
+    }
+    field: "issues": {
+      op: list: method: *POST
+      op: list: optype: *query
+    }
+  }
+
+  entity: team: {
+    field: "team": {
+      op: load: method: *POST
+      op: load: optype: *query
+    }
+    field: "teams": {
+      op: list: method: *POST
+      op: list: optype: *query
+    }
+  }
+
+}
