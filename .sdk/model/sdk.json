@@ -1,6 +1,15 @@
 {
+  "NAME": "LINEAR",
+  "Name": "Linear",
   "def": "linear-issues-only.graphql",
   "main": {
+    "api": {
+      "entity": {},
+      "guide": {}
+    },
+    "custom": {
+      "plurals": {}
+    },
     "def": {
       "desc": ""
     },
@@ -2240,5 +2249,8 @@
     }
   },
   "name": "linear",
+  "name-": "linear",
+  "name_": "linear",
+  "name__orig": "linear",
   "origin": "voxgig-sdk"
 }
