@@ -1,0 +1,221 @@
+
+
+import Path from 'node:path'
+import * as Fs from 'node:fs'
+
+import { test, describe, afterEach } from 'node:test'
+import assert from 'node:assert'
+import { createLiveTransport } from '../../live-runner'
+import { runLiveEntity } from '../../live-entity'
+
+
+import { LinearSDK, BaseFeature, stdutil } from '../../..'
+
+import {
+  envOverride,
+  liveClientOptions,
+  liveDelay,
+  loadEnvLocal,
+  makeCtrl,
+  makeMatch,
+  makeReqdata,
+  makeStepData,
+  makeValid,
+  maybeSkipControl,
+} from '../../utility'
+
+
+// AFTER the imports on purpose: TypeScript hoists `import` above any
+// statement in the emitted CommonJS, so a loader placed above them would
+// run only after every imported module had already been evaluated - and
+// anything reading process.env at module scope would miss these values.
+loadEnvLocal(__dirname + '/../../../.env.local')
+
+
+describe('TimeScheduleEntity', async () => {
+
+  // Per-test live pacing. Delay is read from sdk-test-control.json's
+  // `test.live.delayMs`; only sleeps when LINEAR_TEST_LIVE=TRUE.
+  afterEach(liveDelay('LINEAR_TEST_LIVE'))
+
+  test('instance', async () => {
+    const testsdk = LinearSDK.test()
+    const ent = testsdk.TimeSchedule()
+    assert(null != ent)
+  })
+
+
+  test('basic', async (t) => {
+
+    const live = 'TRUE' === process.env.LINEAR_TEST_LIVE
+    for (const op of ['create', 'list', 'update', 'load', 'remove']) {
+      if (!live && maybeSkipControl(t, 'entityOp', 'time_schedule.' + op, live)) return
+    }
+
+    
+    const setup = basicSetup()
+    if (setup.live) {
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":[{"active":true,"name":"archivedAt","req":false,"short":"The time at which the entity was archived.","type":"`$ANY`","index$":0},{"active":true,"name":"createdAt","req":true,"short":"The time at which the entity was created.","type":"`$ANY`","index$":1},{"active":true,"name":"externalId","req":false,"short":"The identifier of the external schedule.","type":"`$STRING`","index$":2},{"active":true,"name":"externalUrl","req":false,"short":"The URL to the external schedule.","type":"`$STRING`","index$":3},{"active":true,"name":"id","req":true,"short":"The unique identifier of the entity.","type":"`$STRING`","index$":4},{"active":true,"name":"integration","req":false,"short":"The identifier of the Linear integration populating the schedule.","type":"`$OBJECT`","index$":5},{"active":true,"name":"name","req":true,"short":"The name of the schedule.","type":"`$STRING`","index$":6},{"active":true,"name":"organization","req":false,"short":"The workspace of the schedule.","type":"`$OBJECT`","index$":7},{"active":true,"name":"updatedAt","req":true,"short":"The last time at which the entity was meaningfully updated.","type":"`$ANY`","index$":8}],"id":{"field":"id","name":"id"},"name":"time_schedule","op":{"create":{"input":"data","name":"create","points":[{"active":true,"args":{},"contract":{"id":"POST timeScheduleCreate","json":"{\"field\":{\"args\":[{\"gqltype\":\"TimeScheduleCreateInput!\",\"name\":\"input\",\"reqd\":true,\"type\":\"TimeScheduleCreateInput\"}],\"deprecated\":false,\"desc\":\"Creates a new time schedule.\",\"gqltype\":\"TimeSchedulePayload!\",\"list\":false,\"name\":\"timeScheduleCreate\",\"reqd\":true,\"type\":\"TimeSchedulePayload\"},\"invocation\":{\"doc\":\"mutation TimeScheduleCreate($input: TimeScheduleCreateInput!) { timeScheduleCreate(input: $input) { timeSchedule { ...TimeScheduleFields } success } } fragment TimeScheduleFields on TimeSchedule { archivedAt createdAt externalId externalUrl id integration { id } name organization { id } updatedAt }\",\"field\":\"timeScheduleCreate\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"\",\"gqltype\":\"TimeScheduleCreateInput!\",\"name\":\"input\"}]},\"protocol\":\"graphql\",\"types\":{\"DateTime\":{\"desc\":\"Represents a date and time in ISO 8601 format. Accepts shortcuts like `2021` to represent midnight Fri Jan 01 2021. Also accepts ISO 8601 durations strings which are added to the current date to create the represented date (e.g '-P2W1D' represents the date that was two weeks and 1 day ago)\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"DateTime\"},\"JSONObject\":{\"desc\":\"The `JSONObject` scalar type represents arbitrary values as *embedded* JSON\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"JSONObject\"},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"},\"TimeScheduleConfigInput\":{\"fields\":{\"nextShiftByUserId\":{\"args\":[],\"deprecated\":false,\"desc\":\"Record of the next on-call shift keyed by Linear user id, e.g. `{ \\\"<linearUserId>\\\": { \\\"startsAt\\\": \\\"X\\\", \\\"endsAt\\\": \\\"Y\\\" } }`.\",\"gqltype\":\"JSONObject!\",\"list\":false,\"name\":\"nextShiftByUserId\",\"reqd\":true,\"type\":\"JSONObject\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"TimeScheduleConfigInput\"},\"TimeScheduleCreateInput\":{\"desc\":\"Input for creating a new time schedule.\",\"fields\":{\"config\":{\"args\":[],\"deprecated\":false,\"desc\":\"[ALPHA] The schedule configuration.\",\"gqltype\":\"TimeScheduleConfigInput\",\"list\":false,\"name\":\"config\",\"reqd\":false,\"type\":\"TimeScheduleConfigInput\"},\"entries\":{\"args\":[],\"deprecated\":false,\"desc\":\"The schedule entries.\",\"gqltype\":\"[TimeScheduleEntryInput!]!\",\"list\":true,\"name\":\"entries\",\"reqd\":true,\"type\":\"TimeScheduleEntryInput\"},\"externalId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The unique identifier of the external schedule.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"externalId\",\"reqd\":false,\"type\":\"String\"},\"externalUrl\":{\"args\":[],\"deprecated\":false,\"desc\":\"The URL to the external schedule.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"externalUrl\",\"reqd\":false,\"type\":\"String\"},\"id\":{\"args\":[],\"deprecated\":false,\"desc\":\"The identifier in UUID v4 format. If none is provided, the backend will generate one.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"id\",\"reqd\":false,\"type\":\"String\"},\"name\":{\"args\":[],\"deprecated\":false,\"desc\":\"The name of the schedule.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"name\",\"reqd\":true,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"TimeScheduleCreateInput\"},\"TimeScheduleEntryInput\":{\"fields\":{\"endsAt\":{\"args\":[],\"deprecated\":false,\"desc\":\"The end time of the schedule entry in ISO 8601 date-time format.\",\"gqltype\":\"DateTime!\",\"list\":false,\"name\":\"endsAt\",\"reqd\":true,\"type\":\"DateTime\"},\"overriddenUser\":{\"args\":[],\"deprecated\":false,\"desc\":\"[ALPHA] The user this entry replaced, set when the entry is an override.\",\"gqltype\":\"TimeScheduleUserInput\",\"list\":false,\"name\":\"overriddenUser\",\"reqd\":false,\"type\":\"TimeScheduleUserInput\"},\"startsAt\":{\"args\":[],\"deprecated\":false,\"desc\":\"The start time of the schedule entry in ISO 8601 date-time format.\",\"gqltype\":\"DateTime!\",\"list\":false,\"name\":\"startsAt\",\"reqd\":true,\"type\":\"DateTime\"},\"userEmail\":{\"args\":[],\"deprecated\":false,\"desc\":\"The external email, name or reference text for the user when the reference cannot be mapped to a Linear user id.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"userEmail\",\"reqd\":false,\"type\":\"String\"},\"userId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The Linear user id of the referenced user. If the reference cannot be mapped to a Linear user then `userEmail` can be used instead.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"userId\",\"reqd\":false,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"TimeScheduleEntryInput\"},\"TimeScheduleUserInput\":{\"fields\":{\"userEmail\":{\"args\":[],\"deprecated\":false,\"desc\":\"The external email, name or reference text for the user when the reference cannot be mapped to a Linear user id.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"userEmail\",\"reqd\":false,\"type\":\"String\"},\"userId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The Linear user id of the referenced user. If the reference cannot be mapped to a Linear user then `userEmail` can be used instead.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"userId\",\"reqd\":false,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"TimeScheduleUserInput\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"mutation TimeScheduleCreate($input: TimeScheduleCreateInput!) { timeScheduleCreate(input: $input) { timeSchedule { ...TimeScheduleFields } success } } fragment TimeScheduleFields on TimeSchedule { archivedAt createdAt externalId externalUrl id integration { id } name organization { id } updatedAt }","field":"timeScheduleCreate","optype":"mutation","vars":[{"from":"","gqltype":"TimeScheduleCreateInput!","name":"input"}]},"kind":"graphql","method":"POST","orig":"timeScheduleCreate","segments":[],"select":{},"transform":{"req":"`reqdata`","res":"`body.data.timeScheduleCreate.timeSchedule`"},"index$":0}],"key$":"create"},"list":{"input":"data","name":"list","points":[{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"after","orig":"after","reqd":false,"type":"`$STRING`","index$":0},{"active":true,"kind":"param","name":"before","orig":"before","reqd":false,"type":"`$STRING`","index$":1},{"active":true,"kind":"param","name":"first","orig":"first","reqd":false,"type":"`$INTEGER`","index$":2},{"active":true,"kind":"param","name":"include_archived","orig":"include_archived","reqd":false,"type":"`$BOOLEAN`","index$":3},{"active":true,"kind":"param","name":"last","orig":"last","reqd":false,"type":"`$INTEGER`","index$":4},{"active":true,"kind":"param","name":"order_by","orig":"order_by","reqd":false,"type":"`$ANY`","index$":5}]},"contract":{"id":"POST timeSchedules","json":"{\"field\":{\"args\":[{\"gqltype\":\"String\",\"name\":\"after\",\"reqd\":false,\"type\":\"String\"},{\"gqltype\":\"String\",\"name\":\"before\",\"reqd\":false,\"type\":\"String\"},{\"gqltype\":\"Int\",\"name\":\"first\",\"reqd\":false,\"type\":\"Int\"},{\"gqltype\":\"Boolean\",\"name\":\"includeArchived\",\"reqd\":false,\"type\":\"Boolean\"},{\"gqltype\":\"Int\",\"name\":\"last\",\"reqd\":false,\"type\":\"Int\"},{\"gqltype\":\"PaginationOrderBy\",\"name\":\"orderBy\",\"reqd\":false,\"type\":\"PaginationOrderBy\"}],\"deprecated\":false,\"desc\":\"All time schedules.\",\"gqltype\":\"TimeScheduleConnection!\",\"list\":false,\"name\":\"timeSchedules\",\"reqd\":true,\"type\":\"TimeScheduleConnection\"},\"invocation\":{\"doc\":\"query TimeScheduleList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { timeSchedules(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...TimeScheduleFields } pageInfo { endCursor hasNextPage } } } fragment TimeScheduleFields on TimeSchedule { archivedAt createdAt externalId externalUrl id integration { id } name organization { id } updatedAt }\",\"field\":\"timeSchedules\",\"optype\":\"query\",\"page\":{\"cursor\":\"pageInfo.endCursor\",\"more\":\"pageInfo.hasNextPage\",\"nodes\":\"nodes\",\"style\":\"relay\"},\"vars\":[{\"from\":\"after\",\"gqltype\":\"String\",\"name\":\"after\"},{\"from\":\"before\",\"gqltype\":\"String\",\"name\":\"before\"},{\"from\":\"first\",\"gqltype\":\"Int\",\"name\":\"first\"},{\"from\":\"includeArchived\",\"gqltype\":\"Boolean\",\"name\":\"includeArchived\"},{\"from\":\"last\",\"gqltype\":\"Int\",\"name\":\"last\"},{\"from\":\"orderBy\",\"gqltype\":\"PaginationOrderBy\",\"name\":\"orderBy\"}]},\"protocol\":\"graphql\",\"types\":{\"Boolean\":{\"desc\":\"The `Boolean` scalar type represents `true` or `false`.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Boolean\"},\"Int\":{\"desc\":\"The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Int\"},\"PaginationOrderBy\":{\"desc\":\"By which field should the pagination order by\",\"fields\":{},\"kind\":\"ENUM\",\"name\":\"PaginationOrderBy\",\"values\":[\"createdAt\",\"updatedAt\"]},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"query TimeScheduleList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { timeSchedules(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...TimeScheduleFields } pageInfo { endCursor hasNextPage } } } fragment TimeScheduleFields on TimeSchedule { archivedAt createdAt externalId externalUrl id integration { id } name organization { id } updatedAt }","field":"timeSchedules","optype":"query","page":{"cursor":"pageInfo.endCursor","more":"pageInfo.hasNextPage","nodes":"nodes","style":"relay"},"vars":[{"from":"after","gqltype":"String","name":"after"},{"from":"before","gqltype":"String","name":"before"},{"from":"first","gqltype":"Int","name":"first"},{"from":"includeArchived","gqltype":"Boolean","name":"includeArchived"},{"from":"last","gqltype":"Int","name":"last"},{"from":"orderBy","gqltype":"PaginationOrderBy","name":"orderBy"}]},"kind":"graphql","method":"POST","orig":"timeSchedules","segments":[],"select":{},"transform":{"req":"`reqdata`","res":"`body.data.timeSchedules.nodes`"},"index$":0}],"key$":"list"},"load":{"input":"data","name":"load","points":[{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"id","orig":"id","reqd":true,"type":"`$STRING`","index$":0}]},"contract":{"id":"POST timeSchedule","json":"{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"id\",\"reqd\":true,\"type\":\"String\"}],\"deprecated\":false,\"desc\":\"A specific time schedule.\",\"gqltype\":\"TimeSchedule!\",\"list\":false,\"name\":\"timeSchedule\",\"reqd\":true,\"type\":\"TimeSchedule\"},\"invocation\":{\"doc\":\"query TimeScheduleLoad($id: String!) { timeSchedule(id: $id) { ...TimeScheduleFields } } fragment TimeScheduleFields on TimeSchedule { archivedAt createdAt externalId externalUrl id integration { id } name organization { id } updatedAt }\",\"field\":\"timeSchedule\",\"optype\":\"query\",\"vars\":[{\"from\":\"id\",\"gqltype\":\"String!\",\"name\":\"id\"}]},\"protocol\":\"graphql\",\"types\":{\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"query TimeScheduleLoad($id: String!) { timeSchedule(id: $id) { ...TimeScheduleFields } } fragment TimeScheduleFields on TimeSchedule { archivedAt createdAt externalId externalUrl id integration { id } name organization { id } updatedAt }","field":"timeSchedule","optype":"query","vars":[{"from":"id","gqltype":"String!","name":"id"}]},"kind":"graphql","method":"POST","orig":"timeSchedule","segments":[],"select":{"exist":["id"]},"transform":{"req":"`reqdata`","res":"`body.data.timeSchedule`"},"index$":0}],"key$":"load"},"remove":{"input":"data","name":"remove","points":[{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"id","orig":"id","reqd":true,"type":"`$STRING`","index$":0}]},"contract":{"id":"POST timeScheduleDelete","json":"{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"id\",\"reqd\":true,\"type\":\"String\"}],\"deprecated\":false,\"desc\":\"Deletes a time schedule.\",\"gqltype\":\"DeletePayload!\",\"list\":false,\"name\":\"timeScheduleDelete\",\"reqd\":true,\"type\":\"DeletePayload\"},\"invocation\":{\"doc\":\"mutation TimeScheduleRemove($id: String!) { timeScheduleDelete(id: $id) { entityId lastSyncId success } }\",\"field\":\"timeScheduleDelete\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"id\",\"gqltype\":\"String!\",\"name\":\"id\"}]},\"protocol\":\"graphql\",\"types\":{\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"mutation TimeScheduleRemove($id: String!) { timeScheduleDelete(id: $id) { entityId lastSyncId success } }","field":"timeScheduleDelete","optype":"mutation","vars":[{"from":"id","gqltype":"String!","name":"id"}]},"kind":"graphql","method":"POST","orig":"timeScheduleDelete","segments":[],"select":{"exist":["id"]},"transform":{"req":"`reqdata`","res":"`body.data.timeScheduleDelete`"},"index$":0}],"key$":"remove"},"update":{"input":"data","name":"update","points":[{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"external_id","orig":"external_id","reqd":true,"type":"`$STRING`","index$":0}]},"contract":{"id":"POST timeScheduleUpsertExternal","json":"{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"externalId\",\"reqd\":true,\"type\":\"String\"},{\"gqltype\":\"TimeScheduleUpdateInput!\",\"name\":\"input\",\"reqd\":true,\"type\":\"TimeScheduleUpdateInput\"}],\"deprecated\":false,\"desc\":\"Upsert an external time schedule.\",\"gqltype\":\"TimeSchedulePayload!\",\"list\":false,\"name\":\"timeScheduleUpsertExternal\",\"reqd\":true,\"type\":\"TimeSchedulePayload\"},\"invocation\":{\"doc\":\"mutation TimeScheduleUpdate($externalId: String!, $input: TimeScheduleUpdateInput!) { timeScheduleUpsertExternal(externalId: $externalId, input: $input) { timeSchedule { ...TimeScheduleFields } success } } fragment TimeScheduleFields on TimeSchedule { archivedAt createdAt externalId externalUrl id integration { id } name organization { id } updatedAt }\",\"field\":\"timeScheduleUpsertExternal\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"externalId\",\"gqltype\":\"String!\",\"name\":\"externalId\"},{\"from\":\"\",\"gqltype\":\"TimeScheduleUpdateInput!\",\"name\":\"input\"}]},\"protocol\":\"graphql\",\"types\":{\"DateTime\":{\"desc\":\"Represents a date and time in ISO 8601 format. Accepts shortcuts like `2021` to represent midnight Fri Jan 01 2021. Also accepts ISO 8601 durations strings which are added to the current date to create the represented date (e.g '-P2W1D' represents the date that was two weeks and 1 day ago)\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"DateTime\"},\"JSONObject\":{\"desc\":\"The `JSONObject` scalar type represents arbitrary values as *embedded* JSON\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"JSONObject\"},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"},\"TimeScheduleConfigInput\":{\"fields\":{\"nextShiftByUserId\":{\"args\":[],\"deprecated\":false,\"desc\":\"Record of the next on-call shift keyed by Linear user id, e.g. `{ \\\"<linearUserId>\\\": { \\\"startsAt\\\": \\\"X\\\", \\\"endsAt\\\": \\\"Y\\\" } }`.\",\"gqltype\":\"JSONObject!\",\"list\":false,\"name\":\"nextShiftByUserId\",\"reqd\":true,\"type\":\"JSONObject\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"TimeScheduleConfigInput\"},\"TimeScheduleEntryInput\":{\"fields\":{\"endsAt\":{\"args\":[],\"deprecated\":false,\"desc\":\"The end time of the schedule entry in ISO 8601 date-time format.\",\"gqltype\":\"DateTime!\",\"list\":false,\"name\":\"endsAt\",\"reqd\":true,\"type\":\"DateTime\"},\"overriddenUser\":{\"args\":[],\"deprecated\":false,\"desc\":\"[ALPHA] The user this entry replaced, set when the entry is an override.\",\"gqltype\":\"TimeScheduleUserInput\",\"list\":false,\"name\":\"overriddenUser\",\"reqd\":false,\"type\":\"TimeScheduleUserInput\"},\"startsAt\":{\"args\":[],\"deprecated\":false,\"desc\":\"The start time of the schedule entry in ISO 8601 date-time format.\",\"gqltype\":\"DateTime!\",\"list\":false,\"name\":\"startsAt\",\"reqd\":true,\"type\":\"DateTime\"},\"userEmail\":{\"args\":[],\"deprecated\":false,\"desc\":\"The external email, name or reference text for the user when the reference cannot be mapped to a Linear user id.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"userEmail\",\"reqd\":false,\"type\":\"String\"},\"userId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The Linear user id of the referenced user. If the reference cannot be mapped to a Linear user then `userEmail` can be used instead.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"userId\",\"reqd\":false,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"TimeScheduleEntryInput\"},\"TimeScheduleUpdateInput\":{\"desc\":\"Input for updating an existing time schedule.\",\"fields\":{\"config\":{\"args\":[],\"deprecated\":false,\"desc\":\"[ALPHA] The schedule configuration. Pass null to clear it.\",\"gqltype\":\"TimeScheduleConfigInput\",\"list\":false,\"name\":\"config\",\"reqd\":false,\"type\":\"TimeScheduleConfigInput\"},\"entries\":{\"args\":[],\"deprecated\":false,\"desc\":\"The schedule entries.\",\"gqltype\":\"[TimeScheduleEntryInput!]\",\"list\":true,\"name\":\"entries\",\"reqd\":false,\"type\":\"TimeScheduleEntryInput\"},\"externalId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The unique identifier of the external schedule.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"externalId\",\"reqd\":false,\"type\":\"String\"},\"externalUrl\":{\"args\":[],\"deprecated\":false,\"desc\":\"The URL to the external schedule.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"externalUrl\",\"reqd\":false,\"type\":\"String\"},\"name\":{\"args\":[],\"deprecated\":false,\"desc\":\"The name of the schedule.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"name\",\"reqd\":false,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"TimeScheduleUpdateInput\"},\"TimeScheduleUserInput\":{\"fields\":{\"userEmail\":{\"args\":[],\"deprecated\":false,\"desc\":\"The external email, name or reference text for the user when the reference cannot be mapped to a Linear user id.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"userEmail\",\"reqd\":false,\"type\":\"String\"},\"userId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The Linear user id of the referenced user. If the reference cannot be mapped to a Linear user then `userEmail` can be used instead.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"userId\",\"reqd\":false,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"TimeScheduleUserInput\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"mutation TimeScheduleUpdate($externalId: String!, $input: TimeScheduleUpdateInput!) { timeScheduleUpsertExternal(externalId: $externalId, input: $input) { timeSchedule { ...TimeScheduleFields } success } } fragment TimeScheduleFields on TimeSchedule { archivedAt createdAt externalId externalUrl id integration { id } name organization { id } updatedAt }","field":"timeScheduleUpsertExternal","optype":"mutation","vars":[{"from":"externalId","gqltype":"String!","name":"externalId"},{"from":"","gqltype":"TimeScheduleUpdateInput!","name":"input"}]},"kind":"graphql","method":"POST","orig":"timeScheduleUpsertExternal","segments":[],"select":{"exist":["external_id"]},"transform":{"req":"`reqdata`","res":"`body.data.timeScheduleUpsertExternal.timeSchedule`"},"index$":0},{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"id","orig":"id","reqd":true,"type":"`$STRING`"}]},"contract":{"id":"POST timeScheduleRefreshIntegrationSchedule","json":"{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"id\",\"reqd\":true,\"type\":\"String\"}],\"deprecated\":false,\"desc\":\"Refresh the integration schedule information.\",\"gqltype\":\"TimeSchedulePayload!\",\"list\":false,\"name\":\"timeScheduleRefreshIntegrationSchedule\",\"reqd\":true,\"type\":\"TimeSchedulePayload\"},\"invocation\":{\"doc\":\"mutation TimeScheduleUpdateRefreshIntegrationSchedule($id: String!) { timeScheduleRefreshIntegrationSchedule(id: $id) { timeSchedule { ...TimeScheduleFields } success } } fragment TimeScheduleFields on TimeSchedule { archivedAt createdAt externalId externalUrl id integration { id } name organization { id } updatedAt }\",\"field\":\"timeScheduleRefreshIntegrationSchedule\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"id\",\"gqltype\":\"String!\",\"name\":\"id\"}]},\"protocol\":\"graphql\",\"types\":{\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"mutation TimeScheduleUpdateRefreshIntegrationSchedule($id: String!) { timeScheduleRefreshIntegrationSchedule(id: $id) { timeSchedule { ...TimeScheduleFields } success } } fragment TimeScheduleFields on TimeSchedule { archivedAt createdAt externalId externalUrl id integration { id } name organization { id } updatedAt }","field":"timeScheduleRefreshIntegrationSchedule","optype":"mutation","vars":[{"from":"id","gqltype":"String!","name":"id"}]},"kind":"graphql","method":"POST","orig":"timeScheduleRefreshIntegrationSchedule","segments":[],"select":{"$action":"refresh_integration_schedule","exist":["id"]},"transform":{"req":"`reqdata`","res":"`body.data.timeScheduleRefreshIntegrationSchedule.timeSchedule`"},"index$":1},{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"id","orig":"id","reqd":true,"type":"`$STRING`","index$":0}]},"contract":{"id":"POST timeScheduleUpdate","json":"{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"id\",\"reqd\":true,\"type\":\"String\"},{\"gqltype\":\"TimeScheduleUpdateInput!\",\"name\":\"input\",\"reqd\":true,\"type\":\"TimeScheduleUpdateInput\"}],\"deprecated\":false,\"desc\":\"Updates a time schedule.\",\"gqltype\":\"TimeSchedulePayload!\",\"list\":false,\"name\":\"timeScheduleUpdate\",\"reqd\":true,\"type\":\"TimeSchedulePayload\"},\"invocation\":{\"doc\":\"mutation TimeScheduleUpdate($id: String!, $input: TimeScheduleUpdateInput!) { timeScheduleUpdate(id: $id, input: $input) { timeSchedule { ...TimeScheduleFields } success } } fragment TimeScheduleFields on TimeSchedule { archivedAt createdAt externalId externalUrl id integration { id } name organization { id } updatedAt }\",\"field\":\"timeScheduleUpdate\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"id\",\"gqltype\":\"String!\",\"name\":\"id\"},{\"from\":\"\",\"gqltype\":\"TimeScheduleUpdateInput!\",\"name\":\"input\"}]},\"protocol\":\"graphql\",\"types\":{\"DateTime\":{\"desc\":\"Represents a date and time in ISO 8601 format. Accepts shortcuts like `2021` to represent midnight Fri Jan 01 2021. Also accepts ISO 8601 durations strings which are added to the current date to create the represented date (e.g '-P2W1D' represents the date that was two weeks and 1 day ago)\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"DateTime\"},\"JSONObject\":{\"desc\":\"The `JSONObject` scalar type represents arbitrary values as *embedded* JSON\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"JSONObject\"},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"},\"TimeScheduleConfigInput\":{\"fields\":{\"nextShiftByUserId\":{\"args\":[],\"deprecated\":false,\"desc\":\"Record of the next on-call shift keyed by Linear user id, e.g. `{ \\\"<linearUserId>\\\": { \\\"startsAt\\\": \\\"X\\\", \\\"endsAt\\\": \\\"Y\\\" } }`.\",\"gqltype\":\"JSONObject!\",\"list\":false,\"name\":\"nextShiftByUserId\",\"reqd\":true,\"type\":\"JSONObject\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"TimeScheduleConfigInput\"},\"TimeScheduleEntryInput\":{\"fields\":{\"endsAt\":{\"args\":[],\"deprecated\":false,\"desc\":\"The end time of the schedule entry in ISO 8601 date-time format.\",\"gqltype\":\"DateTime!\",\"list\":false,\"name\":\"endsAt\",\"reqd\":true,\"type\":\"DateTime\"},\"overriddenUser\":{\"args\":[],\"deprecated\":false,\"desc\":\"[ALPHA] The user this entry replaced, set when the entry is an override.\",\"gqltype\":\"TimeScheduleUserInput\",\"list\":false,\"name\":\"overriddenUser\",\"reqd\":false,\"type\":\"TimeScheduleUserInput\"},\"startsAt\":{\"args\":[],\"deprecated\":false,\"desc\":\"The start time of the schedule entry in ISO 8601 date-time format.\",\"gqltype\":\"DateTime!\",\"list\":false,\"name\":\"startsAt\",\"reqd\":true,\"type\":\"DateTime\"},\"userEmail\":{\"args\":[],\"deprecated\":false,\"desc\":\"The external email, name or reference text for the user when the reference cannot be mapped to a Linear user id.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"userEmail\",\"reqd\":false,\"type\":\"String\"},\"userId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The Linear user id of the referenced user. If the reference cannot be mapped to a Linear user then `userEmail` can be used instead.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"userId\",\"reqd\":false,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"TimeScheduleEntryInput\"},\"TimeScheduleUpdateInput\":{\"desc\":\"Input for updating an existing time schedule.\",\"fields\":{\"config\":{\"args\":[],\"deprecated\":false,\"desc\":\"[ALPHA] The schedule configuration. Pass null to clear it.\",\"gqltype\":\"TimeScheduleConfigInput\",\"list\":false,\"name\":\"config\",\"reqd\":false,\"type\":\"TimeScheduleConfigInput\"},\"entries\":{\"args\":[],\"deprecated\":false,\"desc\":\"The schedule entries.\",\"gqltype\":\"[TimeScheduleEntryInput!]\",\"list\":true,\"name\":\"entries\",\"reqd\":false,\"type\":\"TimeScheduleEntryInput\"},\"externalId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The unique identifier of the external schedule.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"externalId\",\"reqd\":false,\"type\":\"String\"},\"externalUrl\":{\"args\":[],\"deprecated\":false,\"desc\":\"The URL to the external schedule.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"externalUrl\",\"reqd\":false,\"type\":\"String\"},\"name\":{\"args\":[],\"deprecated\":false,\"desc\":\"The name of the schedule.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"name\",\"reqd\":false,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"TimeScheduleUpdateInput\"},\"TimeScheduleUserInput\":{\"fields\":{\"userEmail\":{\"args\":[],\"deprecated\":false,\"desc\":\"The external email, name or reference text for the user when the reference cannot be mapped to a Linear user id.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"userEmail\",\"reqd\":false,\"type\":\"String\"},\"userId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The Linear user id of the referenced user. If the reference cannot be mapped to a Linear user then `userEmail` can be used instead.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"userId\",\"reqd\":false,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"TimeScheduleUserInput\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"mutation TimeScheduleUpdate($id: String!, $input: TimeScheduleUpdateInput!) { timeScheduleUpdate(id: $id, input: $input) { timeSchedule { ...TimeScheduleFields } success } } fragment TimeScheduleFields on TimeSchedule { archivedAt createdAt externalId externalUrl id integration { id } name organization { id } updatedAt }","field":"timeScheduleUpdate","optype":"mutation","vars":[{"from":"id","gqltype":"String!","name":"id"},{"from":"","gqltype":"TimeScheduleUpdateInput!","name":"input"}]},"kind":"graphql","method":"POST","orig":"timeScheduleUpdate","segments":[],"select":{"exist":["id"]},"transform":{"req":"`reqdata`","res":"`body.data.timeScheduleUpdate.timeSchedule`"},"index$":2}],"key$":"update"}},"relations":{"ancestors":[]},"key$":"time_schedule","name__orig":"time_schedule","Name":"TimeSchedule","name_":"time_schedule","name-":"time-schedule","NAME":"TIME_SCHEDULE","index$":77}, {"active":true,"entity":"time_schedule","key$":"BasicTimeScheduleFlow","kind":"basic","name":"BasicTimeScheduleFlow","param":{},"step":[{"active":true,"data":{},"input":{"ref":"time_schedule_ref01"},"match":{"after":"after01","before":"before01","external_id":"external01","first":"first01","include_archived":"include_archived01","last":"last01","order_by":"order_by01"},"op":"create","spec":[],"valid":[],"index$":0},{"active":true,"data":{},"input":{},"match":{"after":"after01","before":"before01","first":"first01","include_archived":"include_archived01","last":"last01","order_by":"order_by01"},"op":"list","spec":[],"valid":[{"apply":"ItemExists","def":{"ref":"time_schedule_ref01"}}],"index$":1},{"active":true,"data":{},"input":{"ref":"time_schedule_ref01","srcdatavar":"time_schedule_ref01_data","suffix":"_up0","textfield":"externalId"},"match":{},"op":"update","spec":[{"apply":"TextFieldMark","def":{"mark":"Mark01-time_schedule_ref01"}}],"valid":[],"index$":2},{"active":true,"data":{},"input":{"ref":"time_schedule_ref01","srcdatavar":"time_schedule_ref01_data","suffix":"_dt0"},"match":{"id":"time_schedule01"},"op":"load","spec":[],"valid":[{"apply":"TextFieldMark","def":{"mark":"Mark01-time_schedule_ref01"}}],"index$":3},{"active":true,"data":{},"input":{"ref":"time_schedule_ref01","suffix":"_rm0"},"match":{"id":"time_schedule01"},"op":"remove","spec":[],"valid":[],"index$":4},{"active":true,"data":{},"input":{"suffix":"_rt0"},"match":{"after":"after01","before":"before01","first":"first01","include_archived":"include_archived01","last":"last01","order_by":"order_by01"},"op":"list","spec":[],"valid":[{"apply":"ItemNotExists","def":{"ref":"time_schedule_ref01"}}],"index$":5}]}, 'TimeSchedule')
+    }
+    const client = setup.client
+    const struct = setup.struct
+
+    const isempty = struct.isempty
+    const select = struct.select
+
+
+    // CREATE
+    const time_schedule_ref01_ent = client.TimeSchedule()
+    let time_schedule_ref01_data = setup.data.new.time_schedule['time_schedule_ref01']
+    time_schedule_ref01_data['after'] = setup.idmap['after01']
+    time_schedule_ref01_data['before'] = setup.idmap['before01']
+    time_schedule_ref01_data['external_id'] = setup.idmap['external01']
+    time_schedule_ref01_data['first'] = setup.idmap['first01']
+    time_schedule_ref01_data['include_archived'] = setup.idmap['include_archived01']
+    time_schedule_ref01_data['last'] = setup.idmap['last01']
+    time_schedule_ref01_data['order_by'] = setup.idmap['order_by01']
+
+    time_schedule_ref01_data = (await time_schedule_ref01_ent.create(time_schedule_ref01_data)).data()
+    assert(null != time_schedule_ref01_data.id)
+
+
+    // LIST
+    const time_schedule_ref01_match: any = {}
+    time_schedule_ref01_match['after'] = setup.idmap['after01']
+    time_schedule_ref01_match['before'] = setup.idmap['before01']
+    time_schedule_ref01_match['first'] = setup.idmap['first01']
+    time_schedule_ref01_match['include_archived'] = setup.idmap['include_archived01']
+    time_schedule_ref01_match['last'] = setup.idmap['last01']
+    time_schedule_ref01_match['order_by'] = setup.idmap['order_by01']
+
+    const time_schedule_ref01_list = (await time_schedule_ref01_ent.list(time_schedule_ref01_match)).map((e: any) => e.data())
+
+    assert(!isempty(select(time_schedule_ref01_list, { id: time_schedule_ref01_data.id })))
+
+
+    // UPDATE
+    const time_schedule_ref01_data_up0: any = {}
+    time_schedule_ref01_data_up0.id = time_schedule_ref01_data.id
+
+    const time_schedule_ref01_markdef_up0 = { name: 'externalId', value: 'Mark01-time_schedule_ref01_' + setup.now }
+    ;(time_schedule_ref01_data_up0 as any)[time_schedule_ref01_markdef_up0.name] = time_schedule_ref01_markdef_up0.value
+
+    const time_schedule_ref01_resdata_up0 = (await time_schedule_ref01_ent.update(time_schedule_ref01_data_up0)).data()
+    assert(time_schedule_ref01_resdata_up0.id === time_schedule_ref01_data_up0.id)
+
+    assert((time_schedule_ref01_resdata_up0 as any)[time_schedule_ref01_markdef_up0.name] === time_schedule_ref01_markdef_up0.value)
+
+
+    // LOAD
+    const time_schedule_ref01_match_dt0: any = {}
+    time_schedule_ref01_match_dt0.id = time_schedule_ref01_data.id
+    const time_schedule_ref01_data_dt0 = (await time_schedule_ref01_ent.load(time_schedule_ref01_match_dt0)).data()
+    assert(time_schedule_ref01_data_dt0.id === time_schedule_ref01_data.id)
+
+
+    // REMOVE
+    const time_schedule_ref01_match_rm0: any = { id: time_schedule_ref01_data.id }
+    await time_schedule_ref01_ent.remove(time_schedule_ref01_match_rm0)
+  
+
+    // LIST
+    const time_schedule_ref01_match_rt0: any = {}
+    time_schedule_ref01_match_rt0['after'] = setup.idmap['after01']
+    time_schedule_ref01_match_rt0['before'] = setup.idmap['before01']
+    time_schedule_ref01_match_rt0['first'] = setup.idmap['first01']
+    time_schedule_ref01_match_rt0['include_archived'] = setup.idmap['include_archived01']
+    time_schedule_ref01_match_rt0['last'] = setup.idmap['last01']
+    time_schedule_ref01_match_rt0['order_by'] = setup.idmap['order_by01']
+
+    const time_schedule_ref01_list_rt0 = (await time_schedule_ref01_ent.list(time_schedule_ref01_match_rt0)).map((e: any) => e.data())
+
+    assert(isempty(select(time_schedule_ref01_list_rt0, { id: time_schedule_ref01_data.id })))
+
+
+  })
+})
+
+
+
+function basicSetup(extra?: any) {
+  // TODO: fix test def options
+  const options: any = {} // null
+
+  // TODO: needs test utility to resolve path
+  const entityDataFile =
+    Path.resolve(__dirname, 
+      '../../../../.sdk/test/entity/time_schedule/TimeScheduleTestData.json')
+
+  // TODO: file ready util needed?
+  const entityDataSource = Fs.readFileSync(entityDataFile).toString('utf8')
+
+  // TODO: need a xlang JSON parse utility in voxgig/struct with better error msgs
+  const entityData = JSON.parse(entityDataSource)
+
+  options.entity = entityData.existing
+
+  let client = LinearSDK.test(options, extra)
+  const struct = client.utility().struct
+  const merge = struct.merge
+  const transform = struct.transform
+
+  let idmap = transform(
+    ['time_schedule01','time_schedule02','time_schedule03'],
+    {
+      '`$PACK`': ['', {
+        '`$KEY`': '`$COPY`',
+        '`$VAL`': ['`$FORMAT`', 'upper', '`$COPY`']
+      }]
+    })
+
+  const env = envOverride({
+    'LINEAR_TEST_TIME_SCHEDULE_ENTID': idmap,
+    'LINEAR_TEST_LIVE': 'FALSE',
+    'LINEAR_TEST_EXPLAIN': 'FALSE',
+    'LINEAR_APIKEY': '',
+  })
+
+  idmap = env['LINEAR_TEST_TIME_SCHEDULE_ENTID']
+
+  const live = 'TRUE' === env.LINEAR_TEST_LIVE
+
+  const transport = createLiveTransport()
+  if (live) {
+    const rawIds = process.env['LINEAR_TEST_TIME_SCHEDULE_ENTID']
+    idmap = rawIds && rawIds.trim() ? JSON.parse(rawIds) : {}
+    if (!idmap || Array.isArray(idmap) || typeof idmap !== 'object') {
+      throw new Error('Live ENTID must be a JSON object')
+    }
+    client = new LinearSDK(merge([
+      // FIRST, so the generated fields below win: sdk-test-control.json's
+      // test.client.options adds to the live client, it does not redirect it.
+      liveClientOptions(),
+      {
+        apikey: env.LINEAR_APIKEY,
+      },
+      // 'extra || {}', not a bare 'extra': struct.merge returns UNDEFINED when the
+      // last entry is undefined, and basicSetup is normally called with no
+      // argument at all - so a bare 'extra' silently discarded the apikey
+      // and server values above and handed the SDK undefined. Harmless
+      // while there was nothing in that object; not harmless now.
+      extra || {},
+      { system: { fetch: transport.fetch } }
+    ]))
+  }
+
+  const setup = {
+    idmap,
+    env,
+    options,
+    client,
+    struct,
+    data: entityData,
+    explain: 'TRUE' === env.LINEAR_TEST_EXPLAIN,
+    live,
+    transport,
+    now: Date.now(),
+  }
+
+  return setup
+}
+  

@@ -20,7 +20,7 @@ import (
 const prompt = "linear"
 
 // entitiesHelp is the space-separated entity list shown by /help.
-const entitiesHelp = "issue team"
+const entitiesHelp = "access_key_release access_key_release_pipeline agent_activity agent_session agent_skill application attachment audit_entry audit_entry_type auth_resolver_response authentication_session_response comment create_or_join_organization_response custom_view customer customer_need customer_status customer_tier cycle diff document document_search_result email_intake_address email_user_account_auth_challenge_response emoji entity_external_link external_user favorite git_automation_state git_automation_target_branch git_hub_integration_connect_detail initiative initiative_label initiative_lead_team_change_impact initiative_relation initiative_to_project initiative_update integration integration_template integrations_setting issue issue_import issue_label issue_priority_value issue_relation issue_search_result issue_to_release logout_response notification notification_subscription o_auth_application organization organization_domain organization_invite organization_meta passkey_login_start_response project project_label project_milestone project_milestone_move_project_team project_relation project_search_result project_status project_update push_subscription reaction release release_note release_pipeline release_stage roadmap roadmap_to_project sla_configuration sso_url_from_email_response team team_membership template time_schedule triage_responsibility upload_file usage_alert user user_setting view_preference webhook webhook_failure_event workflow_state"
 
 func main() {
 	os.Exit(run(os.Args[1:], os.Stdin, os.Stdout, os.Stderr))

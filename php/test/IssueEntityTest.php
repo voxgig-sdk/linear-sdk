@@ -62,7 +62,7 @@ class IssueEntityTest extends TestCase
         $setup = issue_basic_setup(null);
         // Per-op sdk-test-control.json skip.
         $_live = !empty($setup["live"]);
-        foreach (["create", "list", "update", "load"] as $_op) {
+        foreach (["create", "list", "update", "load", "remove"] as $_op) {
             [$_shouldSkip, $_reason] = Runner::is_control_skipped("entityOp", "issue." . $_op, $_live ? "live" : "unit");
             if ($_shouldSkip) {
                 $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
@@ -82,7 +82,22 @@ class IssueEntityTest extends TestCase
         $issue_ref01_data = Helpers::to_map(Vs::getprop(
             Vs::getpath($setup["data"], "new.issue"), "issue_ref01"));
         $issue_ref01_data["after"] = $setup["idmap"]["after01"];
+        $issue_ref01_data["attachment_id"] = $setup["idmap"]["attachment01"];
+        $issue_ref01_data["before"] = $setup["idmap"]["before01"];
+        $issue_ref01_data["branch_name"] = $setup["idmap"]["branch_name01"];
+        $issue_ref01_data["description"] = $setup["idmap"]["description01"];
+        $issue_ref01_data["file_key"] = $setup["idmap"]["file_key01"];
         $issue_ref01_data["first"] = $setup["idmap"]["first01"];
+        $issue_ref01_data["include_archived"] = $setup["idmap"]["include_archived01"];
+        $issue_ref01_data["label_id"] = $setup["idmap"]["label01"];
+        $issue_ref01_data["last"] = $setup["idmap"]["last01"];
+        $issue_ref01_data["order_by"] = $setup["idmap"]["order_by01"];
+        $issue_ref01_data["permanently_delete"] = $setup["idmap"]["permanently_delete01"];
+        $issue_ref01_data["query"] = $setup["idmap"]["query01"];
+        $issue_ref01_data["reminder_at"] = $setup["idmap"]["reminder_at01"];
+        $issue_ref01_data["trash"] = $setup["idmap"]["trash01"];
+        $issue_ref01_data["user_email"] = $setup["idmap"]["user_email01"];
+        $issue_ref01_data["user_id"] = $setup["idmap"]["user01"];
 
         $issue_ref01_data_result = $issue_ref01_ent->create($issue_ref01_data, null);
         $issue_ref01_data = Helpers::to_map(is_object($issue_ref01_data_result) && method_exists($issue_ref01_data_result, 'data_get') ? $issue_ref01_data_result->data_get() : $issue_ref01_data_result);
@@ -92,7 +107,11 @@ class IssueEntityTest extends TestCase
         // LIST
         $issue_ref01_match = [
             "after" => $setup["idmap"]["after01"],
+            "before" => $setup["idmap"]["before01"],
             "first" => $setup["idmap"]["first01"],
+            "include_archived" => $setup["idmap"]["include_archived01"],
+            "last" => $setup["idmap"]["last01"],
+            "order_by" => $setup["idmap"]["order_by01"],
         ];
 
         $issue_ref01_list_result = $issue_ref01_ent->list($issue_ref01_match, null);
@@ -127,6 +146,30 @@ class IssueEntityTest extends TestCase
         $this->assertNotNull($issue_ref01_data_dt0_load_result);
         $this->assertEquals($issue_ref01_data_dt0_load_result["id"], $issue_ref01_data["id"]);
 
+        // REMOVE
+        $issue_ref01_match_rm0 = [
+            "id" => $issue_ref01_data["id"],
+        ];
+        $issue_ref01_ent->remove($issue_ref01_match_rm0, null);
+
+        // LIST
+        $issue_ref01_match_rt0 = [
+            "after" => $setup["idmap"]["after01"],
+            "before" => $setup["idmap"]["before01"],
+            "first" => $setup["idmap"]["first01"],
+            "include_archived" => $setup["idmap"]["include_archived01"],
+            "last" => $setup["idmap"]["last01"],
+            "order_by" => $setup["idmap"]["order_by01"],
+        ];
+
+        $issue_ref01_list_rt0_result = $issue_ref01_ent->list($issue_ref01_match_rt0, null);
+        $this->assertIsArray($issue_ref01_list_rt0_result);
+
+        $not_found_item = sdk_select(
+            Runner::entity_list_to_data($issue_ref01_list_rt0_result),
+            ["id" => $issue_ref01_data["id"]]);
+        $this->assertEmpty($not_found_item);
+
     }
 }
 
@@ -145,7 +188,7 @@ function issue_basic_setup($extra)
 
     // Generate idmap.
     $idmap = [];
-    foreach (["issue01", "issue02", "issue03", "after01", "first01"] as $k) {
+    foreach (["issue01", "issue02", "issue03", "after01", "attachment01", "before01", "branch_name01", "description01", "file_key01", "first01", "include_archived01", "label01", "last01", "order_by01", "permanently_delete01", "query01", "reminder_at01", "trash01", "user_email01", "user01"] as $k) {
         $idmap[$k] = strtoupper($k);
     }
 

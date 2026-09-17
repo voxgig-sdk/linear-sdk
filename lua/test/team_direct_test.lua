@@ -18,7 +18,7 @@ describe("TeamDirect", function()
       return
     end
     if setup.live then
-      for _, _live_key in ipairs({"after01", "first01"}) do
+      for _, _live_key in ipairs({"after01", "before01", "first01", "include_archived01", "last01", "order_by01"}) do
         if setup.idmap[_live_key] == nil then
           pending("live test needs " .. _live_key .. " via *_ENTID env var (synthetic IDs only)")
           return
@@ -34,9 +34,29 @@ describe("TeamDirect", function()
       params["after"] = "direct01"
     end
     if setup.live then
+      params["before"] = setup.idmap["before01"]
+    else
+      params["before"] = "direct01"
+    end
+    if setup.live then
       params["first"] = setup.idmap["first01"]
     else
       params["first"] = "direct01"
+    end
+    if setup.live then
+      params["include_archived"] = setup.idmap["include_archived01"]
+    else
+      params["include_archived"] = "direct01"
+    end
+    if setup.live then
+      params["last"] = setup.idmap["last01"]
+    else
+      params["last"] = "direct01"
+    end
+    if setup.live then
+      params["order_by"] = setup.idmap["order_by01"]
+    else
+      params["order_by"] = "direct01"
     end
 
     local result, err = client:direct({

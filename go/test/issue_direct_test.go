@@ -25,7 +25,7 @@ func TestIssueDirect(t *testing.T) {
 			return
 		}
 		if setup.live {
-			for _, _liveKey := range []string{"first01", "after01"} {
+			for _, _liveKey := range []string{"after01", "before01", "fileKey01", "first01", "includeArchived01", "last01", "orderBy01"} {
 				if v := setup.idmap[_liveKey]; v == nil {
 					t.Skipf("live test needs %s via *_ENTID env var (synthetic IDs only)", _liveKey)
 					return
@@ -36,14 +36,24 @@ func TestIssueDirect(t *testing.T) {
 
 		variables := map[string]any{}
 		if setup.live {
-		variables["first"] = setup.idmap["first01"]
 		variables["after"] = setup.idmap["after01"]
+		variables["before"] = setup.idmap["before01"]
+		variables["fileKey"] = setup.idmap["fileKey01"]
+		variables["first"] = setup.idmap["first01"]
+		variables["includeArchived"] = setup.idmap["includeArchived01"]
+		variables["last"] = setup.idmap["last01"]
+		variables["orderBy"] = setup.idmap["orderBy01"]
 		} else {
-		variables["first"] = "direct01"
-		variables["after"] = "direct02"
+		variables["after"] = "direct01"
+		variables["before"] = "direct02"
+		variables["fileKey"] = "direct03"
+		variables["first"] = "direct04"
+		variables["includeArchived"] = "direct05"
+		variables["last"] = "direct06"
+		variables["orderBy"] = "direct07"
 		}
 
-		result, err := client.Graphql("query IssueList($first: Int, $after: String) { issues(first: $first, after: $after) { edges { node { ...IssueFields } } pageInfo { endCursor hasNextPage } } } fragment IssueFields on Issue { archivedAt assignee { id } branchName canceledAt completedAt createdAt creator { id } description dueDate estimate id identifier number priority state { id } team { id } title updatedAt url }", variables, nil)
+		result, err := client.Graphql("query IssueList($after: String, $before: String, $fileKey: String!, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { issueFigmaFileKeySearch(after: $after, before: $before, fileKey: $fileKey, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...IssueFields } pageInfo { endCursor hasNextPage } } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }", variables, nil)
 
 		if setup.live {
 			// Live mode is lenient: synthetic ids frequently fail server-side
@@ -83,6 +93,21 @@ func TestIssueDirect(t *testing.T) {
 			if !strings.Contains(bodyStr, "direct02") {
 				t.Fatalf("expected body to contain direct02, got %v", bodyStr)
 			}
+			if !strings.Contains(bodyStr, "direct03") {
+				t.Fatalf("expected body to contain direct03, got %v", bodyStr)
+			}
+			if !strings.Contains(bodyStr, "direct04") {
+				t.Fatalf("expected body to contain direct04, got %v", bodyStr)
+			}
+			if !strings.Contains(bodyStr, "direct05") {
+				t.Fatalf("expected body to contain direct05, got %v", bodyStr)
+			}
+			if !strings.Contains(bodyStr, "direct06") {
+				t.Fatalf("expected body to contain direct06, got %v", bodyStr)
+			}
+			if !strings.Contains(bodyStr, "direct07") {
+				t.Fatalf("expected body to contain direct07, got %v", bodyStr)
+			}
 		}
 	})
 
@@ -100,7 +125,7 @@ func TestIssueDirect(t *testing.T) {
 			return
 		}
 		if setup.live {
-			for _, _liveKey := range []string{"issue01"} {
+			for _, _liveKey := range []string{"branchName01"} {
 				if v := setup.idmap[_liveKey]; v == nil {
 					t.Skipf("live test needs %s via *_ENTID env var (synthetic IDs only)", _liveKey)
 					return
@@ -111,12 +136,12 @@ func TestIssueDirect(t *testing.T) {
 
 		variables := map[string]any{}
 		if setup.live {
-		variables["id"] = setup.idmap["issue01"]
+		variables["branchName"] = setup.idmap["branchName01"]
 		} else {
-		variables["id"] = "direct01"
+		variables["branchName"] = "direct01"
 		}
 
-		result, err := client.Graphql("query IssueLoad($id: String!) { issue(id: $id) { ...IssueFields } } fragment IssueFields on Issue { archivedAt assignee { id } branchName canceledAt completedAt createdAt creator { id } description dueDate estimate id identifier number priority state { id } team { id } title updatedAt url }", variables, nil)
+		result, err := client.Graphql("query IssueLoad($branchName: String!) { issueVcsBranchSearch(branchName: $branchName) { ...IssueFields } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }", variables, nil)
 
 		if setup.live {
 			// Live mode is lenient: synthetic ids frequently fail server-side

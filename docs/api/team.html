@@ -6,9 +6,101 @@
 <div class="site-notice" role="note"></div>
 <div class="shell"><nav class="site-nav" aria-label="Documentation"><div class="search"><label for="search">Search documentation</label><input id="search" type="search" data-base="../" placeholder="Find a guide or reference"><div id="results" aria-live="polite"></div></div><details><summary>Overview</summary><a href="../index.html">linear</a></details>
 <details open><summary>API</summary><a href="../api/index.html">API overview</a>
+<a href="../api/access_key_release.html">AccessKeyRelease</a>
+<a href="../api/access_key_release_pipeline.html">AccessKeyReleasePipeline</a>
+<a href="../api/agent_activity.html">AgentActivity</a>
+<a href="../api/agent_session.html">AgentSession</a>
+<a href="../api/agent_skill.html">AgentSkill</a>
+<a href="../api/application.html">Application</a>
+<a href="../api/attachment.html">Attachment</a>
+<a href="../api/audit_entry.html">AuditEntry</a>
+<a href="../api/audit_entry_type.html">AuditEntryType</a>
+<a href="../api/auth_resolver_response.html">AuthResolverResponse</a>
+<a href="../api/authentication_session_response.html">AuthenticationSessionResponse</a>
+<a href="../api/comment.html">Comment</a>
+<a href="../api/create_or_join_organization_response.html">CreateOrJoinOrganizationResponse</a>
+<a href="../api/custom_view.html">CustomView</a>
+<a href="../api/customer.html">Customer</a>
+<a href="../api/customer_need.html">CustomerNeed</a>
+<a href="../api/customer_status.html">CustomerStatus</a>
+<a href="../api/customer_tier.html">CustomerTier</a>
+<a href="../api/cycle.html">Cycle</a>
+<a href="../api/diff.html">Diff</a>
+<a href="../api/document.html">Document</a>
+<a href="../api/document_search_result.html">DocumentSearchResult</a>
+<a href="../api/email_intake_address.html">EmailIntakeAddress</a>
+<a href="../api/email_user_account_auth_challenge_response.html">EmailUserAccountAuthChallengeResponse</a>
+<a href="../api/emoji.html">Emoji</a>
+<a href="../api/entity_external_link.html">EntityExternalLink</a>
+<a href="../api/external_user.html">ExternalUser</a>
+<a href="../api/favorite.html">Favorite</a>
+<a href="../api/git_automation_state.html">GitAutomationState</a>
+<a href="../api/git_automation_target_branch.html">GitAutomationTargetBranch</a>
+<a href="../api/git_hub_integration_connect_detail.html">GitHubIntegrationConnectDetail</a>
+<a href="../api/initiative.html">Initiative</a>
+<a href="../api/initiative_label.html">InitiativeLabel</a>
+<a href="../api/initiative_lead_team_change_impact.html">InitiativeLeadTeamChangeImpact</a>
+<a href="../api/initiative_relation.html">InitiativeRelation</a>
+<a href="../api/initiative_to_project.html">InitiativeToProject</a>
+<a href="../api/initiative_update.html">InitiativeUpdate</a>
+<a href="../api/integration.html">Integration</a>
+<a href="../api/integration_template.html">IntegrationTemplate</a>
+<a href="../api/integrations_setting.html">IntegrationsSetting</a>
 <a href="../api/issue.html">Issue</a>
-<a aria-current="page" href="../api/team.html">Team</a><div class="nav-sections"><a class="nav-section" href="#post-teams">POST teams</a>
-<a class="nav-section" href="#post-team">POST team</a></div></details>
+<a href="../api/issue_import.html">IssueImport</a>
+<a href="../api/issue_label.html">IssueLabel</a>
+<a href="../api/issue_priority_value.html">IssuePriorityValue</a>
+<a href="../api/issue_relation.html">IssueRelation</a>
+<a href="../api/issue_search_result.html">IssueSearchResult</a>
+<a href="../api/issue_to_release.html">IssueToRelease</a>
+<a href="../api/logout_response.html">LogoutResponse</a>
+<a href="../api/notification.html">Notification</a>
+<a href="../api/notification_subscription.html">NotificationSubscription</a>
+<a href="../api/o_auth_application.html">OAuthApplication</a>
+<a href="../api/organization.html">Organization</a>
+<a href="../api/organization_domain.html">OrganizationDomain</a>
+<a href="../api/organization_invite.html">OrganizationInvite</a>
+<a href="../api/organization_meta.html">OrganizationMeta</a>
+<a href="../api/passkey_login_start_response.html">PasskeyLoginStartResponse</a>
+<a href="../api/project.html">Project</a>
+<a href="../api/project_label.html">ProjectLabel</a>
+<a href="../api/project_milestone.html">ProjectMilestone</a>
+<a href="../api/project_milestone_move_project_team.html">ProjectMilestoneMoveProjectTeam</a>
+<a href="../api/project_relation.html">ProjectRelation</a>
+<a href="../api/project_search_result.html">ProjectSearchResult</a>
+<a href="../api/project_status.html">ProjectStatus</a>
+<a href="../api/project_update.html">ProjectUpdate</a>
+<a href="../api/push_subscription.html">PushSubscription</a>
+<a href="../api/reaction.html">Reaction</a>
+<a href="../api/release.html">Release</a>
+<a href="../api/release_note.html">ReleaseNote</a>
+<a href="../api/release_pipeline.html">ReleasePipeline</a>
+<a href="../api/release_stage.html">ReleaseStage</a>
+<a href="../api/roadmap.html">Roadmap</a>
+<a href="../api/roadmap_to_project.html">RoadmapToProject</a>
+<a href="../api/sla_configuration.html">SlaConfiguration</a>
+<a href="../api/sso_url_from_email_response.html">SsoUrlFromEmailResponse</a>
+<a aria-current="page" href="../api/team.html">Team</a><div class="nav-sections"><a class="nav-section" href="#post-teamcreate">POST teamCreate</a>
+<a class="nav-section" href="#post-administrableteams">POST administrableTeams</a>
+<a class="nav-section" href="#post-archivedteams">POST archivedTeams</a>
+<a class="nav-section" href="#post-teams">POST teams</a>
+<a class="nav-section" href="#post-team">POST team</a>
+<a class="nav-section" href="#post-teamdelete">POST teamDelete</a>
+<a class="nav-section" href="#post-teamcyclesdelete">POST teamCyclesDelete</a>
+<a class="nav-section" href="#post-teamunarchive">POST teamUnarchive</a>
+<a class="nav-section" href="#post-teamupdate">POST teamUpdate</a></div>
+<a href="../api/team_membership.html">TeamMembership</a>
+<a href="../api/template.html">Template</a>
+<a href="../api/time_schedule.html">TimeSchedule</a>
+<a href="../api/triage_responsibility.html">TriageResponsibility</a>
+<a href="../api/upload_file.html">UploadFile</a>
+<a href="../api/usage_alert.html">UsageAlert</a>
+<a href="../api/user.html">User</a>
+<a href="../api/user_setting.html">UserSetting</a>
+<a href="../api/view_preference.html">ViewPreference</a>
+<a href="../api/webhook.html">Webhook</a>
+<a href="../api/webhook_failure_event.html">WebhookFailureEvent</a>
+<a href="../api/workflow_state.html">WorkflowState</a></details>
 <details><summary>Guides</summary><a href="../guides/authentication.html">Authentication</a>
 <a href="../guides/first-call.html">Make your first API call</a>
 <a href="../guides/errors.html">Handle errors</a>
@@ -44,6 +136,24 @@
 <tbody>
 <tr>
 <td><code>POST</code></td>
+<td><a href="#post-teamcreate"><code>teamCreate</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-administrableteams"><code>administrableTeams</code></a></td>
+<td><code>list</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-archivedteams"><code>archivedTeams</code></a></td>
+<td><code>list</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
 <td><a href="#post-teams"><code>teams</code></a></td>
 <td><code>list</code></td>
 <td></td>
@@ -52,6 +162,30 @@
 <td><code>POST</code></td>
 <td><a href="#post-team"><code>team</code></a></td>
 <td><code>load</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-teamdelete"><code>teamDelete</code></a></td>
+<td><code>remove</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-teamcyclesdelete"><code>teamCyclesDelete</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-teamunarchive"><code>teamUnarchive</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-teamupdate"><code>teamUpdate</code></a></td>
+<td><code>update</code></td>
 <td></td>
 </tr>
 </tbody>
@@ -68,34 +202,404 @@
 </thead>
 <tbody>
 <tr>
+<td><code>activeCycle</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>Team's currently active cycle.</td>
+</tr>
+<tr>
+<td><code>aiDiscussionSummariesEnabled</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Whether to enable AI discussion summaries for issues in this team.</td>
+</tr>
+<tr>
+<td><code>aiThreadSummariesEnabled</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Whether to enable resolved thread AI summaries.</td>
+</tr>
+<tr>
+<td><code>allMembersCanJoin</code></td>
+<td><code>boolean</code></td>
+<td>No</td>
+<td>Whether all members in the workspace can join the team.</td>
+</tr>
+<tr>
+<td><code>archivedAt</code></td>
+<td><code>any</code></td>
+<td>No</td>
+<td>The time at which the entity was archived.</td>
+</tr>
+<tr>
+<td><code>autoArchivePeriod</code></td>
+<td><code>number</code></td>
+<td>Yes</td>
+<td>Period after which automatically closed, completed, and duplicate issues are automatically archived in months.</td>
+</tr>
+<tr>
+<td><code>autoCloseChildIssues</code></td>
+<td><code>boolean</code></td>
+<td>No</td>
+<td>Whether child issues should automatically close when their parent issue is closed</td>
+</tr>
+<tr>
+<td><code>autoCloseParentIssues</code></td>
+<td><code>boolean</code></td>
+<td>No</td>
+<td>Whether parent issues should automatically close when all child issues are closed</td>
+</tr>
+<tr>
+<td><code>autoClosePeriod</code></td>
+<td><code>number</code></td>
+<td>No</td>
+<td>Period after which issues are automatically closed in months.</td>
+</tr>
+<tr>
+<td><code>autoCloseStateId</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>The canceled workflow state which auto closed issues will be set to.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>The team's color.</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td><code>any</code></td>
+<td>Yes</td>
+<td>The time at which the entity was created.</td>
+</tr>
+<tr>
+<td><code>currentProgress</code></td>
+<td><code>any</code></td>
+<td>Yes</td>
+<td>[Internal] The current progress of the team.</td>
+</tr>
+<tr>
+<td><code>cycleCalenderUrl</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Calendar feed URL (iCal) for cycles.</td>
+</tr>
+<tr>
+<td><code>cycleCooldownTime</code></td>
+<td><code>number</code></td>
+<td>Yes</td>
+<td>The cooldown time after each cycle in weeks.</td>
+</tr>
+<tr>
+<td><code>cycleDuration</code></td>
+<td><code>number</code></td>
+<td>Yes</td>
+<td>The duration of each cycle in weeks.</td>
+</tr>
+<tr>
+<td><code>cycleIssueAutoAssignCompleted</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Auto assign completed issues to current cycle.</td>
+</tr>
+<tr>
+<td><code>cycleIssueAutoAssignStarted</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Auto assign started issues to current cycle.</td>
+</tr>
+<tr>
+<td><code>cycleLockToActive</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Auto assign issues to current cycle if in active status.</td>
+</tr>
+<tr>
+<td><code>cycleStartDay</code></td>
+<td><code>number</code></td>
+<td>Yes</td>
+<td>The day of the week that a new cycle starts (0 = Sunday, 1 = Monday, ..., 6 = Saturday).</td>
+</tr>
+<tr>
+<td><code>cyclesEnabled</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Whether the team uses cycles for sprint-style issue management.</td>
+</tr>
+<tr>
+<td><code>defaultIssueEstimate</code></td>
+<td><code>number</code></td>
+<td>Yes</td>
+<td>What to use as a default estimate for unestimated issues.</td>
+</tr>
+<tr>
+<td><code>defaultIssueState</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The default workflow state into which issues are set when they are opened by team members.</td>
+</tr>
+<tr>
+<td><code>defaultProjectTemplate</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The default template to use for new projects created for the team.</td>
+</tr>
+<tr>
+<td><code>defaultTemplateForMembers</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The default template to use for new issues created by members of the team.</td>
+</tr>
+<tr>
+<td><code>defaultTemplateForNonMembers</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The default template to use for new issues created by non-members of the team.</td>
+</tr>
+<tr>
 <td><code>description</code></td>
 <td><code>string</code></td>
 <td>No</td>
-<td></td>
+<td>The team's description.</td>
+</tr>
+<tr>
+<td><code>displayName</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>The name of the team including its parent team name if it has one.</td>
+</tr>
+<tr>
+<td><code>groupIssueHistory</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Whether to group recent issue history entries.</td>
+</tr>
+<tr>
+<td><code>icon</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>The icon of the team.</td>
 </tr>
 <tr>
 <td><code>id</code></td>
 <td><code>string</code></td>
 <td>Yes</td>
-<td></td>
+<td>The unique identifier of the entity.</td>
+</tr>
+<tr>
+<td><code>inheritIssueEstimation</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Whether the team should inherit its estimation settings from its parent.</td>
+</tr>
+<tr>
+<td><code>inheritProjectStatuses</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>[Internal] Whether the team should inherit its project statuses from its parent team, or from the workspace when it has no parent.</td>
+</tr>
+<tr>
+<td><code>inheritSlackAutoCreateProjectChannel</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>[Internal] Whether the team should inherit its Slack auto-create project channel setting from its parent.</td>
+</tr>
+<tr>
+<td><code>inheritWorkflowStatuses</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Whether the team should inherit its workflow statuses from its parent.</td>
+</tr>
+<tr>
+<td><code>initiativesEnabled</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Whether team initiatives are enabled and shown in the team's sidebar.</td>
+</tr>
+<tr>
+<td><code>integrationsSettings</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>Settings for all integrations associated with that team.</td>
+</tr>
+<tr>
+<td><code>issueCount</code></td>
+<td><code>integer</code></td>
+<td>Yes</td>
+<td>The total number of issues in the team.</td>
+</tr>
+<tr>
+<td><code>issueEstimationAllowZero</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Whether to allow zeros in issues estimates.</td>
+</tr>
+<tr>
+<td><code>issueEstimationExtended</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Whether to add additional points to the estimate scale.</td>
+</tr>
+<tr>
+<td><code>issueEstimationType</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>The issue estimation type to use.</td>
+</tr>
+<tr>
+<td><code>joinByDefault</code></td>
+<td><code>boolean</code></td>
+<td>No</td>
+<td>[Internal] Whether new users should join this team by default.</td>
 </tr>
 <tr>
 <td><code>key</code></td>
 <td><code>string</code></td>
 <td>Yes</td>
-<td></td>
+<td>The team's unique key, used as a prefix in issue identifiers (for example, 'ENG' in 'ENG-123') and in URLs.</td>
+</tr>
+<tr>
+<td><code>ledInitiativeCount</code></td>
+<td><code>integer</code></td>
+<td>Yes</td>
+<td>The number of initiatives led by this team that would be deleted along with it.</td>
 </tr>
 <tr>
 <td><code>name</code></td>
 <td><code>string</code></td>
 <td>Yes</td>
-<td></td>
+<td>The team's name.</td>
+</tr>
+<tr>
+<td><code>organization</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The workspace that the team belongs to.</td>
+</tr>
+<tr>
+<td><code>parent</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The team's parent team.</td>
+</tr>
+<tr>
+<td><code>progressHistory</code></td>
+<td><code>any</code></td>
+<td>Yes</td>
+<td>[Internal] The progress history of the team.</td>
+</tr>
+<tr>
+<td><code>requirePriorityToLeaveTriage</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Whether an issue needs to have a priority set before leaving triage.</td>
+</tr>
+<tr>
+<td><code>restrictedBy</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>[Internal] For restricted teams, the enclosing private team that forms the visibility boundary.</td>
+</tr>
+<tr>
+<td><code>restrictedById</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>[Internal] The identifier of the enclosing private team that forms the visibility boundary for restricted teams.</td>
+</tr>
+<tr>
+<td><code>retiredAt</code></td>
+<td><code>any</code></td>
+<td>No</td>
+<td>The time at which the team was retired.</td>
+</tr>
+<tr>
+<td><code>scimGroupName</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>The SCIM group name for the team.</td>
+</tr>
+<tr>
+<td><code>scimManaged</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Whether the team is managed by a SCIM integration.</td>
+</tr>
+<tr>
+<td><code>securitySettings</code></td>
+<td><code>any</code></td>
+<td>Yes</td>
+<td>Security settings for the team, including role-based restrictions for issue sharing, label management, member management, template management, and agent skills.</td>
+</tr>
+<tr>
+<td><code>setIssueSortOrderOnStateChange</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Where to move issues when changing state.</td>
+</tr>
+<tr>
+<td><code>slackAutoCreateProjectChannel</code></td>
+<td><code>boolean</code></td>
+<td>No</td>
+<td>[Internal] Whether to automatically create a Slack channel when a new project is created in this team.</td>
+</tr>
+<tr>
+<td><code>timezone</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>The timezone of the team.</td>
+</tr>
+<tr>
+<td><code>triageEnabled</code></td>
+<td><code>boolean</code></td>
+<td>Yes</td>
+<td>Whether triage mode is enabled for the team.</td>
+</tr>
+<tr>
+<td><code>triageIssueState</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The workflow state into which issues are set when they are opened by non-team members or integrations if triage is enabled.</td>
+</tr>
+<tr>
+<td><code>triageResponsibility</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>Team's triage responsibility.</td>
+</tr>
+<tr>
+<td><code>upcomingCycleCount</code></td>
+<td><code>number</code></td>
+<td>Yes</td>
+<td>How many upcoming cycles to create.</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td><code>any</code></td>
+<td>Yes</td>
+<td>The last time at which the entity was meaningfully updated.</td>
+</tr>
+<tr>
+<td><code>visibility</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>The visibility of the team.</td>
 </tr>
 </tbody>
 </table>
+<h2 id="create">create</h2>
+<h3 id="post-teamcreate" class="operation" data-method="post"><code>POST</code> teamCreate</h3>
 <h2 id="list">list</h2>
+<h3 id="post-administrableteams" class="operation" data-method="post"><code>POST</code> administrableTeams</h3>
+<h3 id="post-archivedteams" class="operation" data-method="post"><code>POST</code> archivedTeams</h3>
 <h3 id="post-teams" class="operation" data-method="post"><code>POST</code> teams</h3>
 <h2 id="load">load</h2>
 <h3 id="post-team" class="operation" data-method="post"><code>POST</code> team</h3>
+<h2 id="remove">remove</h2>
+<h3 id="post-teamdelete" class="operation" data-method="post"><code>POST</code> teamDelete</h3>
+<h2 id="update">update</h2>
+<h3 id="post-teamcyclesdelete" class="operation" data-method="post"><code>POST</code> teamCyclesDelete</h3>
+<h3 id="post-teamunarchive" class="operation" data-method="post"><code>POST</code> teamUnarchive</h3>
+<h3 id="post-teamupdate" class="operation" data-method="post"><code>POST</code> teamUpdate</h3>
 </main></div>
 <script src="../assets/search.js" defer></script></body></html>

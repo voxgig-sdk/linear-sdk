@@ -1,0 +1,66 @@
+# BasicIssueImportFlow
+
+main: kit: flow: BasicIssueImportFlow:
+{
+  entity: "issue_import",
+  kind: "basic",
+  name: "BasicIssueImportFlow",
+  step: [
+    {
+      input: {
+        ref: "issue_import_ref01"
+      }
+
+      match: {
+        github_label: "github_label01",
+        github_repo_id: "github_repo01",
+        include_closed_issue: "include_closed_issue01",
+        instant_process: "instant_process01",
+        issue_import_id: "issue_import01",
+        linear_source_organization_id: "linear_source_organization01",
+        mapping: "mapping01",
+        team_id: "team01",
+        team_name: "team_name01"
+      }
+
+      op: "create"
+    }
+
+    {
+      data: {
+        linear_source_organization_id: "linear_source_organization01"
+      }
+
+      input: {
+        ref: "issue_import_ref01",
+        srcdatavar: "issue_import_ref01_data",
+        suffix: "_up0",
+        textfield: "creatorId"
+      }
+
+      op: "update",
+      spec: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-issue_import_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "issue_import_ref01",
+        suffix: "_rm0"
+      }
+
+      match: {
+        issue_import_id: "issue_import01"
+      }
+
+      op: "remove"
+    }
+  ],
+  "key$": "BasicIssueImportFlow"
+}

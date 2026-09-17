@@ -1,0 +1,142 @@
+# BasicAttachmentFlow
+
+main: kit: flow: BasicAttachmentFlow:
+{
+  entity: "attachment",
+  kind: "basic",
+  name: "BasicAttachmentFlow",
+  step: [
+    {
+      input: {
+        ref: "attachment_ref01"
+      }
+
+      match: {
+        after: "after01",
+        before: "before01",
+        channel_id: "channel01",
+        conversation_id: "conversation01",
+        create_as_user: "create_as_user01",
+        display_icon_url: "display_icon_url01",
+        first: "first01",
+        include_archived: "include_archived01",
+        issue_id: "issue01",
+        jira_issue_id: "jira_issue01",
+        last: "last01",
+        link_kind: "link_kind01",
+        message_id: "message01",
+        number: "number01",
+        order_by: "order_by01",
+        part_id: "part01",
+        project_path_with_namespace: "project_path_with_namespace01",
+        sync_to_comment_thread: "sync_to_comment_thread01",
+        ticket_id: "ticket01",
+        title: "title01",
+        url: "url01"
+      }
+
+      op: "create"
+    }
+
+    {
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "attachment_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "attachment_ref01",
+        srcdatavar: "attachment_ref01_data",
+        suffix: "_up0",
+        textfield: "bodyData"
+      }
+
+      op: "update",
+      spec: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-attachment_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "attachment_ref01",
+        srcdatavar: "attachment_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        id: "attachment01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-attachment_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "attachment_ref01",
+        suffix: "_rm0"
+      }
+
+      match: {
+        id: "attachment01"
+      }
+
+      op: "remove"
+    }
+
+    {
+      input: {
+        suffix: "_rt0"
+      }
+
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemNotExists",
+          def: {
+            ref: "attachment_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicAttachmentFlow"
+}

@@ -60,7 +60,7 @@ describe("IssueEntity", function()
     local setup = issue_basic_setup(nil)
     -- Per-op sdk-test-control.json skip.
     local _live = setup.live or false
-    for _, _op in ipairs({"create", "list", "update", "load"}) do
+    for _, _op in ipairs({"create", "list", "update", "load", "remove"}) do
       local _should_skip, _reason = runner.is_control_skipped("entityOp", "issue." .. _op, _live and "live" or "unit")
       if _should_skip then
         pending(_reason or "skipped via sdk-test-control.json")
@@ -80,7 +80,22 @@ describe("IssueEntity", function()
     local issue_ref01_data = helpers.to_map(vs.getprop(
       vs.getpath(setup.data, "new.issue"), "issue_ref01"))
     issue_ref01_data["after"] = setup.idmap["after01"]
+    issue_ref01_data["attachment_id"] = setup.idmap["attachment01"]
+    issue_ref01_data["before"] = setup.idmap["before01"]
+    issue_ref01_data["branch_name"] = setup.idmap["branch_name01"]
+    issue_ref01_data["description"] = setup.idmap["description01"]
+    issue_ref01_data["file_key"] = setup.idmap["file_key01"]
     issue_ref01_data["first"] = setup.idmap["first01"]
+    issue_ref01_data["include_archived"] = setup.idmap["include_archived01"]
+    issue_ref01_data["label_id"] = setup.idmap["label01"]
+    issue_ref01_data["last"] = setup.idmap["last01"]
+    issue_ref01_data["order_by"] = setup.idmap["order_by01"]
+    issue_ref01_data["permanently_delete"] = setup.idmap["permanently_delete01"]
+    issue_ref01_data["query"] = setup.idmap["query01"]
+    issue_ref01_data["reminder_at"] = setup.idmap["reminder_at01"]
+    issue_ref01_data["trash"] = setup.idmap["trash01"]
+    issue_ref01_data["user_email"] = setup.idmap["user_email01"]
+    issue_ref01_data["user_id"] = setup.idmap["user01"]
 
     local issue_ref01_data_result, err = issue_ref01_ent:create(issue_ref01_data, nil)
     assert.is_nil(err)
@@ -91,7 +106,11 @@ describe("IssueEntity", function()
     -- LIST
     local issue_ref01_match = {
       ["after"] = setup.idmap["after01"],
+      ["before"] = setup.idmap["before01"],
       ["first"] = setup.idmap["first01"],
+      ["include_archived"] = setup.idmap["include_archived01"],
+      ["last"] = setup.idmap["last01"],
+      ["order_by"] = setup.idmap["order_by01"],
     }
 
     local issue_ref01_list_result, err = issue_ref01_ent:list(issue_ref01_match, nil)
@@ -129,6 +148,32 @@ describe("IssueEntity", function()
     assert.is_not_nil(issue_ref01_data_dt0_load_result)
     assert.are.equal(issue_ref01_data_dt0_load_result["id"], issue_ref01_data["id"])
 
+    -- REMOVE
+    local issue_ref01_match_rm0 = {
+      id = issue_ref01_data["id"],
+    }
+    local _, err = issue_ref01_ent:remove(issue_ref01_match_rm0, nil)
+    assert.is_nil(err)
+
+    -- LIST
+    local issue_ref01_match_rt0 = {
+      ["after"] = setup.idmap["after01"],
+      ["before"] = setup.idmap["before01"],
+      ["first"] = setup.idmap["first01"],
+      ["include_archived"] = setup.idmap["include_archived01"],
+      ["last"] = setup.idmap["last01"],
+      ["order_by"] = setup.idmap["order_by01"],
+    }
+
+    local issue_ref01_list_rt0_result, err = issue_ref01_ent:list(issue_ref01_match_rt0, nil)
+    assert.is_nil(err)
+    assert.is_table(issue_ref01_list_rt0_result)
+
+    local not_found_item = vs.select(
+      runner.entity_list_to_data(issue_ref01_list_rt0_result),
+      { id = issue_ref01_data["id"] })
+    assert.is_true(vs.isempty(not_found_item))
+
   end)
 end)
 
@@ -152,7 +197,7 @@ function issue_basic_setup(extra)
 
   -- Generate idmap via transform.
   local idmap = vs.transform(
-    { "issue01", "issue02", "issue03", "after01", "first01" },
+    { "issue01", "issue02", "issue03", "after01", "attachment01", "before01", "branch_name01", "description01", "file_key01", "first01", "include_archived01", "label01", "last01", "order_by01", "permanently_delete01", "query01", "reminder_at01", "trash01", "user_email01", "user01" },
     {
       ["`$PACK`"] = { "", {
         ["`$KEY`"] = "`$COPY`",

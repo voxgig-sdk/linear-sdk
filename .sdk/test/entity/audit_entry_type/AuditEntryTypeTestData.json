@@ -1,0 +1,52 @@
+{
+  "existing": {
+    "audit_entry_type": {
+      "AUDIT_ENTRY_TYPE00": {
+        "description": "s14",
+        "type": "s15"
+      },
+      "AUDIT_ENTRY_TYPE01": {
+        "description": "s28",
+        "type": "s29"
+      },
+      "AUDIT_ENTRY_TYPE02": {
+        "description": "s3c",
+        "type": "s3d"
+      }
+    }
+  },
+  "new": {
+    "audit_entry_type": {
+      "audit_entry_type_ref01": {
+        "description": "s50",
+        "type": "s51"
+      }
+    }
+  },
+  "requests": {
+    "POST auditEntryTypes": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [],
+          "deprecated": false,
+          "desc": "List of audit entry types.",
+          "gqltype": "[AuditEntryType!]!",
+          "list": true,
+          "name": "auditEntryTypes",
+          "reqd": true,
+          "type": "AuditEntryType"
+        },
+        "invocation": {
+          "doc": "query AuditEntryTypeList { auditEntryTypes { ...AuditEntryTypeFields } } fragment AuditEntryTypeFields on AuditEntryType { description type }",
+          "field": "auditEntryTypes",
+          "optype": "query",
+          "vars": []
+        },
+        "protocol": "graphql",
+        "types": {},
+        "typesScope": "inputs"
+      }
+    }
+  }
+}

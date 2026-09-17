@@ -27,11 +27,11 @@ Tool-call arguments (what an agent sends):
 
 ```jsonc
 // linear_list: first page of records
-{ "entity": "issue" }
-{ "entity": "issue", "query": { } }
+{ "entity": "access_key_release" }
+{ "entity": "access_key_release", "query": { } }
 
 // linear_load: one record by id
-{ "entity": "issue", "query": { "id": 1 } }
+{ "entity": "access_key_release", "query": { "id": 1 } }
 ```
 
 > The rest of this guide follows the [Diátaxis](https://diataxis.fr) framework:
@@ -60,8 +60,8 @@ Tool-call arguments (what an agent sends):
    ```
 
 4. **Restart Claude Code.** The `linear_list` and `linear_load` tools now appear
-   in new sessions. Ask the agent to *"list issue using linear"*
-   and it calls `linear_list` with `{"entity":"issue"}`.
+   in new sessions. Ask the agent to *"list access_key_release using linear"*
+   and it calls `linear_list` with `{"entity":"access_key_release"}`.
 
 ## How-to guides
 
@@ -92,7 +92,7 @@ Args: `entity` (required), `query` (optional filter map). Returns the first
 page of records as JSON:
 
 ```jsonc
-{ "entity": "issue" }
+{ "entity": "access_key_release" }
 ```
 
 ### Call the `linear_load` tool
@@ -101,7 +101,7 @@ Args: `entity` (required), `query` = `{"id":N}` (required). Returns the single
 record as JSON:
 
 ```jsonc
-{ "entity": "issue", "query": { "id": 1 } }
+{ "entity": "access_key_release", "query": { "id": 1 } }
 ```
 
 ### Cross-compile release binaries
@@ -129,7 +129,7 @@ Both tools take the same argument object:
 
 | Field | Type | Notes |
 |-------|------|-------|
-| `entity` | string | One of the 2 supported entities (see below). |
+| `entity` | string | One of the 87 supported entities (see below). |
 | `query` | object | Optional match map. `{"id":N}` for load; omit or `{}` for list. |
 
 JSON schemas are emitted by the SDK from the `Args` struct's `json` /
@@ -151,9 +151,9 @@ JSON schemas are emitted by the SDK from the `Args` struct's `json` /
 
 ### Entities
 
-The 2 entities valid as the `entity` argument:
+The 87 entities valid as the `entity` argument:
 
-issue | team
+access_key_release | access_key_release_pipeline | agent_activity | agent_session | agent_skill | application | attachment | audit_entry | audit_entry_type | auth_resolver_response | authentication_session_response | comment | create_or_join_organization_response | custom_view | customer | customer_need | customer_status | customer_tier | cycle | diff | document | document_search_result | email_intake_address | email_user_account_auth_challenge_response | emoji | entity_external_link | external_user | favorite | git_automation_state | git_automation_target_branch | git_hub_integration_connect_detail | initiative | initiative_label | initiative_lead_team_change_impact | initiative_relation | initiative_to_project | initiative_update | integration | integration_template | integrations_setting | issue | issue_import | issue_label | issue_priority_value | issue_relation | issue_search_result | issue_to_release | logout_response | notification | notification_subscription | o_auth_application | organization | organization_domain | organization_invite | organization_meta | passkey_login_start_response | project | project_label | project_milestone | project_milestone_move_project_team | project_relation | project_search_result | project_status | project_update | push_subscription | reaction | release | release_note | release_pipeline | release_stage | roadmap | roadmap_to_project | sla_configuration | sso_url_from_email_response | team | team_membership | template | time_schedule | triage_responsibility | upload_file | usage_alert | user | user_setting | view_preference | webhook | webhook_failure_event | workflow_state
 
 ### Smoke test via HTTP (raw JSON-RPC)
 
@@ -173,7 +173,7 @@ curl -sN -X POST http://localhost:18080 \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -H "Mcp-Session-Id: $SESSION" \
-  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"linear_load","arguments":{"entity":"issue","query":{"id":1}}}}'
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"linear_load","arguments":{"entity":"access_key_release","query":{"id":1}}}}'
 ```
 
 ## Explanation

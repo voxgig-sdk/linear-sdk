@@ -19,18 +19,17 @@ make build
 export LINEAR_APIKEY=sk_live_xxx
 
 # 4. Each command line is ONE boru expression, run against the API:
-./linear-cli list issue
-./linear-cli load 1 issue            # {id:1} shorthand
-./linear-cli load '{id:1}' issue       # explicit match map
-./linear-cli update '{name:"x"}' issue
-./linear-cli list team
+./linear-cli list access_key_release
+./linear-cli load 1 access_key_release            # {id:1} shorthand
+./linear-cli load '{id:1}' access_key_release       # explicit match map
+./linear-cli list access_key_release_pipeline
 
 # 5. Override the API base URL for a single call
-LINEAR_BASE=https://api.example.com ./linear-cli list issue
+LINEAR_BASE=https://api.example.com ./linear-cli list access_key_release
 
 # 6. No arguments -> interactive REPL
 ./linear-cli
-linear> list issue
+linear> list access_key_release
 linear> /quit
 ```
 
@@ -56,7 +55,7 @@ linear> /quit
    arguments to open the REPL):
 
    ```sh
-   ./dist/*/linear-cli list issue
+   ./dist/*/linear-cli list access_key_release
    ```
 
 4. **Go interactive.** Run the binary with no arguments to open the REPL, then
@@ -69,7 +68,7 @@ That is the whole loop: *build → set key → evaluate boru expressions*.
 ### List the records of an entity
 
 ```sh
-./linear-cli list issue
+./linear-cli list access_key_release
 ```
 
 `list <entity>` returns the first page of records. `<entity>` is a bareword —
@@ -78,21 +77,12 @@ it is auto-quoted as an boru atom, so no quotes are needed.
 ### Load a single record
 
 ```sh
-./linear-cli load 1 issue          # scalar shorthand for {id:1}
-./linear-cli load '{id:1}' issue     # explicit match map
+./linear-cli load 1 access_key_release          # scalar shorthand for {id:1}
+./linear-cli load '{id:1}' access_key_release     # explicit match map
 ```
 
 The query is either a **scalar** (`1`, treated as `{id:1}`) or a **match map**
 (`{id:1}`, `{slug:"acme"}`). Quote the map so your shell passes it through intact.
-
-### Update a record
-
-```sh
-./linear-cli update '{id:1,name:"new"}' issue
-```
-
-The match map carries both the selector and the new field values; the updated
-record is printed back.
 
 ### Authenticate and choose an environment
 
@@ -101,7 +91,7 @@ Configuration is read from the environment — nothing is written to disk:
 ```sh
 export LINEAR_APIKEY=sk_live_xxx            # API key
 export LINEAR_BASE=https://api.example.com  # optional: override the API base URL
-./linear-cli list issue
+./linear-cli list access_key_release
 ```
 
 Both are injectable by a secrets vault, so the key never has to be typed inline.
@@ -113,7 +103,7 @@ evaluated as its own boru expression:
 
 ```text
 $ ./linear-cli
-linear> list issue
+linear> list access_key_release
 linear> /help
 linear> /quit
 ```
@@ -128,7 +118,7 @@ make build-all   # linux/darwin/windows x amd64/arm64, under dist/<os>-<arch>/
 ### Discover the available entities
 
 `/help` in the REPL prints the full entity list, or see [Entities](#entities)
-below — this SDK exposes 2 entities.
+below — this SDK exposes 87 entities.
 
 ## Reference
 
@@ -142,7 +132,7 @@ The CLI registers these boru words, each bound to the SDK:
 | `load`   | `load <entity>` · `load <query> <entity>`     | A single record                |
 | `update` | `update <query> <entity>`                     | Update a record, return it     |
 
-- `<entity>` is a bareword, auto-quoted as an boru atom (e.g. `issue`).
+- `<entity>` is a bareword, auto-quoted as an boru atom (e.g. `access_key_release`).
 - `<query>` is either a **Map** (`{id:1}`) or a **Scalar** (`1`, treated as
   `{id:1}`). A scalar is always wrapped as `{id:<value>}`.
 
@@ -183,9 +173,9 @@ Meta-commands use the `/` prefix (everything else on a line is evaluated as boru
 
 ### Entities
 
-The 2 entities this SDK exposes (any is valid as `<entity>`):
+The 87 entities this SDK exposes (any is valid as `<entity>`):
 
-issue team
+access_key_release access_key_release_pipeline agent_activity agent_session agent_skill application attachment audit_entry audit_entry_type auth_resolver_response authentication_session_response comment create_or_join_organization_response custom_view customer customer_need customer_status customer_tier cycle diff document document_search_result email_intake_address email_user_account_auth_challenge_response emoji entity_external_link external_user favorite git_automation_state git_automation_target_branch git_hub_integration_connect_detail initiative initiative_label initiative_lead_team_change_impact initiative_relation initiative_to_project initiative_update integration integration_template integrations_setting issue issue_import issue_label issue_priority_value issue_relation issue_search_result issue_to_release logout_response notification notification_subscription o_auth_application organization organization_domain organization_invite organization_meta passkey_login_start_response project project_label project_milestone project_milestone_move_project_team project_relation project_search_result project_status project_update push_subscription reaction release release_note release_pipeline release_stage roadmap roadmap_to_project sla_configuration sso_url_from_email_response team team_membership template time_schedule triage_responsibility upload_file usage_alert user user_setting view_preference webhook webhook_failure_event workflow_state
 
 ## Explanation
 

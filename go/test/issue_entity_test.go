@@ -81,7 +81,7 @@ func TestIssueEntity(t *testing.T) {
 		if setup.live {
 			_mode = "live"
 		}
-		for _, _op := range []string{"create", "list", "update", "load"} {
+		for _, _op := range []string{"create", "list", "update", "load", "remove"} {
 			if _shouldSkip, _reason := isControlSkipped("entityOp", "issue." + _op, _mode); _shouldSkip {
 				if _reason == "" {
 					_reason = "skipped via sdk-test-control.json"
@@ -103,7 +103,22 @@ func TestIssueEntity(t *testing.T) {
 		issueRef01Data := core.ToMapAny(vs.GetProp(
 			vs.GetPath(setup.data, []any{"new", "issue"}), "issue_ref01"))
 		issueRef01Data["after"] = setup.idmap["after01"]
+		issueRef01Data["attachment_id"] = setup.idmap["attachment01"]
+		issueRef01Data["before"] = setup.idmap["before01"]
+		issueRef01Data["branch_name"] = setup.idmap["branch_name01"]
+		issueRef01Data["description"] = setup.idmap["description01"]
+		issueRef01Data["file_key"] = setup.idmap["file_key01"]
 		issueRef01Data["first"] = setup.idmap["first01"]
+		issueRef01Data["include_archived"] = setup.idmap["include_archived01"]
+		issueRef01Data["label_id"] = setup.idmap["label01"]
+		issueRef01Data["last"] = setup.idmap["last01"]
+		issueRef01Data["order_by"] = setup.idmap["order_by01"]
+		issueRef01Data["permanently_delete"] = setup.idmap["permanently_delete01"]
+		issueRef01Data["query"] = setup.idmap["query01"]
+		issueRef01Data["reminder_at"] = setup.idmap["reminder_at01"]
+		issueRef01Data["trash"] = setup.idmap["trash01"]
+		issueRef01Data["user_email"] = setup.idmap["user_email01"]
+		issueRef01Data["user_id"] = setup.idmap["user01"]
 
 		issueRef01DataResult, err := issueRef01Ent.Create(issueRef01Data, nil)
 		if err != nil {
@@ -120,7 +135,11 @@ func TestIssueEntity(t *testing.T) {
 		// LIST
 		issueRef01Match := map[string]any{
 			"after": setup.idmap["after01"],
+			"before": setup.idmap["before01"],
 			"first": setup.idmap["first01"],
+			"include_archived": setup.idmap["include_archived01"],
+			"last": setup.idmap["last01"],
+			"order_by": setup.idmap["order_by01"],
 		}
 
 		issueRef01ListResult, err := issueRef01Ent.List(issueRef01Match, nil)
@@ -177,6 +196,39 @@ func TestIssueEntity(t *testing.T) {
 			t.Fatal("expected load result id to match")
 		}
 
+		// REMOVE
+		issueRef01MatchRm0 := map[string]any{
+			"id": issueRef01Data["id"],
+		}
+		_, err = issueRef01Ent.Remove(issueRef01MatchRm0, nil)
+		if err != nil {
+			t.Fatalf("remove failed: %v", err)
+		}
+
+		// LIST
+		issueRef01MatchRt0 := map[string]any{
+			"after": setup.idmap["after01"],
+			"before": setup.idmap["before01"],
+			"first": setup.idmap["first01"],
+			"include_archived": setup.idmap["include_archived01"],
+			"last": setup.idmap["last01"],
+			"order_by": setup.idmap["order_by01"],
+		}
+
+		issueRef01ListRt0Result, err := issueRef01Ent.List(issueRef01MatchRt0, nil)
+		if err != nil {
+			t.Fatalf("list failed: %v", err)
+		}
+		issueRef01ListRt0, issueRef01ListRt0Ok := issueRef01ListRt0Result.([]any)
+		if !issueRef01ListRt0Ok {
+			t.Fatalf("expected list result to be an array, got %T", issueRef01ListRt0Result)
+		}
+
+		notFoundItem := vs.Select(entityListToData(issueRef01ListRt0), map[string]any{"id": issueRef01Data["id"]})
+		if !vs.IsEmpty(notFoundItem) {
+			t.Fatal("expected removed entity to not be in list")
+		}
+
 	})
 }
 
@@ -205,7 +257,7 @@ func issueBasicSetup(extra map[string]any) *entityTestSetup {
 
 	// Generate idmap via transform, matching TS pattern.
 	idmap, _ := vs.Transform(
-		[]any{"issue01", "issue02", "issue03", "after01", "first01"},
+		[]any{"issue01", "issue02", "issue03", "after01", "attachment01", "before01", "branch_name01", "description01", "file_key01", "first01", "include_archived01", "label01", "last01", "order_by01", "permanently_delete01", "query01", "reminder_at01", "trash01", "user_email01", "user01"},
 		map[string]any{
 			"`$PACK`": []any{"", map[string]any{
 				"`$KEY`": "`$COPY`",

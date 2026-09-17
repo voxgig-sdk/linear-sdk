@@ -46,7 +46,7 @@ const utility_1 = require("../../utility");
         else {
             variables["id"] = 'direct01';
         }
-        const result = await client.graphql("query TeamLoad($id: String!) { team(id: $id) { ...TeamFields } } fragment TeamFields on Team { description id key name }", variables);
+        const result = await client.graphql("query TeamLoad($id: String!) { team(id: $id) { ...TeamFields } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }", variables);
         if (setup.live) {
             // STRICT live mode: a non-2xx is a real failure - this project owns
             // the server it points at, so there is nothing to be lenient about.
@@ -77,19 +77,29 @@ const utility_1 = require("../../utility");
         const setup = directSetup();
         if ((0, utility_1.maybeSkipControl)(t, 'direct', 'direct-list-team', setup.live))
             return;
-        if ((0, utility_1.skipIfMissingIds)(t, setup, ["first01", "after01"]))
+        if ((0, utility_1.skipIfMissingIds)(t, setup, ["after01", "before01", "filter01", "first01", "includeArchived01", "last01", "orderBy01"]))
             return;
         const { client, calls } = setup;
         const variables = {};
         if (setup.live) {
-            variables["first"] = setup.idmap['first01'];
             variables["after"] = setup.idmap['after01'];
+            variables["before"] = setup.idmap['before01'];
+            variables["filter"] = setup.idmap['filter01'];
+            variables["first"] = setup.idmap['first01'];
+            variables["includeArchived"] = setup.idmap['includeArchived01'];
+            variables["last"] = setup.idmap['last01'];
+            variables["orderBy"] = setup.idmap['orderBy01'];
         }
         else {
-            variables["first"] = 'direct01';
-            variables["after"] = 'direct02';
+            variables["after"] = 'direct01';
+            variables["before"] = 'direct02';
+            variables["filter"] = 'direct03';
+            variables["first"] = 'direct04';
+            variables["includeArchived"] = 'direct05';
+            variables["last"] = 'direct06';
+            variables["orderBy"] = 'direct07';
         }
-        const result = await client.graphql("query TeamList($first: Int, $after: String) { teams(first: $first, after: $after) { ...TeamFields } } fragment TeamFields on Team { description id key name }", variables);
+        const result = await client.graphql("query TeamList($after: String, $before: String, $filter: TeamFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { administrableTeams(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...TeamFields } pageInfo { endCursor hasNextPage } } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }", variables);
         if (setup.live) {
             // STRICT live mode: a non-2xx is a real failure - this project owns
             // the server it points at, so there is nothing to be lenient about.
@@ -111,6 +121,11 @@ const utility_1 = require("../../utility");
             (0, node_assert_1.default)(calls[0].init.method === 'POST');
             (0, node_assert_1.default)(calls[0].init.body.includes('direct01'));
             (0, node_assert_1.default)(calls[0].init.body.includes('direct02'));
+            (0, node_assert_1.default)(calls[0].init.body.includes('direct03'));
+            (0, node_assert_1.default)(calls[0].init.body.includes('direct04'));
+            (0, node_assert_1.default)(calls[0].init.body.includes('direct05'));
+            (0, node_assert_1.default)(calls[0].init.body.includes('direct06'));
+            (0, node_assert_1.default)(calls[0].init.body.includes('direct07'));
         }
     });
 });

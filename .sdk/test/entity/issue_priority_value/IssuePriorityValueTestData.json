@@ -1,0 +1,52 @@
+{
+  "existing": {
+    "issue_priority_value": {
+      "ISSUE_PRIORITY_VALUE00": {
+        "label": "s14",
+        "priority": 21
+      },
+      "ISSUE_PRIORITY_VALUE01": {
+        "label": "s28",
+        "priority": 41
+      },
+      "ISSUE_PRIORITY_VALUE02": {
+        "label": "s3c",
+        "priority": 61
+      }
+    }
+  },
+  "new": {
+    "issue_priority_value": {
+      "issue_priority_value_ref01": {
+        "label": "s50",
+        "priority": 81
+      }
+    }
+  },
+  "requests": {
+    "POST issuePriorityValues": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [],
+          "deprecated": false,
+          "desc": "Issue priority values and corresponding labels.",
+          "gqltype": "[IssuePriorityValue!]!",
+          "list": true,
+          "name": "issuePriorityValues",
+          "reqd": true,
+          "type": "IssuePriorityValue"
+        },
+        "invocation": {
+          "doc": "query IssuePriorityValueList { issuePriorityValues { ...IssuePriorityValueFields } } fragment IssuePriorityValueFields on IssuePriorityValue { label priority }",
+          "field": "issuePriorityValues",
+          "optype": "query",
+          "vars": []
+        },
+        "protocol": "graphql",
+        "types": {},
+        "typesScope": "inputs"
+      }
+    }
+  }
+}

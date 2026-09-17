@@ -1,0 +1,570 @@
+# Entity: agent_session
+
+main: kit: entity: agent_session: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "appUser"
+      req: false
+      short: "The agent user that is associated with this agent session."
+      type: "`$OBJECT`"
+    }
+    {
+      name: "archivedAt"
+      req: false
+      short: "The time at which the entity was archived."
+      type: "`$ANY`"
+    }
+    {
+      name: "codingHarnessModelLabel"
+      req: false
+      short: "[Internal] Compact display label for the coding harness model used by this session, derived from the latest associated sandbox."
+      type: "`$STRING`"
+    }
+    {
+      name: "comment"
+      req: false
+      short: "The comment this agent session is associated with."
+      type: "`$OBJECT`"
+    }
+    {
+      name: "context"
+      req: true
+      short: "The entity contexts this session is related to, such as issues or projects referenced in direct chat sessions."
+      type: "`$ANY`"
+    }
+    {
+      name: "createdAt"
+      req: true
+      short: "The time at which the entity was created."
+      type: "`$ANY`"
+    }
+    {
+      name: "creator"
+      req: false
+      short: "The human user responsible for the agent session."
+      type: "`$OBJECT`"
+    }
+    {
+      name: "dismissedAt"
+      req: false
+      short: "The time a user dismissed this agent session."
+      type: "`$ANY`"
+    }
+    {
+      name: "dismissedBy"
+      req: false
+      short: "The user who dismissed the agent session."
+      type: "`$OBJECT`"
+    }
+    {
+      name: "endedAt"
+      req: false
+      short: "The time the agent session completed."
+      type: "`$ANY`"
+    }
+    {
+      name: "id"
+      req: true
+      short: "The unique identifier of the entity."
+      type: "`$STRING`"
+    }
+    {
+      name: "issue"
+      req: false
+      short: "The issue this agent session is associated with."
+      type: "`$OBJECT`"
+    }
+    {
+      name: "modelSelection"
+      req: false
+      short: "[Internal] How Adaptive selected the model route used by this coding session."
+      type: "`$ANY`"
+    }
+    {
+      name: "plan"
+      req: false
+      short: "A dynamically updated plan describing the agent's execution strategy, including steps to be taken and their current status."
+      type: "`$ANY`"
+    }
+    {
+      name: "pullRequest"
+      req: false
+      short: "The pull request this agent session is anchored to, when started from a pull request."
+      type: "`$OBJECT`"
+    }
+    {
+      name: "slugId"
+      req: true
+      short: "The agent session's unique URL slug."
+      type: "`$STRING`"
+    }
+    {
+      name: "sourceComment"
+      req: false
+      short: "The comment that this agent session was spawned from, if from a different thread."
+      type: "`$OBJECT`"
+    }
+    {
+      name: "sourceMetadata"
+      req: false
+      short: "Metadata about the external source that created this agent session."
+      type: "`$ANY`"
+    }
+    {
+      name: "startedAt"
+      req: false
+      short: "The time the agent session transitioned to active status and began work."
+      type: "`$ANY`"
+    }
+    {
+      name: "status"
+      req: true
+      short: "The current status of the agent session, such as pending, active, awaiting input, complete, error, or stale."
+      type: "`$STRING`"
+    }
+    {
+      name: "summary"
+      req: false
+      short: "The session title, generated automatically or set by the owning OAuth application."
+      type: "`$STRING`"
+    }
+    {
+      name: "updatedAt"
+      req: true
+      short: "The last time at which the entity was meaningfully updated."
+      type: "`$ANY`"
+    }
+    {
+      name: "url"
+      req: false
+      short: "The URL to the agent session page in the Linear app."
+      type: "`$STRING`"
+    }
+  ]
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "agent_session"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "pull_request_id"
+                orig: "pull_request_id"
+                reqd: false
+                type: "`$STRING`"
+              }
+            ]
+          }
+          contract: {
+            id: "POST agentSessionCreate"
+            json: "{\"field\":{\"args\":[{\"gqltype\":\"AgentSessionCreateInput!\",\"name\":\"input\",\"reqd\":true,\"type\":\"AgentSessionCreateInput\"},{\"gqltype\":\"String\",\"name\":\"pullRequestId\",\"reqd\":false,\"type\":\"String\"}],\"deprecated\":false,\"desc\":\"[Internal] Creates a new agent session on behalf of the current user\",\"gqltype\":\"AgentSessionPayload!\",\"list\":false,\"name\":\"agentSessionCreate\",\"reqd\":true,\"type\":\"AgentSessionPayload\"},\"invocation\":{\"doc\":\"mutation AgentSessionCreate($input: AgentSessionCreateInput!, $pullRequestId: String) { agentSessionCreate(input: $input, pullRequestId: $pullRequestId) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }\",\"field\":\"agentSessionCreate\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"\",\"gqltype\":\"AgentSessionCreateInput!\",\"name\":\"input\"},{\"from\":\"pullRequestId\",\"gqltype\":\"String\",\"name\":\"pullRequestId\"}]},\"protocol\":\"graphql\",\"types\":{\"AgentSessionCreateInput\":{\"desc\":\"[Internal] Input for creating an agent session on behalf of the current user.\",\"fields\":{\"appUserId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The app user (agent) to create a session for.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"appUserId\",\"reqd\":true,\"type\":\"String\"},\"context\":{\"args\":[],\"deprecated\":false,\"desc\":\"[Internal] No longer supported.\",\"gqltype\":\"JSONObject\",\"list\":false,\"name\":\"context\",\"reqd\":false,\"type\":\"JSONObject\"},\"id\":{\"args\":[],\"deprecated\":false,\"desc\":\"The identifier in UUID v4 format. If none is provided, the backend will generate one.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"id\",\"reqd\":false,\"type\":\"String\"},\"issueId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The issue that this session will be associated with. Can be a UUID or issue identifier (e.g., 'LIN-123').\",\"gqltype\":\"String\",\"list\":false,\"name\":\"issueId\",\"reqd\":false,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"AgentSessionCreateInput\"},\"JSONObject\":{\"desc\":\"The `JSONObject` scalar type represents arbitrary values as *embedded* JSON\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"JSONObject\"},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}"
+            source: "graphql"
+            version: 1
+          }
+          graphql: {
+            doc: "mutation AgentSessionCreate($input: AgentSessionCreateInput!, $pullRequestId: String) { agentSessionCreate(input: $input, pullRequestId: $pullRequestId) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessionCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "AgentSessionCreateInput!"
+                name: "input"
+              }
+              {
+                from: "pullRequestId"
+                gqltype: "String"
+                name: "pullRequestId"
+              }
+            ]
+          }
+          kind: "graphql"
+          method: "POST"
+          orig: "agentSessionCreate"
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessionCreate.agentSession`"
+          }
+        }
+        {
+          contract: {
+            id: "POST agentSessionCreateOnComment"
+            json: "{\"field\":{\"args\":[{\"gqltype\":\"AgentSessionCreateOnComment!\",\"name\":\"input\",\"reqd\":true,\"type\":\"AgentSessionCreateOnComment\"}],\"deprecated\":false,\"desc\":\"Creates a new agent session on a root comment.\",\"gqltype\":\"AgentSessionPayload!\",\"list\":false,\"name\":\"agentSessionCreateOnComment\",\"reqd\":true,\"type\":\"AgentSessionPayload\"},\"invocation\":{\"doc\":\"mutation AgentSessionCreateCreateOnComment($input: AgentSessionCreateOnComment!) { agentSessionCreateOnComment(input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }\",\"field\":\"agentSessionCreateOnComment\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"\",\"gqltype\":\"AgentSessionCreateOnComment!\",\"name\":\"input\"}]},\"protocol\":\"graphql\",\"types\":{\"AgentSessionCreateOnComment\":{\"desc\":\"Input for creating an agent session on a root comment.\",\"fields\":{\"commentId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The root comment that this session will be associated with.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"commentId\",\"reqd\":true,\"type\":\"String\"},\"externalLink\":{\"args\":[],\"deprecated\":false,\"desc\":\"The URL of an external agent-hosted page associated with this session.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"externalLink\",\"reqd\":false,\"type\":\"String\"},\"externalUrls\":{\"args\":[],\"deprecated\":false,\"desc\":\"URLs of external resources associated with this session.\",\"gqltype\":\"[AgentSessionExternalUrlInput!]\",\"list\":true,\"name\":\"externalUrls\",\"reqd\":false,\"type\":\"AgentSessionExternalUrlInput\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"AgentSessionCreateOnComment\"},\"AgentSessionExternalUrlInput\":{\"desc\":\"Input for an external URL associated with an agent session.\",\"fields\":{\"label\":{\"args\":[],\"deprecated\":false,\"desc\":\"Label for the URL.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"label\",\"reqd\":true,\"type\":\"String\"},\"url\":{\"args\":[],\"deprecated\":false,\"desc\":\"The URL of the external resource.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"url\",\"reqd\":true,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"AgentSessionExternalUrlInput\"},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}"
+            source: "graphql"
+            version: 1
+          }
+          graphql: {
+            doc: "mutation AgentSessionCreateCreateOnComment($input: AgentSessionCreateOnComment!) { agentSessionCreateOnComment(input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessionCreateOnComment"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "AgentSessionCreateOnComment!"
+                name: "input"
+              }
+            ]
+          }
+          kind: "graphql"
+          method: "POST"
+          orig: "agentSessionCreateOnComment"
+          select: {
+            "$action": "create_on_comment"
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessionCreateOnComment.agentSession`"
+          }
+        }
+        {
+          contract: {
+            id: "POST agentSessionCreateOnIssue"
+            json: "{\"field\":{\"args\":[{\"gqltype\":\"AgentSessionCreateOnIssue!\",\"name\":\"input\",\"reqd\":true,\"type\":\"AgentSessionCreateOnIssue\"}],\"deprecated\":false,\"desc\":\"Creates a new agent session on an issue.\",\"gqltype\":\"AgentSessionPayload!\",\"list\":false,\"name\":\"agentSessionCreateOnIssue\",\"reqd\":true,\"type\":\"AgentSessionPayload\"},\"invocation\":{\"doc\":\"mutation AgentSessionCreateCreateOnIssue($input: AgentSessionCreateOnIssue!) { agentSessionCreateOnIssue(input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }\",\"field\":\"agentSessionCreateOnIssue\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"\",\"gqltype\":\"AgentSessionCreateOnIssue!\",\"name\":\"input\"}]},\"protocol\":\"graphql\",\"types\":{\"AgentSessionCreateOnIssue\":{\"desc\":\"Input for creating an agent session on an issue.\",\"fields\":{\"externalLink\":{\"args\":[],\"deprecated\":false,\"desc\":\"The URL of an external agent-hosted page associated with this session.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"externalLink\",\"reqd\":false,\"type\":\"String\"},\"externalUrls\":{\"args\":[],\"deprecated\":false,\"desc\":\"URLs of external resources associated with this session.\",\"gqltype\":\"[AgentSessionExternalUrlInput!]\",\"list\":true,\"name\":\"externalUrls\",\"reqd\":false,\"type\":\"AgentSessionExternalUrlInput\"},\"issueId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The issue that this session will be associated with. Can be a UUID or issue identifier (e.g., 'LIN-123').\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"issueId\",\"reqd\":true,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"AgentSessionCreateOnIssue\"},\"AgentSessionExternalUrlInput\":{\"desc\":\"Input for an external URL associated with an agent session.\",\"fields\":{\"label\":{\"args\":[],\"deprecated\":false,\"desc\":\"Label for the URL.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"label\",\"reqd\":true,\"type\":\"String\"},\"url\":{\"args\":[],\"deprecated\":false,\"desc\":\"The URL of the external resource.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"url\",\"reqd\":true,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"AgentSessionExternalUrlInput\"},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}"
+            source: "graphql"
+            version: 1
+          }
+          graphql: {
+            doc: "mutation AgentSessionCreateCreateOnIssue($input: AgentSessionCreateOnIssue!) { agentSessionCreateOnIssue(input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessionCreateOnIssue"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "AgentSessionCreateOnIssue!"
+                name: "input"
+              }
+            ]
+          }
+          kind: "graphql"
+          method: "POST"
+          orig: "agentSessionCreateOnIssue"
+          select: {
+            "$action": "create_on_issue"
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessionCreateOnIssue.agentSession`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "after"
+                orig: "after"
+                reqd: false
+                type: "`$STRING`"
+              }
+              {
+                kind: "param"
+                name: "before"
+                orig: "before"
+                reqd: false
+                type: "`$STRING`"
+              }
+              {
+                kind: "param"
+                name: "first"
+                orig: "first"
+                reqd: false
+                type: "`$INTEGER`"
+              }
+              {
+                kind: "param"
+                name: "include_archived"
+                orig: "include_archived"
+                reqd: false
+                type: "`$BOOLEAN`"
+              }
+              {
+                kind: "param"
+                name: "last"
+                orig: "last"
+                reqd: false
+                type: "`$INTEGER`"
+              }
+              {
+                kind: "param"
+                name: "order_by"
+                orig: "order_by"
+                reqd: false
+                type: "`$ANY`"
+              }
+            ]
+          }
+          contract: {
+            id: "POST agentSessions"
+            json: "{\"field\":{\"args\":[{\"gqltype\":\"String\",\"name\":\"after\",\"reqd\":false,\"type\":\"String\"},{\"gqltype\":\"String\",\"name\":\"before\",\"reqd\":false,\"type\":\"String\"},{\"gqltype\":\"Int\",\"name\":\"first\",\"reqd\":false,\"type\":\"Int\"},{\"gqltype\":\"Boolean\",\"name\":\"includeArchived\",\"reqd\":false,\"type\":\"Boolean\"},{\"gqltype\":\"Int\",\"name\":\"last\",\"reqd\":false,\"type\":\"Int\"},{\"gqltype\":\"PaginationOrderBy\",\"name\":\"orderBy\",\"reqd\":false,\"type\":\"PaginationOrderBy\"}],\"deprecated\":false,\"desc\":\"All agent sessions.\",\"gqltype\":\"AgentSessionConnection!\",\"list\":false,\"name\":\"agentSessions\",\"reqd\":true,\"type\":\"AgentSessionConnection\"},\"invocation\":{\"doc\":\"query AgentSessionList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { agentSessions(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...AgentSessionFields } pageInfo { endCursor hasNextPage } } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }\",\"field\":\"agentSessions\",\"optype\":\"query\",\"page\":{\"cursor\":\"pageInfo.endCursor\",\"more\":\"pageInfo.hasNextPage\",\"nodes\":\"nodes\",\"style\":\"relay\"},\"vars\":[{\"from\":\"after\",\"gqltype\":\"String\",\"name\":\"after\"},{\"from\":\"before\",\"gqltype\":\"String\",\"name\":\"before\"},{\"from\":\"first\",\"gqltype\":\"Int\",\"name\":\"first\"},{\"from\":\"includeArchived\",\"gqltype\":\"Boolean\",\"name\":\"includeArchived\"},{\"from\":\"last\",\"gqltype\":\"Int\",\"name\":\"last\"},{\"from\":\"orderBy\",\"gqltype\":\"PaginationOrderBy\",\"name\":\"orderBy\"}]},\"protocol\":\"graphql\",\"types\":{\"Boolean\":{\"desc\":\"The `Boolean` scalar type represents `true` or `false`.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Boolean\"},\"Int\":{\"desc\":\"The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Int\"},\"PaginationOrderBy\":{\"desc\":\"By which field should the pagination order by\",\"fields\":{},\"kind\":\"ENUM\",\"name\":\"PaginationOrderBy\",\"values\":[\"createdAt\",\"updatedAt\"]},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}"
+            source: "graphql"
+            version: 1
+          }
+          graphql: {
+            doc: "query AgentSessionList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { agentSessions(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...AgentSessionFields } pageInfo { endCursor hasNextPage } } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessions"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          kind: "graphql"
+          method: "POST"
+          orig: "agentSessions"
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessions.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "id"
+                orig: "id"
+                reqd: true
+                type: "`$STRING`"
+              }
+            ]
+          }
+          contract: {
+            id: "POST agentSession"
+            json: "{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"id\",\"reqd\":true,\"type\":\"String\"}],\"deprecated\":false,\"desc\":\"A specific agent session.\",\"gqltype\":\"AgentSession!\",\"list\":false,\"name\":\"agentSession\",\"reqd\":true,\"type\":\"AgentSession\"},\"invocation\":{\"doc\":\"query AgentSessionLoad($id: String!) { agentSession(id: $id) { ...AgentSessionFields } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }\",\"field\":\"agentSession\",\"optype\":\"query\",\"vars\":[{\"from\":\"id\",\"gqltype\":\"String!\",\"name\":\"id\"}]},\"protocol\":\"graphql\",\"types\":{\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}"
+            source: "graphql"
+            version: 1
+          }
+          graphql: {
+            doc: "query AgentSessionLoad($id: String!) { agentSession(id: $id) { ...AgentSessionFields } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSession"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          kind: "graphql"
+          method: "POST"
+          orig: "agentSession"
+          select: {
+            exist: [
+              "id"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data.agentSession`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "id"
+                orig: "id"
+                reqd: true
+                type: "`$STRING`"
+              }
+            ]
+          }
+          contract: {
+            id: "POST agentSessionRestartWithDefaultModel"
+            json: "{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"id\",\"reqd\":true,\"type\":\"String\"}],\"deprecated\":false,\"desc\":\"[Internal] Restarts a routed coding session with the default model.\",\"gqltype\":\"AgentSessionPayload!\",\"list\":false,\"name\":\"agentSessionRestartWithDefaultModel\",\"reqd\":true,\"type\":\"AgentSessionPayload\"},\"invocation\":{\"doc\":\"mutation AgentSessionUpdateRestartWithDefaultModel($id: String!) { agentSessionRestartWithDefaultModel(id: $id) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }\",\"field\":\"agentSessionRestartWithDefaultModel\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"id\",\"gqltype\":\"String!\",\"name\":\"id\"}]},\"protocol\":\"graphql\",\"types\":{\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}"
+            source: "graphql"
+            version: 1
+          }
+          graphql: {
+            doc: "mutation AgentSessionUpdateRestartWithDefaultModel($id: String!) { agentSessionRestartWithDefaultModel(id: $id) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessionRestartWithDefaultModel"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          kind: "graphql"
+          method: "POST"
+          orig: "agentSessionRestartWithDefaultModel"
+          select: {
+            "$action": "restart_with_default_model"
+            exist: [
+              "id"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessionRestartWithDefaultModel.agentSession`"
+          }
+        }
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "id"
+                orig: "id"
+                reqd: true
+                type: "`$STRING`"
+              }
+            ]
+          }
+          contract: {
+            id: "POST agentSessionUpdate"
+            json: "{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"id\",\"reqd\":true,\"type\":\"String\"},{\"gqltype\":\"AgentSessionUpdateInput!\",\"name\":\"input\",\"reqd\":true,\"type\":\"AgentSessionUpdateInput\"}],\"deprecated\":false,\"desc\":\"Updates an agent session.\",\"gqltype\":\"AgentSessionPayload!\",\"list\":false,\"name\":\"agentSessionUpdate\",\"reqd\":true,\"type\":\"AgentSessionPayload\"},\"invocation\":{\"doc\":\"mutation AgentSessionUpdate($id: String!, $input: AgentSessionUpdateInput!) { agentSessionUpdate(id: $id, input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }\",\"field\":\"agentSessionUpdate\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"id\",\"gqltype\":\"String!\",\"name\":\"id\"},{\"from\":\"\",\"gqltype\":\"AgentSessionUpdateInput!\",\"name\":\"input\"}]},\"protocol\":\"graphql\",\"types\":{\"AgentSessionExternalUrlInput\":{\"desc\":\"Input for an external URL associated with an agent session.\",\"fields\":{\"label\":{\"args\":[],\"deprecated\":false,\"desc\":\"Label for the URL.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"label\",\"reqd\":true,\"type\":\"String\"},\"url\":{\"args\":[],\"deprecated\":false,\"desc\":\"The URL of the external resource.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"url\",\"reqd\":true,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"AgentSessionExternalUrlInput\"},\"AgentSessionUpdateInput\":{\"desc\":\"Input for updating an agent session.\",\"fields\":{\"addedExternalUrls\":{\"args\":[],\"deprecated\":false,\"desc\":\"URLs of external resources to be added to this session. Only updatable by the OAuth application that owns the session.\",\"gqltype\":\"[AgentSessionExternalUrlInput!]\",\"list\":true,\"name\":\"addedExternalUrls\",\"reqd\":false,\"type\":\"AgentSessionExternalUrlInput\"},\"dismissedAt\":{\"args\":[],\"deprecated\":false,\"desc\":\"[Internal] The time at which the agent session was dismissed. Set to null to un-dismiss. Only updatable by internal clients.\",\"gqltype\":\"DateTime\",\"list\":false,\"name\":\"dismissedAt\",\"reqd\":false,\"type\":\"DateTime\"},\"externalLink\":{\"args\":[],\"deprecated\":false,\"desc\":\"The URL of an external agent-hosted page associated with this session. Only updatable by the OAuth application that owns the session.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"externalLink\",\"reqd\":false,\"type\":\"String\"},\"externalUrls\":{\"args\":[],\"deprecated\":false,\"desc\":\"URLs of external resources associated with this session. Replaces existing URLs. Only updatable by the OAuth application that owns the session. If supplied, addedExternalUrls and removedExternalUrls are ignored.\",\"gqltype\":\"[AgentSessionExternalUrlInput!]\",\"list\":true,\"name\":\"externalUrls\",\"reqd\":false,\"type\":\"AgentSessionExternalUrlInput\"},\"plan\":{\"args\":[],\"deprecated\":false,\"desc\":\"A dynamically updated list of the agent's execution strategy. Only updatable by the OAuth application that owns the session.\",\"gqltype\":\"JSONObject\",\"list\":false,\"name\":\"plan\",\"reqd\":false,\"type\":\"JSONObject\"},\"removedExternalUrls\":{\"args\":[],\"deprecated\":false,\"desc\":\"URLs to be removed from this session. Only updatable by the OAuth application that owns the session.\",\"gqltype\":\"[String!]\",\"list\":true,\"name\":\"removedExternalUrls\",\"reqd\":false,\"type\":\"String\"},\"summary\":{\"args\":[],\"deprecated\":false,\"desc\":\"The session title, displayed as its summary. Must contain 1 to 255 characters, including a non-whitespace character, with no line breaks or NUL bytes. Set to null to clear it and allow automatic title generation. Updating only this field does not acknowledge the session. Only updatable by the OAuth application that owns the session.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"summary\",\"reqd\":false,\"type\":\"String\"},\"userState\":{\"args\":[],\"deprecated\":false,\"desc\":\"[Internal] User-specific state for the agent session. Only updatable by internal clients.\",\"gqltype\":\"[AgentSessionUserStateInput!]\",\"list\":true,\"name\":\"userState\",\"reqd\":false,\"type\":\"AgentSessionUserStateInput\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"AgentSessionUpdateInput\"},\"AgentSessionUserStateInput\":{\"fields\":{\"lastReadAt\":{\"args\":[],\"deprecated\":false,\"desc\":\"The time at which the user most recently viewed the session.\",\"gqltype\":\"DateTime\",\"list\":false,\"name\":\"lastReadAt\",\"reqd\":false,\"type\":\"DateTime\"},\"userId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The ID of the user this state belongs to.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"userId\",\"reqd\":true,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"AgentSessionUserStateInput\"},\"DateTime\":{\"desc\":\"Represents a date and time in ISO 8601 format. Accepts shortcuts like `2021` to represent midnight Fri Jan 01 2021. Also accepts ISO 8601 durations strings which are added to the current date to create the represented date (e.g '-P2W1D' represents the date that was two weeks and 1 day ago)\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"DateTime\"},\"JSONObject\":{\"desc\":\"The `JSONObject` scalar type represents arbitrary values as *embedded* JSON\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"JSONObject\"},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}"
+            source: "graphql"
+            version: 1
+          }
+          graphql: {
+            doc: "mutation AgentSessionUpdate($id: String!, $input: AgentSessionUpdateInput!) { agentSessionUpdate(id: $id, input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessionUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "AgentSessionUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          kind: "graphql"
+          method: "POST"
+          orig: "agentSessionUpdate"
+          select: {
+            exist: [
+              "id"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessionUpdate.agentSession`"
+          }
+        }
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "id"
+                orig: "id"
+                reqd: true
+                type: "`$STRING`"
+              }
+            ]
+          }
+          contract: {
+            id: "POST agentSessionUpdateExternalUrl"
+            json: "{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"id\",\"reqd\":true,\"type\":\"String\"},{\"gqltype\":\"AgentSessionUpdateExternalUrlInput!\",\"name\":\"input\",\"reqd\":true,\"type\":\"AgentSessionUpdateExternalUrlInput\"}],\"deprecated\":false,\"desc\":\"Updates the externalUrl of an agent session, which is an agent-hosted page associated with this session.\",\"gqltype\":\"AgentSessionPayload!\",\"list\":false,\"name\":\"agentSessionUpdateExternalUrl\",\"reqd\":true,\"type\":\"AgentSessionPayload\"},\"invocation\":{\"doc\":\"mutation AgentSessionUpdateUpdateExternalUrl($id: String!, $input: AgentSessionUpdateExternalUrlInput!) { agentSessionUpdateExternalUrl(id: $id, input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }\",\"field\":\"agentSessionUpdateExternalUrl\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"id\",\"gqltype\":\"String!\",\"name\":\"id\"},{\"from\":\"\",\"gqltype\":\"AgentSessionUpdateExternalUrlInput!\",\"name\":\"input\"}]},\"protocol\":\"graphql\",\"types\":{\"AgentSessionExternalUrlInput\":{\"desc\":\"Input for an external URL associated with an agent session.\",\"fields\":{\"label\":{\"args\":[],\"deprecated\":false,\"desc\":\"Label for the URL.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"label\",\"reqd\":true,\"type\":\"String\"},\"url\":{\"args\":[],\"deprecated\":false,\"desc\":\"The URL of the external resource.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"url\",\"reqd\":true,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"AgentSessionExternalUrlInput\"},\"AgentSessionUpdateExternalUrlInput\":{\"desc\":\"Input for updating the external URLs of an agent session.\",\"fields\":{\"addedExternalUrls\":{\"args\":[],\"deprecated\":false,\"desc\":\"URLs of external resources to be added to this session.\",\"gqltype\":\"[AgentSessionExternalUrlInput!]\",\"list\":true,\"name\":\"addedExternalUrls\",\"reqd\":false,\"type\":\"AgentSessionExternalUrlInput\"},\"externalLink\":{\"args\":[],\"deprecated\":false,\"desc\":\"The URL of an external agent-hosted page associated with this session.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"externalLink\",\"reqd\":false,\"type\":\"String\"},\"externalUrls\":{\"args\":[],\"deprecated\":false,\"desc\":\"URLs of external resources associated with this session. Replaces existing URLs.\",\"gqltype\":\"[AgentSessionExternalUrlInput!]\",\"list\":true,\"name\":\"externalUrls\",\"reqd\":false,\"type\":\"AgentSessionExternalUrlInput\"},\"removedExternalUrls\":{\"args\":[],\"deprecated\":false,\"desc\":\"URLs to be removed from this session.\",\"gqltype\":\"[String!]\",\"list\":true,\"name\":\"removedExternalUrls\",\"reqd\":false,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"AgentSessionUpdateExternalUrlInput\"},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}"
+            source: "graphql"
+            version: 1
+          }
+          graphql: {
+            doc: "mutation AgentSessionUpdateUpdateExternalUrl($id: String!, $input: AgentSessionUpdateExternalUrlInput!) { agentSessionUpdateExternalUrl(id: $id, input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessionUpdateExternalUrl"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "AgentSessionUpdateExternalUrlInput!"
+                name: "input"
+              }
+            ]
+          }
+          kind: "graphql"
+          method: "POST"
+          orig: "agentSessionUpdateExternalUrl"
+          select: {
+            "$action": "update_external_url"
+            exist: [
+              "id"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessionUpdateExternalUrl.agentSession`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

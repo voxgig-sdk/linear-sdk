@@ -316,23 +316,111 @@ static Entity** team_list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl,
 }
 
 
-static Entity* team_create(Entity* e, voxgig_value* reqarg, voxgig_value* ctrl, PNError** err) {
-  (void)e; (void)reqarg; (void)ctrl;
-  *err = unsupported_op("create", "team");
-  return NULL;
+
+static void team_create_postdone(team_entity* self, Context* ctx) {
+  SdkResult* result = ctx->result;
+  if (result) {
+    voxgig_value* resdata = result->resdata;
+    if (!v_is_noval(resdata) && !v_is_null(resdata)) {
+      voxgig_value* m = to_map(voxgig_clone(resdata));
+      self->data = voxgig_is_map(m) ? m : voxgig_new_map();
+    }
+  }
 }
 
-static Entity* team_update(Entity* e, voxgig_value* reqarg, voxgig_value* ctrl, PNError** err) {
-  (void)e; (void)reqarg; (void)ctrl;
-  *err = unsupported_op("update", "team");
-  return NULL;
+static Entity* team_create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err) {
+  team_entity* self = (team_entity*)e;
+  CtxSpec cs;
+  memset(&cs, 0, sizeof(cs));
+  cs.opname = "create";
+  cs.ctrl = ctrl;
+  cs.mtch = self->mtch;
+  cs.data = self->data;
+  cs.reqdata = reqdata;
+  Context* ctx = make_context_util(cs, team_ent_ctx(self));
+  team_run_op(self, ctx, team_create_postdone, err);
+  if (*err) return NULL;
+
+  // The operation resolves to THIS entity: run_op has just absorbed the
+  // result into it, and the caller reaches the record through vt->data.
+  // See AGENTS.md "Entity operations return ENTITIES".
+
+  return e;
 }
 
-static Entity* team_remove(Entity* e, voxgig_value* reqarg, voxgig_value* ctrl, PNError** err) {
-  (void)e; (void)reqarg; (void)ctrl;
-  *err = unsupported_op("remove", "team");
-  return NULL;
+
+
+static void team_update_postdone(team_entity* self, Context* ctx) {
+  SdkResult* result = ctx->result;
+  if (result) {
+    voxgig_value* resmatch = result->resmatch;
+    voxgig_value* resdata = result->resdata;
+    if (voxgig_is_map(resmatch)) self->mtch = resmatch;
+    if (!v_is_noval(resdata) && !v_is_null(resdata)) {
+      voxgig_value* m = to_map(voxgig_clone(resdata));
+      self->data = voxgig_is_map(m) ? m : voxgig_new_map();
+    }
+  }
 }
+
+static Entity* team_update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err) {
+  team_entity* self = (team_entity*)e;
+  CtxSpec cs;
+  memset(&cs, 0, sizeof(cs));
+  cs.opname = "update";
+  cs.ctrl = ctrl;
+  cs.mtch = self->mtch;
+  cs.data = self->data;
+  cs.reqdata = reqdata;
+  Context* ctx = make_context_util(cs, team_ent_ctx(self));
+  team_run_op(self, ctx, team_update_postdone, err);
+  if (*err) return NULL;
+
+  // The operation resolves to THIS entity: run_op has just absorbed the
+  // result into it, and the caller reaches the record through vt->data.
+  // See AGENTS.md "Entity operations return ENTITIES".
+
+  return e;
+}
+
+
+
+static void team_remove_postdone(team_entity* self, Context* ctx) {
+  SdkResult* result = ctx->result;
+  if (result) {
+    voxgig_value* resmatch = result->resmatch;
+    voxgig_value* resdata = result->resdata;
+    if (voxgig_is_map(resmatch)) self->mtch = resmatch;
+    if (!v_is_noval(resdata) && !v_is_null(resdata)) {
+      voxgig_value* m = to_map(voxgig_clone(resdata));
+      self->data = voxgig_is_map(m) ? m : voxgig_new_map();
+    }
+  }
+}
+
+static Entity* team_remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err) {
+  team_entity* self = (team_entity*)e;
+  CtxSpec cs;
+  memset(&cs, 0, sizeof(cs));
+  cs.opname = "remove";
+  cs.ctrl = ctrl;
+  cs.mtch = self->mtch;
+  cs.data = self->data;
+  cs.reqmatch = reqmatch;
+  Context* ctx = make_context_util(cs, team_ent_ctx(self));
+  team_run_op(self, ctx, team_remove_postdone, err);
+  if (*err) return NULL;
+
+  // The operation resolves to THIS entity: run_op has just absorbed the
+  // result into it, and the caller reaches the record through vt->data.
+  // See AGENTS.md "Entity operations return ENTITIES".
+
+  // A removed entity keeps its data but is no longer a live record.
+  self->deleted = true;
+
+  return e;
+}
+
 
 // `remove` resolves to the entity, marked. The instance KEEPS the data it
 // held - a caller can still read what was deleted - but it is no longer a

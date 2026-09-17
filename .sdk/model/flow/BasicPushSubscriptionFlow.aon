@@ -1,0 +1,31 @@
+# BasicPushSubscriptionFlow
+
+main: kit: flow: BasicPushSubscriptionFlow:
+{
+  entity: "push_subscription",
+  kind: "basic",
+  name: "BasicPushSubscriptionFlow",
+  step: [
+    {
+      input: {
+        ref: "push_subscription_ref01"
+      }
+
+      op: "create"
+    }
+
+    {
+      input: {
+        ref: "push_subscription_ref01",
+        suffix: "_rm0"
+      }
+
+      match: {
+        id: "push_subscription01"
+      }
+
+      op: "remove"
+    }
+  ],
+  "key$": "BasicPushSubscriptionFlow"
+}

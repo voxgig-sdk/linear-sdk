@@ -1,0 +1,167 @@
+{
+  "existing": {
+    "authentication_session_response": {
+      "AUTHENTICATION_SESSION_RESPONSE00": {
+        "browserType": "sc8",
+        "client": "sc9",
+        "countryCodes": "sca",
+        "createdAt": "scb",
+        "detailedName": "scc",
+        "id": "AUTHENTICATION_SESSION_RESPONSE00",
+        "ip": "sce",
+        "isCurrentSession": false,
+        "lastActiveAt": "sd0",
+        "location": "sd1",
+        "locationCity": "sd2",
+        "locationCountry": "sd3",
+        "locationCountryCode": "sd4",
+        "locationRegionCode": "sd5",
+        "name": "sd6",
+        "operatingSystem": "sd7",
+        "service": "sd8",
+        "type": "sd9",
+        "updatedAt": "sda",
+        "userAgent": "sdb"
+      },
+      "AUTHENTICATION_SESSION_RESPONSE01": {
+        "browserType": "s190",
+        "client": "s191",
+        "countryCodes": "s192",
+        "createdAt": "s193",
+        "detailedName": "s194",
+        "id": "AUTHENTICATION_SESSION_RESPONSE01",
+        "ip": "s196",
+        "isCurrentSession": false,
+        "lastActiveAt": "s198",
+        "location": "s199",
+        "locationCity": "s19a",
+        "locationCountry": "s19b",
+        "locationCountryCode": "s19c",
+        "locationRegionCode": "s19d",
+        "name": "s19e",
+        "operatingSystem": "s19f",
+        "service": "s1a0",
+        "type": "s1a1",
+        "updatedAt": "s1a2",
+        "userAgent": "s1a3"
+      },
+      "AUTHENTICATION_SESSION_RESPONSE02": {
+        "browserType": "s258",
+        "client": "s259",
+        "countryCodes": "s25a",
+        "createdAt": "s25b",
+        "detailedName": "s25c",
+        "id": "AUTHENTICATION_SESSION_RESPONSE02",
+        "ip": "s25e",
+        "isCurrentSession": false,
+        "lastActiveAt": "s260",
+        "location": "s261",
+        "locationCity": "s262",
+        "locationCountry": "s263",
+        "locationCountryCode": "s264",
+        "locationRegionCode": "s265",
+        "name": "s266",
+        "operatingSystem": "s267",
+        "service": "s268",
+        "type": "s269",
+        "updatedAt": "s26a",
+        "userAgent": "s26b"
+      }
+    }
+  },
+  "new": {
+    "authentication_session_response": {
+      "authentication_session_response_ref01": {
+        "browserType": "s320",
+        "client": "s321",
+        "countryCodes": "s322",
+        "createdAt": "s323",
+        "detailedName": "s324",
+        "ip": "s326",
+        "isCurrentSession": false,
+        "lastActiveAt": "s328",
+        "location": "s329",
+        "locationCity": "s32a",
+        "locationCountry": "s32b",
+        "locationCountryCode": "s32c",
+        "locationRegionCode": "s32d",
+        "name": "s32e",
+        "operatingSystem": "s32f",
+        "service": "s330",
+        "type": "s331",
+        "updatedAt": "s332",
+        "userAgent": "s333"
+      }
+    }
+  },
+  "requests": {
+    "POST userSessions": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "id",
+              "reqd": true,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Lists all active authentication sessions for a user. Can only be called by a workspace admin or owner.",
+          "gqltype": "[AuthenticationSessionResponse!]!",
+          "list": true,
+          "name": "userSessions",
+          "reqd": true,
+          "type": "AuthenticationSessionResponse"
+        },
+        "invocation": {
+          "doc": "query AuthenticationSessionResponseList($id: String!) { userSessions(id: $id) { ...AuthenticationSessionResponseFields } } fragment AuthenticationSessionResponseFields on AuthenticationSessionResponse { browserType client countryCodes createdAt detailedName id ip isCurrentSession lastActiveAt location locationCity locationCountry locationCountryCode locationRegionCode name operatingSystem service type updatedAt userAgent }",
+          "field": "userSessions",
+          "optype": "query",
+          "vars": [
+            {
+              "from": "id",
+              "gqltype": "String!",
+              "name": "id"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST authenticationSessions": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [],
+          "deprecated": false,
+          "desc": "User's active sessions.",
+          "gqltype": "[AuthenticationSessionResponse!]!",
+          "list": true,
+          "name": "authenticationSessions",
+          "reqd": true,
+          "type": "AuthenticationSessionResponse"
+        },
+        "invocation": {
+          "doc": "query AuthenticationSessionResponseList { authenticationSessions { ...AuthenticationSessionResponseFields } } fragment AuthenticationSessionResponseFields on AuthenticationSessionResponse { browserType client countryCodes createdAt detailedName id ip isCurrentSession lastActiveAt location locationCity locationCountry locationCountryCode locationRegionCode name operatingSystem service type updatedAt userAgent }",
+          "field": "authenticationSessions",
+          "optype": "query",
+          "vars": []
+        },
+        "protocol": "graphql",
+        "types": {},
+        "typesScope": "inputs"
+      }
+    }
+  }
+}

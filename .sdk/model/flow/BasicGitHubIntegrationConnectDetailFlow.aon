@@ -1,0 +1,53 @@
+# BasicGitHubIntegrationConnectDetailFlow
+
+main: kit: flow: BasicGitHubIntegrationConnectDetailFlow:
+{
+  entity: "git_hub_integration_connect_detail",
+  kind: "basic",
+  name: "BasicGitHubIntegrationConnectDetailFlow",
+  step: [
+    {
+      input: {
+        ref: "git_hub_integration_connect_detail_ref01"
+      }
+
+      match: {
+        code: "code01",
+        custom_view_id: "custom_view01",
+        initiative_id: "initiative01",
+        integration_id: "integration01",
+        project_id: "project01",
+        redirect_uri: "redirect_uri01",
+        service: "service01",
+        should_use_v2_auth: "should_use_v2_auth01",
+        team_id: "team01"
+      }
+
+      op: "create"
+    }
+
+    {
+      data: {
+        integration_id: "integration01"
+      }
+
+      input: {
+        ref: "git_hub_integration_connect_detail_ref01",
+        srcdatavar: "git_hub_integration_connect_detail_ref01_data",
+        suffix: "_up0",
+        textfield: "lostRepositoryNames"
+      }
+
+      op: "update",
+      spec: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-git_hub_integration_connect_detail_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicGitHubIntegrationConnectDetailFlow"
+}

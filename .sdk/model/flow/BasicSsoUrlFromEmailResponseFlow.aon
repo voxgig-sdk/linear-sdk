@@ -1,0 +1,34 @@
+# BasicSsoUrlFromEmailResponseFlow
+
+main: kit: flow: BasicSsoUrlFromEmailResponseFlow:
+{
+  entity: "sso_url_from_email_response",
+  kind: "basic",
+  name: "BasicSsoUrlFromEmailResponseFlow",
+  step: [
+    {
+      input: {
+        ref: "sso_url_from_email_response_ref01",
+        srcdatavar: "sso_url_from_email_response_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        email: "email01",
+        is_desktop: "is_desktop01",
+        type: "type01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-sso_url_from_email_response_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicSsoUrlFromEmailResponseFlow"
+}

@@ -1,0 +1,1007 @@
+{
+  "existing": {
+    "agent_session": {
+      "AGENT_SESSION00": {
+        "appUser": {},
+        "archivedAt": "se7",
+        "codingHarnessModelLabel": "se8",
+        "comment": {},
+        "context": "sea",
+        "createdAt": "seb",
+        "creator": {},
+        "dismissedAt": "sed",
+        "dismissedBy": {},
+        "endedAt": "sef",
+        "id": "AGENT_SESSION00",
+        "issue": {},
+        "modelSelection": "sf2",
+        "plan": "sf3",
+        "pullRequest": {},
+        "slugId": "sf5",
+        "sourceComment": {},
+        "sourceMetadata": "sf7",
+        "startedAt": "sf8",
+        "status": "sf9",
+        "summary": "sfa",
+        "updatedAt": "sfb",
+        "url": "sfc",
+        "pull_request_id": "PULL_REQUEST01",
+        "after": "AFTER01",
+        "before": "BEFORE01",
+        "first": "FIRST01",
+        "include_archived": "INCLUDE_ARCHIVED01",
+        "last": "LAST01",
+        "order_by": "ORDER_BY01"
+      },
+      "AGENT_SESSION01": {
+        "appUser": {},
+        "archivedAt": "s1cd",
+        "codingHarnessModelLabel": "s1ce",
+        "comment": {},
+        "context": "s1d0",
+        "createdAt": "s1d1",
+        "creator": {},
+        "dismissedAt": "s1d3",
+        "dismissedBy": {},
+        "endedAt": "s1d5",
+        "id": "AGENT_SESSION01",
+        "issue": {},
+        "modelSelection": "s1d8",
+        "plan": "s1d9",
+        "pullRequest": {},
+        "slugId": "s1db",
+        "sourceComment": {},
+        "sourceMetadata": "s1dd",
+        "startedAt": "s1de",
+        "status": "s1df",
+        "summary": "s1e0",
+        "updatedAt": "s1e1",
+        "url": "s1e2",
+        "pull_request_id": "PULL_REQUEST01",
+        "after": "AFTER01",
+        "before": "BEFORE01",
+        "first": "FIRST01",
+        "include_archived": "INCLUDE_ARCHIVED01",
+        "last": "LAST01",
+        "order_by": "ORDER_BY01"
+      },
+      "AGENT_SESSION02": {
+        "appUser": {},
+        "archivedAt": "s2b3",
+        "codingHarnessModelLabel": "s2b4",
+        "comment": {},
+        "context": "s2b6",
+        "createdAt": "s2b7",
+        "creator": {},
+        "dismissedAt": "s2b9",
+        "dismissedBy": {},
+        "endedAt": "s2bb",
+        "id": "AGENT_SESSION02",
+        "issue": {},
+        "modelSelection": "s2be",
+        "plan": "s2bf",
+        "pullRequest": {},
+        "slugId": "s2c1",
+        "sourceComment": {},
+        "sourceMetadata": "s2c3",
+        "startedAt": "s2c4",
+        "status": "s2c5",
+        "summary": "s2c6",
+        "updatedAt": "s2c7",
+        "url": "s2c8",
+        "pull_request_id": "PULL_REQUEST01",
+        "after": "AFTER01",
+        "before": "BEFORE01",
+        "first": "FIRST01",
+        "include_archived": "INCLUDE_ARCHIVED01",
+        "last": "LAST01",
+        "order_by": "ORDER_BY01"
+      }
+    }
+  },
+  "new": {
+    "agent_session": {
+      "agent_session_ref01": {
+        "appUser": {},
+        "archivedAt": "s399",
+        "codingHarnessModelLabel": "s39a",
+        "comment": {},
+        "context": "s39c",
+        "createdAt": "s39d",
+        "creator": {},
+        "dismissedAt": "s39f",
+        "dismissedBy": {},
+        "endedAt": "s3a1",
+        "issue": {},
+        "modelSelection": "s3a4",
+        "plan": "s3a5",
+        "pullRequest": {},
+        "slugId": "s3a7",
+        "sourceComment": {},
+        "sourceMetadata": "s3a9",
+        "startedAt": "s3aa",
+        "status": "s3ab",
+        "summary": "s3ac",
+        "updatedAt": "s3ad",
+        "url": "s3ae"
+      }
+    }
+  },
+  "requests": {
+    "POST agentSessionCreate": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "AgentSessionCreateInput!",
+              "name": "input",
+              "reqd": true,
+              "type": "AgentSessionCreateInput"
+            },
+            {
+              "gqltype": "String",
+              "name": "pullRequestId",
+              "reqd": false,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "[Internal] Creates a new agent session on behalf of the current user",
+          "gqltype": "AgentSessionPayload!",
+          "list": false,
+          "name": "agentSessionCreate",
+          "reqd": true,
+          "type": "AgentSessionPayload"
+        },
+        "invocation": {
+          "doc": "mutation AgentSessionCreate($input: AgentSessionCreateInput!, $pullRequestId: String) { agentSessionCreate(input: $input, pullRequestId: $pullRequestId) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }",
+          "field": "agentSessionCreate",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "",
+              "gqltype": "AgentSessionCreateInput!",
+              "name": "input"
+            },
+            {
+              "from": "pullRequestId",
+              "gqltype": "String",
+              "name": "pullRequestId"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "AgentSessionCreateInput": {
+            "desc": "[Internal] Input for creating an agent session on behalf of the current user.",
+            "fields": {
+              "appUserId": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The app user (agent) to create a session for.",
+                "gqltype": "String!",
+                "list": false,
+                "name": "appUserId",
+                "reqd": true,
+                "type": "String"
+              },
+              "context": {
+                "args": [],
+                "deprecated": false,
+                "desc": "[Internal] No longer supported.",
+                "gqltype": "JSONObject",
+                "list": false,
+                "name": "context",
+                "reqd": false,
+                "type": "JSONObject"
+              },
+              "id": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The identifier in UUID v4 format. If none is provided, the backend will generate one.",
+                "gqltype": "String",
+                "list": false,
+                "name": "id",
+                "reqd": false,
+                "type": "String"
+              },
+              "issueId": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The issue that this session will be associated with. Can be a UUID or issue identifier (e.g., 'LIN-123').",
+                "gqltype": "String",
+                "list": false,
+                "name": "issueId",
+                "reqd": false,
+                "type": "String"
+              }
+            },
+            "kind": "INPUT_OBJECT",
+            "name": "AgentSessionCreateInput"
+          },
+          "JSONObject": {
+            "desc": "The `JSONObject` scalar type represents arbitrary values as *embedded* JSON",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "JSONObject"
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST agentSessionCreateOnComment": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "AgentSessionCreateOnComment!",
+              "name": "input",
+              "reqd": true,
+              "type": "AgentSessionCreateOnComment"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Creates a new agent session on a root comment.",
+          "gqltype": "AgentSessionPayload!",
+          "list": false,
+          "name": "agentSessionCreateOnComment",
+          "reqd": true,
+          "type": "AgentSessionPayload"
+        },
+        "invocation": {
+          "doc": "mutation AgentSessionCreateCreateOnComment($input: AgentSessionCreateOnComment!) { agentSessionCreateOnComment(input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }",
+          "field": "agentSessionCreateOnComment",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "",
+              "gqltype": "AgentSessionCreateOnComment!",
+              "name": "input"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "AgentSessionCreateOnComment": {
+            "desc": "Input for creating an agent session on a root comment.",
+            "fields": {
+              "commentId": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The root comment that this session will be associated with.",
+                "gqltype": "String!",
+                "list": false,
+                "name": "commentId",
+                "reqd": true,
+                "type": "String"
+              },
+              "externalLink": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The URL of an external agent-hosted page associated with this session.",
+                "gqltype": "String",
+                "list": false,
+                "name": "externalLink",
+                "reqd": false,
+                "type": "String"
+              },
+              "externalUrls": {
+                "args": [],
+                "deprecated": false,
+                "desc": "URLs of external resources associated with this session.",
+                "gqltype": "[AgentSessionExternalUrlInput!]",
+                "list": true,
+                "name": "externalUrls",
+                "reqd": false,
+                "type": "AgentSessionExternalUrlInput"
+              }
+            },
+            "kind": "INPUT_OBJECT",
+            "name": "AgentSessionCreateOnComment"
+          },
+          "AgentSessionExternalUrlInput": {
+            "desc": "Input for an external URL associated with an agent session.",
+            "fields": {
+              "label": {
+                "args": [],
+                "deprecated": false,
+                "desc": "Label for the URL.",
+                "gqltype": "String!",
+                "list": false,
+                "name": "label",
+                "reqd": true,
+                "type": "String"
+              },
+              "url": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The URL of the external resource.",
+                "gqltype": "String!",
+                "list": false,
+                "name": "url",
+                "reqd": true,
+                "type": "String"
+              }
+            },
+            "kind": "INPUT_OBJECT",
+            "name": "AgentSessionExternalUrlInput"
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST agentSessionCreateOnIssue": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "AgentSessionCreateOnIssue!",
+              "name": "input",
+              "reqd": true,
+              "type": "AgentSessionCreateOnIssue"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Creates a new agent session on an issue.",
+          "gqltype": "AgentSessionPayload!",
+          "list": false,
+          "name": "agentSessionCreateOnIssue",
+          "reqd": true,
+          "type": "AgentSessionPayload"
+        },
+        "invocation": {
+          "doc": "mutation AgentSessionCreateCreateOnIssue($input: AgentSessionCreateOnIssue!) { agentSessionCreateOnIssue(input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }",
+          "field": "agentSessionCreateOnIssue",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "",
+              "gqltype": "AgentSessionCreateOnIssue!",
+              "name": "input"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "AgentSessionCreateOnIssue": {
+            "desc": "Input for creating an agent session on an issue.",
+            "fields": {
+              "externalLink": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The URL of an external agent-hosted page associated with this session.",
+                "gqltype": "String",
+                "list": false,
+                "name": "externalLink",
+                "reqd": false,
+                "type": "String"
+              },
+              "externalUrls": {
+                "args": [],
+                "deprecated": false,
+                "desc": "URLs of external resources associated with this session.",
+                "gqltype": "[AgentSessionExternalUrlInput!]",
+                "list": true,
+                "name": "externalUrls",
+                "reqd": false,
+                "type": "AgentSessionExternalUrlInput"
+              },
+              "issueId": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The issue that this session will be associated with. Can be a UUID or issue identifier (e.g., 'LIN-123').",
+                "gqltype": "String!",
+                "list": false,
+                "name": "issueId",
+                "reqd": true,
+                "type": "String"
+              }
+            },
+            "kind": "INPUT_OBJECT",
+            "name": "AgentSessionCreateOnIssue"
+          },
+          "AgentSessionExternalUrlInput": {
+            "desc": "Input for an external URL associated with an agent session.",
+            "fields": {
+              "label": {
+                "args": [],
+                "deprecated": false,
+                "desc": "Label for the URL.",
+                "gqltype": "String!",
+                "list": false,
+                "name": "label",
+                "reqd": true,
+                "type": "String"
+              },
+              "url": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The URL of the external resource.",
+                "gqltype": "String!",
+                "list": false,
+                "name": "url",
+                "reqd": true,
+                "type": "String"
+              }
+            },
+            "kind": "INPUT_OBJECT",
+            "name": "AgentSessionExternalUrlInput"
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST agentSessions": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String",
+              "name": "after",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "before",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "Int",
+              "name": "first",
+              "reqd": false,
+              "type": "Int"
+            },
+            {
+              "gqltype": "Boolean",
+              "name": "includeArchived",
+              "reqd": false,
+              "type": "Boolean"
+            },
+            {
+              "gqltype": "Int",
+              "name": "last",
+              "reqd": false,
+              "type": "Int"
+            },
+            {
+              "gqltype": "PaginationOrderBy",
+              "name": "orderBy",
+              "reqd": false,
+              "type": "PaginationOrderBy"
+            }
+          ],
+          "deprecated": false,
+          "desc": "All agent sessions.",
+          "gqltype": "AgentSessionConnection!",
+          "list": false,
+          "name": "agentSessions",
+          "reqd": true,
+          "type": "AgentSessionConnection"
+        },
+        "invocation": {
+          "doc": "query AgentSessionList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { agentSessions(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...AgentSessionFields } pageInfo { endCursor hasNextPage } } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }",
+          "field": "agentSessions",
+          "optype": "query",
+          "page": {
+            "cursor": "pageInfo.endCursor",
+            "more": "pageInfo.hasNextPage",
+            "nodes": "nodes",
+            "style": "relay"
+          },
+          "vars": [
+            {
+              "from": "after",
+              "gqltype": "String",
+              "name": "after"
+            },
+            {
+              "from": "before",
+              "gqltype": "String",
+              "name": "before"
+            },
+            {
+              "from": "first",
+              "gqltype": "Int",
+              "name": "first"
+            },
+            {
+              "from": "includeArchived",
+              "gqltype": "Boolean",
+              "name": "includeArchived"
+            },
+            {
+              "from": "last",
+              "gqltype": "Int",
+              "name": "last"
+            },
+            {
+              "from": "orderBy",
+              "gqltype": "PaginationOrderBy",
+              "name": "orderBy"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "Boolean": {
+            "desc": "The `Boolean` scalar type represents `true` or `false`.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "Boolean"
+          },
+          "Int": {
+            "desc": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "Int"
+          },
+          "PaginationOrderBy": {
+            "desc": "By which field should the pagination order by",
+            "fields": {},
+            "kind": "ENUM",
+            "name": "PaginationOrderBy",
+            "values": [
+              "createdAt",
+              "updatedAt"
+            ]
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST agentSession": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "id",
+              "reqd": true,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "A specific agent session.",
+          "gqltype": "AgentSession!",
+          "list": false,
+          "name": "agentSession",
+          "reqd": true,
+          "type": "AgentSession"
+        },
+        "invocation": {
+          "doc": "query AgentSessionLoad($id: String!) { agentSession(id: $id) { ...AgentSessionFields } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }",
+          "field": "agentSession",
+          "optype": "query",
+          "vars": [
+            {
+              "from": "id",
+              "gqltype": "String!",
+              "name": "id"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST agentSessionRestartWithDefaultModel": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "id",
+              "reqd": true,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "[Internal] Restarts a routed coding session with the default model.",
+          "gqltype": "AgentSessionPayload!",
+          "list": false,
+          "name": "agentSessionRestartWithDefaultModel",
+          "reqd": true,
+          "type": "AgentSessionPayload"
+        },
+        "invocation": {
+          "doc": "mutation AgentSessionUpdateRestartWithDefaultModel($id: String!) { agentSessionRestartWithDefaultModel(id: $id) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }",
+          "field": "agentSessionRestartWithDefaultModel",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "id",
+              "gqltype": "String!",
+              "name": "id"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST agentSessionUpdate": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "id",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "AgentSessionUpdateInput!",
+              "name": "input",
+              "reqd": true,
+              "type": "AgentSessionUpdateInput"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Updates an agent session.",
+          "gqltype": "AgentSessionPayload!",
+          "list": false,
+          "name": "agentSessionUpdate",
+          "reqd": true,
+          "type": "AgentSessionPayload"
+        },
+        "invocation": {
+          "doc": "mutation AgentSessionUpdate($id: String!, $input: AgentSessionUpdateInput!) { agentSessionUpdate(id: $id, input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }",
+          "field": "agentSessionUpdate",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "id",
+              "gqltype": "String!",
+              "name": "id"
+            },
+            {
+              "from": "",
+              "gqltype": "AgentSessionUpdateInput!",
+              "name": "input"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "AgentSessionExternalUrlInput": {
+            "desc": "Input for an external URL associated with an agent session.",
+            "fields": {
+              "label": {
+                "args": [],
+                "deprecated": false,
+                "desc": "Label for the URL.",
+                "gqltype": "String!",
+                "list": false,
+                "name": "label",
+                "reqd": true,
+                "type": "String"
+              },
+              "url": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The URL of the external resource.",
+                "gqltype": "String!",
+                "list": false,
+                "name": "url",
+                "reqd": true,
+                "type": "String"
+              }
+            },
+            "kind": "INPUT_OBJECT",
+            "name": "AgentSessionExternalUrlInput"
+          },
+          "AgentSessionUpdateInput": {
+            "desc": "Input for updating an agent session.",
+            "fields": {
+              "addedExternalUrls": {
+                "args": [],
+                "deprecated": false,
+                "desc": "URLs of external resources to be added to this session. Only updatable by the OAuth application that owns the session.",
+                "gqltype": "[AgentSessionExternalUrlInput!]",
+                "list": true,
+                "name": "addedExternalUrls",
+                "reqd": false,
+                "type": "AgentSessionExternalUrlInput"
+              },
+              "dismissedAt": {
+                "args": [],
+                "deprecated": false,
+                "desc": "[Internal] The time at which the agent session was dismissed. Set to null to un-dismiss. Only updatable by internal clients.",
+                "gqltype": "DateTime",
+                "list": false,
+                "name": "dismissedAt",
+                "reqd": false,
+                "type": "DateTime"
+              },
+              "externalLink": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The URL of an external agent-hosted page associated with this session. Only updatable by the OAuth application that owns the session.",
+                "gqltype": "String",
+                "list": false,
+                "name": "externalLink",
+                "reqd": false,
+                "type": "String"
+              },
+              "externalUrls": {
+                "args": [],
+                "deprecated": false,
+                "desc": "URLs of external resources associated with this session. Replaces existing URLs. Only updatable by the OAuth application that owns the session. If supplied, addedExternalUrls and removedExternalUrls are ignored.",
+                "gqltype": "[AgentSessionExternalUrlInput!]",
+                "list": true,
+                "name": "externalUrls",
+                "reqd": false,
+                "type": "AgentSessionExternalUrlInput"
+              },
+              "plan": {
+                "args": [],
+                "deprecated": false,
+                "desc": "A dynamically updated list of the agent's execution strategy. Only updatable by the OAuth application that owns the session.",
+                "gqltype": "JSONObject",
+                "list": false,
+                "name": "plan",
+                "reqd": false,
+                "type": "JSONObject"
+              },
+              "removedExternalUrls": {
+                "args": [],
+                "deprecated": false,
+                "desc": "URLs to be removed from this session. Only updatable by the OAuth application that owns the session.",
+                "gqltype": "[String!]",
+                "list": true,
+                "name": "removedExternalUrls",
+                "reqd": false,
+                "type": "String"
+              },
+              "summary": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The session title, displayed as its summary. Must contain 1 to 255 characters, including a non-whitespace character, with no line breaks or NUL bytes. Set to null to clear it and allow automatic title generation. Updating only this field does not acknowledge the session. Only updatable by the OAuth application that owns the session.",
+                "gqltype": "String",
+                "list": false,
+                "name": "summary",
+                "reqd": false,
+                "type": "String"
+              },
+              "userState": {
+                "args": [],
+                "deprecated": false,
+                "desc": "[Internal] User-specific state for the agent session. Only updatable by internal clients.",
+                "gqltype": "[AgentSessionUserStateInput!]",
+                "list": true,
+                "name": "userState",
+                "reqd": false,
+                "type": "AgentSessionUserStateInput"
+              }
+            },
+            "kind": "INPUT_OBJECT",
+            "name": "AgentSessionUpdateInput"
+          },
+          "AgentSessionUserStateInput": {
+            "fields": {
+              "lastReadAt": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The time at which the user most recently viewed the session.",
+                "gqltype": "DateTime",
+                "list": false,
+                "name": "lastReadAt",
+                "reqd": false,
+                "type": "DateTime"
+              },
+              "userId": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The ID of the user this state belongs to.",
+                "gqltype": "String!",
+                "list": false,
+                "name": "userId",
+                "reqd": true,
+                "type": "String"
+              }
+            },
+            "kind": "INPUT_OBJECT",
+            "name": "AgentSessionUserStateInput"
+          },
+          "DateTime": {
+            "desc": "Represents a date and time in ISO 8601 format. Accepts shortcuts like `2021` to represent midnight Fri Jan 01 2021. Also accepts ISO 8601 durations strings which are added to the current date to create the represented date (e.g '-P2W1D' represents the date that was two weeks and 1 day ago)",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "DateTime"
+          },
+          "JSONObject": {
+            "desc": "The `JSONObject` scalar type represents arbitrary values as *embedded* JSON",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "JSONObject"
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST agentSessionUpdateExternalUrl": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "id",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "AgentSessionUpdateExternalUrlInput!",
+              "name": "input",
+              "reqd": true,
+              "type": "AgentSessionUpdateExternalUrlInput"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Updates the externalUrl of an agent session, which is an agent-hosted page associated with this session.",
+          "gqltype": "AgentSessionPayload!",
+          "list": false,
+          "name": "agentSessionUpdateExternalUrl",
+          "reqd": true,
+          "type": "AgentSessionPayload"
+        },
+        "invocation": {
+          "doc": "mutation AgentSessionUpdateUpdateExternalUrl($id: String!, $input: AgentSessionUpdateExternalUrlInput!) { agentSessionUpdateExternalUrl(id: $id, input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }",
+          "field": "agentSessionUpdateExternalUrl",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "id",
+              "gqltype": "String!",
+              "name": "id"
+            },
+            {
+              "from": "",
+              "gqltype": "AgentSessionUpdateExternalUrlInput!",
+              "name": "input"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "AgentSessionExternalUrlInput": {
+            "desc": "Input for an external URL associated with an agent session.",
+            "fields": {
+              "label": {
+                "args": [],
+                "deprecated": false,
+                "desc": "Label for the URL.",
+                "gqltype": "String!",
+                "list": false,
+                "name": "label",
+                "reqd": true,
+                "type": "String"
+              },
+              "url": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The URL of the external resource.",
+                "gqltype": "String!",
+                "list": false,
+                "name": "url",
+                "reqd": true,
+                "type": "String"
+              }
+            },
+            "kind": "INPUT_OBJECT",
+            "name": "AgentSessionExternalUrlInput"
+          },
+          "AgentSessionUpdateExternalUrlInput": {
+            "desc": "Input for updating the external URLs of an agent session.",
+            "fields": {
+              "addedExternalUrls": {
+                "args": [],
+                "deprecated": false,
+                "desc": "URLs of external resources to be added to this session.",
+                "gqltype": "[AgentSessionExternalUrlInput!]",
+                "list": true,
+                "name": "addedExternalUrls",
+                "reqd": false,
+                "type": "AgentSessionExternalUrlInput"
+              },
+              "externalLink": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The URL of an external agent-hosted page associated with this session.",
+                "gqltype": "String",
+                "list": false,
+                "name": "externalLink",
+                "reqd": false,
+                "type": "String"
+              },
+              "externalUrls": {
+                "args": [],
+                "deprecated": false,
+                "desc": "URLs of external resources associated with this session. Replaces existing URLs.",
+                "gqltype": "[AgentSessionExternalUrlInput!]",
+                "list": true,
+                "name": "externalUrls",
+                "reqd": false,
+                "type": "AgentSessionExternalUrlInput"
+              },
+              "removedExternalUrls": {
+                "args": [],
+                "deprecated": false,
+                "desc": "URLs to be removed from this session.",
+                "gqltype": "[String!]",
+                "list": true,
+                "name": "removedExternalUrls",
+                "reqd": false,
+                "type": "String"
+              }
+            },
+            "kind": "INPUT_OBJECT",
+            "name": "AgentSessionUpdateExternalUrlInput"
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    }
+  }
+}

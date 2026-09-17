@@ -1,0 +1,108 @@
+# BasicIssueToReleaseFlow
+
+main: kit: flow: BasicIssueToReleaseFlow:
+{
+  entity: "issue_to_release",
+  kind: "basic",
+  name: "BasicIssueToReleaseFlow",
+  step: [
+    {
+      input: {
+        ref: "issue_to_release_ref01"
+      }
+
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "create"
+    }
+
+    {
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "issue_to_release_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "issue_to_release_ref01",
+        srcdatavar: "issue_to_release_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        id: "issue_to_release01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-issue_to_release_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "issue_to_release_ref01",
+        suffix: "_rm0"
+      }
+
+      match: {
+        id: "issue_to_release01"
+      }
+
+      op: "remove"
+    }
+
+    {
+      input: {
+        suffix: "_rt0"
+      }
+
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemNotExists",
+          def: {
+            ref: "issue_to_release_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicIssueToReleaseFlow"
+}

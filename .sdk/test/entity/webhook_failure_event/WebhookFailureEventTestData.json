@@ -1,0 +1,141 @@
+{
+  "existing": {
+    "webhook_failure_event": {
+      "WEBHOOK_FAILURE_EVENT00": {
+        "createdAt": "s46",
+        "executionId": "s47",
+        "httpStatus": 72,
+        "id": "WEBHOOK_FAILURE_EVENT00",
+        "responseOrError": "s4a",
+        "url": "s4b",
+        "webhook": {},
+        "oauth_client_id": "OAUTH_CLIENT01",
+        "webhook_id": "WEBHOOK01"
+      },
+      "WEBHOOK_FAILURE_EVENT01": {
+        "createdAt": "s8c",
+        "executionId": "s8d",
+        "httpStatus": 142,
+        "id": "WEBHOOK_FAILURE_EVENT01",
+        "responseOrError": "s90",
+        "url": "s91",
+        "webhook": {},
+        "oauth_client_id": "OAUTH_CLIENT01",
+        "webhook_id": "WEBHOOK01"
+      },
+      "WEBHOOK_FAILURE_EVENT02": {
+        "createdAt": "sd2",
+        "executionId": "sd3",
+        "httpStatus": 212,
+        "id": "WEBHOOK_FAILURE_EVENT02",
+        "responseOrError": "sd6",
+        "url": "sd7",
+        "webhook": {},
+        "oauth_client_id": "OAUTH_CLIENT01",
+        "webhook_id": "WEBHOOK01"
+      }
+    }
+  },
+  "new": {
+    "webhook_failure_event": {
+      "webhook_failure_event_ref01": {
+        "createdAt": "s118",
+        "executionId": "s119",
+        "httpStatus": 282,
+        "responseOrError": "s11c",
+        "url": "s11d",
+        "webhook": {}
+      }
+    }
+  },
+  "requests": {
+    "POST failuresForOauthWebhooks": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "oauthClientId",
+              "reqd": true,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "[INTERNAL] Webhook failure events for webhooks that belong to an OAuth application. (last 50)",
+          "gqltype": "[WebhookFailureEvent!]!",
+          "list": true,
+          "name": "failuresForOauthWebhooks",
+          "reqd": true,
+          "type": "WebhookFailureEvent"
+        },
+        "invocation": {
+          "doc": "query WebhookFailureEventList($oauthClientId: String!) { failuresForOauthWebhooks(oauthClientId: $oauthClientId) { ...WebhookFailureEventFields } } fragment WebhookFailureEventFields on WebhookFailureEvent { createdAt executionId httpStatus id responseOrError url webhook { id } }",
+          "field": "failuresForOauthWebhooks",
+          "optype": "query",
+          "vars": [
+            {
+              "from": "oauthClientId",
+              "gqltype": "String!",
+              "name": "oauthClientId"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST auditLogWebhookFailureEvents": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "webhookId",
+              "reqd": true,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "[INTERNAL] Failure events for an audit log webhook (last 50).",
+          "gqltype": "[WebhookFailureEvent!]!",
+          "list": true,
+          "name": "auditLogWebhookFailureEvents",
+          "reqd": true,
+          "type": "WebhookFailureEvent"
+        },
+        "invocation": {
+          "doc": "query WebhookFailureEventList($webhookId: String!) { auditLogWebhookFailureEvents(webhookId: $webhookId) { ...WebhookFailureEventFields } } fragment WebhookFailureEventFields on WebhookFailureEvent { createdAt executionId httpStatus id responseOrError url webhook { id } }",
+          "field": "auditLogWebhookFailureEvents",
+          "optype": "query",
+          "vars": [
+            {
+              "from": "webhookId",
+              "gqltype": "String!",
+              "name": "webhookId"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    }
+  }
+}

@@ -25,7 +25,7 @@ func TestTeamDirect(t *testing.T) {
 			return
 		}
 		if setup.live {
-			for _, _liveKey := range []string{"first01", "after01"} {
+			for _, _liveKey := range []string{"after01", "before01", "filter01", "first01", "includeArchived01", "last01", "orderBy01"} {
 				if v := setup.idmap[_liveKey]; v == nil {
 					t.Skipf("live test needs %s via *_ENTID env var (synthetic IDs only)", _liveKey)
 					return
@@ -36,14 +36,24 @@ func TestTeamDirect(t *testing.T) {
 
 		variables := map[string]any{}
 		if setup.live {
-		variables["first"] = setup.idmap["first01"]
 		variables["after"] = setup.idmap["after01"]
+		variables["before"] = setup.idmap["before01"]
+		variables["filter"] = setup.idmap["filter01"]
+		variables["first"] = setup.idmap["first01"]
+		variables["includeArchived"] = setup.idmap["includeArchived01"]
+		variables["last"] = setup.idmap["last01"]
+		variables["orderBy"] = setup.idmap["orderBy01"]
 		} else {
-		variables["first"] = "direct01"
-		variables["after"] = "direct02"
+		variables["after"] = "direct01"
+		variables["before"] = "direct02"
+		variables["filter"] = "direct03"
+		variables["first"] = "direct04"
+		variables["includeArchived"] = "direct05"
+		variables["last"] = "direct06"
+		variables["orderBy"] = "direct07"
 		}
 
-		result, err := client.Graphql("query TeamList($first: Int, $after: String) { teams(first: $first, after: $after) { ...TeamFields } } fragment TeamFields on Team { description id key name }", variables, nil)
+		result, err := client.Graphql("query TeamList($after: String, $before: String, $filter: TeamFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { administrableTeams(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...TeamFields } pageInfo { endCursor hasNextPage } } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }", variables, nil)
 
 		if setup.live {
 			// Live mode is lenient: synthetic ids frequently fail server-side
@@ -83,6 +93,21 @@ func TestTeamDirect(t *testing.T) {
 			if !strings.Contains(bodyStr, "direct02") {
 				t.Fatalf("expected body to contain direct02, got %v", bodyStr)
 			}
+			if !strings.Contains(bodyStr, "direct03") {
+				t.Fatalf("expected body to contain direct03, got %v", bodyStr)
+			}
+			if !strings.Contains(bodyStr, "direct04") {
+				t.Fatalf("expected body to contain direct04, got %v", bodyStr)
+			}
+			if !strings.Contains(bodyStr, "direct05") {
+				t.Fatalf("expected body to contain direct05, got %v", bodyStr)
+			}
+			if !strings.Contains(bodyStr, "direct06") {
+				t.Fatalf("expected body to contain direct06, got %v", bodyStr)
+			}
+			if !strings.Contains(bodyStr, "direct07") {
+				t.Fatalf("expected body to contain direct07, got %v", bodyStr)
+			}
 		}
 	})
 
@@ -116,7 +141,7 @@ func TestTeamDirect(t *testing.T) {
 		variables["id"] = "direct01"
 		}
 
-		result, err := client.Graphql("query TeamLoad($id: String!) { team(id: $id) { ...TeamFields } } fragment TeamFields on Team { description id key name }", variables, nil)
+		result, err := client.Graphql("query TeamLoad($id: String!) { team(id: $id) { ...TeamFields } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }", variables, nil)
 
 		if setup.live {
 			// Live mode is lenient: synthetic ids frequently fail server-side

@@ -22,7 +22,7 @@ class TestIssueDirect:
             pytest.skip(_reason or "skipped via sdk-test-control.json")
             return
         if setup["live"]:
-            for _live_key in ["after01", "first01"]:
+            for _live_key in ["after01", "before01", "file_key01", "first01", "include_archived01", "last01", "order_by01"]:
                 if setup["idmap"].get(_live_key) is None:
                     # pytest already imported at module scope
                     pytest.skip(f"live test needs {_live_key} via *_ENTID env var (synthetic IDs only)")
@@ -36,9 +36,29 @@ class TestIssueDirect:
         else:
             params["after"] = "direct01"
         if setup["live"]:
+            params["before"] = setup["idmap"]["before01"]
+        else:
+            params["before"] = "direct01"
+        if setup["live"]:
+            params["file_key"] = setup["idmap"]["file_key01"]
+        else:
+            params["file_key"] = "direct01"
+        if setup["live"]:
             params["first"] = setup["idmap"]["first01"]
         else:
             params["first"] = "direct01"
+        if setup["live"]:
+            params["include_archived"] = setup["idmap"]["include_archived01"]
+        else:
+            params["include_archived"] = "direct01"
+        if setup["live"]:
+            params["last"] = setup["idmap"]["last01"]
+        else:
+            params["last"] = "direct01"
+        if setup["live"]:
+            params["order_by"] = setup["idmap"]["order_by01"]
+        else:
+            params["order_by"] = "direct01"
 
         result = client.direct({
             "path": "",

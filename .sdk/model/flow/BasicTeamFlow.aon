@@ -7,9 +7,31 @@ main: kit: flow: BasicTeamFlow:
   name: "BasicTeamFlow",
   step: [
     {
+      input: {
+        ref: "team_ref01"
+      }
+
       match: {
         after: "after01",
-        first: "first01"
+        before: "before01",
+        copy_settings_from_team_id: "copy_settings_from_team01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "create"
+    }
+
+    {
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
       }
 
       op: "list",
@@ -18,6 +40,25 @@ main: kit: flow: BasicTeamFlow:
           apply: "ItemExists",
           def: {
             ref: "team_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "team_ref01",
+        srcdatavar: "team_ref01_data",
+        suffix: "_up0",
+        textfield: "autoCloseStateId"
+      }
+
+      op: "update",
+      spec: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-team_ref01"
           }
         }
       ]
@@ -40,6 +81,44 @@ main: kit: flow: BasicTeamFlow:
           apply: "TextFieldMark",
           def: {
             mark: "Mark01-team_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "team_ref01",
+        suffix: "_rm0"
+      }
+
+      match: {
+        id: "team01"
+      }
+
+      op: "remove"
+    }
+
+    {
+      input: {
+        suffix: "_rt0"
+      }
+
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemNotExists",
+          def: {
+            ref: "team_ref01"
           }
         }
       ]

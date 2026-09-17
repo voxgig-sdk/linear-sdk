@@ -1,0 +1,127 @@
+# BasicFavoriteFlow
+
+main: kit: flow: BasicFavoriteFlow:
+{
+  entity: "favorite",
+  kind: "basic",
+  name: "BasicFavoriteFlow",
+  step: [
+    {
+      input: {
+        ref: "favorite_ref01"
+      }
+
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "create"
+    }
+
+    {
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "favorite_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "favorite_ref01",
+        srcdatavar: "favorite_ref01_data",
+        suffix: "_up0",
+        textfield: "color"
+      }
+
+      op: "update",
+      spec: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-favorite_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "favorite_ref01",
+        srcdatavar: "favorite_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        id: "favorite01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-favorite_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "favorite_ref01",
+        suffix: "_rm0"
+      }
+
+      match: {
+        id: "favorite01"
+      }
+
+      op: "remove"
+    }
+
+    {
+      input: {
+        suffix: "_rt0"
+      }
+
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemNotExists",
+          def: {
+            ref: "favorite_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicFavoriteFlow"
+}

@@ -6,88 +6,5054 @@
 -- @voxgig/apidef VALID_CANON). Annotations only — no runtime effect. Do not
 -- edit by hand.
 
----@class Issue
+---@class AccessKeyRelease
 ---@field archivedAt? any
----@field assignee? table
----@field branchName string
----@field canceledAt? any
+---@field commitSha? string
 ---@field completedAt? any
+---@field createdAt any
+---@field id string
+---@field name string
+---@field url string
+---@field version? string
+
+---@class AccessKeyReleaseLoadMatch
+---@field archivedAt? any
+---@field commitSha? string
+---@field completedAt? any
+---@field createdAt? any
+---@field id string
+---@field name? string
+---@field url? string
+---@field version? string
+
+---@class AccessKeyReleaseListMatch
+---@field limit? number
+
+---@class AccessKeyReleaseCreateData
+---@field archivedAt? any
+---@field commitSha? string
+---@field completedAt? any
+---@field createdAt any
+---@field id string
+---@field name string
+---@field url string
+---@field version? string
+
+---@class AccessKeyReleasePipeline
+---@field id string
+---@field includePathPatterns string
+
+---@class AccessKeyReleasePipelineLoadMatch
+---@field id string
+---@field includePathPatterns? string
+
+---@class AgentActivity
+---@field agentSession? table
+---@field archivedAt? any
+---@field contextualMetadata? any
+---@field createdAt any
+---@field ephemeral boolean
+---@field executionSkippedReason? string
+---@field id string
+---@field queued boolean
+---@field sentAt? any
+---@field signal? string
+---@field signalMetadata? any
+---@field sourceComment? table
+---@field sourceMetadata? any
+---@field updatedAt any
+---@field user? table
+
+---@class AgentActivityLoadMatch
+---@field id string
+
+---@class AgentActivityListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class AgentActivityCreateData
+---@field agentSession? table
+---@field archivedAt? any
+---@field contextualMetadata? any
+---@field createdAt any
+---@field ephemeral boolean
+---@field executionSkippedReason? string
+---@field id string
+---@field queued boolean
+---@field sentAt? any
+---@field signal? string
+---@field signalMetadata? any
+---@field sourceComment? table
+---@field sourceMetadata? any
+---@field updatedAt any
+---@field user? table
+
+---@class AgentActivityUpdateData
+---@field id string
+---@field agentSession? table
+---@field archivedAt? any
+---@field contextualMetadata? any
+---@field createdAt? any
+---@field ephemeral? boolean
+---@field executionSkippedReason? string
+---@field queued? boolean
+---@field sentAt? any
+---@field signal? string
+---@field signalMetadata? any
+---@field sourceComment? table
+---@field sourceMetadata? any
+---@field updatedAt? any
+---@field user? table
+
+---@class AgentSession
+---@field appUser? table
+---@field archivedAt? any
+---@field codingHarnessModelLabel? string
+---@field comment? table
+---@field context any
+---@field createdAt any
+---@field creator? table
+---@field dismissedAt? any
+---@field dismissedBy? table
+---@field endedAt? any
+---@field id string
+---@field issue? table
+---@field modelSelection? any
+---@field plan? any
+---@field pullRequest? table
+---@field slugId string
+---@field sourceComment? table
+---@field sourceMetadata? any
+---@field startedAt? any
+---@field status string
+---@field summary? string
+---@field updatedAt any
+---@field url? string
+
+---@class AgentSessionLoadMatch
+---@field id string
+
+---@class AgentSessionListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class AgentSessionCreateData
+---@field pull_request_id? string
+---@field appUser? table
+---@field archivedAt? any
+---@field codingHarnessModelLabel? string
+---@field comment? table
+---@field context any
+---@field createdAt any
+---@field creator? table
+---@field dismissedAt? any
+---@field dismissedBy? table
+---@field endedAt? any
+---@field id string
+---@field issue? table
+---@field modelSelection? any
+---@field plan? any
+---@field pullRequest? table
+---@field slugId string
+---@field sourceComment? table
+---@field sourceMetadata? any
+---@field startedAt? any
+---@field status string
+---@field summary? string
+---@field updatedAt any
+---@field url? string
+
+---@class AgentSessionUpdateData
+---@field id string
+---@field appUser? table
+---@field archivedAt? any
+---@field codingHarnessModelLabel? string
+---@field comment? table
+---@field context? any
+---@field createdAt? any
+---@field creator? table
+---@field dismissedAt? any
+---@field dismissedBy? table
+---@field endedAt? any
+---@field issue? table
+---@field modelSelection? any
+---@field plan? any
+---@field pullRequest? table
+---@field slugId? string
+---@field sourceComment? table
+---@field sourceMetadata? any
+---@field startedAt? any
+---@field status? string
+---@field summary? string
+---@field updatedAt? any
+---@field url? string
+
+---@class AgentSkill
+---@field archivedAt? any
+---@field body string
+---@field color? string
 ---@field createdAt any
 ---@field creator? table
 ---@field description? string
----@field dueDate? any
----@field estimate? number
+---@field icon? string
 ---@field id string
----@field identifier string
----@field number number
----@field priority number
----@field state? table
----@field team? table
+---@field inheritedFrom? table
+---@field lastUpdatedBy? table
+---@field lastUsedAt? any
+---@field owner? table
+---@field recentUsageCount number
+---@field shared boolean
+---@field slugId string
+---@field teamId? string
+---@field title string
+---@field updatedAt any
+
+---@class AgentSkillLoadMatch
+---@field id string
+
+---@class AgentSkillListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class AgentSkillCreateData
+---@field archivedAt? any
+---@field body string
+---@field color? string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field icon? string
+---@field id string
+---@field inheritedFrom? table
+---@field lastUpdatedBy? table
+---@field lastUsedAt? any
+---@field owner? table
+---@field recentUsageCount number
+---@field shared boolean
+---@field slugId string
+---@field teamId? string
+---@field title string
+---@field updatedAt any
+
+---@class AgentSkillUpdateData
+---@field id string
+---@field archivedAt? any
+---@field body? string
+---@field color? string
+---@field createdAt? any
+---@field creator? table
+---@field description? string
+---@field icon? string
+---@field inheritedFrom? table
+---@field lastUpdatedBy? table
+---@field lastUsedAt? any
+---@field owner? table
+---@field recentUsageCount? number
+---@field shared? boolean
+---@field slugId? string
+---@field teamId? string
+---@field title? string
+---@field updatedAt? any
+
+---@class AgentSkillRemoveMatch
+---@field id string
+
+---@class Application
+---@field clientId string
+---@field description? string
+---@field developer string
+---@field developerUrl string
+---@field id string
+---@field imageUrl? string
+---@field name string
+
+---@class ApplicationLoadMatch
+---@field client_id string
+
+---@class Attachment
+---@field archivedAt? any
+---@field bodyData? string
+---@field createdAt any
+---@field creator? table
+---@field externalUserCreator? table
+---@field groupBySource boolean
+---@field id string
+---@field issue? table
+---@field metadata any
+---@field originalIssue? table
+---@field source? any
+---@field sourceType? string
+---@field subtitle? string
 ---@field title string
 ---@field updatedAt any
 ---@field url string
 
----@class IssueLoadMatch
+---@class AttachmentLoadMatch
 ---@field id string
 
----@class IssueListMatch
+---@class AttachmentListMatch
 ---@field after? string
+---@field before? string
 ---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+---@field url? string
 
----@class IssueCreateData
+---@class AttachmentCreateData
 ---@field archivedAt? any
+---@field bodyData? string
+---@field createdAt any
+---@field creator? table
+---@field externalUserCreator? table
+---@field groupBySource boolean
+---@field id string
+---@field issue? table
+---@field metadata any
+---@field originalIssue? table
+---@field source? any
+---@field sourceType? string
+---@field subtitle? string
+---@field title string
+---@field updatedAt any
+---@field url string
+
+---@class AttachmentUpdateData
+---@field id string
+---@field archivedAt? any
+---@field bodyData? string
+---@field createdAt? any
+---@field creator? table
+---@field externalUserCreator? table
+---@field groupBySource? boolean
+---@field issue? table
+---@field metadata? any
+---@field originalIssue? table
+---@field source? any
+---@field sourceType? string
+---@field subtitle? string
+---@field title? string
+---@field updatedAt? any
+---@field url? string
+
+---@class AttachmentRemoveMatch
+---@field id string
+
+---@class AuditEntry
+---@field actor? table
+---@field actorId? string
+---@field archivedAt? any
+---@field countryCode? string
+---@field createdAt any
+---@field id string
+---@field ip? string
+---@field metadata? any
+---@field organization? table
+---@field requestInformation? any
+---@field type string
+---@field updatedAt any
+
+---@class AuditEntryListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class AuditEntryType
+---@field description string
+---@field type string
+
+---@class AuditEntryTypeListMatch
+---@field description? string
+---@field type? string
+
+---@class AuthResolverResponse
+---@field allowDomainAccess? boolean
+---@field email string
+---@field id string
+---@field lastUsedOrganizationId? string
+---@field service? string
+
+---@class AuthResolverResponseLoadMatch
+---@field allowDomainAccess? boolean
+---@field email? string
+---@field id string
+---@field lastUsedOrganizationId? string
+---@field service? string
+
+---@class AuthResolverResponseCreateData
+---@field allowDomainAccess? boolean
+---@field email string
+---@field id string
+---@field lastUsedOrganizationId? string
+---@field service? string
+
+---@class AuthResolverResponseUpdateData
+---@field auth_id string
+---@field response any
+---@field allowDomainAccess? boolean
+---@field email? string
+---@field id? string
+---@field lastUsedOrganizationId? string
+---@field service? string
+
+---@class AuthenticationSessionResponse
+---@field browserType? string
+---@field client? string
+---@field countryCodes string
+---@field createdAt any
+---@field detailedName string
+---@field id string
+---@field ip? string
+---@field isCurrentSession boolean
+---@field lastActiveAt? any
+---@field location? string
+---@field locationCity? string
+---@field locationCountry? string
+---@field locationCountryCode? string
+---@field locationRegionCode? string
+---@field name string
+---@field operatingSystem? string
+---@field service? string
+---@field type string
+---@field updatedAt any
+---@field userAgent? string
+
+---@class AuthenticationSessionResponseListMatch
+---@field id? string
+
+---@class Comment
+---@field agentSession? table
+---@field archivedAt? any
+---@field body string
+---@field bodyData string
+---@field botActor? table
+---@field createdAt any
+---@field documentContent? table
+---@field documentContentId? string
+---@field editedAt? any
+---@field externalThread? table
+---@field externalUser? table
+---@field hideInLinear boolean
+---@field id string
+---@field initiative? table
+---@field initiativeId? string
+---@field initiativeUpdate? table
+---@field initiativeUpdateId? string
+---@field isArtificialAgentSessionRoot boolean
+---@field issue? table
+---@field issueId? string
+---@field onBehalfOf? table
+---@field parent? table
+---@field parentId? string
+---@field post? table
+---@field project? table
+---@field projectId? string
+---@field projectUpdate? table
+---@field projectUpdateId? string
+---@field quotedText? string
+---@field reactionData any
+---@field resolvedAt? any
+---@field resolvingComment? table
+---@field resolvingCommentId? string
+---@field resolvingUser? table
+---@field threadSummary? any
+---@field updatedAt any
+---@field url string
+---@field user? table
+
+---@class CommentLoadMatch
+---@field hash? string
+---@field id? string
+
+---@class CommentListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class CommentCreateData
+---@field agentSession? table
+---@field archivedAt? any
+---@field body string
+---@field bodyData string
+---@field botActor? table
+---@field createdAt any
+---@field documentContent? table
+---@field documentContentId? string
+---@field editedAt? any
+---@field externalThread? table
+---@field externalUser? table
+---@field hideInLinear boolean
+---@field id string
+---@field initiative? table
+---@field initiativeId? string
+---@field initiativeUpdate? table
+---@field initiativeUpdateId? string
+---@field isArtificialAgentSessionRoot boolean
+---@field issue? table
+---@field issueId? string
+---@field onBehalfOf? table
+---@field parent? table
+---@field parentId? string
+---@field post? table
+---@field project? table
+---@field projectId? string
+---@field projectUpdate? table
+---@field projectUpdateId? string
+---@field quotedText? string
+---@field reactionData any
+---@field resolvedAt? any
+---@field resolvingComment? table
+---@field resolvingCommentId? string
+---@field resolvingUser? table
+---@field threadSummary? any
+---@field updatedAt any
+---@field url string
+---@field user? table
+
+---@class CommentUpdateData
+---@field id string
+---@field skip_edited_at? boolean
+---@field agentSession? table
+---@field archivedAt? any
+---@field body? string
+---@field bodyData? string
+---@field botActor? table
+---@field createdAt? any
+---@field documentContent? table
+---@field documentContentId? string
+---@field editedAt? any
+---@field externalThread? table
+---@field externalUser? table
+---@field hideInLinear? boolean
+---@field initiative? table
+---@field initiativeId? string
+---@field initiativeUpdate? table
+---@field initiativeUpdateId? string
+---@field isArtificialAgentSessionRoot? boolean
+---@field issue? table
+---@field issueId? string
+---@field onBehalfOf? table
+---@field parent? table
+---@field parentId? string
+---@field post? table
+---@field project? table
+---@field projectId? string
+---@field projectUpdate? table
+---@field projectUpdateId? string
+---@field quotedText? string
+---@field reactionData? any
+---@field resolvedAt? any
+---@field resolvingComment? table
+---@field resolvingCommentId? string
+---@field resolvingUser? table
+---@field threadSummary? any
+---@field updatedAt? any
+---@field url? string
+---@field user? table
+
+---@class CommentRemoveMatch
+---@field id string
+
+---@class CreateOrJoinOrganizationResponse
+---@field organization? table
+---@field user? table
+
+---@class CreateOrJoinOrganizationResponseCreateData
+---@field partner_offer_token? string
+---@field session_id? string
+---@field organization? table
+---@field user? table
+
+---@class CreateOrJoinOrganizationResponseUpdateData
+---@field organization_id string
+---@field organization? table
+---@field user? table
+
+---@class CustomView
+---@field archivedAt? any
+---@field color? string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field facet? table
+---@field feedItemFilterData? any
+---@field filterData any
+---@field icon? string
+---@field id string
+---@field initiativeFilterData? any
+---@field modelName string
+---@field name string
+---@field organization? table
+---@field organizationViewPreferences? table
+---@field owner? table
+---@field projectFilterData? any
+---@field shared boolean
+---@field slugId string
+---@field team? table
+---@field updatedAt any
+---@field updatedBy? table
+---@field userViewPreferences? table
+
+---@class CustomViewLoadMatch
+---@field id string
+
+---@class CustomViewListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class CustomViewCreateData
+---@field archivedAt? any
+---@field color? string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field facet? table
+---@field feedItemFilterData? any
+---@field filterData any
+---@field icon? string
+---@field id string
+---@field initiativeFilterData? any
+---@field modelName string
+---@field name string
+---@field organization? table
+---@field organizationViewPreferences? table
+---@field owner? table
+---@field projectFilterData? any
+---@field shared boolean
+---@field slugId string
+---@field team? table
+---@field updatedAt any
+---@field updatedBy? table
+---@field userViewPreferences? table
+
+---@class CustomViewUpdateData
+---@field id string
+---@field archivedAt? any
+---@field color? string
+---@field createdAt? any
+---@field creator? table
+---@field description? string
+---@field facet? table
+---@field feedItemFilterData? any
+---@field filterData? any
+---@field icon? string
+---@field initiativeFilterData? any
+---@field modelName? string
+---@field name? string
+---@field organization? table
+---@field organizationViewPreferences? table
+---@field owner? table
+---@field projectFilterData? any
+---@field shared? boolean
+---@field slugId? string
+---@field team? table
+---@field updatedAt? any
+---@field updatedBy? table
+---@field userViewPreferences? table
+
+---@class CustomViewRemoveMatch
+---@field id string
+
+---@class Customer
+---@field approximateNeedCount number
+---@field archivedAt? any
+---@field createdAt any
+---@field domains string
+---@field externalIds string
+---@field id string
+---@field integration? table
+---@field logoUrl? string
+---@field mainSourceId? string
+---@field name string
+---@field owner? table
+---@field revenue? number
+---@field size? number
+---@field slackChannelId? string
+---@field slugId string
+---@field status? table
+---@field tier? table
+---@field updatedAt any
+---@field url string
+
+---@class CustomerLoadMatch
+---@field id string
+
+---@class CustomerListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class CustomerCreateData
+---@field approximateNeedCount number
+---@field archivedAt? any
+---@field createdAt any
+---@field domains string
+---@field externalIds string
+---@field id string
+---@field integration? table
+---@field logoUrl? string
+---@field mainSourceId? string
+---@field name string
+---@field owner? table
+---@field revenue? number
+---@field size? number
+---@field slackChannelId? string
+---@field slugId string
+---@field status? table
+---@field tier? table
+---@field updatedAt any
+---@field url string
+
+---@class CustomerUpdateData
+---@field id string
+---@field approximateNeedCount? number
+---@field archivedAt? any
+---@field createdAt? any
+---@field domains? string
+---@field externalIds? string
+---@field integration? table
+---@field logoUrl? string
+---@field mainSourceId? string
+---@field name? string
+---@field owner? table
+---@field revenue? number
+---@field size? number
+---@field slackChannelId? string
+---@field slugId? string
+---@field status? table
+---@field tier? table
+---@field updatedAt? any
+---@field url? string
+
+---@class CustomerRemoveMatch
+---@field id string
+
+---@class CustomerNeed
+---@field archivedAt? any
+---@field attachment? table
+---@field body? string
+---@field bodyData? string
+---@field comment? table
+---@field content? string
+---@field createdAt any
+---@field creator? table
+---@field customer? table
+---@field id string
+---@field issue? table
+---@field originalIssue? table
+---@field priority number
+---@field project? table
+---@field projectAttachment? table
+---@field updatedAt any
+---@field url? string
+
+---@class CustomerNeedLoadMatch
+---@field hash? string
+---@field id? string
+
+---@class CustomerNeedListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class CustomerNeedCreateData
+---@field archivedAt? any
+---@field attachment? table
+---@field body? string
+---@field bodyData? string
+---@field comment? table
+---@field content? string
+---@field createdAt any
+---@field creator? table
+---@field customer? table
+---@field id string
+---@field issue? table
+---@field originalIssue? table
+---@field priority number
+---@field project? table
+---@field projectAttachment? table
+---@field updatedAt any
+---@field url? string
+
+---@class CustomerNeedUpdateData
+---@field clear_attachment? boolean
+---@field id string
+---@field archivedAt? any
+---@field attachment? table
+---@field body? string
+---@field bodyData? string
+---@field comment? table
+---@field content? string
+---@field createdAt? any
+---@field creator? table
+---@field customer? table
+---@field issue? table
+---@field originalIssue? table
+---@field priority? number
+---@field project? table
+---@field projectAttachment? table
+---@field updatedAt? any
+---@field url? string
+
+---@class CustomerNeedRemoveMatch
+---@field id string
+---@field keep_attachment? boolean
+
+---@class CustomerStatus
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field description? string
+---@field displayName string
+---@field id string
+---@field name string
+---@field position number
+---@field updatedAt any
+
+---@class CustomerStatusLoadMatch
+---@field id string
+
+---@class CustomerStatusListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class CustomerStatusCreateData
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field description? string
+---@field displayName string
+---@field id string
+---@field name string
+---@field position number
+---@field updatedAt any
+
+---@class CustomerStatusUpdateData
+---@field id string
+---@field archivedAt? any
+---@field color? string
+---@field createdAt? any
+---@field description? string
+---@field displayName? string
+---@field name? string
+---@field position? number
+---@field updatedAt? any
+
+---@class CustomerStatusRemoveMatch
+---@field id string
+
+---@class CustomerTier
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field description? string
+---@field displayName string
+---@field id string
+---@field name string
+---@field position number
+---@field updatedAt any
+
+---@class CustomerTierLoadMatch
+---@field id string
+
+---@class CustomerTierListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class CustomerTierCreateData
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field description? string
+---@field displayName string
+---@field id string
+---@field name string
+---@field position number
+---@field updatedAt any
+
+---@class CustomerTierUpdateData
+---@field id string
+---@field archivedAt? any
+---@field color? string
+---@field createdAt? any
+---@field description? string
+---@field displayName? string
+---@field name? string
+---@field position? number
+---@field updatedAt? any
+
+---@class CustomerTierRemoveMatch
+---@field id string
+
+---@class Cycle
+---@field archivedAt? any
+---@field autoArchivedAt? any
+---@field completedAt? any
+---@field completedIssueCountHistory number
+---@field completedScopeHistory number
+---@field createdAt any
+---@field currentProgress any
+---@field description? string
+---@field endsAt any
+---@field id string
+---@field inProgressScopeHistory number
+---@field inheritedFrom? table
+---@field isActive boolean
+---@field isFuture boolean
+---@field isNext boolean
+---@field isPast boolean
+---@field isPrevious boolean
+---@field issueCountHistory number
+---@field name? string
+---@field number number
+---@field progress number
+---@field progressHistory any
+---@field scopeHistory number
+---@field startsAt any
+---@field team? table
+---@field updatedAt any
+
+---@class CycleLoadMatch
+---@field id string
+
+---@class CycleListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class CycleCreateData
+---@field archivedAt? any
+---@field autoArchivedAt? any
+---@field completedAt? any
+---@field completedIssueCountHistory number
+---@field completedScopeHistory number
+---@field createdAt any
+---@field currentProgress any
+---@field description? string
+---@field endsAt any
+---@field id string
+---@field inProgressScopeHistory number
+---@field inheritedFrom? table
+---@field isActive boolean
+---@field isFuture boolean
+---@field isNext boolean
+---@field isPast boolean
+---@field isPrevious boolean
+---@field issueCountHistory number
+---@field name? string
+---@field number number
+---@field progress number
+---@field progressHistory any
+---@field scopeHistory number
+---@field startsAt any
+---@field team? table
+---@field updatedAt any
+
+---@class CycleUpdateData
+---@field id string
+---@field archivedAt? any
+---@field autoArchivedAt? any
+---@field completedAt? any
+---@field completedIssueCountHistory? number
+---@field completedScopeHistory? number
+---@field createdAt? any
+---@field currentProgress? any
+---@field description? string
+---@field endsAt? any
+---@field inProgressScopeHistory? number
+---@field inheritedFrom? table
+---@field isActive? boolean
+---@field isFuture? boolean
+---@field isNext? boolean
+---@field isPast? boolean
+---@field isPrevious? boolean
+---@field issueCountHistory? number
+---@field name? string
+---@field number? number
+---@field progress? number
+---@field progressHistory? any
+---@field scopeHistory? number
+---@field startsAt? any
+---@field team? table
+---@field updatedAt? any
+
+---@class Diff
+---@field additions number
+---@field agentSession? table
+---@field archivedAt? any
+---@field contentHash string
+---@field createdAt any
+---@field creator? table
+---@field deletions number
+---@field fileCount number
+---@field id string
+---@field organization? table
+---@field pullRequest? table
+---@field slugId string
+---@field truncated boolean
+---@field updatedAt any
+
+---@class DiffLoadMatch
+---@field id string
+
+---@class Document
+---@field archivedAt? any
+---@field color? string
+---@field content? string
+---@field contentState? string
+---@field createdAt any
+---@field creator? table
+---@field cycle? table
+---@field documentContentId? string
+---@field hiddenAt? any
+---@field icon? string
+---@field id string
+---@field initiative? table
+---@field issue? table
+---@field lastAppliedTemplate? table
+---@field owner? table
+---@field project? table
+---@field release? table
+---@field slugId string
+---@field sortOrder number
+---@field summary? string
+---@field team? table
+---@field title string
+---@field trashed? boolean
+---@field updatedAt any
+---@field updatedBy? table
+---@field url string
+
+---@class DocumentLoadMatch
+---@field id string
+
+---@class DocumentListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class DocumentCreateData
+---@field archivedAt? any
+---@field color? string
+---@field content? string
+---@field contentState? string
+---@field createdAt any
+---@field creator? table
+---@field cycle? table
+---@field documentContentId? string
+---@field hiddenAt? any
+---@field icon? string
+---@field id string
+---@field initiative? table
+---@field issue? table
+---@field lastAppliedTemplate? table
+---@field owner? table
+---@field project? table
+---@field release? table
+---@field slugId string
+---@field sortOrder number
+---@field summary? string
+---@field team? table
+---@field title string
+---@field trashed? boolean
+---@field updatedAt any
+---@field updatedBy? table
+---@field url string
+
+---@class DocumentUpdateData
+---@field id string
+---@field archivedAt? any
+---@field color? string
+---@field content? string
+---@field contentState? string
+---@field createdAt? any
+---@field creator? table
+---@field cycle? table
+---@field documentContentId? string
+---@field hiddenAt? any
+---@field icon? string
+---@field initiative? table
+---@field issue? table
+---@field lastAppliedTemplate? table
+---@field owner? table
+---@field project? table
+---@field release? table
+---@field slugId? string
+---@field sortOrder? number
+---@field summary? string
+---@field team? table
+---@field title? string
+---@field trashed? boolean
+---@field updatedAt? any
+---@field updatedBy? table
+---@field url? string
+
+---@class DocumentRemoveMatch
+---@field id string
+
+---@class DocumentSearchResult
+---@field archivedAt? any
+---@field color? string
+---@field content? string
+---@field contentState? string
+---@field createdAt any
+---@field creator? table
+---@field cycle? table
+---@field documentContentId? string
+---@field hiddenAt? any
+---@field icon? string
+---@field id string
+---@field initiative? table
+---@field issue? table
+---@field lastAppliedTemplate? table
+---@field metadata any
+---@field owner? table
+---@field project? table
+---@field release? table
+---@field slugId string
+---@field sortOrder number
+---@field summary? string
+---@field team? table
+---@field title string
+---@field trashed? boolean
+---@field updatedAt any
+---@field updatedBy? table
+---@field url string
+
+---@class DocumentSearchResultListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field include_comment? boolean
+---@field last? number
+---@field order_by? any
+---@field team_id? string
+---@field term string
+
+---@class EmailIntakeAddress
+---@field address string
+---@field archivedAt? any
+---@field createdAt any
+---@field creator? table
+---@field customerRequestsEnabled boolean
+---@field enabled boolean
+---@field forwardingEmailAddress? string
+---@field id string
+---@field issueCanceledAutoReply? string
+---@field issueCanceledAutoReplyEnabled boolean
+---@field issueCompletedAutoReply? string
+---@field issueCompletedAutoReplyEnabled boolean
+---@field issueCreatedAutoReply? string
+---@field issueCreatedAutoReplyEnabled boolean
+---@field lastUsedAt? any
+---@field organization? table
+---@field reopenOnReply boolean
+---@field repliesEnabled boolean
+---@field senderName? string
+---@field sesDomainIdentity? table
+---@field team? table
+---@field template? table
+---@field type string
+---@field updatedAt any
+---@field useUserNamesInReplies boolean
+
+---@class EmailIntakeAddressLoadMatch
+---@field id string
+
+---@class EmailIntakeAddressCreateData
+---@field address string
+---@field archivedAt? any
+---@field createdAt any
+---@field creator? table
+---@field customerRequestsEnabled boolean
+---@field enabled boolean
+---@field forwardingEmailAddress? string
+---@field id string
+---@field issueCanceledAutoReply? string
+---@field issueCanceledAutoReplyEnabled boolean
+---@field issueCompletedAutoReply? string
+---@field issueCompletedAutoReplyEnabled boolean
+---@field issueCreatedAutoReply? string
+---@field issueCreatedAutoReplyEnabled boolean
+---@field lastUsedAt? any
+---@field organization? table
+---@field reopenOnReply boolean
+---@field repliesEnabled boolean
+---@field senderName? string
+---@field sesDomainIdentity? table
+---@field team? table
+---@field template? table
+---@field type string
+---@field updatedAt any
+---@field useUserNamesInReplies boolean
+
+---@class EmailIntakeAddressUpdateData
+---@field id string
+---@field address? string
+---@field archivedAt? any
+---@field createdAt? any
+---@field creator? table
+---@field customerRequestsEnabled? boolean
+---@field enabled? boolean
+---@field forwardingEmailAddress? string
+---@field issueCanceledAutoReply? string
+---@field issueCanceledAutoReplyEnabled? boolean
+---@field issueCompletedAutoReply? string
+---@field issueCompletedAutoReplyEnabled? boolean
+---@field issueCreatedAutoReply? string
+---@field issueCreatedAutoReplyEnabled? boolean
+---@field lastUsedAt? any
+---@field organization? table
+---@field reopenOnReply? boolean
+---@field repliesEnabled? boolean
+---@field senderName? string
+---@field sesDomainIdentity? table
+---@field team? table
+---@field template? table
+---@field type? string
+---@field updatedAt? any
+---@field useUserNamesInReplies? boolean
+
+---@class EmailIntakeAddressRemoveMatch
+---@field id string
+
+---@class EmailUserAccountAuthChallengeResponse
+---@field authType string
+---@field success boolean
+
+---@class EmailUserAccountAuthChallengeResponseCreateData
+---@field authType string
+---@field success boolean
+
+---@class Emoji
+---@field archivedAt? any
+---@field createdAt any
+---@field creator? table
+---@field id string
+---@field name string
+---@field organization? table
+---@field source string
+---@field updatedAt any
+---@field url string
+
+---@class EmojiLoadMatch
+---@field id string
+
+---@class EmojiListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class EmojiCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field creator? table
+---@field id string
+---@field name string
+---@field organization? table
+---@field source string
+---@field updatedAt any
+---@field url string
+
+---@class EmojiRemoveMatch
+---@field id string
+
+---@class EntityExternalLink
+---@field archivedAt? any
+---@field createdAt any
+---@field creator? table
+---@field id string
+---@field initiative? table
+---@field label string
+---@field project? table
+---@field sortOrder number
+---@field updatedAt any
+---@field url string
+
+---@class EntityExternalLinkLoadMatch
+---@field id string
+
+---@class EntityExternalLinkCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field creator? table
+---@field id string
+---@field initiative? table
+---@field label string
+---@field project? table
+---@field sortOrder number
+---@field updatedAt any
+---@field url string
+
+---@class EntityExternalLinkUpdateData
+---@field id string
+---@field archivedAt? any
+---@field createdAt? any
+---@field creator? table
+---@field initiative? table
+---@field label? string
+---@field project? table
+---@field sortOrder? number
+---@field updatedAt? any
+---@field url? string
+
+---@class EntityExternalLinkRemoveMatch
+---@field id string
+
+---@class ExternalUser
+---@field archivedAt? any
+---@field avatarUrl? string
+---@field createdAt any
+---@field displayName string
+---@field email? string
+---@field id string
+---@field lastSeen? any
+---@field name string
+---@field organization? table
+---@field updatedAt any
+
+---@class ExternalUserLoadMatch
+---@field id string
+
+---@class ExternalUserListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class Favorite
+---@field aiConversation? table
+---@field archivedAt? any
+---@field color? string
+---@field createdAt any
+---@field customView? table
+---@field customer? table
+---@field cycle? table
+---@field dashboard? table
+---@field detail? string
+---@field document? table
+---@field facet? table
+---@field folderName? string
+---@field icon? string
+---@field id string
+---@field initiative? table
+---@field initiativeLabel? table
+---@field initiativeTab? string
+---@field issue? table
+---@field label? table
+---@field liveFolderDefinition? any
+---@field liveFolderPreset? string
+---@field owner? table
+---@field parent? table
+---@field pipelineTab? string
+---@field predefinedViewTeam? table
+---@field predefinedViewType? string
+---@field project? table
+---@field projectLabel? table
+---@field projectTab? string
+---@field projectTeam? table
+---@field pullRequest? table
+---@field release? table
+---@field releaseNote? table
+---@field releasePipeline? table
+---@field sortOrder number
+---@field team? table
+---@field title string
+---@field type string
+---@field updatedAt any
+---@field url? string
+---@field user? table
+---@field workflowDefinition? table
+
+---@class FavoriteLoadMatch
+---@field id string
+
+---@class FavoriteListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class FavoriteCreateData
+---@field aiConversation? table
+---@field archivedAt? any
+---@field color? string
+---@field createdAt any
+---@field customView? table
+---@field customer? table
+---@field cycle? table
+---@field dashboard? table
+---@field detail? string
+---@field document? table
+---@field facet? table
+---@field folderName? string
+---@field icon? string
+---@field id string
+---@field initiative? table
+---@field initiativeLabel? table
+---@field initiativeTab? string
+---@field issue? table
+---@field label? table
+---@field liveFolderDefinition? any
+---@field liveFolderPreset? string
+---@field owner? table
+---@field parent? table
+---@field pipelineTab? string
+---@field predefinedViewTeam? table
+---@field predefinedViewType? string
+---@field project? table
+---@field projectLabel? table
+---@field projectTab? string
+---@field projectTeam? table
+---@field pullRequest? table
+---@field release? table
+---@field releaseNote? table
+---@field releasePipeline? table
+---@field sortOrder number
+---@field team? table
+---@field title string
+---@field type string
+---@field updatedAt any
+---@field url? string
+---@field user? table
+---@field workflowDefinition? table
+
+---@class FavoriteUpdateData
+---@field id string
+---@field aiConversation? table
+---@field archivedAt? any
+---@field color? string
+---@field createdAt? any
+---@field customView? table
+---@field customer? table
+---@field cycle? table
+---@field dashboard? table
+---@field detail? string
+---@field document? table
+---@field facet? table
+---@field folderName? string
+---@field icon? string
+---@field initiative? table
+---@field initiativeLabel? table
+---@field initiativeTab? string
+---@field issue? table
+---@field label? table
+---@field liveFolderDefinition? any
+---@field liveFolderPreset? string
+---@field owner? table
+---@field parent? table
+---@field pipelineTab? string
+---@field predefinedViewTeam? table
+---@field predefinedViewType? string
+---@field project? table
+---@field projectLabel? table
+---@field projectTab? string
+---@field projectTeam? table
+---@field pullRequest? table
+---@field release? table
+---@field releaseNote? table
+---@field releasePipeline? table
+---@field sortOrder? number
+---@field team? table
+---@field title? string
+---@field type? string
+---@field updatedAt? any
+---@field url? string
+---@field user? table
+---@field workflowDefinition? table
+
+---@class FavoriteRemoveMatch
+---@field id string
+
+---@class GitAutomationState
+---@field archivedAt? any
+---@field createdAt any
+---@field event string
+---@field id string
+---@field state? table
+---@field targetBranch? table
+---@field team? table
+---@field updatedAt any
+
+---@class GitAutomationStateCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field event string
+---@field id string
+---@field state? table
+---@field targetBranch? table
+---@field team? table
+---@field updatedAt any
+
+---@class GitAutomationStateUpdateData
+---@field id string
+---@field archivedAt? any
+---@field createdAt? any
+---@field event? string
+---@field state? table
+---@field targetBranch? table
+---@field team? table
+---@field updatedAt? any
+
+---@class GitAutomationStateRemoveMatch
+---@field id string
+
+---@class GitAutomationTargetBranch
+---@field archivedAt? any
+---@field branchPattern string
+---@field createdAt any
+---@field id string
+---@field isRegex boolean
+---@field team? table
+---@field updatedAt any
+
+---@class GitAutomationTargetBranchCreateData
+---@field archivedAt? any
+---@field branchPattern string
+---@field createdAt any
+---@field id string
+---@field isRegex boolean
+---@field team? table
+---@field updatedAt any
+
+---@class GitAutomationTargetBranchUpdateData
+---@field id string
+---@field archivedAt? any
+---@field branchPattern? string
+---@field createdAt? any
+---@field isRegex? boolean
+---@field team? table
+---@field updatedAt? any
+
+---@class GitAutomationTargetBranchRemoveMatch
+---@field id string
+
+---@class GitHubIntegrationConnectDetail
+---@field lostRepositoryNames? string
+
+---@class GitHubIntegrationConnectDetailCreateData
+---@field code? string
+---@field redirect_uri? string
+---@field github_url? string
+---@field organization_name? string
+---@field access_token? string
+---@field expires_at? string
+---@field gitlab_url? string
+---@field readonly? boolean
+---@field validation_project_path? string
+---@field lostRepositoryNames? string
+
+---@class GitHubIntegrationConnectDetailUpdateData
+---@field code? string
+---@field project_id? string
+---@field redirect_uri? string
+---@field service? string
+---@field custom_view_id? string
+---@field initiative_id? string
+---@field should_use_v2_auth? boolean
+---@field team_id? string
+---@field integration_id? string
+---@field lostRepositoryNames? string
+
+---@class Initiative
+---@field archivedAt? any
+---@field canceledAt? any
+---@field color? string
+---@field completedAt? any
+---@field content? string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field documentContent? table
+---@field frequencyResolution string
+---@field health? string
+---@field healthUpdatedAt? any
+---@field icon? string
+---@field id string
+---@field identifier? string
+---@field integrationsSettings? table
+---@field labelIds string
+---@field lastUpdate? table
+---@field leadTeam? table
+---@field name string
+---@field organization? table
+---@field owner? table
+---@field parentInitiative? table
+---@field previousIdentifiers string
+---@field priority number
+---@field prioritySortOrder number
+---@field slugId string
+---@field sortOrder number
+---@field startedAt? any
+---@field status string
+---@field targetDate? any
+---@field targetDateResolution? string
+---@field trashed? boolean
+---@field updateReminderFrequency? number
+---@field updateReminderFrequencyInWeeks? number
+---@field updateRemindersDay? string
+---@field updateRemindersHour? number
+---@field updatedAt any
+---@field url string
+---@field visibility string
+
+---@class InitiativeLoadMatch
+---@field id string
+
+---@class InitiativeListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class InitiativeCreateData
+---@field archivedAt? any
+---@field canceledAt? any
+---@field color? string
+---@field completedAt? any
+---@field content? string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field documentContent? table
+---@field frequencyResolution string
+---@field health? string
+---@field healthUpdatedAt? any
+---@field icon? string
+---@field id string
+---@field identifier? string
+---@field integrationsSettings? table
+---@field labelIds string
+---@field lastUpdate? table
+---@field leadTeam? table
+---@field name string
+---@field organization? table
+---@field owner? table
+---@field parentInitiative? table
+---@field previousIdentifiers string
+---@field priority number
+---@field prioritySortOrder number
+---@field slugId string
+---@field sortOrder number
+---@field startedAt? any
+---@field status string
+---@field targetDate? any
+---@field targetDateResolution? string
+---@field trashed? boolean
+---@field updateReminderFrequency? number
+---@field updateReminderFrequencyInWeeks? number
+---@field updateRemindersDay? string
+---@field updateRemindersHour? number
+---@field updatedAt any
+---@field url string
+---@field visibility string
+
+---@class InitiativeUpdateData
+---@field id string
+---@field archivedAt? any
+---@field canceledAt? any
+---@field color? string
+---@field completedAt? any
+---@field content? string
+---@field createdAt? any
+---@field creator? table
+---@field description? string
+---@field documentContent? table
+---@field frequencyResolution? string
+---@field health? string
+---@field healthUpdatedAt? any
+---@field icon? string
+---@field identifier? string
+---@field integrationsSettings? table
+---@field labelIds? string
+---@field lastUpdate? table
+---@field leadTeam? table
+---@field name? string
+---@field organization? table
+---@field owner? table
+---@field parentInitiative? table
+---@field previousIdentifiers? string
+---@field priority? number
+---@field prioritySortOrder? number
+---@field slugId? string
+---@field sortOrder? number
+---@field startedAt? any
+---@field status? string
+---@field targetDate? any
+---@field targetDateResolution? string
+---@field trashed? boolean
+---@field updateReminderFrequency? number
+---@field updateReminderFrequencyInWeeks? number
+---@field updateRemindersDay? string
+---@field updateRemindersHour? number
+---@field updatedAt? any
+---@field url? string
+---@field visibility? string
+
+---@class InitiativeRemoveMatch
+---@field id string
+
+---@class InitiativeLabel
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field id string
+---@field isGroup boolean
+---@field lastAppliedAt? any
+---@field name string
+---@field organization? table
+---@field parent? table
+---@field retiredAt? any
+---@field retiredBy? table
+---@field updatedAt any
+
+---@class InitiativeLabelLoadMatch
+---@field id string
+
+---@class InitiativeLabelListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class InitiativeLabelCreateData
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field id string
+---@field isGroup boolean
+---@field lastAppliedAt? any
+---@field name string
+---@field organization? table
+---@field parent? table
+---@field retiredAt? any
+---@field retiredBy? table
+---@field updatedAt any
+
+---@class InitiativeLabelUpdateData
+---@field id string
+---@field archivedAt? any
+---@field color? string
+---@field createdAt? any
+---@field creator? table
+---@field description? string
+---@field isGroup? boolean
+---@field lastAppliedAt? any
+---@field name? string
+---@field organization? table
+---@field parent? table
+---@field retiredAt? any
+---@field retiredBy? table
+---@field updatedAt? any
+
+---@class InitiativeLabelRemoveMatch
+---@field id string
+
+---@class InitiativeLeadTeamChangeImpact
+---@field affectedDescendantCount number
+---@field id? string
+---@field visibilityMayChange boolean
+
+---@class InitiativeLeadTeamChangeImpactLoadMatch
+---@field id string
+---@field lead_team_id? string
+
+---@class InitiativeRelation
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field initiative? table
+---@field relatedInitiative? table
+---@field sortOrder number
+---@field updatedAt any
+---@field user? table
+
+---@class InitiativeRelationLoadMatch
+---@field id string
+
+---@class InitiativeRelationListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class InitiativeRelationCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field initiative? table
+---@field relatedInitiative? table
+---@field sortOrder number
+---@field updatedAt any
+---@field user? table
+
+---@class InitiativeRelationUpdateData
+---@field id string
+---@field archivedAt? any
+---@field createdAt? any
+---@field initiative? table
+---@field relatedInitiative? table
+---@field sortOrder? number
+---@field updatedAt? any
+---@field user? table
+
+---@class InitiativeRelationRemoveMatch
+---@field id string
+
+---@class InitiativeToProject
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field initiative? table
+---@field project? table
+---@field sortOrder string
+---@field updatedAt any
+
+---@class InitiativeToProjectLoadMatch
+---@field id string
+
+---@class InitiativeToProjectListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class InitiativeToProjectCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field initiative? table
+---@field project? table
+---@field sortOrder string
+---@field updatedAt any
+
+---@class InitiativeToProjectUpdateData
+---@field id string
+---@field archivedAt? any
+---@field createdAt? any
+---@field initiative? table
+---@field project? table
+---@field sortOrder? string
+---@field updatedAt? any
+
+---@class InitiativeToProjectRemoveMatch
+---@field id string
+
+---@class InitiativeUpdate
+---@field archivedAt? any
+---@field body string
+---@field bodyData string
+---@field commentCount number
+---@field createdAt any
+---@field diff? any
+---@field diffMarkdown? string
+---@field editedAt? any
+---@field health string
+---@field id string
+---@field infoSnapshot? any
+---@field initiative? table
+---@field isDiffHidden boolean
+---@field isStale boolean
+---@field reactionData any
+---@field slugId string
+---@field updatedAt any
+---@field url string
+---@field user? table
+
+---@class InitiativeUpdateLoadMatch
+---@field id string
+
+---@class InitiativeUpdateListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class InitiativeUpdateCreateData
+---@field archivedAt? any
+---@field body string
+---@field bodyData string
+---@field commentCount number
+---@field createdAt any
+---@field diff? any
+---@field diffMarkdown? string
+---@field editedAt? any
+---@field health string
+---@field id string
+---@field infoSnapshot? any
+---@field initiative? table
+---@field isDiffHidden boolean
+---@field isStale boolean
+---@field reactionData any
+---@field slugId string
+---@field updatedAt any
+---@field url string
+---@field user? table
+
+---@class InitiativeUpdateUpdateData
+---@field id string
+---@field archivedAt? any
+---@field body? string
+---@field bodyData? string
+---@field commentCount? number
+---@field createdAt? any
+---@field diff? any
+---@field diffMarkdown? string
+---@field editedAt? any
+---@field health? string
+---@field infoSnapshot? any
+---@field initiative? table
+---@field isDiffHidden? boolean
+---@field isStale? boolean
+---@field reactionData? any
+---@field slugId? string
+---@field updatedAt? any
+---@field url? string
+---@field user? table
+
+---@class Integration
+---@field archivedAt? any
+---@field createdAt any
+---@field creator? table
+---@field id string
+---@field organization? table
+---@field service string
+---@field team? table
+---@field updatedAt any
+
+---@class IntegrationLoadMatch
+---@field id string
+
+---@class IntegrationListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class IntegrationCreateData
+---@field code? string
+---@field code_verifier? string
+---@field redirect_uri? string
+---@field subdomain? string
+---@field environment? string
+---@field project_key? string
+---@field domain_url? string
+---@field requested_scope? string
+---@field should_use_v2_auth? boolean
+---@field code_access? boolean
+---@field enterprise_url? string
+---@field mcp_server_definition_id? string
+---@field server_url? string
+---@field team_id? string
+---@field workflow_definition_draft_id? string
+---@field workflow_definition_id? string
+---@field api_key? string
+---@field access_token? string
+---@field bot_user_role? string
+---@field custom_api_url? string
+---@field scope? string
+---@field archivedAt? any
+---@field createdAt any
+---@field creator? table
+---@field id string
+---@field organization? table
+---@field service string
+---@field team? table
+---@field updatedAt any
+
+---@class IntegrationUpdateData
+---@field id string
+---@field archivedAt? any
+---@field createdAt? any
+---@field creator? table
+---@field organization? table
+---@field service? string
+---@field team? table
+---@field updatedAt? any
+
+---@class IntegrationRemoveMatch
+---@field id string
+---@field skip_installation_deletion? boolean
+
+---@class IntegrationTemplate
+---@field archivedAt? any
+---@field createdAt any
+---@field foreignEntityId? string
+---@field id string
+---@field integration? table
+---@field template? table
+---@field updatedAt any
+
+---@class IntegrationTemplateLoadMatch
+---@field id string
+
+---@class IntegrationTemplateListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class IntegrationTemplateCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field foreignEntityId? string
+---@field id string
+---@field integration? table
+---@field template? table
+---@field updatedAt any
+
+---@class IntegrationTemplateRemoveMatch
+---@field id string
+
+---@class IntegrationsSetting
+---@field archivedAt? any
+---@field contextViewType? string
+---@field createdAt any
+---@field id string
+---@field initiative? table
+---@field microsoftTeamsProjectUpdateCreated? boolean
+---@field project? table
+---@field slackInitiativeUpdateCreated? boolean
+---@field slackIssueAddedToTriage? boolean
+---@field slackIssueAddedToView? boolean
+---@field slackIssueNewComment? boolean
+---@field slackIssueSlaBreached? boolean
+---@field slackIssueSlaHighRisk? boolean
+---@field slackIssueStatusChangedAll? boolean
+---@field slackIssueStatusChangedDone? boolean
+---@field slackProjectUpdateCreated? boolean
+---@field slackProjectUpdateCreatedToTeam? boolean
+---@field slackProjectUpdateCreatedToWorkspace? boolean
+---@field team? table
+---@field updatedAt any
+
+---@class IntegrationsSettingLoadMatch
+---@field id string
+
+---@class IntegrationsSettingCreateData
+---@field archivedAt? any
+---@field contextViewType? string
+---@field createdAt any
+---@field id string
+---@field initiative? table
+---@field microsoftTeamsProjectUpdateCreated? boolean
+---@field project? table
+---@field slackInitiativeUpdateCreated? boolean
+---@field slackIssueAddedToTriage? boolean
+---@field slackIssueAddedToView? boolean
+---@field slackIssueNewComment? boolean
+---@field slackIssueSlaBreached? boolean
+---@field slackIssueSlaHighRisk? boolean
+---@field slackIssueStatusChangedAll? boolean
+---@field slackIssueStatusChangedDone? boolean
+---@field slackProjectUpdateCreated? boolean
+---@field slackProjectUpdateCreatedToTeam? boolean
+---@field slackProjectUpdateCreatedToWorkspace? boolean
+---@field team? table
+---@field updatedAt any
+
+---@class IntegrationsSettingUpdateData
+---@field id string
+---@field archivedAt? any
+---@field contextViewType? string
+---@field createdAt? any
+---@field initiative? table
+---@field microsoftTeamsProjectUpdateCreated? boolean
+---@field project? table
+---@field slackInitiativeUpdateCreated? boolean
+---@field slackIssueAddedToTriage? boolean
+---@field slackIssueAddedToView? boolean
+---@field slackIssueNewComment? boolean
+---@field slackIssueSlaBreached? boolean
+---@field slackIssueSlaHighRisk? boolean
+---@field slackIssueStatusChangedAll? boolean
+---@field slackIssueStatusChangedDone? boolean
+---@field slackProjectUpdateCreated? boolean
+---@field slackProjectUpdateCreatedToTeam? boolean
+---@field slackProjectUpdateCreatedToWorkspace? boolean
+---@field team? table
+---@field updatedAt? any
+
+---@class Issue
+---@field activitySummary? any
+---@field addedToCycleAt? any
+---@field addedToProjectAt? any
+---@field addedToTeamAt? any
+---@field archivedAt? any
+---@field asksExternalUserRequester? table
+---@field asksRequester? table
 ---@field assignee? table
+---@field autoArchivedAt? any
+---@field autoClosedAt? any
+---@field botActor? table
 ---@field branchName string
 ---@field canceledAt? any
 ---@field completedAt? any
 ---@field createdAt any
 ---@field creator? table
+---@field customerTicketCount number
+---@field cycle? table
+---@field delegate? table
 ---@field description? string
+---@field descriptionState? string
+---@field documentContent? table
 ---@field dueDate? any
 ---@field estimate? number
+---@field externalUserCreator? table
+---@field favorite? table
 ---@field id string
 ---@field identifier string
+---@field inheritsSharedAccess boolean
+---@field integrationSourceType? string
+---@field labelIds string
+---@field lastAppliedTemplate? table
 ---@field number number
+---@field parent? table
+---@field previousIdentifiers string
 ---@field priority number
+---@field priorityLabel string
+---@field prioritySortOrder number
+---@field project? table
+---@field projectMilestone? table
+---@field reactionData any
+---@field recurringIssueTemplate? table
+---@field slaBreachesAt? any
+---@field slaHighRiskAt? any
+---@field slaMediumRiskAt? any
+---@field slaStartedAt? any
+---@field slaType? string
+---@field snoozedBy? table
+---@field snoozedUntilAt? any
+---@field sortOrder number
+---@field sourceComment? table
+---@field startedAt? any
+---@field startedTriageAt? any
 ---@field state? table
+---@field subIssueSortOrder? number
+---@field suggestionsGeneratedAt? any
+---@field summary? table
 ---@field team? table
 ---@field title string
+---@field trashed? boolean
+---@field triagedAt? any
+---@field trusted? boolean
+---@field updatedAt any
+---@field url string
+
+---@class IssueLoadMatch
+---@field branch_name? string
+---@field id? string
+
+---@class IssueListMatch
+---@field after? string
+---@field before? string
+---@field file_key? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+---@field query? string
+
+---@class IssueCreateData
+---@field activitySummary? any
+---@field addedToCycleAt? any
+---@field addedToProjectAt? any
+---@field addedToTeamAt? any
+---@field archivedAt? any
+---@field asksExternalUserRequester? table
+---@field asksRequester? table
+---@field assignee? table
+---@field autoArchivedAt? any
+---@field autoClosedAt? any
+---@field botActor? table
+---@field branchName string
+---@field canceledAt? any
+---@field completedAt? any
+---@field createdAt any
+---@field creator? table
+---@field customerTicketCount number
+---@field cycle? table
+---@field delegate? table
+---@field description? string
+---@field descriptionState? string
+---@field documentContent? table
+---@field dueDate? any
+---@field estimate? number
+---@field externalUserCreator? table
+---@field favorite? table
+---@field id string
+---@field identifier string
+---@field inheritsSharedAccess boolean
+---@field integrationSourceType? string
+---@field labelIds string
+---@field lastAppliedTemplate? table
+---@field number number
+---@field parent? table
+---@field previousIdentifiers string
+---@field priority number
+---@field priorityLabel string
+---@field prioritySortOrder number
+---@field project? table
+---@field projectMilestone? table
+---@field reactionData any
+---@field recurringIssueTemplate? table
+---@field slaBreachesAt? any
+---@field slaHighRiskAt? any
+---@field slaMediumRiskAt? any
+---@field slaStartedAt? any
+---@field slaType? string
+---@field snoozedBy? table
+---@field snoozedUntilAt? any
+---@field sortOrder number
+---@field sourceComment? table
+---@field startedAt? any
+---@field startedTriageAt? any
+---@field state? table
+---@field subIssueSortOrder? number
+---@field suggestionsGeneratedAt? any
+---@field summary? table
+---@field team? table
+---@field title string
+---@field trashed? boolean
+---@field triagedAt? any
+---@field trusted? boolean
 ---@field updatedAt any
 ---@field url string
 
 ---@class IssueUpdateData
 ---@field id string
+---@field activitySummary? any
+---@field addedToCycleAt? any
+---@field addedToProjectAt? any
+---@field addedToTeamAt? any
 ---@field archivedAt? any
+---@field asksExternalUserRequester? table
+---@field asksRequester? table
 ---@field assignee? table
+---@field autoArchivedAt? any
+---@field autoClosedAt? any
+---@field botActor? table
 ---@field branchName? string
 ---@field canceledAt? any
 ---@field completedAt? any
 ---@field createdAt? any
 ---@field creator? table
+---@field customerTicketCount? number
+---@field cycle? table
+---@field delegate? table
 ---@field description? string
+---@field descriptionState? string
+---@field documentContent? table
 ---@field dueDate? any
 ---@field estimate? number
+---@field externalUserCreator? table
+---@field favorite? table
 ---@field identifier? string
+---@field inheritsSharedAccess? boolean
+---@field integrationSourceType? string
+---@field labelIds? string
+---@field lastAppliedTemplate? table
 ---@field number? number
+---@field parent? table
+---@field previousIdentifiers? string
 ---@field priority? number
+---@field priorityLabel? string
+---@field prioritySortOrder? number
+---@field project? table
+---@field projectMilestone? table
+---@field reactionData? any
+---@field recurringIssueTemplate? table
+---@field slaBreachesAt? any
+---@field slaHighRiskAt? any
+---@field slaMediumRiskAt? any
+---@field slaStartedAt? any
+---@field slaType? string
+---@field snoozedBy? table
+---@field snoozedUntilAt? any
+---@field sortOrder? number
+---@field sourceComment? table
+---@field startedAt? any
+---@field startedTriageAt? any
 ---@field state? table
+---@field subIssueSortOrder? number
+---@field suggestionsGeneratedAt? any
+---@field summary? table
 ---@field team? table
+---@field title? string
+---@field trashed? boolean
+---@field triagedAt? any
+---@field trusted? boolean
+---@field updatedAt? any
+---@field url? string
+
+---@class IssueRemoveMatch
+---@field id string
+---@field permanently_delete? boolean
+
+---@class IssueImport
+---@field archivedAt? any
+---@field createdAt any
+---@field creatorId? string
+---@field csvFileUrl? string
+---@field displayName string
+---@field error? string
+---@field errorMetadata? any
+---@field id string
+---@field mapping? any
+---@field progress? number
+---@field service string
+---@field serviceMetadata? any
+---@field status string
+---@field teamName? string
+---@field updatedAt any
+
+---@class IssueImportCreateData
+---@field id? string
+---@field include_closed_issue? boolean
+---@field instant_process? boolean
+---@field jira_email? string
+---@field jira_hostname? string
+---@field jira_project? string
+---@field jira_token? string
+---@field jql? string
+---@field team_id? string
+---@field team_name? string
+---@field asana_team_name? string
+---@field asana_token? string
+---@field clubhouse_group_name? string
+---@field clubhouse_token? string
+---@field csv_url? string
+---@field github_label? string
+---@field github_repo_id? number
+---@field archivedAt? any
+---@field createdAt any
+---@field creatorId? string
+---@field csvFileUrl? string
+---@field displayName string
+---@field error? string
+---@field errorMetadata? any
+---@field mapping? any
+---@field progress? number
+---@field service string
+---@field serviceMetadata? any
+---@field status string
+---@field teamName? string
+---@field updatedAt any
+
+---@class IssueImportUpdateData
+---@field id string
+---@field archivedAt? any
+---@field createdAt? any
+---@field creatorId? string
+---@field csvFileUrl? string
+---@field displayName? string
+---@field error? string
+---@field errorMetadata? any
+---@field mapping? any
+---@field progress? number
+---@field service? string
+---@field serviceMetadata? any
+---@field status? string
+---@field teamName? string
+---@field updatedAt? any
+
+---@class IssueImportRemoveMatch
+---@field issue_import_id string
+
+---@class IssueLabel
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field groupType? string
+---@field id string
+---@field inheritedFrom? table
+---@field isGroup boolean
+---@field lastAppliedAt? any
+---@field name string
+---@field parent? table
+---@field retiredAt? any
+---@field retiredBy? table
+---@field team? table
+---@field updatedAt any
+
+---@class IssueLabelLoadMatch
+---@field id string
+
+---@class IssueLabelListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class IssueLabelCreateData
+---@field replace_team_label? boolean
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field groupType? string
+---@field id string
+---@field inheritedFrom? table
+---@field isGroup boolean
+---@field lastAppliedAt? any
+---@field name string
+---@field parent? table
+---@field retiredAt? any
+---@field retiredBy? table
+---@field team? table
+---@field updatedAt any
+
+---@class IssueLabelUpdateData
+---@field id string
+---@field replace_team_label? boolean
+---@field archivedAt? any
+---@field color? string
+---@field createdAt? any
+---@field creator? table
+---@field description? string
+---@field groupType? string
+---@field inheritedFrom? table
+---@field isGroup? boolean
+---@field lastAppliedAt? any
+---@field name? string
+---@field parent? table
+---@field retiredAt? any
+---@field retiredBy? table
+---@field team? table
+---@field updatedAt? any
+
+---@class IssueLabelRemoveMatch
+---@field id string
+
+---@class IssuePriorityValue
+---@field label string
+---@field priority number
+
+---@class IssuePriorityValueListMatch
+---@field label? string
+---@field priority? number
+
+---@class IssueRelation
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field issue? table
+---@field relatedIssue? table
+---@field type string
+---@field updatedAt any
+
+---@class IssueRelationLoadMatch
+---@field id string
+
+---@class IssueRelationListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class IssueRelationCreateData
+---@field override_created_at? any
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field issue? table
+---@field relatedIssue? table
+---@field type string
+---@field updatedAt any
+
+---@class IssueRelationUpdateData
+---@field id string
+---@field archivedAt? any
+---@field createdAt? any
+---@field issue? table
+---@field relatedIssue? table
+---@field type? string
+---@field updatedAt? any
+
+---@class IssueRelationRemoveMatch
+---@field id string
+
+---@class IssueSearchResult
+---@field activitySummary? any
+---@field addedToCycleAt? any
+---@field addedToProjectAt? any
+---@field addedToTeamAt? any
+---@field archivedAt? any
+---@field asksExternalUserRequester? table
+---@field asksRequester? table
+---@field assignee? table
+---@field autoArchivedAt? any
+---@field autoClosedAt? any
+---@field botActor? table
+---@field branchName string
+---@field canceledAt? any
+---@field completedAt? any
+---@field createdAt any
+---@field creator? table
+---@field customerTicketCount number
+---@field cycle? table
+---@field delegate? table
+---@field description? string
+---@field descriptionState? string
+---@field documentContent? table
+---@field dueDate? any
+---@field estimate? number
+---@field externalUserCreator? table
+---@field favorite? table
+---@field id string
+---@field identifier string
+---@field inheritsSharedAccess boolean
+---@field integrationSourceType? string
+---@field labelIds string
+---@field lastAppliedTemplate? table
+---@field metadata any
+---@field number number
+---@field parent? table
+---@field previousIdentifiers string
+---@field priority number
+---@field priorityLabel string
+---@field prioritySortOrder number
+---@field project? table
+---@field projectMilestone? table
+---@field reactionData any
+---@field recurringIssueTemplate? table
+---@field slaBreachesAt? any
+---@field slaHighRiskAt? any
+---@field slaMediumRiskAt? any
+---@field slaStartedAt? any
+---@field slaType? string
+---@field snoozedBy? table
+---@field snoozedUntilAt? any
+---@field sortOrder number
+---@field sourceComment? table
+---@field startedAt? any
+---@field startedTriageAt? any
+---@field state? table
+---@field subIssueSortOrder? number
+---@field suggestionsGeneratedAt? any
+---@field summary? table
+---@field team? table
+---@field title string
+---@field trashed? boolean
+---@field triagedAt? any
+---@field trusted? boolean
+---@field updatedAt any
+---@field url string
+
+---@class IssueSearchResultListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field include_comment? boolean
+---@field last? number
+---@field order_by? any
+---@field team_id? string
+---@field term string
+
+---@class IssueToRelease
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field issue? table
+---@field release? table
+---@field updatedAt any
+
+---@class IssueToReleaseLoadMatch
+---@field id string
+
+---@class IssueToReleaseListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class IssueToReleaseCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field issue? table
+---@field release? table
+---@field updatedAt any
+
+---@class IssueToReleaseRemoveMatch
+---@field id string
+
+---@class LogoutResponse
+---@field success boolean
+
+---@class LogoutResponseCreateData
+---@field reason? string
+---@field success boolean
+
+---@class LogoutResponseUpdateData
+---@field session_id string
+---@field success? boolean
+
+---@class Notification
+---@field actor? table
+---@field actorAvatarColor string
+---@field actorAvatarUrl? string
+---@field actorInactive boolean
+---@field actorInitials? string
+---@field archivedAt? any
+---@field botActor? table
+---@field category string
+---@field createdAt any
+---@field emailedAt? any
+---@field externalUserActor? table
+---@field groupingKey string
+---@field groupingPriority number
+---@field id string
+---@field inboxUrl string
+---@field initiativeUpdateHealth? string
+---@field isLinearActor boolean
+---@field issueStatusType? string
+---@field projectUpdateHealth? string
+---@field readAt? any
+---@field snoozedUntilAt? any
+---@field subtitle string
+---@field title string
+---@field type string
+---@field unsnoozedAt? any
+---@field updatedAt any
+---@field url string
+---@field user? table
+
+---@class NotificationLoadMatch
+---@field id string
+
+---@class NotificationListMatch
+---@field after? string
+---@field first? number
+---@field unread_only? boolean
+---@field before? string
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class NotificationSubscription
+---@field active boolean
+---@field archivedAt? any
+---@field contextViewType? string
+---@field createdAt any
+---@field customView? table
+---@field customer? table
+---@field cycle? table
+---@field id string
+---@field initiative? table
+---@field label? table
+---@field project? table
+---@field subscriber? table
+---@field team? table
+---@field updatedAt any
+---@field user? table
+---@field userContextViewType? string
+
+---@class NotificationSubscriptionLoadMatch
+---@field id string
+
+---@class NotificationSubscriptionListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class OAuthApplication
+---@field clientId string
+---@field createdAt any
+---@field description? string
+---@field developer string
+---@field developerUrl string
+---@field distribution string
+---@field grantTypes string
+---@field id string
+---@field imageUrl? string
+---@field name string
+---@field redirectUris string
+---@field updatedAt any
+---@field webhookEnabled boolean
+---@field webhookResourceTypes string
+---@field webhookUrl? string
+
+---@class OAuthApplicationLoadMatch
+---@field id string
+
+---@class OAuthApplicationListMatch
+---@field clientId? string
+---@field createdAt? any
+---@field description? string
+---@field developer? string
+---@field developerUrl? string
+---@field distribution? string
+---@field grantTypes? string
+---@field id? string
+---@field imageUrl? string
+---@field name? string
+---@field redirectUris? string
+---@field updatedAt? any
+---@field webhookEnabled? boolean
+---@field webhookResourceTypes? string
+---@field webhookUrl? string
+
+---@class OAuthApplicationCreateData
+---@field clientId string
+---@field createdAt any
+---@field description? string
+---@field developer string
+---@field developerUrl string
+---@field distribution string
+---@field grantTypes string
+---@field id string
+---@field imageUrl? string
+---@field name string
+---@field redirectUris string
+---@field updatedAt any
+---@field webhookEnabled boolean
+---@field webhookResourceTypes string
+---@field webhookUrl? string
+
+---@class OAuthApplicationUpdateData
+---@field id string
+---@field clientId? string
+---@field createdAt? any
+---@field description? string
+---@field developer? string
+---@field developerUrl? string
+---@field distribution? string
+---@field grantTypes? string
+---@field imageUrl? string
+---@field name? string
+---@field redirectUris? string
+---@field updatedAt? any
+---@field webhookEnabled? boolean
+---@field webhookResourceTypes? string
+---@field webhookUrl? string
+
+---@class Organization
+---@field agentAutomationEnabled boolean
+---@field aiAddonEnabled boolean
+---@field aiDiscussionSummariesEnabled boolean
+---@field aiProviderConfiguration? any
+---@field aiTelemetryEnabled boolean
+---@field aiThreadSummariesEnabled boolean
+---@field allowedFileUploadContentTypes? string
+---@field archivedAt? any
+---@field authSettings any
+---@field codeIntelligenceEnabled boolean
+---@field codeIntelligenceRepository? string
+---@field codingAgentEnabled boolean
+---@field codingAgentSettings any
+---@field createdAt any
+---@field createdIssueCount number
+---@field customerCount number
+---@field customersConfiguration any
+---@field customersEnabled boolean
+---@field defaultFeedSummarySchedule? string
+---@field defaultHomeView? string
+---@field defaultHomeViewTargetId? string
+---@field deletionRequestedAt? any
+---@field feedEnabled boolean
+---@field fiscalYearStartMonth number
+---@field generatedUpdatesEnabled boolean
+---@field gitBranchFormat? string
+---@field gitLinkbackDescriptionsEnabled boolean
+---@field gitLinkbackMessagesEnabled boolean
+---@field gitPublicLinkbackMessagesEnabled boolean
+---@field hipaaComplianceEnabled boolean
+---@field id string
+---@field initiativeUpdateReminderFrequencyInWeeks? number
+---@field initiativeUpdateRemindersDay string
+---@field initiativeUpdateRemindersHour number
+---@field linearAgentEnabled boolean
+---@field linearAgentSettings any
+---@field logoUrl? string
+---@field name string
+---@field periodUploadVolume number
+---@field previousUrlKeys string
+---@field projectUpdateReminderFrequencyInWeeks? number
+---@field projectUpdateRemindersDay string
+---@field projectUpdateRemindersHour number
+---@field pullRequestIssueMode string
+---@field pullRequestTourEnabled boolean
+---@field releaseChannel string
+---@field releasesEnabled boolean
+---@field restrictAgentInvocationToMembers? boolean
+---@field roadmapEnabled boolean
+---@field samlEnabled boolean
+---@field samlSettings? any
+---@field scimEnabled boolean
+---@field scimSettings? any
+---@field securitySettings any
+---@field slackAutoCreateProjectChannel boolean
+---@field slackProjectChannelIntegration? table
+---@field slackProjectChannelPrefix string
+---@field slackProjectChannelsEnabled boolean
+---@field subscription? table
+---@field themeSettings? any
+---@field trialEndsAt? any
+---@field trialStartsAt? any
+---@field updatedAt any
+---@field urlKey string
+---@field userCount number
+---@field workingDays number
+
+---@class OrganizationLoadMatch
+---@field agentAutomationEnabled? boolean
+---@field aiAddonEnabled? boolean
+---@field aiDiscussionSummariesEnabled? boolean
+---@field aiProviderConfiguration? any
+---@field aiTelemetryEnabled? boolean
+---@field aiThreadSummariesEnabled? boolean
+---@field allowedFileUploadContentTypes? string
+---@field archivedAt? any
+---@field authSettings? any
+---@field codeIntelligenceEnabled? boolean
+---@field codeIntelligenceRepository? string
+---@field codingAgentEnabled? boolean
+---@field codingAgentSettings? any
+---@field createdAt? any
+---@field createdIssueCount? number
+---@field customerCount? number
+---@field customersConfiguration? any
+---@field customersEnabled? boolean
+---@field defaultFeedSummarySchedule? string
+---@field defaultHomeView? string
+---@field defaultHomeViewTargetId? string
+---@field deletionRequestedAt? any
+---@field feedEnabled? boolean
+---@field fiscalYearStartMonth? number
+---@field generatedUpdatesEnabled? boolean
+---@field gitBranchFormat? string
+---@field gitLinkbackDescriptionsEnabled? boolean
+---@field gitLinkbackMessagesEnabled? boolean
+---@field gitPublicLinkbackMessagesEnabled? boolean
+---@field hipaaComplianceEnabled? boolean
+---@field id string
+---@field initiativeUpdateReminderFrequencyInWeeks? number
+---@field initiativeUpdateRemindersDay? string
+---@field initiativeUpdateRemindersHour? number
+---@field linearAgentEnabled? boolean
+---@field linearAgentSettings? any
+---@field logoUrl? string
+---@field name? string
+---@field periodUploadVolume? number
+---@field previousUrlKeys? string
+---@field projectUpdateReminderFrequencyInWeeks? number
+---@field projectUpdateRemindersDay? string
+---@field projectUpdateRemindersHour? number
+---@field pullRequestIssueMode? string
+---@field pullRequestTourEnabled? boolean
+---@field releaseChannel? string
+---@field releasesEnabled? boolean
+---@field restrictAgentInvocationToMembers? boolean
+---@field roadmapEnabled? boolean
+---@field samlEnabled? boolean
+---@field samlSettings? any
+---@field scimEnabled? boolean
+---@field scimSettings? any
+---@field securitySettings? any
+---@field slackAutoCreateProjectChannel? boolean
+---@field slackProjectChannelIntegration? table
+---@field slackProjectChannelPrefix? string
+---@field slackProjectChannelsEnabled? boolean
+---@field subscription? table
+---@field themeSettings? any
+---@field trialEndsAt? any
+---@field trialStartsAt? any
+---@field updatedAt? any
+---@field urlKey? string
+---@field userCount? number
+---@field workingDays? number
+
+---@class OrganizationUpdateData
+---@field agentAutomationEnabled? boolean
+---@field aiAddonEnabled? boolean
+---@field aiDiscussionSummariesEnabled? boolean
+---@field aiProviderConfiguration? any
+---@field aiTelemetryEnabled? boolean
+---@field aiThreadSummariesEnabled? boolean
+---@field allowedFileUploadContentTypes? string
+---@field archivedAt? any
+---@field authSettings? any
+---@field codeIntelligenceEnabled? boolean
+---@field codeIntelligenceRepository? string
+---@field codingAgentEnabled? boolean
+---@field codingAgentSettings? any
+---@field createdAt? any
+---@field createdIssueCount? number
+---@field customerCount? number
+---@field customersConfiguration? any
+---@field customersEnabled? boolean
+---@field defaultFeedSummarySchedule? string
+---@field defaultHomeView? string
+---@field defaultHomeViewTargetId? string
+---@field deletionRequestedAt? any
+---@field feedEnabled? boolean
+---@field fiscalYearStartMonth? number
+---@field generatedUpdatesEnabled? boolean
+---@field gitBranchFormat? string
+---@field gitLinkbackDescriptionsEnabled? boolean
+---@field gitLinkbackMessagesEnabled? boolean
+---@field gitPublicLinkbackMessagesEnabled? boolean
+---@field hipaaComplianceEnabled? boolean
+---@field id? string
+---@field initiativeUpdateReminderFrequencyInWeeks? number
+---@field initiativeUpdateRemindersDay? string
+---@field initiativeUpdateRemindersHour? number
+---@field linearAgentEnabled? boolean
+---@field linearAgentSettings? any
+---@field logoUrl? string
+---@field name? string
+---@field periodUploadVolume? number
+---@field previousUrlKeys? string
+---@field projectUpdateReminderFrequencyInWeeks? number
+---@field projectUpdateRemindersDay? string
+---@field projectUpdateRemindersHour? number
+---@field pullRequestIssueMode? string
+---@field pullRequestTourEnabled? boolean
+---@field releaseChannel? string
+---@field releasesEnabled? boolean
+---@field restrictAgentInvocationToMembers? boolean
+---@field roadmapEnabled? boolean
+---@field samlEnabled? boolean
+---@field samlSettings? any
+---@field scimEnabled? boolean
+---@field scimSettings? any
+---@field securitySettings? any
+---@field slackAutoCreateProjectChannel? boolean
+---@field slackProjectChannelIntegration? table
+---@field slackProjectChannelPrefix? string
+---@field slackProjectChannelsEnabled? boolean
+---@field subscription? table
+---@field themeSettings? any
+---@field trialEndsAt? any
+---@field trialStartsAt? any
+---@field updatedAt? any
+---@field urlKey? string
+---@field userCount? number
+---@field workingDays? number
+
+---@class OrganizationRemoveMatch
+---@field agentAutomationEnabled? boolean
+---@field aiAddonEnabled? boolean
+---@field aiDiscussionSummariesEnabled? boolean
+---@field aiProviderConfiguration? any
+---@field aiTelemetryEnabled? boolean
+---@field aiThreadSummariesEnabled? boolean
+---@field allowedFileUploadContentTypes? string
+---@field archivedAt? any
+---@field authSettings? any
+---@field codeIntelligenceEnabled? boolean
+---@field codeIntelligenceRepository? string
+---@field codingAgentEnabled? boolean
+---@field codingAgentSettings? any
+---@field createdAt? any
+---@field createdIssueCount? number
+---@field customerCount? number
+---@field customersConfiguration? any
+---@field customersEnabled? boolean
+---@field defaultFeedSummarySchedule? string
+---@field defaultHomeView? string
+---@field defaultHomeViewTargetId? string
+---@field deletionRequestedAt? any
+---@field feedEnabled? boolean
+---@field fiscalYearStartMonth? number
+---@field generatedUpdatesEnabled? boolean
+---@field gitBranchFormat? string
+---@field gitLinkbackDescriptionsEnabled? boolean
+---@field gitLinkbackMessagesEnabled? boolean
+---@field gitPublicLinkbackMessagesEnabled? boolean
+---@field hipaaComplianceEnabled? boolean
+---@field id string
+---@field initiativeUpdateReminderFrequencyInWeeks? number
+---@field initiativeUpdateRemindersDay? string
+---@field initiativeUpdateRemindersHour? number
+---@field linearAgentEnabled? boolean
+---@field linearAgentSettings? any
+---@field logoUrl? string
+---@field name? string
+---@field periodUploadVolume? number
+---@field previousUrlKeys? string
+---@field projectUpdateReminderFrequencyInWeeks? number
+---@field projectUpdateRemindersDay? string
+---@field projectUpdateRemindersHour? number
+---@field pullRequestIssueMode? string
+---@field pullRequestTourEnabled? boolean
+---@field releaseChannel? string
+---@field releasesEnabled? boolean
+---@field restrictAgentInvocationToMembers? boolean
+---@field roadmapEnabled? boolean
+---@field samlEnabled? boolean
+---@field samlSettings? any
+---@field scimEnabled? boolean
+---@field scimSettings? any
+---@field securitySettings? any
+---@field slackAutoCreateProjectChannel? boolean
+---@field slackProjectChannelIntegration? table
+---@field slackProjectChannelPrefix? string
+---@field slackProjectChannelsEnabled? boolean
+---@field subscription? table
+---@field themeSettings? any
+---@field trialEndsAt? any
+---@field trialStartsAt? any
+---@field updatedAt? any
+---@field urlKey? string
+---@field userCount? number
+---@field workingDays? number
+
+---@class OrganizationDomain
+---@field archivedAt? any
+---@field authType string
+---@field claimed? boolean
+---@field createdAt any
+---@field creator? table
+---@field disableOrganizationCreation? boolean
+---@field id string
+---@field identityProvider? table
+---@field name string
+---@field updatedAt any
+---@field verificationEmail? string
+---@field verified boolean
+
+---@class OrganizationDomainCreateData
+---@field trigger_email_verification? boolean
+---@field archivedAt? any
+---@field authType string
+---@field claimed? boolean
+---@field createdAt any
+---@field creator? table
+---@field disableOrganizationCreation? boolean
+---@field id string
+---@field identityProvider? table
+---@field name string
+---@field updatedAt any
+---@field verificationEmail? string
+---@field verified boolean
+
+---@class OrganizationDomainUpdateData
+---@field id string
+---@field archivedAt? any
+---@field authType? string
+---@field claimed? boolean
+---@field createdAt? any
+---@field creator? table
+---@field disableOrganizationCreation? boolean
+---@field identityProvider? table
+---@field name? string
+---@field updatedAt? any
+---@field verificationEmail? string
+---@field verified? boolean
+
+---@class OrganizationDomainRemoveMatch
+---@field id string
+
+---@class OrganizationInvite
+---@field acceptedAt? any
+---@field archivedAt? any
+---@field createdAt any
+---@field email string
+---@field expiresAt? any
+---@field external boolean
+---@field id string
+---@field invitee? table
+---@field inviter? table
+---@field metadata? any
+---@field organization? table
+---@field role string
+---@field updatedAt any
+
+---@class OrganizationInviteLoadMatch
+---@field id string
+
+---@class OrganizationInviteListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class OrganizationInviteCreateData
+---@field acceptedAt? any
+---@field archivedAt? any
+---@field createdAt any
+---@field email string
+---@field expiresAt? any
+---@field external boolean
+---@field id string
+---@field invitee? table
+---@field inviter? table
+---@field metadata? any
+---@field organization? table
+---@field role string
+---@field updatedAt any
+
+---@class OrganizationInviteUpdateData
+---@field id string
+---@field acceptedAt? any
+---@field archivedAt? any
+---@field createdAt? any
+---@field email? string
+---@field expiresAt? any
+---@field external? boolean
+---@field invitee? table
+---@field inviter? table
+---@field metadata? any
+---@field organization? table
+---@field role? string
+---@field updatedAt? any
+
+---@class OrganizationInviteRemoveMatch
+---@field id string
+
+---@class OrganizationMeta
+---@field allowedAuthServices string
+---@field region string
+
+---@class OrganizationMetaLoadMatch
+---@field url_key string
+
+---@class PasskeyLoginStartResponse
+---@field options any
+---@field success boolean
+
+---@class PasskeyLoginStartResponseUpdateData
+---@field auth_id string
+---@field options? any
+---@field success? boolean
+
+---@class Project
+---@field archivedAt? any
+---@field autoArchivedAt? any
+---@field canceledAt? any
+---@field color string
+---@field completedAt? any
+---@field completedIssueCountHistory number
+---@field completedScopeHistory number
+---@field content? string
+---@field contentState? string
+---@field convertedFromIssue? table
+---@field createdAt any
+---@field creator? table
+---@field currentProgress any
+---@field description string
+---@field documentContent? table
+---@field favorite? table
+---@field frequencyResolution string
+---@field health? string
+---@field healthUpdatedAt? any
+---@field icon? string
+---@field id string
+---@field identifier? string
+---@field inProgressScopeHistory number
+---@field integrationsSettings? table
+---@field issueCountHistory number
+---@field labelIds string
+---@field lastAppliedTemplate? table
+---@field lastUpdate? table
+---@field lead? table
+---@field leadTeam? table
+---@field microsoftTeamsChannelId? string
+---@field name string
+---@field previousIdentifiers string
+---@field priority number
+---@field priorityLabel string
+---@field prioritySortOrder number
+---@field progress number
+---@field progressHistory any
+---@field projectUpdateRemindersPausedUntilAt? any
+---@field resourceCount number
+---@field scope number
+---@field scopeHistory number
+---@field slackChannelId? string
+---@field slugId string
+---@field sortOrder number
+---@field startDate? any
+---@field startDateResolution? string
+---@field startedAt? any
+---@field status? table
+---@field targetDate? any
+---@field targetDateResolution? string
+---@field trashed? boolean
+---@field updateReminderFrequency? number
+---@field updateReminderFrequencyInWeeks? number
+---@field updateRemindersDay? string
+---@field updateRemindersHour? number
+---@field updatedAt any
+---@field url string
+
+---@class ProjectLoadMatch
+---@field id string
+
+---@class ProjectListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class ProjectCreateData
+---@field ai_conversation_id? string
+---@field project_draft_id? string
+---@field slack_channel_name? string
+---@field archivedAt? any
+---@field autoArchivedAt? any
+---@field canceledAt? any
+---@field color string
+---@field completedAt? any
+---@field completedIssueCountHistory number
+---@field completedScopeHistory number
+---@field content? string
+---@field contentState? string
+---@field convertedFromIssue? table
+---@field createdAt any
+---@field creator? table
+---@field currentProgress any
+---@field description string
+---@field documentContent? table
+---@field favorite? table
+---@field frequencyResolution string
+---@field health? string
+---@field healthUpdatedAt? any
+---@field icon? string
+---@field id string
+---@field identifier? string
+---@field inProgressScopeHistory number
+---@field integrationsSettings? table
+---@field issueCountHistory number
+---@field labelIds string
+---@field lastAppliedTemplate? table
+---@field lastUpdate? table
+---@field lead? table
+---@field leadTeam? table
+---@field microsoftTeamsChannelId? string
+---@field name string
+---@field previousIdentifiers string
+---@field priority number
+---@field priorityLabel string
+---@field prioritySortOrder number
+---@field progress number
+---@field progressHistory any
+---@field projectUpdateRemindersPausedUntilAt? any
+---@field resourceCount number
+---@field scope number
+---@field scopeHistory number
+---@field slackChannelId? string
+---@field slugId string
+---@field sortOrder number
+---@field startDate? any
+---@field startDateResolution? string
+---@field startedAt? any
+---@field status? table
+---@field targetDate? any
+---@field targetDateResolution? string
+---@field trashed? boolean
+---@field updateReminderFrequency? number
+---@field updateReminderFrequencyInWeeks? number
+---@field updateRemindersDay? string
+---@field updateRemindersHour? number
+---@field updatedAt any
+---@field url string
+
+---@class ProjectUpdateData
+---@field id string
+---@field archivedAt? any
+---@field autoArchivedAt? any
+---@field canceledAt? any
+---@field color? string
+---@field completedAt? any
+---@field completedIssueCountHistory? number
+---@field completedScopeHistory? number
+---@field content? string
+---@field contentState? string
+---@field convertedFromIssue? table
+---@field createdAt? any
+---@field creator? table
+---@field currentProgress? any
+---@field description? string
+---@field documentContent? table
+---@field favorite? table
+---@field frequencyResolution? string
+---@field health? string
+---@field healthUpdatedAt? any
+---@field icon? string
+---@field identifier? string
+---@field inProgressScopeHistory? number
+---@field integrationsSettings? table
+---@field issueCountHistory? number
+---@field labelIds? string
+---@field lastAppliedTemplate? table
+---@field lastUpdate? table
+---@field lead? table
+---@field leadTeam? table
+---@field microsoftTeamsChannelId? string
+---@field name? string
+---@field previousIdentifiers? string
+---@field priority? number
+---@field priorityLabel? string
+---@field prioritySortOrder? number
+---@field progress? number
+---@field progressHistory? any
+---@field projectUpdateRemindersPausedUntilAt? any
+---@field resourceCount? number
+---@field scope? number
+---@field scopeHistory? number
+---@field slackChannelId? string
+---@field slugId? string
+---@field sortOrder? number
+---@field startDate? any
+---@field startDateResolution? string
+---@field startedAt? any
+---@field status? table
+---@field targetDate? any
+---@field targetDateResolution? string
+---@field trashed? boolean
+---@field updateReminderFrequency? number
+---@field updateReminderFrequencyInWeeks? number
+---@field updateRemindersDay? string
+---@field updateRemindersHour? number
+---@field updatedAt? any
+---@field url? string
+
+---@class ProjectRemoveMatch
+---@field id string
+
+---@class ProjectLabel
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field id string
+---@field inheritedFrom? table
+---@field isGroup boolean
+---@field lastAppliedAt? any
+---@field name string
+---@field organization? table
+---@field parent? table
+---@field retiredAt? any
+---@field retiredBy? table
+---@field team? table
+---@field updatedAt any
+
+---@class ProjectLabelLoadMatch
+---@field id string
+
+---@class ProjectLabelListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class ProjectLabelCreateData
+---@field replace_team_label? boolean
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field id string
+---@field inheritedFrom? table
+---@field isGroup boolean
+---@field lastAppliedAt? any
+---@field name string
+---@field organization? table
+---@field parent? table
+---@field retiredAt? any
+---@field retiredBy? table
+---@field team? table
+---@field updatedAt any
+
+---@class ProjectLabelUpdateData
+---@field id string
+---@field replace_team_label? boolean
+---@field archivedAt? any
+---@field color? string
+---@field createdAt? any
+---@field creator? table
+---@field description? string
+---@field inheritedFrom? table
+---@field isGroup? boolean
+---@field lastAppliedAt? any
+---@field name? string
+---@field organization? table
+---@field parent? table
+---@field retiredAt? any
+---@field retiredBy? table
+---@field team? table
+---@field updatedAt? any
+
+---@class ProjectLabelRemoveMatch
+---@field id string
+
+---@class ProjectMilestone
+---@field archivedAt? any
+---@field createdAt any
+---@field currentProgress any
+---@field description? string
+---@field descriptionState? string
+---@field documentContent? table
+---@field id string
+---@field name string
+---@field progress number
+---@field progressHistory any
+---@field project? table
+---@field sortOrder number
+---@field status string
+---@field targetDate? any
+---@field updatedAt any
+
+---@class ProjectMilestoneLoadMatch
+---@field id string
+
+---@class ProjectMilestoneListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class ProjectMilestoneCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field currentProgress any
+---@field description? string
+---@field descriptionState? string
+---@field documentContent? table
+---@field id string
+---@field name string
+---@field progress number
+---@field progressHistory any
+---@field project? table
+---@field sortOrder number
+---@field status string
+---@field targetDate? any
+---@field updatedAt any
+
+---@class ProjectMilestoneUpdateData
+---@field id string
+---@field archivedAt? any
+---@field createdAt? any
+---@field currentProgress? any
+---@field description? string
+---@field descriptionState? string
+---@field documentContent? table
+---@field name? string
+---@field progress? number
+---@field progressHistory? any
+---@field project? table
+---@field sortOrder? number
+---@field status? string
+---@field targetDate? any
+---@field updatedAt? any
+
+---@class ProjectMilestoneRemoveMatch
+---@field id string
+
+---@class ProjectMilestoneMoveProjectTeam
+---@field id? string
+---@field projectId string
+---@field teamIds string
+
+---@class ProjectMilestoneMoveProjectTeamUpdateData
+---@field id string
+---@field projectId? string
+---@field teamIds? string
+
+---@class ProjectRelation
+---@field anchorType string
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field project? table
+---@field projectMilestone? table
+---@field relatedAnchorType string
+---@field relatedProject? table
+---@field relatedProjectMilestone? table
+---@field type string
+---@field updatedAt any
+---@field user? table
+
+---@class ProjectRelationLoadMatch
+---@field id string
+
+---@class ProjectRelationListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class ProjectRelationCreateData
+---@field anchorType string
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field project? table
+---@field projectMilestone? table
+---@field relatedAnchorType string
+---@field relatedProject? table
+---@field relatedProjectMilestone? table
+---@field type string
+---@field updatedAt any
+---@field user? table
+
+---@class ProjectRelationUpdateData
+---@field id string
+---@field anchorType? string
+---@field archivedAt? any
+---@field createdAt? any
+---@field project? table
+---@field projectMilestone? table
+---@field relatedAnchorType? string
+---@field relatedProject? table
+---@field relatedProjectMilestone? table
+---@field type? string
+---@field updatedAt? any
+---@field user? table
+
+---@class ProjectRelationRemoveMatch
+---@field id string
+
+---@class ProjectSearchResult
+---@field archivedAt? any
+---@field autoArchivedAt? any
+---@field canceledAt? any
+---@field color string
+---@field completedAt? any
+---@field completedIssueCountHistory number
+---@field completedScopeHistory number
+---@field content? string
+---@field contentState? string
+---@field convertedFromIssue? table
+---@field createdAt any
+---@field creator? table
+---@field currentProgress any
+---@field description string
+---@field documentContent? table
+---@field favorite? table
+---@field frequencyResolution string
+---@field health? string
+---@field healthUpdatedAt? any
+---@field icon? string
+---@field id string
+---@field identifier? string
+---@field inProgressScopeHistory number
+---@field integrationsSettings? table
+---@field issueCountHistory number
+---@field labelIds string
+---@field lastAppliedTemplate? table
+---@field lastUpdate? table
+---@field lead? table
+---@field leadTeam? table
+---@field metadata any
+---@field microsoftTeamsChannelId? string
+---@field name string
+---@field previousIdentifiers string
+---@field priority number
+---@field priorityLabel string
+---@field prioritySortOrder number
+---@field progress number
+---@field progressHistory any
+---@field projectUpdateRemindersPausedUntilAt? any
+---@field resourceCount number
+---@field scope number
+---@field scopeHistory number
+---@field slackChannelId? string
+---@field slugId string
+---@field sortOrder number
+---@field startDate? any
+---@field startDateResolution? string
+---@field startedAt? any
+---@field status? table
+---@field targetDate? any
+---@field targetDateResolution? string
+---@field trashed? boolean
+---@field updateReminderFrequency? number
+---@field updateReminderFrequencyInWeeks? number
+---@field updateRemindersDay? string
+---@field updateRemindersHour? number
+---@field updatedAt any
+---@field url string
+
+---@class ProjectSearchResultListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field include_comment? boolean
+---@field last? number
+---@field order_by? any
+---@field team_id? string
+---@field term string
+
+---@class ProjectStatus
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field description? string
+---@field id string
+---@field indefinite boolean
+---@field inheritedFrom? table
+---@field name string
+---@field position number
+---@field team? table
+---@field type string
+---@field updatedAt any
+
+---@class ProjectStatusLoadMatch
+---@field id string
+
+---@class ProjectStatusListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class ProjectStatusCreateData
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field description? string
+---@field id string
+---@field indefinite boolean
+---@field inheritedFrom? table
+---@field name string
+---@field position number
+---@field team? table
+---@field type string
+---@field updatedAt any
+
+---@class ProjectStatusUpdateData
+---@field id string
+---@field archivedAt? any
+---@field color? string
+---@field createdAt? any
+---@field description? string
+---@field indefinite? boolean
+---@field inheritedFrom? table
+---@field name? string
+---@field position? number
+---@field team? table
+---@field type? string
+---@field updatedAt? any
+
+---@class ProjectUpdate
+---@field archivedAt? any
+---@field body string
+---@field bodyData string
+---@field commentCount number
+---@field createdAt any
+---@field diff? any
+---@field diffMarkdown? string
+---@field editedAt? any
+---@field health string
+---@field id string
+---@field infoSnapshot? any
+---@field isDiffHidden boolean
+---@field isStale boolean
+---@field project? table
+---@field reactionData any
+---@field shortSummary? string
+---@field slugId string
+---@field updatedAt any
+---@field url string
+---@field user? table
+
+---@class ProjectUpdateLoadMatch
+---@field id string
+---@field project_id? string
+
+---@class ProjectUpdateListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class ProjectUpdateCreateData
+---@field archivedAt? any
+---@field body string
+---@field bodyData string
+---@field commentCount number
+---@field createdAt any
+---@field diff? any
+---@field diffMarkdown? string
+---@field editedAt? any
+---@field health string
+---@field id string
+---@field infoSnapshot? any
+---@field isDiffHidden boolean
+---@field isStale boolean
+---@field project? table
+---@field reactionData any
+---@field shortSummary? string
+---@field slugId string
+---@field updatedAt any
+---@field url string
+---@field user? table
+
+---@class ProjectUpdateUpdateData
+---@field id string
+---@field archivedAt? any
+---@field body? string
+---@field bodyData? string
+---@field commentCount? number
+---@field createdAt? any
+---@field diff? any
+---@field diffMarkdown? string
+---@field editedAt? any
+---@field health? string
+---@field infoSnapshot? any
+---@field isDiffHidden? boolean
+---@field isStale? boolean
+---@field project? table
+---@field reactionData? any
+---@field shortSummary? string
+---@field slugId? string
+---@field updatedAt? any
+---@field url? string
+---@field user? table
+
+---@class ProjectUpdateRemoveMatch
+---@field id string
+
+---@class PushSubscription
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field updatedAt any
+
+---@class PushSubscriptionCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field updatedAt any
+
+---@class PushSubscriptionRemoveMatch
+---@field id string
+
+---@class Reaction
+---@field archivedAt? any
+---@field comment? table
+---@field createdAt any
+---@field emoji string
+---@field externalUser? table
+---@field id string
+---@field initiativeUpdate? table
+---@field issue? table
+---@field post? table
+---@field projectUpdate? table
+---@field updatedAt any
+---@field user? table
+
+---@class ReactionCreateData
+---@field archivedAt? any
+---@field comment? table
+---@field createdAt any
+---@field emoji string
+---@field externalUser? table
+---@field id string
+---@field initiativeUpdate? table
+---@field issue? table
+---@field post? table
+---@field projectUpdate? table
+---@field updatedAt any
+---@field user? table
+
+---@class ReactionRemoveMatch
+---@field id string
+
+---@class Release
+---@field archivedAt? any
+---@field autoArchivedAt? any
+---@field canceledAt? any
+---@field commitSha? string
+---@field completedAt? any
+---@field createdAt any
+---@field creator? table
+---@field currentProgress any
+---@field description? string
+---@field id string
+---@field issueCount number
+---@field name string
+---@field pipeline? table
+---@field progressHistory any
+---@field releaseNote? table
+---@field slugId string
+---@field stage? table
+---@field startDate? any
+---@field startedAt? any
+---@field targetDate? any
+---@field trashed? boolean
+---@field updatedAt any
+---@field url string
+---@field version? string
+
+---@class ReleaseLoadMatch
+---@field id string
+
+---@class ReleaseListMatch
+---@field first? number
+---@field term? string
+---@field after? string
+---@field before? string
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class ReleaseCreateData
+---@field archivedAt? any
+---@field autoArchivedAt? any
+---@field canceledAt? any
+---@field commitSha? string
+---@field completedAt? any
+---@field createdAt any
+---@field creator? table
+---@field currentProgress any
+---@field description? string
+---@field id string
+---@field issueCount number
+---@field name string
+---@field pipeline? table
+---@field progressHistory any
+---@field releaseNote? table
+---@field slugId string
+---@field stage? table
+---@field startDate? any
+---@field startedAt? any
+---@field targetDate? any
+---@field trashed? boolean
+---@field updatedAt any
+---@field url string
+---@field version? string
+
+---@class ReleaseUpdateData
+---@field id string
+---@field archivedAt? any
+---@field autoArchivedAt? any
+---@field canceledAt? any
+---@field commitSha? string
+---@field completedAt? any
+---@field createdAt? any
+---@field creator? table
+---@field currentProgress? any
+---@field description? string
+---@field issueCount? number
+---@field name? string
+---@field pipeline? table
+---@field progressHistory? any
+---@field releaseNote? table
+---@field slugId? string
+---@field stage? table
+---@field startDate? any
+---@field startedAt? any
+---@field targetDate? any
+---@field trashed? boolean
+---@field updatedAt? any
+---@field url? string
+---@field version? string
+
+---@class ReleaseRemoveMatch
+---@field id string
+
+---@class ReleaseNote
+---@field archivedAt? any
+---@field createdAt any
+---@field documentContent? table
+---@field firstRelease? table
+---@field generationStatus? string
+---@field id string
+---@field lastRelease? table
+---@field pipeline? table
+---@field releaseCount number
+---@field slugId string
+---@field title? string
+---@field updatedAt any
+---@field url string
+
+---@class ReleaseNoteLoadMatch
+---@field id string
+
+---@class ReleaseNoteListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class ReleaseNoteCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field documentContent? table
+---@field firstRelease? table
+---@field generationStatus? string
+---@field id string
+---@field lastRelease? table
+---@field pipeline? table
+---@field releaseCount number
+---@field slugId string
+---@field title? string
+---@field updatedAt any
+---@field url string
+
+---@class ReleaseNoteUpdateData
+---@field id string
+---@field archivedAt? any
+---@field createdAt? any
+---@field documentContent? table
+---@field firstRelease? table
+---@field generationStatus? string
+---@field lastRelease? table
+---@field pipeline? table
+---@field releaseCount? number
+---@field slugId? string
 ---@field title? string
 ---@field updatedAt? any
 ---@field url? string
 
----@class Team
+---@class ReleaseNoteRemoveMatch
+---@field id string
+
+---@class ReleasePipeline
+---@field approximateReleaseCount number
+---@field archivedAt? any
+---@field autoGenerateReleaseNotesOnCompletion boolean
+---@field createdAt any
+---@field id string
+---@field includePathPatterns string
+---@field isProduction boolean
+---@field latestReleaseNote? table
+---@field name string
+---@field releaseNoteTemplate? table
+---@field rolloverIssuesOnCompletion boolean
+---@field slugId string
+---@field trashed? boolean
+---@field type string
+---@field updatedAt any
+---@field url string
+
+---@class ReleasePipelineLoadMatch
+---@field id string
+
+---@class ReleasePipelineListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class ReleasePipelineCreateData
+---@field approximateReleaseCount number
+---@field archivedAt? any
+---@field autoGenerateReleaseNotesOnCompletion boolean
+---@field createdAt any
+---@field id string
+---@field includePathPatterns string
+---@field isProduction boolean
+---@field latestReleaseNote? table
+---@field name string
+---@field releaseNoteTemplate? table
+---@field rolloverIssuesOnCompletion boolean
+---@field slugId string
+---@field trashed? boolean
+---@field type string
+---@field updatedAt any
+---@field url string
+
+---@class ReleasePipelineUpdateData
+---@field id string
+---@field approximateReleaseCount? number
+---@field archivedAt? any
+---@field autoGenerateReleaseNotesOnCompletion? boolean
+---@field createdAt? any
+---@field includePathPatterns? string
+---@field isProduction? boolean
+---@field latestReleaseNote? table
+---@field name? string
+---@field releaseNoteTemplate? table
+---@field rolloverIssuesOnCompletion? boolean
+---@field slugId? string
+---@field trashed? boolean
+---@field type? string
+---@field updatedAt? any
+---@field url? string
+
+---@class ReleasePipelineRemoveMatch
+---@field id string
+
+---@class ReleaseStage
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field frozen boolean
+---@field id string
+---@field name string
+---@field pipeline? table
+---@field position number
+---@field type string
+---@field updatedAt any
+
+---@class ReleaseStageLoadMatch
+---@field id string
+
+---@class ReleaseStageListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class ReleaseStageCreateData
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field frozen boolean
+---@field id string
+---@field name string
+---@field pipeline? table
+---@field position number
+---@field type string
+---@field updatedAt any
+
+---@class ReleaseStageUpdateData
+---@field id string
+---@field archivedAt? any
+---@field color? string
+---@field createdAt? any
+---@field frozen? boolean
+---@field name? string
+---@field pipeline? table
+---@field position? number
+---@field type? string
+---@field updatedAt? any
+
+---@class Roadmap
+---@field archivedAt? any
+---@field color? string
+---@field createdAt any
+---@field creator? table
 ---@field description? string
 ---@field id string
----@field key string
 ---@field name string
+---@field organization? table
+---@field owner? table
+---@field slugId string
+---@field sortOrder number
+---@field updatedAt any
+---@field url string
+
+---@class RoadmapLoadMatch
+---@field id string
+
+---@class RoadmapListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class RoadmapCreateData
+---@field archivedAt? any
+---@field color? string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field id string
+---@field name string
+---@field organization? table
+---@field owner? table
+---@field slugId string
+---@field sortOrder number
+---@field updatedAt any
+---@field url string
+
+---@class RoadmapUpdateData
+---@field id string
+---@field archivedAt? any
+---@field color? string
+---@field createdAt? any
+---@field creator? table
+---@field description? string
+---@field name? string
+---@field organization? table
+---@field owner? table
+---@field slugId? string
+---@field sortOrder? number
+---@field updatedAt? any
+---@field url? string
+
+---@class RoadmapRemoveMatch
+---@field id string
+
+---@class RoadmapToProject
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field project? table
+---@field roadmap? table
+---@field sortOrder string
+---@field updatedAt any
+
+---@class RoadmapToProjectLoadMatch
+---@field id string
+
+---@class RoadmapToProjectListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class RoadmapToProjectCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field project? table
+---@field roadmap? table
+---@field sortOrder string
+---@field updatedAt any
+
+---@class RoadmapToProjectUpdateData
+---@field id string
+---@field archivedAt? any
+---@field createdAt? any
+---@field project? table
+---@field roadmap? table
+---@field sortOrder? string
+---@field updatedAt? any
+
+---@class RoadmapToProjectRemoveMatch
+---@field id string
+
+---@class SlaConfiguration
+---@field conditions any
+---@field id string
+---@field name string
+---@field removesSla boolean
+---@field sla? number
+---@field slaType? string
+---@field startMode? string
+
+---@class SlaConfigurationListMatch
+---@field team_id string
+
+---@class SsoUrlFromEmailResponse
+---@field samlSsoUrl string
+---@field success boolean
+
+---@class SsoUrlFromEmailResponseLoadMatch
+---@field email string
+---@field is_desktop? boolean
+---@field type any
+
+---@class Team
+---@field activeCycle? table
+---@field aiDiscussionSummariesEnabled boolean
+---@field aiThreadSummariesEnabled boolean
+---@field allMembersCanJoin? boolean
+---@field archivedAt? any
+---@field autoArchivePeriod number
+---@field autoCloseChildIssues? boolean
+---@field autoCloseParentIssues? boolean
+---@field autoClosePeriod? number
+---@field autoCloseStateId? string
+---@field color? string
+---@field createdAt any
+---@field currentProgress any
+---@field cycleCalenderUrl string
+---@field cycleCooldownTime number
+---@field cycleDuration number
+---@field cycleIssueAutoAssignCompleted boolean
+---@field cycleIssueAutoAssignStarted boolean
+---@field cycleLockToActive boolean
+---@field cycleStartDay number
+---@field cyclesEnabled boolean
+---@field defaultIssueEstimate number
+---@field defaultIssueState? table
+---@field defaultProjectTemplate? table
+---@field defaultTemplateForMembers? table
+---@field defaultTemplateForNonMembers? table
+---@field description? string
+---@field displayName string
+---@field groupIssueHistory boolean
+---@field icon? string
+---@field id string
+---@field inheritIssueEstimation boolean
+---@field inheritProjectStatuses boolean
+---@field inheritSlackAutoCreateProjectChannel boolean
+---@field inheritWorkflowStatuses boolean
+---@field initiativesEnabled boolean
+---@field integrationsSettings? table
+---@field issueCount number
+---@field issueEstimationAllowZero boolean
+---@field issueEstimationExtended boolean
+---@field issueEstimationType string
+---@field joinByDefault? boolean
+---@field key string
+---@field ledInitiativeCount number
+---@field name string
+---@field organization? table
+---@field parent? table
+---@field progressHistory any
+---@field requirePriorityToLeaveTriage boolean
+---@field restrictedBy? table
+---@field restrictedById? string
+---@field retiredAt? any
+---@field scimGroupName? string
+---@field scimManaged boolean
+---@field securitySettings any
+---@field setIssueSortOrderOnStateChange string
+---@field slackAutoCreateProjectChannel? boolean
+---@field timezone string
+---@field triageEnabled boolean
+---@field triageIssueState? table
+---@field triageResponsibility? table
+---@field upcomingCycleCount number
+---@field updatedAt any
+---@field visibility string
 
 ---@class TeamLoadMatch
 ---@field id string
 
 ---@class TeamListMatch
 ---@field after? string
+---@field before? string
 ---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class TeamCreateData
+---@field copy_settings_from_team_id? string
+---@field activeCycle? table
+---@field aiDiscussionSummariesEnabled boolean
+---@field aiThreadSummariesEnabled boolean
+---@field allMembersCanJoin? boolean
+---@field archivedAt? any
+---@field autoArchivePeriod number
+---@field autoCloseChildIssues? boolean
+---@field autoCloseParentIssues? boolean
+---@field autoClosePeriod? number
+---@field autoCloseStateId? string
+---@field color? string
+---@field createdAt any
+---@field currentProgress any
+---@field cycleCalenderUrl string
+---@field cycleCooldownTime number
+---@field cycleDuration number
+---@field cycleIssueAutoAssignCompleted boolean
+---@field cycleIssueAutoAssignStarted boolean
+---@field cycleLockToActive boolean
+---@field cycleStartDay number
+---@field cyclesEnabled boolean
+---@field defaultIssueEstimate number
+---@field defaultIssueState? table
+---@field defaultProjectTemplate? table
+---@field defaultTemplateForMembers? table
+---@field defaultTemplateForNonMembers? table
+---@field description? string
+---@field displayName string
+---@field groupIssueHistory boolean
+---@field icon? string
+---@field id string
+---@field inheritIssueEstimation boolean
+---@field inheritProjectStatuses boolean
+---@field inheritSlackAutoCreateProjectChannel boolean
+---@field inheritWorkflowStatuses boolean
+---@field initiativesEnabled boolean
+---@field integrationsSettings? table
+---@field issueCount number
+---@field issueEstimationAllowZero boolean
+---@field issueEstimationExtended boolean
+---@field issueEstimationType string
+---@field joinByDefault? boolean
+---@field key string
+---@field ledInitiativeCount number
+---@field name string
+---@field organization? table
+---@field parent? table
+---@field progressHistory any
+---@field requirePriorityToLeaveTriage boolean
+---@field restrictedBy? table
+---@field restrictedById? string
+---@field retiredAt? any
+---@field scimGroupName? string
+---@field scimManaged boolean
+---@field securitySettings any
+---@field setIssueSortOrderOnStateChange string
+---@field slackAutoCreateProjectChannel? boolean
+---@field timezone string
+---@field triageEnabled boolean
+---@field triageIssueState? table
+---@field triageResponsibility? table
+---@field upcomingCycleCount number
+---@field updatedAt any
+---@field visibility string
+
+---@class TeamUpdateData
+---@field id string
+---@field activeCycle? table
+---@field aiDiscussionSummariesEnabled? boolean
+---@field aiThreadSummariesEnabled? boolean
+---@field allMembersCanJoin? boolean
+---@field archivedAt? any
+---@field autoArchivePeriod? number
+---@field autoCloseChildIssues? boolean
+---@field autoCloseParentIssues? boolean
+---@field autoClosePeriod? number
+---@field autoCloseStateId? string
+---@field color? string
+---@field createdAt? any
+---@field currentProgress? any
+---@field cycleCalenderUrl? string
+---@field cycleCooldownTime? number
+---@field cycleDuration? number
+---@field cycleIssueAutoAssignCompleted? boolean
+---@field cycleIssueAutoAssignStarted? boolean
+---@field cycleLockToActive? boolean
+---@field cycleStartDay? number
+---@field cyclesEnabled? boolean
+---@field defaultIssueEstimate? number
+---@field defaultIssueState? table
+---@field defaultProjectTemplate? table
+---@field defaultTemplateForMembers? table
+---@field defaultTemplateForNonMembers? table
+---@field description? string
+---@field displayName? string
+---@field groupIssueHistory? boolean
+---@field icon? string
+---@field inheritIssueEstimation? boolean
+---@field inheritProjectStatuses? boolean
+---@field inheritSlackAutoCreateProjectChannel? boolean
+---@field inheritWorkflowStatuses? boolean
+---@field initiativesEnabled? boolean
+---@field integrationsSettings? table
+---@field issueCount? number
+---@field issueEstimationAllowZero? boolean
+---@field issueEstimationExtended? boolean
+---@field issueEstimationType? string
+---@field joinByDefault? boolean
+---@field key? string
+---@field ledInitiativeCount? number
+---@field name? string
+---@field organization? table
+---@field parent? table
+---@field progressHistory? any
+---@field requirePriorityToLeaveTriage? boolean
+---@field restrictedBy? table
+---@field restrictedById? string
+---@field retiredAt? any
+---@field scimGroupName? string
+---@field scimManaged? boolean
+---@field securitySettings? any
+---@field setIssueSortOrderOnStateChange? string
+---@field slackAutoCreateProjectChannel? boolean
+---@field timezone? string
+---@field triageEnabled? boolean
+---@field triageIssueState? table
+---@field triageResponsibility? table
+---@field upcomingCycleCount? number
+---@field updatedAt? any
+---@field visibility? string
+
+---@class TeamRemoveMatch
+---@field id string
+
+---@class TeamMembership
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field owner boolean
+---@field sortOrder number
+---@field team? table
+---@field updatedAt any
+---@field user? table
+
+---@class TeamMembershipLoadMatch
+---@field id string
+
+---@class TeamMembershipListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class TeamMembershipCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field owner boolean
+---@field sortOrder number
+---@field team? table
+---@field updatedAt any
+---@field user? table
+
+---@class TeamMembershipUpdateData
+---@field id string
+---@field archivedAt? any
+---@field createdAt? any
+---@field owner? boolean
+---@field sortOrder? number
+---@field team? table
+---@field updatedAt? any
+---@field user? table
+
+---@class TeamMembershipRemoveMatch
+---@field also_leave_parent_team? boolean
+---@field id string
+
+---@class Template
+---@field archivedAt? any
+---@field color? string
+---@field content? string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field hasFormFields boolean
+---@field icon? string
+---@field id string
+---@field inheritedFrom? table
+---@field lastAppliedAt? any
+---@field lastUpdatedBy? table
+---@field name string
+---@field organization? table
+---@field pipeline? table
+---@field sortOrder number
+---@field team? table
+---@field templateData any
+---@field type string
+---@field updatedAt any
+
+---@class TemplateLoadMatch
+---@field id string
+
+---@class TemplateListMatch
+---@field integration_type? string
+---@field first? number
+---@field include_archived? boolean
+
+---@class TemplateCreateData
+---@field archivedAt? any
+---@field color? string
+---@field content? string
+---@field createdAt any
+---@field creator? table
+---@field description? string
+---@field hasFormFields boolean
+---@field icon? string
+---@field id string
+---@field inheritedFrom? table
+---@field lastAppliedAt? any
+---@field lastUpdatedBy? table
+---@field name string
+---@field organization? table
+---@field pipeline? table
+---@field sortOrder number
+---@field team? table
+---@field templateData any
+---@field type string
+---@field updatedAt any
+
+---@class TemplateUpdateData
+---@field id string
+---@field archivedAt? any
+---@field color? string
+---@field content? string
+---@field createdAt? any
+---@field creator? table
+---@field description? string
+---@field hasFormFields? boolean
+---@field icon? string
+---@field inheritedFrom? table
+---@field lastAppliedAt? any
+---@field lastUpdatedBy? table
+---@field name? string
+---@field organization? table
+---@field pipeline? table
+---@field sortOrder? number
+---@field team? table
+---@field templateData? any
+---@field type? string
+---@field updatedAt? any
+
+---@class TemplateRemoveMatch
+---@field id string
+
+---@class TimeSchedule
+---@field archivedAt? any
+---@field createdAt any
+---@field externalId? string
+---@field externalUrl? string
+---@field id string
+---@field integration? table
+---@field name string
+---@field organization? table
+---@field updatedAt any
+
+---@class TimeScheduleLoadMatch
+---@field id string
+
+---@class TimeScheduleListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class TimeScheduleCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field externalId? string
+---@field externalUrl? string
+---@field id string
+---@field integration? table
+---@field name string
+---@field organization? table
+---@field updatedAt any
+
+---@class TimeScheduleUpdateData
+---@field external_id? string
+---@field id? string
+---@field archivedAt? any
+---@field createdAt? any
+---@field externalId? string
+---@field externalUrl? string
+---@field integration? table
+---@field name? string
+---@field organization? table
+---@field updatedAt? any
+
+---@class TimeScheduleRemoveMatch
+---@field id string
+
+---@class TriageResponsibility
+---@field action string
+---@field archivedAt? any
+---@field createdAt any
+---@field currentUser? table
+---@field id string
+---@field team? table
+---@field timeSchedule? table
+---@field updatedAt any
+
+---@class TriageResponsibilityLoadMatch
+---@field id string
+
+---@class TriageResponsibilityListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class TriageResponsibilityCreateData
+---@field action string
+---@field archivedAt? any
+---@field createdAt any
+---@field currentUser? table
+---@field id string
+---@field team? table
+---@field timeSchedule? table
+---@field updatedAt any
+
+---@class TriageResponsibilityUpdateData
+---@field id string
+---@field action? string
+---@field archivedAt? any
+---@field createdAt? any
+---@field currentUser? table
+---@field team? table
+---@field timeSchedule? table
+---@field updatedAt? any
+
+---@class TriageResponsibilityRemoveMatch
+---@field id string
+
+---@class UploadFile
+---@field assetUrl string
+---@field contentType string
+---@field filename string
+---@field metaData? any
+---@field size number
+---@field uploadUrl string
+
+---@class UploadFileCreateData
+---@field content_type string
+---@field filename string
+---@field make_public? boolean
+---@field meta_data? any
+---@field size number
+---@field assetUrl string
+---@field contentType string
+---@field metaData? any
+---@field uploadUrl string
+
+---@class UsageAlert
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field metadata any
+---@field resolvedAt? any
+---@field type string
+---@field updatedAt any
+
+---@class UsageAlertLoadMatch
+---@field id string
+
+---@class UsageAlertListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class User
+---@field active boolean
+---@field admin boolean
+---@field app boolean
+---@field archivedAt? any
+---@field avatarBackgroundColor string
+---@field avatarUrl? string
+---@field calendarHash? string
+---@field canAccessAnyPublicTeam boolean
+---@field createdAt any
+---@field createdIssueCount number
+---@field description? string
+---@field disableReason? string
+---@field displayName string
+---@field email string
+---@field gitHubUserId? string
+---@field guest boolean
+---@field hasGitHubCodeAccess boolean
+---@field id string
+---@field identityProvider? table
+---@field initials string
+---@field isAssignable boolean
+---@field isMe boolean
+---@field isMentionable boolean
+---@field lastSeen? any
+---@field name string
+---@field organization? table
+---@field owner boolean
+---@field statusEmoji? string
+---@field statusLabel? string
+---@field statusUntilAt? any
+---@field supportsAgentSessions boolean
+---@field timezone? string
+---@field title? string
+---@field updatedAt any
+---@field url string
+
+---@class UserLoadMatch
+---@field id? string
+
+---@class UserListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field include_disabled? boolean
+---@field last? number
+---@field order_by? any
+
+---@class UserCreateData
+---@field code? string
+---@field redirect_uri? string
+---@field service? string
+---@field active boolean
+---@field admin boolean
+---@field app boolean
+---@field archivedAt? any
+---@field avatarBackgroundColor string
+---@field avatarUrl? string
+---@field calendarHash? string
+---@field canAccessAnyPublicTeam boolean
+---@field createdAt any
+---@field createdIssueCount number
+---@field description? string
+---@field disableReason? string
+---@field displayName string
+---@field email string
+---@field gitHubUserId? string
+---@field guest boolean
+---@field hasGitHubCodeAccess boolean
+---@field id string
+---@field identityProvider? table
+---@field initials string
+---@field isAssignable boolean
+---@field isMe boolean
+---@field isMentionable boolean
+---@field lastSeen? any
+---@field name string
+---@field organization? table
+---@field owner boolean
+---@field statusEmoji? string
+---@field statusLabel? string
+---@field statusUntilAt? any
+---@field supportsAgentSessions boolean
+---@field timezone? string
+---@field title? string
+---@field updatedAt any
+---@field url string
+
+---@class UserUpdateData
+---@field id string
+---@field active? boolean
+---@field admin? boolean
+---@field app? boolean
+---@field archivedAt? any
+---@field avatarBackgroundColor? string
+---@field avatarUrl? string
+---@field calendarHash? string
+---@field canAccessAnyPublicTeam? boolean
+---@field createdAt? any
+---@field createdIssueCount? number
+---@field description? string
+---@field disableReason? string
+---@field displayName? string
+---@field email? string
+---@field gitHubUserId? string
+---@field guest? boolean
+---@field hasGitHubCodeAccess? boolean
+---@field identityProvider? table
+---@field initials? string
+---@field isAssignable? boolean
+---@field isMe? boolean
+---@field isMentionable? boolean
+---@field lastSeen? any
+---@field name? string
+---@field organization? table
+---@field owner? boolean
+---@field statusEmoji? string
+---@field statusLabel? string
+---@field statusUntilAt? any
+---@field supportsAgentSessions? boolean
+---@field timezone? string
+---@field title? string
+---@field updatedAt? any
+---@field url? string
+
+---@class UserSetting
+---@field archivedAt? any
+---@field autoAssignToSelf boolean
+---@field calendarHash? string
+---@field createdAt any
+---@field feedLastSeenTime? any
+---@field feedSummarySchedule? string
+---@field id string
+---@field pullRequestMergeStrategyPreference? string
+---@field showFullUserNames boolean
+---@field subscribedToChangelog boolean
+---@field subscribedToDPA boolean
+---@field subscribedToInviteAccepted boolean
+---@field subscribedToPrivacyLegalUpdates boolean
+---@field updatedAt any
+---@field user? table
+
+---@class UserSettingLoadMatch
+---@field archivedAt? any
+---@field autoAssignToSelf? boolean
+---@field calendarHash? string
+---@field createdAt? any
+---@field feedLastSeenTime? any
+---@field feedSummarySchedule? string
+---@field id string
+---@field pullRequestMergeStrategyPreference? string
+---@field showFullUserNames? boolean
+---@field subscribedToChangelog? boolean
+---@field subscribedToDPA? boolean
+---@field subscribedToInviteAccepted? boolean
+---@field subscribedToPrivacyLegalUpdates? boolean
+---@field updatedAt? any
+---@field user? table
+
+---@class UserSettingCreateData
+---@field category any
+---@field channel any
+---@field subscribe boolean
+---@field archivedAt? any
+---@field autoAssignToSelf boolean
+---@field calendarHash? string
+---@field createdAt any
+---@field feedLastSeenTime? any
+---@field feedSummarySchedule? string
+---@field id string
+---@field pullRequestMergeStrategyPreference? string
+---@field showFullUserNames boolean
+---@field subscribedToChangelog boolean
+---@field subscribedToDPA boolean
+---@field subscribedToInviteAccepted boolean
+---@field subscribedToPrivacyLegalUpdates boolean
+---@field updatedAt any
+---@field user? table
+
+---@class UserSettingUpdateData
+---@field id string
+---@field archivedAt? any
+---@field autoAssignToSelf? boolean
+---@field calendarHash? string
+---@field createdAt? any
+---@field feedLastSeenTime? any
+---@field feedSummarySchedule? string
+---@field pullRequestMergeStrategyPreference? string
+---@field showFullUserNames? boolean
+---@field subscribedToChangelog? boolean
+---@field subscribedToDPA? boolean
+---@field subscribedToInviteAccepted? boolean
+---@field subscribedToPrivacyLegalUpdates? boolean
+---@field updatedAt? any
+---@field user? table
+
+---@class ViewPreference
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field type string
+---@field updatedAt any
+---@field viewType string
+
+---@class ViewPreferenceLoadMatch
+---@field view_type any
+
+---@class ViewPreferenceCreateData
+---@field archivedAt? any
+---@field createdAt any
+---@field id string
+---@field type string
+---@field updatedAt any
+---@field viewType string
+
+---@class ViewPreferenceUpdateData
+---@field id string
+---@field archivedAt? any
+---@field createdAt? any
+---@field type? string
+---@field updatedAt? any
+---@field viewType? string
+
+---@class ViewPreferenceRemoveMatch
+---@field id string
+
+---@class Webhook
+---@field allPublicTeams boolean
+---@field archivedAt? any
+---@field createdAt any
+---@field creator? table
+---@field enabled boolean
+---@field id string
+---@field label? string
+---@field resourceTypes string
+---@field secret? string
+---@field team? table
+---@field teamIds? string
+---@field updatedAt any
+---@field url? string
+
+---@class WebhookLoadMatch
+---@field id string
+
+---@class WebhookListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class WebhookCreateData
+---@field allPublicTeams boolean
+---@field archivedAt? any
+---@field createdAt any
+---@field creator? table
+---@field enabled boolean
+---@field id string
+---@field label? string
+---@field resourceTypes string
+---@field secret? string
+---@field team? table
+---@field teamIds? string
+---@field updatedAt any
+---@field url? string
+
+---@class WebhookUpdateData
+---@field id string
+---@field allPublicTeams? boolean
+---@field archivedAt? any
+---@field createdAt? any
+---@field creator? table
+---@field enabled? boolean
+---@field label? string
+---@field resourceTypes? string
+---@field secret? string
+---@field team? table
+---@field teamIds? string
+---@field updatedAt? any
+---@field url? string
+
+---@class WebhookRemoveMatch
+---@field id string
+
+---@class WebhookFailureEvent
+---@field createdAt any
+---@field executionId string
+---@field httpStatus? number
+---@field id string
+---@field responseOrError? string
+---@field url string
+---@field webhook? table
+
+---@class WebhookFailureEventListMatch
+---@field oauth_client_id? string
+---@field webhook_id? string
+
+---@class WorkflowState
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field description? string
+---@field id string
+---@field inheritedFrom? table
+---@field name string
+---@field position number
+---@field team? table
+---@field type string
+---@field updatedAt any
+
+---@class WorkflowStateLoadMatch
+---@field id string
+
+---@class WorkflowStateListMatch
+---@field after? string
+---@field before? string
+---@field first? number
+---@field include_archived? boolean
+---@field last? number
+---@field order_by? any
+
+---@class WorkflowStateCreateData
+---@field archivedAt? any
+---@field color string
+---@field createdAt any
+---@field description? string
+---@field id string
+---@field inheritedFrom? table
+---@field name string
+---@field position number
+---@field team? table
+---@field type string
+---@field updatedAt any
+
+---@class WorkflowStateUpdateData
+---@field id string
+---@field archivedAt? any
+---@field color? string
+---@field createdAt? any
+---@field description? string
+---@field inheritedFrom? table
+---@field name? string
+---@field position? number
+---@field team? table
+---@field type? string
+---@field updatedAt? any
 
 local M = {}
 

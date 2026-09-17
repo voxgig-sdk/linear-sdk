@@ -1,0 +1,201 @@
+
+
+import Path from 'node:path'
+import * as Fs from 'node:fs'
+
+import { test, describe, afterEach } from 'node:test'
+import assert from 'node:assert'
+import { createLiveTransport } from '../../live-runner'
+import { runLiveEntity } from '../../live-entity'
+
+
+import { LinearSDK, BaseFeature, stdutil } from '../../..'
+
+import {
+  envOverride,
+  liveClientOptions,
+  liveDelay,
+  loadEnvLocal,
+  makeCtrl,
+  makeMatch,
+  makeReqdata,
+  makeStepData,
+  makeValid,
+  maybeSkipControl,
+} from '../../utility'
+
+
+// AFTER the imports on purpose: TypeScript hoists `import` above any
+// statement in the emitted CommonJS, so a loader placed above them would
+// run only after every imported module had already been evaluated - and
+// anything reading process.env at module scope would miss these values.
+loadEnvLocal(__dirname + '/../../../.env.local')
+
+
+describe('ReleaseStageEntity', async () => {
+
+  // Per-test live pacing. Delay is read from sdk-test-control.json's
+  // `test.live.delayMs`; only sleeps when LINEAR_TEST_LIVE=TRUE.
+  afterEach(liveDelay('LINEAR_TEST_LIVE'))
+
+  test('instance', async () => {
+    const testsdk = LinearSDK.test()
+    const ent = testsdk.ReleaseStage()
+    assert(null != ent)
+  })
+
+
+  test('basic', async (t) => {
+
+    const live = 'TRUE' === process.env.LINEAR_TEST_LIVE
+    for (const op of ['create', 'list', 'update', 'load']) {
+      if (!live && maybeSkipControl(t, 'entityOp', 'release_stage.' + op, live)) return
+    }
+
+    
+    const setup = basicSetup()
+    if (setup.live) {
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":[{"active":true,"name":"archivedAt","req":false,"short":"The time at which the entity was archived.","type":"`$ANY`","index$":0},{"active":true,"name":"color","req":true,"short":"The display color of the stage as a HEX string (e.g., '#0f783c'), used for visual representation in the UI.","type":"`$STRING`","index$":1},{"active":true,"name":"createdAt","req":true,"short":"The time at which the entity was created.","type":"`$ANY`","index$":2},{"active":true,"name":"frozen","req":true,"short":"Whether this stage is frozen.","type":"`$BOOLEAN`","index$":3},{"active":true,"name":"id","req":true,"short":"The unique identifier of the entity.","type":"`$STRING`","index$":4},{"active":true,"name":"name","req":true,"short":"The name of the stage.","type":"`$STRING`","index$":5},{"active":true,"name":"pipeline","req":false,"short":"The release pipeline that this stage belongs to.","type":"`$OBJECT`","index$":6},{"active":true,"name":"position","req":true,"short":"The position of the stage within its pipeline, used for ordering stages in the UI.","type":"`$NUMBER`","index$":7},{"active":true,"name":"type","req":true,"short":"The lifecycle type of the stage (planned, started, completed, or canceled).","type":"`$STRING`","index$":8},{"active":true,"name":"updatedAt","req":true,"short":"The last time at which the entity was meaningfully updated.","type":"`$ANY`","index$":9}],"id":{"field":"id","name":"id"},"name":"release_stage","op":{"create":{"input":"data","name":"create","points":[{"active":true,"args":{},"contract":{"id":"POST releaseStageCreate","json":"{\"field\":{\"args\":[{\"gqltype\":\"ReleaseStageCreateInput!\",\"name\":\"input\",\"reqd\":true,\"type\":\"ReleaseStageCreateInput\"}],\"deprecated\":false,\"desc\":\"Creates a new release stage in a pipeline. Non-started stages must use default names and colors and are unique by type; creating a canonical duplicate returns the existing stage. Started stages can optionally be frozen, but at least one non-frozen started stage must remain.\",\"gqltype\":\"ReleaseStagePayload!\",\"list\":false,\"name\":\"releaseStageCreate\",\"reqd\":true,\"type\":\"ReleaseStagePayload\"},\"invocation\":{\"doc\":\"mutation ReleaseStageCreate($input: ReleaseStageCreateInput!) { releaseStageCreate(input: $input) { releaseStage { ...ReleaseStageFields } success } } fragment ReleaseStageFields on ReleaseStage { archivedAt color createdAt frozen id name pipeline { id } position type updatedAt }\",\"field\":\"releaseStageCreate\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"\",\"gqltype\":\"ReleaseStageCreateInput!\",\"name\":\"input\"}]},\"protocol\":\"graphql\",\"types\":{\"Boolean\":{\"desc\":\"The `Boolean` scalar type represents `true` or `false`.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Boolean\"},\"Float\":{\"desc\":\"The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Float\"},\"ReleaseStageCreateInput\":{\"desc\":\"Input for creating a new release stage.\",\"fields\":{\"color\":{\"args\":[],\"deprecated\":false,\"desc\":\"The UI color of the stage as a HEX string.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"color\",\"reqd\":true,\"type\":\"String\"},\"frozen\":{\"args\":[],\"deprecated\":false,\"desc\":\"Whether this stage is frozen. Only applicable to started stages.\",\"gqltype\":\"Boolean\",\"list\":false,\"name\":\"frozen\",\"reqd\":false,\"type\":\"Boolean\"},\"id\":{\"args\":[],\"deprecated\":false,\"desc\":\"The identifier in UUID v4 format. If none is provided, the backend will generate one.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"id\",\"reqd\":false,\"type\":\"String\"},\"name\":{\"args\":[],\"deprecated\":false,\"desc\":\"The name of the stage.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"name\",\"reqd\":true,\"type\":\"String\"},\"pipelineId\":{\"args\":[],\"deprecated\":false,\"desc\":\"The identifier of the pipeline this stage belongs to.\",\"gqltype\":\"String!\",\"list\":false,\"name\":\"pipelineId\",\"reqd\":true,\"type\":\"String\"},\"position\":{\"args\":[],\"deprecated\":false,\"desc\":\"The position of the stage.\",\"gqltype\":\"Float!\",\"list\":false,\"name\":\"position\",\"reqd\":true,\"type\":\"Float\"},\"type\":{\"args\":[],\"deprecated\":false,\"desc\":\"The type of the stage.\",\"gqltype\":\"ReleaseStageType!\",\"list\":false,\"name\":\"type\",\"reqd\":true,\"type\":\"ReleaseStageType\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"ReleaseStageCreateInput\"},\"ReleaseStageType\":{\"desc\":\"The type of a release stage, which determines the release's lifecycle state. Types include planned, started, completed, and canceled. Each pipeline must have at least one stage of each type, though only started stages may have multiple instances.\",\"fields\":{},\"kind\":\"ENUM\",\"name\":\"ReleaseStageType\",\"values\":[\"canceled\",\"completed\",\"planned\",\"started\"]},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"mutation ReleaseStageCreate($input: ReleaseStageCreateInput!) { releaseStageCreate(input: $input) { releaseStage { ...ReleaseStageFields } success } } fragment ReleaseStageFields on ReleaseStage { archivedAt color createdAt frozen id name pipeline { id } position type updatedAt }","field":"releaseStageCreate","optype":"mutation","vars":[{"from":"","gqltype":"ReleaseStageCreateInput!","name":"input"}]},"kind":"graphql","method":"POST","orig":"releaseStageCreate","segments":[],"select":{},"transform":{"req":"`reqdata`","res":"`body.data.releaseStageCreate.releaseStage`"},"index$":0}],"key$":"create"},"list":{"input":"data","name":"list","points":[{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"after","orig":"after","reqd":false,"type":"`$STRING`","index$":0},{"active":true,"kind":"param","name":"before","orig":"before","reqd":false,"type":"`$STRING`","index$":1},{"active":true,"kind":"param","name":"first","orig":"first","reqd":false,"type":"`$INTEGER`","index$":2},{"active":true,"kind":"param","name":"include_archived","orig":"include_archived","reqd":false,"type":"`$BOOLEAN`","index$":3},{"active":true,"kind":"param","name":"last","orig":"last","reqd":false,"type":"`$INTEGER`","index$":4},{"active":true,"kind":"param","name":"order_by","orig":"order_by","reqd":false,"type":"`$ANY`","index$":5}]},"contract":{"id":"POST releaseStages","json":"{\"field\":{\"args\":[{\"gqltype\":\"String\",\"name\":\"after\",\"reqd\":false,\"type\":\"String\"},{\"gqltype\":\"String\",\"name\":\"before\",\"reqd\":false,\"type\":\"String\"},{\"gqltype\":\"ReleaseStageFilter\",\"name\":\"filter\",\"reqd\":false,\"type\":\"ReleaseStageFilter\"},{\"gqltype\":\"Int\",\"name\":\"first\",\"reqd\":false,\"type\":\"Int\"},{\"gqltype\":\"Boolean\",\"name\":\"includeArchived\",\"reqd\":false,\"type\":\"Boolean\"},{\"gqltype\":\"Int\",\"name\":\"last\",\"reqd\":false,\"type\":\"Int\"},{\"gqltype\":\"PaginationOrderBy\",\"name\":\"orderBy\",\"reqd\":false,\"type\":\"PaginationOrderBy\"}],\"deprecated\":false,\"desc\":\"All release stages in the workspace, with optional filtering.\",\"gqltype\":\"ReleaseStageConnection!\",\"list\":false,\"name\":\"releaseStages\",\"reqd\":true,\"type\":\"ReleaseStageConnection\"},\"invocation\":{\"doc\":\"query ReleaseStageList($after: String, $before: String, $filter: ReleaseStageFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { releaseStages(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...ReleaseStageFields } pageInfo { endCursor hasNextPage } } } fragment ReleaseStageFields on ReleaseStage { archivedAt color createdAt frozen id name pipeline { id } position type updatedAt }\",\"field\":\"releaseStages\",\"optype\":\"query\",\"page\":{\"cursor\":\"pageInfo.endCursor\",\"more\":\"pageInfo.hasNextPage\",\"nodes\":\"nodes\",\"style\":\"relay\"},\"vars\":[{\"from\":\"after\",\"gqltype\":\"String\",\"name\":\"after\"},{\"from\":\"before\",\"gqltype\":\"String\",\"name\":\"before\"},{\"from\":\"\",\"gqltype\":\"ReleaseStageFilter\",\"name\":\"filter\"},{\"from\":\"first\",\"gqltype\":\"Int\",\"name\":\"first\"},{\"from\":\"includeArchived\",\"gqltype\":\"Boolean\",\"name\":\"includeArchived\"},{\"from\":\"last\",\"gqltype\":\"Int\",\"name\":\"last\"},{\"from\":\"orderBy\",\"gqltype\":\"PaginationOrderBy\",\"name\":\"orderBy\"}]},\"protocol\":\"graphql\",\"types\":{\"Boolean\":{\"desc\":\"The `Boolean` scalar type represents `true` or `false`.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Boolean\"},\"DateComparator\":{\"desc\":\"Comparator for dates.\",\"fields\":{\"eq\":{\"args\":[],\"deprecated\":false,\"desc\":\"Equals constraint.\",\"gqltype\":\"DateTimeOrDuration\",\"list\":false,\"name\":\"eq\",\"reqd\":false,\"type\":\"DateTimeOrDuration\"},\"gt\":{\"args\":[],\"deprecated\":false,\"desc\":\"Greater-than constraint. Matches any values that are greater than the given value.\",\"gqltype\":\"DateTimeOrDuration\",\"list\":false,\"name\":\"gt\",\"reqd\":false,\"type\":\"DateTimeOrDuration\"},\"gte\":{\"args\":[],\"deprecated\":false,\"desc\":\"Greater-than-or-equal constraint. Matches any values that are greater than or equal to the given value.\",\"gqltype\":\"DateTimeOrDuration\",\"list\":false,\"name\":\"gte\",\"reqd\":false,\"type\":\"DateTimeOrDuration\"},\"in\":{\"args\":[],\"deprecated\":false,\"desc\":\"In-array constraint.\",\"gqltype\":\"[DateTimeOrDuration!]\",\"list\":true,\"name\":\"in\",\"reqd\":false,\"type\":\"DateTimeOrDuration\"},\"lt\":{\"args\":[],\"deprecated\":false,\"desc\":\"Less-than constraint. Matches any values that are less than the given value.\",\"gqltype\":\"DateTimeOrDuration\",\"list\":false,\"name\":\"lt\",\"reqd\":false,\"type\":\"DateTimeOrDuration\"},\"lte\":{\"args\":[],\"deprecated\":false,\"desc\":\"Less-than-or-equal constraint. Matches any values that are less than or equal to the given value.\",\"gqltype\":\"DateTimeOrDuration\",\"list\":false,\"name\":\"lte\",\"reqd\":false,\"type\":\"DateTimeOrDuration\"},\"neq\":{\"args\":[],\"deprecated\":false,\"desc\":\"Not-equals constraint.\",\"gqltype\":\"DateTimeOrDuration\",\"list\":false,\"name\":\"neq\",\"reqd\":false,\"type\":\"DateTimeOrDuration\"},\"nin\":{\"args\":[],\"deprecated\":false,\"desc\":\"Not-in-array constraint.\",\"gqltype\":\"[DateTimeOrDuration!]\",\"list\":true,\"name\":\"nin\",\"reqd\":false,\"type\":\"DateTimeOrDuration\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"DateComparator\"},\"DateTimeOrDuration\":{\"desc\":\"Represents a date and time in ISO 8601 format. Accepts shortcuts like `2021` to represent midnight Fri Jan 01 2021. Also accepts ISO 8601 durations strings which are added to the current date to create the represented date (e.g '-P2W1D' represents the date that was two weeks and 1 day ago)\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"DateTimeOrDuration\"},\"ID\":{\"desc\":\"The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `\\\"4\\\"`) or integer (such as `4`) input value will be accepted as an ID.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"ID\"},\"IDComparator\":{\"desc\":\"Comparator for identifiers.\",\"fields\":{\"eq\":{\"args\":[],\"deprecated\":false,\"desc\":\"Equals constraint.\",\"gqltype\":\"ID\",\"list\":false,\"name\":\"eq\",\"reqd\":false,\"type\":\"ID\"},\"in\":{\"args\":[],\"deprecated\":false,\"desc\":\"In-array constraint.\",\"gqltype\":\"[ID!]\",\"list\":true,\"name\":\"in\",\"reqd\":false,\"type\":\"ID\"},\"neq\":{\"args\":[],\"deprecated\":false,\"desc\":\"Not-equals constraint.\",\"gqltype\":\"ID\",\"list\":false,\"name\":\"neq\",\"reqd\":false,\"type\":\"ID\"},\"nin\":{\"args\":[],\"deprecated\":false,\"desc\":\"Not-in-array constraint.\",\"gqltype\":\"[ID!]\",\"list\":true,\"name\":\"nin\",\"reqd\":false,\"type\":\"ID\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"IDComparator\"},\"Int\":{\"desc\":\"The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Int\"},\"PaginationOrderBy\":{\"desc\":\"By which field should the pagination order by\",\"fields\":{},\"kind\":\"ENUM\",\"name\":\"PaginationOrderBy\",\"values\":[\"createdAt\",\"updatedAt\"]},\"ReleaseStageFilter\":{\"desc\":\"Release stage filtering options.\",\"fields\":{\"and\":{\"args\":[],\"deprecated\":false,\"desc\":\"Compound filters, all of which need to be matched by the stage.\",\"gqltype\":\"[ReleaseStageFilter!]\",\"list\":true,\"name\":\"and\",\"reqd\":false,\"type\":\"ReleaseStageFilter\"},\"createdAt\":{\"args\":[],\"deprecated\":false,\"desc\":\"Comparator for the created at date.\",\"gqltype\":\"DateComparator\",\"list\":false,\"name\":\"createdAt\",\"reqd\":false,\"type\":\"DateComparator\"},\"id\":{\"args\":[],\"deprecated\":false,\"desc\":\"Comparator for the identifier.\",\"gqltype\":\"IDComparator\",\"list\":false,\"name\":\"id\",\"reqd\":false,\"type\":\"IDComparator\"},\"name\":{\"args\":[],\"deprecated\":false,\"desc\":\"Comparator for the stage name.\",\"gqltype\":\"StringComparator\",\"list\":false,\"name\":\"name\",\"reqd\":false,\"type\":\"StringComparator\"},\"or\":{\"args\":[],\"deprecated\":false,\"desc\":\"Compound filters, one of which need to be matched by the stage.\",\"gqltype\":\"[ReleaseStageFilter!]\",\"list\":true,\"name\":\"or\",\"reqd\":false,\"type\":\"ReleaseStageFilter\"},\"type\":{\"args\":[],\"deprecated\":false,\"desc\":\"Comparator for the stage type.\",\"gqltype\":\"ReleaseStageTypeComparator\",\"list\":false,\"name\":\"type\",\"reqd\":false,\"type\":\"ReleaseStageTypeComparator\"},\"updatedAt\":{\"args\":[],\"deprecated\":false,\"desc\":\"Comparator for the updated at date.\",\"gqltype\":\"DateComparator\",\"list\":false,\"name\":\"updatedAt\",\"reqd\":false,\"type\":\"DateComparator\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"ReleaseStageFilter\"},\"ReleaseStageType\":{\"desc\":\"The type of a release stage, which determines the release's lifecycle state. Types include planned, started, completed, and canceled. Each pipeline must have at least one stage of each type, though only started stages may have multiple instances.\",\"fields\":{},\"kind\":\"ENUM\",\"name\":\"ReleaseStageType\",\"values\":[\"canceled\",\"completed\",\"planned\",\"started\"]},\"ReleaseStageTypeComparator\":{\"desc\":\"Comparator for release stage type.\",\"fields\":{\"eq\":{\"args\":[],\"deprecated\":false,\"desc\":\"Equals constraint.\",\"gqltype\":\"ReleaseStageType\",\"list\":false,\"name\":\"eq\",\"reqd\":false,\"type\":\"ReleaseStageType\"},\"in\":{\"args\":[],\"deprecated\":false,\"desc\":\"In-array constraint.\",\"gqltype\":\"[ReleaseStageType!]\",\"list\":true,\"name\":\"in\",\"reqd\":false,\"type\":\"ReleaseStageType\"},\"neq\":{\"args\":[],\"deprecated\":false,\"desc\":\"Not-equals constraint.\",\"gqltype\":\"ReleaseStageType\",\"list\":false,\"name\":\"neq\",\"reqd\":false,\"type\":\"ReleaseStageType\"},\"nin\":{\"args\":[],\"deprecated\":false,\"desc\":\"Not-in-array constraint.\",\"gqltype\":\"[ReleaseStageType!]\",\"list\":true,\"name\":\"nin\",\"reqd\":false,\"type\":\"ReleaseStageType\"},\"null\":{\"args\":[],\"deprecated\":false,\"desc\":\"Null constraint. Matches any non-null values if the given value is false, otherwise it matches null values.\",\"gqltype\":\"Boolean\",\"list\":false,\"name\":\"null\",\"reqd\":false,\"type\":\"Boolean\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"ReleaseStageTypeComparator\"},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"},\"StringComparator\":{\"desc\":\"Comparator for strings.\",\"fields\":{\"contains\":{\"args\":[],\"deprecated\":false,\"desc\":\"Contains constraint. Matches any values that contain the given string.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"contains\",\"reqd\":false,\"type\":\"String\"},\"containsIgnoreCase\":{\"args\":[],\"deprecated\":false,\"desc\":\"Contains case insensitive constraint. Matches any values that contain the given string case insensitive.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"containsIgnoreCase\",\"reqd\":false,\"type\":\"String\"},\"containsIgnoreCaseAndAccent\":{\"args\":[],\"deprecated\":false,\"desc\":\"Contains case and accent insensitive constraint. Matches any values that contain the given string case and accent insensitive.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"containsIgnoreCaseAndAccent\",\"reqd\":false,\"type\":\"String\"},\"endsWith\":{\"args\":[],\"deprecated\":false,\"desc\":\"Ends with constraint. Matches any values that end with the given string.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"endsWith\",\"reqd\":false,\"type\":\"String\"},\"eq\":{\"args\":[],\"deprecated\":false,\"desc\":\"Equals constraint.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"eq\",\"reqd\":false,\"type\":\"String\"},\"eqIgnoreCase\":{\"args\":[],\"deprecated\":false,\"desc\":\"Equals case insensitive. Matches any values that matches the given string case insensitive.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"eqIgnoreCase\",\"reqd\":false,\"type\":\"String\"},\"in\":{\"args\":[],\"deprecated\":false,\"desc\":\"In-array constraint.\",\"gqltype\":\"[String!]\",\"list\":true,\"name\":\"in\",\"reqd\":false,\"type\":\"String\"},\"neq\":{\"args\":[],\"deprecated\":false,\"desc\":\"Not-equals constraint.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"neq\",\"reqd\":false,\"type\":\"String\"},\"neqIgnoreCase\":{\"args\":[],\"deprecated\":false,\"desc\":\"Not-equals case insensitive. Matches any values that don't match the given string case insensitive.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"neqIgnoreCase\",\"reqd\":false,\"type\":\"String\"},\"nin\":{\"args\":[],\"deprecated\":false,\"desc\":\"Not-in-array constraint.\",\"gqltype\":\"[String!]\",\"list\":true,\"name\":\"nin\",\"reqd\":false,\"type\":\"String\"},\"notContains\":{\"args\":[],\"deprecated\":false,\"desc\":\"Doesn't contain constraint. Matches any values that don't contain the given string.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"notContains\",\"reqd\":false,\"type\":\"String\"},\"notContainsIgnoreCase\":{\"args\":[],\"deprecated\":false,\"desc\":\"Doesn't contain case insensitive constraint. Matches any values that don't contain the given string case insensitive.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"notContainsIgnoreCase\",\"reqd\":false,\"type\":\"String\"},\"notEndsWith\":{\"args\":[],\"deprecated\":false,\"desc\":\"Doesn't end with constraint. Matches any values that don't end with the given string.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"notEndsWith\",\"reqd\":false,\"type\":\"String\"},\"notStartsWith\":{\"args\":[],\"deprecated\":false,\"desc\":\"Doesn't start with constraint. Matches any values that don't start with the given string.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"notStartsWith\",\"reqd\":false,\"type\":\"String\"},\"startsWith\":{\"args\":[],\"deprecated\":false,\"desc\":\"Starts with constraint. Matches any values that start with the given string.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"startsWith\",\"reqd\":false,\"type\":\"String\"},\"startsWithIgnoreCase\":{\"args\":[],\"deprecated\":false,\"desc\":\"Starts with case insensitive constraint. Matches any values that start with the given string.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"startsWithIgnoreCase\",\"reqd\":false,\"type\":\"String\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"StringComparator\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"query ReleaseStageList($after: String, $before: String, $filter: ReleaseStageFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { releaseStages(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...ReleaseStageFields } pageInfo { endCursor hasNextPage } } } fragment ReleaseStageFields on ReleaseStage { archivedAt color createdAt frozen id name pipeline { id } position type updatedAt }","field":"releaseStages","optype":"query","page":{"cursor":"pageInfo.endCursor","more":"pageInfo.hasNextPage","nodes":"nodes","style":"relay"},"vars":[{"from":"after","gqltype":"String","name":"after"},{"from":"before","gqltype":"String","name":"before"},{"from":"","gqltype":"ReleaseStageFilter","name":"filter"},{"from":"first","gqltype":"Int","name":"first"},{"from":"includeArchived","gqltype":"Boolean","name":"includeArchived"},{"from":"last","gqltype":"Int","name":"last"},{"from":"orderBy","gqltype":"PaginationOrderBy","name":"orderBy"}]},"kind":"graphql","method":"POST","orig":"releaseStages","segments":[],"select":{},"transform":{"req":"`reqdata`","res":"`body.data.releaseStages.nodes`"},"index$":0}],"key$":"list"},"load":{"input":"data","name":"load","points":[{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"id","orig":"id","reqd":true,"type":"`$STRING`","index$":0}]},"contract":{"id":"POST releaseStage","json":"{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"id\",\"reqd\":true,\"type\":\"String\"}],\"deprecated\":false,\"desc\":\"Fetch a single release stage by its UUID.\",\"gqltype\":\"ReleaseStage!\",\"list\":false,\"name\":\"releaseStage\",\"reqd\":true,\"type\":\"ReleaseStage\"},\"invocation\":{\"doc\":\"query ReleaseStageLoad($id: String!) { releaseStage(id: $id) { ...ReleaseStageFields } } fragment ReleaseStageFields on ReleaseStage { archivedAt color createdAt frozen id name pipeline { id } position type updatedAt }\",\"field\":\"releaseStage\",\"optype\":\"query\",\"vars\":[{\"from\":\"id\",\"gqltype\":\"String!\",\"name\":\"id\"}]},\"protocol\":\"graphql\",\"types\":{\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"query ReleaseStageLoad($id: String!) { releaseStage(id: $id) { ...ReleaseStageFields } } fragment ReleaseStageFields on ReleaseStage { archivedAt color createdAt frozen id name pipeline { id } position type updatedAt }","field":"releaseStage","optype":"query","vars":[{"from":"id","gqltype":"String!","name":"id"}]},"kind":"graphql","method":"POST","orig":"releaseStage","segments":[],"select":{"exist":["id"]},"transform":{"req":"`reqdata`","res":"`body.data.releaseStage`"},"index$":0}],"key$":"load"},"update":{"input":"data","name":"update","points":[{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"id","orig":"id","reqd":true,"type":"`$STRING`"}]},"contract":{"id":"POST releaseStageArchive","json":"{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"id\",\"reqd\":true,\"type\":\"String\"}],\"deprecated\":false,\"desc\":\"Archives a release stage. Only started-type stages can be archived, and only if they have no active releases and at least one other stage of the same type remains. Cannot archive the last non-frozen started stage.\",\"gqltype\":\"ReleaseStageArchivePayload!\",\"list\":false,\"name\":\"releaseStageArchive\",\"reqd\":true,\"type\":\"ReleaseStageArchivePayload\"},\"invocation\":{\"doc\":\"mutation ReleaseStageUpdateArchive($id: String!) { releaseStageArchive(id: $id) { entity { ...ReleaseStageFields } success } } fragment ReleaseStageFields on ReleaseStage { archivedAt color createdAt frozen id name pipeline { id } position type updatedAt }\",\"field\":\"releaseStageArchive\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"id\",\"gqltype\":\"String!\",\"name\":\"id\"}]},\"protocol\":\"graphql\",\"types\":{\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"mutation ReleaseStageUpdateArchive($id: String!) { releaseStageArchive(id: $id) { entity { ...ReleaseStageFields } success } } fragment ReleaseStageFields on ReleaseStage { archivedAt color createdAt frozen id name pipeline { id } position type updatedAt }","field":"releaseStageArchive","optype":"mutation","vars":[{"from":"id","gqltype":"String!","name":"id"}]},"kind":"graphql","method":"POST","orig":"releaseStageArchive","segments":[],"select":{"$action":"archive","exist":["id"]},"transform":{"req":"`reqdata`","res":"`body.data.releaseStageArchive.entity`"},"index$":0},{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"id","orig":"id","reqd":true,"type":"`$STRING`"}]},"contract":{"id":"POST releaseStageUnarchive","json":"{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"id\",\"reqd\":true,\"type\":\"String\"}],\"deprecated\":false,\"desc\":\"Unarchives a release stage.\",\"gqltype\":\"ReleaseStageArchivePayload!\",\"list\":false,\"name\":\"releaseStageUnarchive\",\"reqd\":true,\"type\":\"ReleaseStageArchivePayload\"},\"invocation\":{\"doc\":\"mutation ReleaseStageUpdateUnarchive($id: String!) { releaseStageUnarchive(id: $id) { entity { ...ReleaseStageFields } success } } fragment ReleaseStageFields on ReleaseStage { archivedAt color createdAt frozen id name pipeline { id } position type updatedAt }\",\"field\":\"releaseStageUnarchive\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"id\",\"gqltype\":\"String!\",\"name\":\"id\"}]},\"protocol\":\"graphql\",\"types\":{\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"mutation ReleaseStageUpdateUnarchive($id: String!) { releaseStageUnarchive(id: $id) { entity { ...ReleaseStageFields } success } } fragment ReleaseStageFields on ReleaseStage { archivedAt color createdAt frozen id name pipeline { id } position type updatedAt }","field":"releaseStageUnarchive","optype":"mutation","vars":[{"from":"id","gqltype":"String!","name":"id"}]},"kind":"graphql","method":"POST","orig":"releaseStageUnarchive","segments":[],"select":{"$action":"unarchive","exist":["id"]},"transform":{"req":"`reqdata`","res":"`body.data.releaseStageUnarchive.entity`"},"index$":1},{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"id","orig":"id","reqd":true,"type":"`$STRING`","index$":0}]},"contract":{"id":"POST releaseStageUpdate","json":"{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"id\",\"reqd\":true,\"type\":\"String\"},{\"gqltype\":\"ReleaseStageUpdateInput!\",\"name\":\"input\",\"reqd\":true,\"type\":\"ReleaseStageUpdateInput\"}],\"deprecated\":false,\"desc\":\"Updates an existing release stage. Only started-type stages can be edited. Supports updating name, color, position, and frozen status.\",\"gqltype\":\"ReleaseStagePayload!\",\"list\":false,\"name\":\"releaseStageUpdate\",\"reqd\":true,\"type\":\"ReleaseStagePayload\"},\"invocation\":{\"doc\":\"mutation ReleaseStageUpdate($id: String!, $input: ReleaseStageUpdateInput!) { releaseStageUpdate(id: $id, input: $input) { releaseStage { ...ReleaseStageFields } success } } fragment ReleaseStageFields on ReleaseStage { archivedAt color createdAt frozen id name pipeline { id } position type updatedAt }\",\"field\":\"releaseStageUpdate\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"id\",\"gqltype\":\"String!\",\"name\":\"id\"},{\"from\":\"\",\"gqltype\":\"ReleaseStageUpdateInput!\",\"name\":\"input\"}]},\"protocol\":\"graphql\",\"types\":{\"Boolean\":{\"desc\":\"The `Boolean` scalar type represents `true` or `false`.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Boolean\"},\"Float\":{\"desc\":\"The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Float\"},\"ReleaseStageUpdateInput\":{\"desc\":\"Input for updating an existing release stage.\",\"fields\":{\"color\":{\"args\":[],\"deprecated\":false,\"desc\":\"The UI color of the stage as a HEX string.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"color\",\"reqd\":false,\"type\":\"String\"},\"frozen\":{\"args\":[],\"deprecated\":false,\"desc\":\"Whether this stage is frozen. Only applicable to started stages.\",\"gqltype\":\"Boolean\",\"list\":false,\"name\":\"frozen\",\"reqd\":false,\"type\":\"Boolean\"},\"name\":{\"args\":[],\"deprecated\":false,\"desc\":\"The name of the stage.\",\"gqltype\":\"String\",\"list\":false,\"name\":\"name\",\"reqd\":false,\"type\":\"String\"},\"position\":{\"args\":[],\"deprecated\":false,\"desc\":\"The position of the stage.\",\"gqltype\":\"Float\",\"list\":false,\"name\":\"position\",\"reqd\":false,\"type\":\"Float\"}},\"kind\":\"INPUT_OBJECT\",\"name\":\"ReleaseStageUpdateInput\"},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"mutation ReleaseStageUpdate($id: String!, $input: ReleaseStageUpdateInput!) { releaseStageUpdate(id: $id, input: $input) { releaseStage { ...ReleaseStageFields } success } } fragment ReleaseStageFields on ReleaseStage { archivedAt color createdAt frozen id name pipeline { id } position type updatedAt }","field":"releaseStageUpdate","optype":"mutation","vars":[{"from":"id","gqltype":"String!","name":"id"},{"from":"","gqltype":"ReleaseStageUpdateInput!","name":"input"}]},"kind":"graphql","method":"POST","orig":"releaseStageUpdate","segments":[],"select":{"exist":["id"]},"transform":{"req":"`reqdata`","res":"`body.data.releaseStageUpdate.releaseStage`"},"index$":2}],"key$":"update"}},"relations":{"ancestors":[]},"key$":"release_stage","name__orig":"release_stage","Name":"ReleaseStage","name_":"release_stage","name-":"release-stage","NAME":"RELEASE_STAGE","index$":69}, {"active":true,"entity":"release_stage","key$":"BasicReleaseStageFlow","kind":"basic","name":"BasicReleaseStageFlow","param":{},"step":[{"active":true,"data":{},"input":{"ref":"release_stage_ref01"},"match":{"after":"after01","before":"before01","first":"first01","include_archived":"include_archived01","last":"last01","order_by":"order_by01"},"op":"create","spec":[],"valid":[],"index$":0},{"active":true,"data":{},"input":{},"match":{"after":"after01","before":"before01","first":"first01","include_archived":"include_archived01","last":"last01","order_by":"order_by01"},"op":"list","spec":[],"valid":[{"apply":"ItemExists","def":{"ref":"release_stage_ref01"}}],"index$":1},{"active":true,"data":{},"input":{"ref":"release_stage_ref01","srcdatavar":"release_stage_ref01_data","suffix":"_up0","textfield":"color"},"match":{},"op":"update","spec":[{"apply":"TextFieldMark","def":{"mark":"Mark01-release_stage_ref01"}}],"valid":[],"index$":2},{"active":true,"data":{},"input":{"ref":"release_stage_ref01","srcdatavar":"release_stage_ref01_data","suffix":"_dt0"},"match":{"id":"release_stage01"},"op":"load","spec":[],"valid":[{"apply":"TextFieldMark","def":{"mark":"Mark01-release_stage_ref01"}}],"index$":3}]}, 'ReleaseStage')
+    }
+    const client = setup.client
+    const struct = setup.struct
+
+    const isempty = struct.isempty
+    const select = struct.select
+
+
+    // CREATE
+    const release_stage_ref01_ent = client.ReleaseStage()
+    let release_stage_ref01_data = setup.data.new.release_stage['release_stage_ref01']
+    release_stage_ref01_data['after'] = setup.idmap['after01']
+    release_stage_ref01_data['before'] = setup.idmap['before01']
+    release_stage_ref01_data['first'] = setup.idmap['first01']
+    release_stage_ref01_data['include_archived'] = setup.idmap['include_archived01']
+    release_stage_ref01_data['last'] = setup.idmap['last01']
+    release_stage_ref01_data['order_by'] = setup.idmap['order_by01']
+
+    release_stage_ref01_data = (await release_stage_ref01_ent.create(release_stage_ref01_data)).data()
+    assert(null != release_stage_ref01_data.id)
+
+
+    // LIST
+    const release_stage_ref01_match: any = {}
+    release_stage_ref01_match['after'] = setup.idmap['after01']
+    release_stage_ref01_match['before'] = setup.idmap['before01']
+    release_stage_ref01_match['first'] = setup.idmap['first01']
+    release_stage_ref01_match['include_archived'] = setup.idmap['include_archived01']
+    release_stage_ref01_match['last'] = setup.idmap['last01']
+    release_stage_ref01_match['order_by'] = setup.idmap['order_by01']
+
+    const release_stage_ref01_list = (await release_stage_ref01_ent.list(release_stage_ref01_match)).map((e: any) => e.data())
+
+    assert(!isempty(select(release_stage_ref01_list, { id: release_stage_ref01_data.id })))
+
+
+    // UPDATE
+    const release_stage_ref01_data_up0: any = {}
+    release_stage_ref01_data_up0.id = release_stage_ref01_data.id
+
+    const release_stage_ref01_markdef_up0 = { name: 'color', value: 'Mark01-release_stage_ref01_' + setup.now }
+    ;(release_stage_ref01_data_up0 as any)[release_stage_ref01_markdef_up0.name] = release_stage_ref01_markdef_up0.value
+
+    const release_stage_ref01_resdata_up0 = (await release_stage_ref01_ent.update(release_stage_ref01_data_up0)).data()
+    assert(release_stage_ref01_resdata_up0.id === release_stage_ref01_data_up0.id)
+
+    assert((release_stage_ref01_resdata_up0 as any)[release_stage_ref01_markdef_up0.name] === release_stage_ref01_markdef_up0.value)
+
+
+    // LOAD
+    const release_stage_ref01_match_dt0: any = {}
+    release_stage_ref01_match_dt0.id = release_stage_ref01_data.id
+    const release_stage_ref01_data_dt0 = (await release_stage_ref01_ent.load(release_stage_ref01_match_dt0)).data()
+    assert(release_stage_ref01_data_dt0.id === release_stage_ref01_data.id)
+
+
+  })
+})
+
+
+
+function basicSetup(extra?: any) {
+  // TODO: fix test def options
+  const options: any = {} // null
+
+  // TODO: needs test utility to resolve path
+  const entityDataFile =
+    Path.resolve(__dirname, 
+      '../../../../.sdk/test/entity/release_stage/ReleaseStageTestData.json')
+
+  // TODO: file ready util needed?
+  const entityDataSource = Fs.readFileSync(entityDataFile).toString('utf8')
+
+  // TODO: need a xlang JSON parse utility in voxgig/struct with better error msgs
+  const entityData = JSON.parse(entityDataSource)
+
+  options.entity = entityData.existing
+
+  let client = LinearSDK.test(options, extra)
+  const struct = client.utility().struct
+  const merge = struct.merge
+  const transform = struct.transform
+
+  let idmap = transform(
+    ['release_stage01','release_stage02','release_stage03'],
+    {
+      '`$PACK`': ['', {
+        '`$KEY`': '`$COPY`',
+        '`$VAL`': ['`$FORMAT`', 'upper', '`$COPY`']
+      }]
+    })
+
+  const env = envOverride({
+    'LINEAR_TEST_RELEASE_STAGE_ENTID': idmap,
+    'LINEAR_TEST_LIVE': 'FALSE',
+    'LINEAR_TEST_EXPLAIN': 'FALSE',
+    'LINEAR_APIKEY': '',
+  })
+
+  idmap = env['LINEAR_TEST_RELEASE_STAGE_ENTID']
+
+  const live = 'TRUE' === env.LINEAR_TEST_LIVE
+
+  const transport = createLiveTransport()
+  if (live) {
+    const rawIds = process.env['LINEAR_TEST_RELEASE_STAGE_ENTID']
+    idmap = rawIds && rawIds.trim() ? JSON.parse(rawIds) : {}
+    if (!idmap || Array.isArray(idmap) || typeof idmap !== 'object') {
+      throw new Error('Live ENTID must be a JSON object')
+    }
+    client = new LinearSDK(merge([
+      // FIRST, so the generated fields below win: sdk-test-control.json's
+      // test.client.options adds to the live client, it does not redirect it.
+      liveClientOptions(),
+      {
+        apikey: env.LINEAR_APIKEY,
+      },
+      // 'extra || {}', not a bare 'extra': struct.merge returns UNDEFINED when the
+      // last entry is undefined, and basicSetup is normally called with no
+      // argument at all - so a bare 'extra' silently discarded the apikey
+      // and server values above and handed the SDK undefined. Harmless
+      // while there was nothing in that object; not harmless now.
+      extra || {},
+      { system: { fetch: transport.fetch } }
+    ]))
+  }
+
+  const setup = {
+    idmap,
+    env,
+    options,
+    client,
+    struct,
+    data: entityData,
+    explain: 'TRUE' === env.LINEAR_TEST_EXPLAIN,
+    live,
+    transport,
+    now: Date.now(),
+  }
+
+  return setup
+}
+  

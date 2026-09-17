@@ -1,0 +1,314 @@
+{
+  "existing": {
+    "document_search_result": {
+      "DOCUMENT_SEARCH_RESULT00": {
+        "archivedAt": "s10e",
+        "color": "s10f",
+        "content": "s110",
+        "contentState": "s111",
+        "createdAt": "s112",
+        "creator": {},
+        "cycle": {},
+        "documentContentId": "s115",
+        "hiddenAt": "s116",
+        "icon": "s117",
+        "id": "DOCUMENT_SEARCH_RESULT00",
+        "initiative": {},
+        "issue": {},
+        "lastAppliedTemplate": {},
+        "metadata": "s11c",
+        "owner": {},
+        "project": {},
+        "release": {},
+        "slugId": "s120",
+        "sortOrder": 289,
+        "summary": "s122",
+        "team": {},
+        "title": "s124",
+        "trashed": false,
+        "updatedAt": "s126",
+        "updatedBy": {},
+        "url": "s128",
+        "after": "AFTER01",
+        "before": "BEFORE01",
+        "first": "FIRST01",
+        "include_archived": "INCLUDE_ARCHIVED01",
+        "include_comment": "INCLUDE_COMMENT01",
+        "last": "LAST01",
+        "order_by": "ORDER_BY01",
+        "team_id": "TEAM01",
+        "term": "TERM01"
+      },
+      "DOCUMENT_SEARCH_RESULT01": {
+        "archivedAt": "s21c",
+        "color": "s21d",
+        "content": "s21e",
+        "contentState": "s21f",
+        "createdAt": "s220",
+        "creator": {},
+        "cycle": {},
+        "documentContentId": "s223",
+        "hiddenAt": "s224",
+        "icon": "s225",
+        "id": "DOCUMENT_SEARCH_RESULT01",
+        "initiative": {},
+        "issue": {},
+        "lastAppliedTemplate": {},
+        "metadata": "s22a",
+        "owner": {},
+        "project": {},
+        "release": {},
+        "slugId": "s22e",
+        "sortOrder": 559,
+        "summary": "s230",
+        "team": {},
+        "title": "s232",
+        "trashed": false,
+        "updatedAt": "s234",
+        "updatedBy": {},
+        "url": "s236",
+        "after": "AFTER01",
+        "before": "BEFORE01",
+        "first": "FIRST01",
+        "include_archived": "INCLUDE_ARCHIVED01",
+        "include_comment": "INCLUDE_COMMENT01",
+        "last": "LAST01",
+        "order_by": "ORDER_BY01",
+        "team_id": "TEAM01",
+        "term": "TERM01"
+      },
+      "DOCUMENT_SEARCH_RESULT02": {
+        "archivedAt": "s32a",
+        "color": "s32b",
+        "content": "s32c",
+        "contentState": "s32d",
+        "createdAt": "s32e",
+        "creator": {},
+        "cycle": {},
+        "documentContentId": "s331",
+        "hiddenAt": "s332",
+        "icon": "s333",
+        "id": "DOCUMENT_SEARCH_RESULT02",
+        "initiative": {},
+        "issue": {},
+        "lastAppliedTemplate": {},
+        "metadata": "s338",
+        "owner": {},
+        "project": {},
+        "release": {},
+        "slugId": "s33c",
+        "sortOrder": 829,
+        "summary": "s33e",
+        "team": {},
+        "title": "s340",
+        "trashed": false,
+        "updatedAt": "s342",
+        "updatedBy": {},
+        "url": "s344",
+        "after": "AFTER01",
+        "before": "BEFORE01",
+        "first": "FIRST01",
+        "include_archived": "INCLUDE_ARCHIVED01",
+        "include_comment": "INCLUDE_COMMENT01",
+        "last": "LAST01",
+        "order_by": "ORDER_BY01",
+        "team_id": "TEAM01",
+        "term": "TERM01"
+      }
+    }
+  },
+  "new": {
+    "document_search_result": {
+      "document_search_result_ref01": {
+        "archivedAt": "s438",
+        "color": "s439",
+        "content": "s43a",
+        "contentState": "s43b",
+        "createdAt": "s43c",
+        "creator": {},
+        "cycle": {},
+        "documentContentId": "s43f",
+        "hiddenAt": "s440",
+        "icon": "s441",
+        "initiative": {},
+        "issue": {},
+        "lastAppliedTemplate": {},
+        "metadata": "s446",
+        "owner": {},
+        "project": {},
+        "release": {},
+        "slugId": "s44a",
+        "sortOrder": 1099,
+        "summary": "s44c",
+        "team": {},
+        "title": "s44e",
+        "trashed": false,
+        "updatedAt": "s450",
+        "updatedBy": {},
+        "url": "s452"
+      }
+    }
+  },
+  "requests": {
+    "POST searchDocuments": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String",
+              "name": "after",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "before",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "Int",
+              "name": "first",
+              "reqd": false,
+              "type": "Int"
+            },
+            {
+              "gqltype": "Boolean",
+              "name": "includeArchived",
+              "reqd": false,
+              "type": "Boolean"
+            },
+            {
+              "gqltype": "Boolean",
+              "name": "includeComments",
+              "reqd": false,
+              "type": "Boolean"
+            },
+            {
+              "gqltype": "Int",
+              "name": "last",
+              "reqd": false,
+              "type": "Int"
+            },
+            {
+              "gqltype": "PaginationOrderBy",
+              "name": "orderBy",
+              "reqd": false,
+              "type": "PaginationOrderBy"
+            },
+            {
+              "gqltype": "String",
+              "name": "teamId",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String!",
+              "name": "term",
+              "reqd": true,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Search documents by text query using full-text and vector search. Results are ranked by relevance unless an orderBy parameter is specified. Rate-limited to 30 requests per minute.",
+          "gqltype": "DocumentSearchPayload!",
+          "list": false,
+          "name": "searchDocuments",
+          "reqd": true,
+          "type": "DocumentSearchPayload"
+        },
+        "invocation": {
+          "doc": "query DocumentSearchResultList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $includeComments: Boolean, $last: Int, $orderBy: PaginationOrderBy, $teamId: String, $term: String!) { searchDocuments(after: $after, before: $before, first: $first, includeArchived: $includeArchived, includeComments: $includeComments, last: $last, orderBy: $orderBy, teamId: $teamId, term: $term) { nodes { ...DocumentSearchResultFields } pageInfo { endCursor hasNextPage } } } fragment DocumentSearchResultFields on DocumentSearchResult { archivedAt color content contentState createdAt creator { id } cycle { id } documentContentId hiddenAt icon id initiative { id } issue { id } lastAppliedTemplate { id } metadata owner { id } project { id } release { id } slugId sortOrder summary team { id } title trashed updatedAt updatedBy { id } url }",
+          "field": "searchDocuments",
+          "optype": "query",
+          "page": {
+            "cursor": "pageInfo.endCursor",
+            "more": "pageInfo.hasNextPage",
+            "nodes": "nodes",
+            "style": "relay"
+          },
+          "vars": [
+            {
+              "from": "after",
+              "gqltype": "String",
+              "name": "after"
+            },
+            {
+              "from": "before",
+              "gqltype": "String",
+              "name": "before"
+            },
+            {
+              "from": "first",
+              "gqltype": "Int",
+              "name": "first"
+            },
+            {
+              "from": "includeArchived",
+              "gqltype": "Boolean",
+              "name": "includeArchived"
+            },
+            {
+              "from": "includeComments",
+              "gqltype": "Boolean",
+              "name": "includeComments"
+            },
+            {
+              "from": "last",
+              "gqltype": "Int",
+              "name": "last"
+            },
+            {
+              "from": "orderBy",
+              "gqltype": "PaginationOrderBy",
+              "name": "orderBy"
+            },
+            {
+              "from": "teamId",
+              "gqltype": "String",
+              "name": "teamId"
+            },
+            {
+              "from": "term",
+              "gqltype": "String!",
+              "name": "term"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "Boolean": {
+            "desc": "The `Boolean` scalar type represents `true` or `false`.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "Boolean"
+          },
+          "Int": {
+            "desc": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "Int"
+          },
+          "PaginationOrderBy": {
+            "desc": "By which field should the pagination order by",
+            "fields": {},
+            "kind": "ENUM",
+            "name": "PaginationOrderBy",
+            "values": [
+              "createdAt",
+              "updatedAt"
+            ]
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    }
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "existing": {
+    "diff": {
+      "DIFF00": {
+        "additions": 140,
+        "agentSession": {},
+        "archivedAt": "s8e",
+        "contentHash": "s8f",
+        "createdAt": "s90",
+        "creator": {},
+        "deletions": 146,
+        "fileCount": 147,
+        "id": "DIFF00",
+        "organization": {},
+        "pullRequest": {},
+        "slugId": "s97",
+        "truncated": true,
+        "updatedAt": "s99"
+      },
+      "DIFF01": {
+        "additions": 280,
+        "agentSession": {},
+        "archivedAt": "s11a",
+        "contentHash": "s11b",
+        "createdAt": "s11c",
+        "creator": {},
+        "deletions": 286,
+        "fileCount": 287,
+        "id": "DIFF01",
+        "organization": {},
+        "pullRequest": {},
+        "slugId": "s123",
+        "truncated": true,
+        "updatedAt": "s125"
+      },
+      "DIFF02": {
+        "additions": 420,
+        "agentSession": {},
+        "archivedAt": "s1a6",
+        "contentHash": "s1a7",
+        "createdAt": "s1a8",
+        "creator": {},
+        "deletions": 426,
+        "fileCount": 427,
+        "id": "DIFF02",
+        "organization": {},
+        "pullRequest": {},
+        "slugId": "s1af",
+        "truncated": true,
+        "updatedAt": "s1b1"
+      }
+    }
+  },
+  "new": {
+    "diff": {
+      "diff_ref01": {
+        "additions": 560,
+        "agentSession": {},
+        "archivedAt": "s232",
+        "contentHash": "s233",
+        "createdAt": "s234",
+        "creator": {},
+        "deletions": 566,
+        "fileCount": 567,
+        "organization": {},
+        "pullRequest": {},
+        "slugId": "s23b",
+        "truncated": true,
+        "updatedAt": "s23d"
+      }
+    }
+  },
+  "requests": {
+    "POST diff": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "id",
+              "reqd": true,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "[Internal] A specific diff.",
+          "gqltype": "Diff!",
+          "list": false,
+          "name": "diff",
+          "reqd": true,
+          "type": "Diff"
+        },
+        "invocation": {
+          "doc": "query DiffLoad($id: String!) { diff(id: $id) { ...DiffFields } } fragment DiffFields on Diff { additions agentSession { id } archivedAt contentHash createdAt creator { id } deletions fileCount id organization { id } pullRequest { id } slugId truncated updatedAt }",
+          "field": "diff",
+          "optype": "query",
+          "vars": [
+            {
+              "from": "id",
+              "gqltype": "String!",
+              "name": "id"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    }
+  }
+}

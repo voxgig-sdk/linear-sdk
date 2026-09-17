@@ -52,7 +52,7 @@ class TeamEntityTest < Minitest::Test
     setup = team_basic_setup(nil)
     # Per-op sdk-test-control.json skip.
     _live = setup[:live] || false
-    ["list", "load"].each do |_op|
+    ["create", "list", "update", "load", "remove"].each do |_op|
       _should_skip, _reason = Runner.is_control_skipped("entityOp", "team." + _op, _live ? "live" : "unit")
       if _should_skip
         skip(_reason || "skipped via sdk-test-control.json")
@@ -67,23 +67,55 @@ class TeamEntityTest < Minitest::Test
     end
     client = setup[:client]
 
-    # Bootstrap entity data from existing test data.
-    team_ref01_data_raw = Vs.items(Helpers.to_map(
-      Vs.getpath(setup[:data], "existing.team")))
-    team_ref01_data = nil
-    if team_ref01_data_raw.length > 0
-      team_ref01_data = Helpers.to_map(team_ref01_data_raw[0][1])
-    end
+    # CREATE
+    team_ref01_ent = client.Team(nil)
+    team_ref01_data = Helpers.to_map(Vs.getprop(
+      Vs.getpath(setup[:data], "new.team"), "team_ref01"))
+    team_ref01_data["after"] = setup[:idmap]["after01"]
+    team_ref01_data["before"] = setup[:idmap]["before01"]
+    team_ref01_data["copy_settings_from_team_id"] = setup[:idmap]["copy_settings_from_team01"]
+    team_ref01_data["first"] = setup[:idmap]["first01"]
+    team_ref01_data["include_archived"] = setup[:idmap]["include_archived01"]
+    team_ref01_data["last"] = setup[:idmap]["last01"]
+    team_ref01_data["order_by"] = setup[:idmap]["order_by01"]
+
+    team_ref01_data_result = team_ref01_ent.create(team_ref01_data, nil)
+    team_ref01_data = Helpers.to_map(team_ref01_data_result.respond_to?(:data_get) ? team_ref01_data_result.data_get : team_ref01_data_result)
+    assert !team_ref01_data.nil?
+    assert !team_ref01_data["id"].nil?
 
     # LIST
-    team_ref01_ent = client.Team(nil)
     team_ref01_match = {
       "after" => setup[:idmap]["after01"],
+      "before" => setup[:idmap]["before01"],
       "first" => setup[:idmap]["first01"],
+      "include_archived" => setup[:idmap]["include_archived01"],
+      "last" => setup[:idmap]["last01"],
+      "order_by" => setup[:idmap]["order_by01"],
     }
 
     team_ref01_list_result = team_ref01_ent.list(team_ref01_match, nil)
     assert team_ref01_list_result.is_a?(Array)
+
+    found_item = Vs.select(
+      Runner.entity_list_to_data(team_ref01_list_result),
+      { "id" => team_ref01_data["id"] })
+    assert !Vs.isempty(found_item)
+
+    # UPDATE
+    team_ref01_data_up0_up = {
+      "id" => team_ref01_data["id"],
+    }
+
+    team_ref01_markdef_up0_name = "autoCloseStateId"
+    team_ref01_markdef_up0_value = "Mark01-team_ref01_#{setup[:now]}"
+    team_ref01_data_up0_up[team_ref01_markdef_up0_name] = team_ref01_markdef_up0_value
+
+    team_ref01_resdata_up0_result = team_ref01_ent.update(team_ref01_data_up0_up, nil)
+    team_ref01_resdata_up0 = Helpers.to_map(team_ref01_resdata_up0_result.respond_to?(:data_get) ? team_ref01_resdata_up0_result.data_get : team_ref01_resdata_up0_result)
+    assert !team_ref01_resdata_up0.nil?
+    assert_equal team_ref01_resdata_up0["id"], team_ref01_data_up0_up["id"]
+    assert_equal team_ref01_resdata_up0[team_ref01_markdef_up0_name], team_ref01_markdef_up0_value
 
     # LOAD
     team_ref01_match_dt0 = {
@@ -93,6 +125,30 @@ class TeamEntityTest < Minitest::Test
     team_ref01_data_dt0_load_result = Helpers.to_map(team_ref01_data_dt0_loaded.respond_to?(:data_get) ? team_ref01_data_dt0_loaded.data_get : team_ref01_data_dt0_loaded)
     assert !team_ref01_data_dt0_load_result.nil?
     assert_equal team_ref01_data_dt0_load_result["id"], team_ref01_data["id"]
+
+    # REMOVE
+    team_ref01_match_rm0 = {
+      "id" => team_ref01_data["id"],
+    }
+    team_ref01_ent.remove(team_ref01_match_rm0, nil)
+
+    # LIST
+    team_ref01_match_rt0 = {
+      "after" => setup[:idmap]["after01"],
+      "before" => setup[:idmap]["before01"],
+      "first" => setup[:idmap]["first01"],
+      "include_archived" => setup[:idmap]["include_archived01"],
+      "last" => setup[:idmap]["last01"],
+      "order_by" => setup[:idmap]["order_by01"],
+    }
+
+    team_ref01_list_rt0_result = team_ref01_ent.list(team_ref01_match_rt0, nil)
+    assert team_ref01_list_rt0_result.is_a?(Array)
+
+    not_found_item = Vs.select(
+      Runner.entity_list_to_data(team_ref01_list_rt0_result),
+      { "id" => team_ref01_data["id"] })
+    assert Vs.isempty(not_found_item)
 
   end
 end
@@ -111,7 +167,7 @@ def team_basic_setup(extra)
 
   # Generate idmap via transform.
   idmap = Vs.transform(
-    ["team01", "team02", "team03", "after01", "first01"],
+    ["team01", "team02", "team03", "after01", "before01", "copy_settings_from_team01", "first01", "include_archived01", "last01", "order_by01"],
     {
       "`$PACK`" => ["", {
         "`$KEY`" => "`$COPY`",

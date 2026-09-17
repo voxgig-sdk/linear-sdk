@@ -1,0 +1,150 @@
+# BasicIntegrationFlow
+
+main: kit: flow: BasicIntegrationFlow:
+{
+  entity: "integration",
+  kind: "basic",
+  name: "BasicIntegrationFlow",
+  step: [
+    {
+      input: {
+        ref: "integration_ref01"
+      }
+
+      match: {
+        after: "after01",
+        api_key: "api_key01",
+        application_key: "application_key01",
+        before: "before01",
+        channel_id: "channel01",
+        channel_name: "channel_name01",
+        code: "code01",
+        code_access: "code_access01",
+        confirm_replace: "confirm_replace01",
+        enabled: "enabled01",
+        environment_id: "environment01",
+        first: "first01",
+        github_host: "github_host01",
+        include_archived: "include_archived01",
+        installation_id: "installation01",
+        integration_id: "integration01",
+        last: "last01",
+        membership_type: "membership_type01",
+        order_by: "order_by01",
+        organization_slug: "organization_slug01",
+        project_id: "project01",
+        redirect_uri: "redirect_uri01",
+        requested_scope: "requested_scope01",
+        site: "site01",
+        skip_installation_deletion: "skip_installation_deletion01",
+        team_id: "team01",
+        team_name: "team_name01",
+        type: "type01"
+      }
+
+      op: "create"
+    }
+
+    {
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "integration_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "integration_ref01",
+        srcdatavar: "integration_ref01_data",
+        suffix: "_up0",
+        textfield: "service"
+      }
+
+      op: "update",
+      spec: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-integration_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "integration_ref01",
+        srcdatavar: "integration_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        id: "integration01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-integration_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "integration_ref01",
+        suffix: "_rm0"
+      }
+
+      match: {
+        id: "integration01",
+        skip_installation_deletion: "skip_installation_deletion01"
+      }
+
+      op: "remove"
+    }
+
+    {
+      input: {
+        suffix: "_rt0"
+      }
+
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemNotExists",
+          def: {
+            ref: "integration_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicIntegrationFlow"
+}

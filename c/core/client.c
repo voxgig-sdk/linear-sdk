@@ -294,14 +294,439 @@ voxgig_value* sdk_graphql(LinearSDK* sdk, const char* query,
 }
 
 
+// AccessKeyRelease entity bound to this client.
+Entity* linear_access_key_release(LinearSDK* client, voxgig_value* entopts) {
+  return access_key_release_entity_new(client, entopts);
+}
+
+// AccessKeyReleasePipeline entity bound to this client.
+Entity* linear_access_key_release_pipeline(LinearSDK* client, voxgig_value* entopts) {
+  return access_key_release_pipeline_entity_new(client, entopts);
+}
+
+// AgentActivity entity bound to this client.
+Entity* linear_agent_activity(LinearSDK* client, voxgig_value* entopts) {
+  return agent_activity_entity_new(client, entopts);
+}
+
+// AgentSession entity bound to this client.
+Entity* linear_agent_session(LinearSDK* client, voxgig_value* entopts) {
+  return agent_session_entity_new(client, entopts);
+}
+
+// AgentSkill entity bound to this client.
+Entity* linear_agent_skill(LinearSDK* client, voxgig_value* entopts) {
+  return agent_skill_entity_new(client, entopts);
+}
+
+// Application entity bound to this client.
+Entity* linear_application(LinearSDK* client, voxgig_value* entopts) {
+  return application_entity_new(client, entopts);
+}
+
+// Attachment entity bound to this client.
+Entity* linear_attachment(LinearSDK* client, voxgig_value* entopts) {
+  return attachment_entity_new(client, entopts);
+}
+
+// AuditEntry entity bound to this client.
+Entity* linear_audit_entry(LinearSDK* client, voxgig_value* entopts) {
+  return audit_entry_entity_new(client, entopts);
+}
+
+// AuditEntryType entity bound to this client.
+Entity* linear_audit_entry_type(LinearSDK* client, voxgig_value* entopts) {
+  return audit_entry_type_entity_new(client, entopts);
+}
+
+// AuthResolverResponse entity bound to this client.
+Entity* linear_auth_resolver_response(LinearSDK* client, voxgig_value* entopts) {
+  return auth_resolver_response_entity_new(client, entopts);
+}
+
+// AuthenticationSessionResponse entity bound to this client.
+Entity* linear_authentication_session_response(LinearSDK* client, voxgig_value* entopts) {
+  return authentication_session_response_entity_new(client, entopts);
+}
+
+// Comment entity bound to this client.
+Entity* linear_comment(LinearSDK* client, voxgig_value* entopts) {
+  return comment_entity_new(client, entopts);
+}
+
+// CreateOrJoinOrganizationResponse entity bound to this client.
+Entity* linear_create_or_join_organization_response(LinearSDK* client, voxgig_value* entopts) {
+  return create_or_join_organization_response_entity_new(client, entopts);
+}
+
+// CustomView entity bound to this client.
+Entity* linear_custom_view(LinearSDK* client, voxgig_value* entopts) {
+  return custom_view_entity_new(client, entopts);
+}
+
+// Customer entity bound to this client.
+Entity* linear_customer(LinearSDK* client, voxgig_value* entopts) {
+  return customer_entity_new(client, entopts);
+}
+
+// CustomerNeed entity bound to this client.
+Entity* linear_customer_need(LinearSDK* client, voxgig_value* entopts) {
+  return customer_need_entity_new(client, entopts);
+}
+
+// CustomerStatus entity bound to this client.
+Entity* linear_customer_status(LinearSDK* client, voxgig_value* entopts) {
+  return customer_status_entity_new(client, entopts);
+}
+
+// CustomerTier entity bound to this client.
+Entity* linear_customer_tier(LinearSDK* client, voxgig_value* entopts) {
+  return customer_tier_entity_new(client, entopts);
+}
+
+// Cycle entity bound to this client.
+Entity* linear_cycle(LinearSDK* client, voxgig_value* entopts) {
+  return cycle_entity_new(client, entopts);
+}
+
+// Diff entity bound to this client.
+Entity* linear_diff(LinearSDK* client, voxgig_value* entopts) {
+  return diff_entity_new(client, entopts);
+}
+
+// Document entity bound to this client.
+Entity* linear_document(LinearSDK* client, voxgig_value* entopts) {
+  return document_entity_new(client, entopts);
+}
+
+// DocumentSearchResult entity bound to this client.
+Entity* linear_document_search_result(LinearSDK* client, voxgig_value* entopts) {
+  return document_search_result_entity_new(client, entopts);
+}
+
+// EmailIntakeAddress entity bound to this client.
+Entity* linear_email_intake_address(LinearSDK* client, voxgig_value* entopts) {
+  return email_intake_address_entity_new(client, entopts);
+}
+
+// EmailUserAccountAuthChallengeResponse entity bound to this client.
+Entity* linear_email_user_account_auth_challenge_response(LinearSDK* client, voxgig_value* entopts) {
+  return email_user_account_auth_challenge_response_entity_new(client, entopts);
+}
+
+// Emoji entity bound to this client.
+Entity* linear_emoji(LinearSDK* client, voxgig_value* entopts) {
+  return emoji_entity_new(client, entopts);
+}
+
+// EntityExternalLink entity bound to this client.
+Entity* linear_entity_external_link(LinearSDK* client, voxgig_value* entopts) {
+  return entity_external_link_entity_new(client, entopts);
+}
+
+// ExternalUser entity bound to this client.
+Entity* linear_external_user(LinearSDK* client, voxgig_value* entopts) {
+  return external_user_entity_new(client, entopts);
+}
+
+// Favorite entity bound to this client.
+Entity* linear_favorite(LinearSDK* client, voxgig_value* entopts) {
+  return favorite_entity_new(client, entopts);
+}
+
+// GitAutomationState entity bound to this client.
+Entity* linear_git_automation_state(LinearSDK* client, voxgig_value* entopts) {
+  return git_automation_state_entity_new(client, entopts);
+}
+
+// GitAutomationTargetBranch entity bound to this client.
+Entity* linear_git_automation_target_branch(LinearSDK* client, voxgig_value* entopts) {
+  return git_automation_target_branch_entity_new(client, entopts);
+}
+
+// GitHubIntegrationConnectDetail entity bound to this client.
+Entity* linear_git_hub_integration_connect_detail(LinearSDK* client, voxgig_value* entopts) {
+  return git_hub_integration_connect_detail_entity_new(client, entopts);
+}
+
+// Initiative entity bound to this client.
+Entity* linear_initiative(LinearSDK* client, voxgig_value* entopts) {
+  return initiative_entity_new(client, entopts);
+}
+
+// InitiativeLabel entity bound to this client.
+Entity* linear_initiative_label(LinearSDK* client, voxgig_value* entopts) {
+  return initiative_label_entity_new(client, entopts);
+}
+
+// InitiativeLeadTeamChangeImpact entity bound to this client.
+Entity* linear_initiative_lead_team_change_impact(LinearSDK* client, voxgig_value* entopts) {
+  return initiative_lead_team_change_impact_entity_new(client, entopts);
+}
+
+// InitiativeRelation entity bound to this client.
+Entity* linear_initiative_relation(LinearSDK* client, voxgig_value* entopts) {
+  return initiative_relation_entity_new(client, entopts);
+}
+
+// InitiativeToProject entity bound to this client.
+Entity* linear_initiative_to_project(LinearSDK* client, voxgig_value* entopts) {
+  return initiative_to_project_entity_new(client, entopts);
+}
+
+// InitiativeUpdate entity bound to this client.
+Entity* linear_initiative_update(LinearSDK* client, voxgig_value* entopts) {
+  return initiative_update_entity_new(client, entopts);
+}
+
+// Integration entity bound to this client.
+Entity* linear_integration(LinearSDK* client, voxgig_value* entopts) {
+  return integration_entity_new(client, entopts);
+}
+
+// IntegrationTemplate entity bound to this client.
+Entity* linear_integration_template(LinearSDK* client, voxgig_value* entopts) {
+  return integration_template_entity_new(client, entopts);
+}
+
+// IntegrationsSetting entity bound to this client.
+Entity* linear_integrations_setting(LinearSDK* client, voxgig_value* entopts) {
+  return integrations_setting_entity_new(client, entopts);
+}
+
 // Issue entity bound to this client.
 Entity* linear_issue(LinearSDK* client, voxgig_value* entopts) {
   return issue_entity_new(client, entopts);
 }
 
+// IssueImport entity bound to this client.
+Entity* linear_issue_import(LinearSDK* client, voxgig_value* entopts) {
+  return issue_import_entity_new(client, entopts);
+}
+
+// IssueLabel entity bound to this client.
+Entity* linear_issue_label(LinearSDK* client, voxgig_value* entopts) {
+  return issue_label_entity_new(client, entopts);
+}
+
+// IssuePriorityValue entity bound to this client.
+Entity* linear_issue_priority_value(LinearSDK* client, voxgig_value* entopts) {
+  return issue_priority_value_entity_new(client, entopts);
+}
+
+// IssueRelation entity bound to this client.
+Entity* linear_issue_relation(LinearSDK* client, voxgig_value* entopts) {
+  return issue_relation_entity_new(client, entopts);
+}
+
+// IssueSearchResult entity bound to this client.
+Entity* linear_issue_search_result(LinearSDK* client, voxgig_value* entopts) {
+  return issue_search_result_entity_new(client, entopts);
+}
+
+// IssueToRelease entity bound to this client.
+Entity* linear_issue_to_release(LinearSDK* client, voxgig_value* entopts) {
+  return issue_to_release_entity_new(client, entopts);
+}
+
+// LogoutResponse entity bound to this client.
+Entity* linear_logout_response(LinearSDK* client, voxgig_value* entopts) {
+  return logout_response_entity_new(client, entopts);
+}
+
+// Notification entity bound to this client.
+Entity* linear_notification(LinearSDK* client, voxgig_value* entopts) {
+  return notification_entity_new(client, entopts);
+}
+
+// NotificationSubscription entity bound to this client.
+Entity* linear_notification_subscription(LinearSDK* client, voxgig_value* entopts) {
+  return notification_subscription_entity_new(client, entopts);
+}
+
+// OAuthApplication entity bound to this client.
+Entity* linear_o_auth_application(LinearSDK* client, voxgig_value* entopts) {
+  return o_auth_application_entity_new(client, entopts);
+}
+
+// Organization entity bound to this client.
+Entity* linear_organization(LinearSDK* client, voxgig_value* entopts) {
+  return organization_entity_new(client, entopts);
+}
+
+// OrganizationDomain entity bound to this client.
+Entity* linear_organization_domain(LinearSDK* client, voxgig_value* entopts) {
+  return organization_domain_entity_new(client, entopts);
+}
+
+// OrganizationInvite entity bound to this client.
+Entity* linear_organization_invite(LinearSDK* client, voxgig_value* entopts) {
+  return organization_invite_entity_new(client, entopts);
+}
+
+// OrganizationMeta entity bound to this client.
+Entity* linear_organization_meta(LinearSDK* client, voxgig_value* entopts) {
+  return organization_meta_entity_new(client, entopts);
+}
+
+// PasskeyLoginStartResponse entity bound to this client.
+Entity* linear_passkey_login_start_response(LinearSDK* client, voxgig_value* entopts) {
+  return passkey_login_start_response_entity_new(client, entopts);
+}
+
+// Project entity bound to this client.
+Entity* linear_project(LinearSDK* client, voxgig_value* entopts) {
+  return project_entity_new(client, entopts);
+}
+
+// ProjectLabel entity bound to this client.
+Entity* linear_project_label(LinearSDK* client, voxgig_value* entopts) {
+  return project_label_entity_new(client, entopts);
+}
+
+// ProjectMilestone entity bound to this client.
+Entity* linear_project_milestone(LinearSDK* client, voxgig_value* entopts) {
+  return project_milestone_entity_new(client, entopts);
+}
+
+// ProjectMilestoneMoveProjectTeam entity bound to this client.
+Entity* linear_project_milestone_move_project_team(LinearSDK* client, voxgig_value* entopts) {
+  return project_milestone_move_project_team_entity_new(client, entopts);
+}
+
+// ProjectRelation entity bound to this client.
+Entity* linear_project_relation(LinearSDK* client, voxgig_value* entopts) {
+  return project_relation_entity_new(client, entopts);
+}
+
+// ProjectSearchResult entity bound to this client.
+Entity* linear_project_search_result(LinearSDK* client, voxgig_value* entopts) {
+  return project_search_result_entity_new(client, entopts);
+}
+
+// ProjectStatus entity bound to this client.
+Entity* linear_project_status(LinearSDK* client, voxgig_value* entopts) {
+  return project_status_entity_new(client, entopts);
+}
+
+// ProjectUpdate entity bound to this client.
+Entity* linear_project_update(LinearSDK* client, voxgig_value* entopts) {
+  return project_update_entity_new(client, entopts);
+}
+
+// PushSubscription entity bound to this client.
+Entity* linear_push_subscription(LinearSDK* client, voxgig_value* entopts) {
+  return push_subscription_entity_new(client, entopts);
+}
+
+// Reaction entity bound to this client.
+Entity* linear_reaction(LinearSDK* client, voxgig_value* entopts) {
+  return reaction_entity_new(client, entopts);
+}
+
+// Release entity bound to this client.
+Entity* linear_release(LinearSDK* client, voxgig_value* entopts) {
+  return release_entity_new(client, entopts);
+}
+
+// ReleaseNote entity bound to this client.
+Entity* linear_release_note(LinearSDK* client, voxgig_value* entopts) {
+  return release_note_entity_new(client, entopts);
+}
+
+// ReleasePipeline entity bound to this client.
+Entity* linear_release_pipeline(LinearSDK* client, voxgig_value* entopts) {
+  return release_pipeline_entity_new(client, entopts);
+}
+
+// ReleaseStage entity bound to this client.
+Entity* linear_release_stage(LinearSDK* client, voxgig_value* entopts) {
+  return release_stage_entity_new(client, entopts);
+}
+
+// Roadmap entity bound to this client.
+Entity* linear_roadmap(LinearSDK* client, voxgig_value* entopts) {
+  return roadmap_entity_new(client, entopts);
+}
+
+// RoadmapToProject entity bound to this client.
+Entity* linear_roadmap_to_project(LinearSDK* client, voxgig_value* entopts) {
+  return roadmap_to_project_entity_new(client, entopts);
+}
+
+// SlaConfiguration entity bound to this client.
+Entity* linear_sla_configuration(LinearSDK* client, voxgig_value* entopts) {
+  return sla_configuration_entity_new(client, entopts);
+}
+
+// SsoUrlFromEmailResponse entity bound to this client.
+Entity* linear_sso_url_from_email_response(LinearSDK* client, voxgig_value* entopts) {
+  return sso_url_from_email_response_entity_new(client, entopts);
+}
+
 // Team entity bound to this client.
 Entity* linear_team(LinearSDK* client, voxgig_value* entopts) {
   return team_entity_new(client, entopts);
+}
+
+// TeamMembership entity bound to this client.
+Entity* linear_team_membership(LinearSDK* client, voxgig_value* entopts) {
+  return team_membership_entity_new(client, entopts);
+}
+
+// Template entity bound to this client.
+Entity* linear_template(LinearSDK* client, voxgig_value* entopts) {
+  return template_entity_new(client, entopts);
+}
+
+// TimeSchedule entity bound to this client.
+Entity* linear_time_schedule(LinearSDK* client, voxgig_value* entopts) {
+  return time_schedule_entity_new(client, entopts);
+}
+
+// TriageResponsibility entity bound to this client.
+Entity* linear_triage_responsibility(LinearSDK* client, voxgig_value* entopts) {
+  return triage_responsibility_entity_new(client, entopts);
+}
+
+// UploadFile entity bound to this client.
+Entity* linear_upload_file(LinearSDK* client, voxgig_value* entopts) {
+  return upload_file_entity_new(client, entopts);
+}
+
+// UsageAlert entity bound to this client.
+Entity* linear_usage_alert(LinearSDK* client, voxgig_value* entopts) {
+  return usage_alert_entity_new(client, entopts);
+}
+
+// User entity bound to this client.
+Entity* linear_user(LinearSDK* client, voxgig_value* entopts) {
+  return user_entity_new(client, entopts);
+}
+
+// UserSetting entity bound to this client.
+Entity* linear_user_setting(LinearSDK* client, voxgig_value* entopts) {
+  return user_setting_entity_new(client, entopts);
+}
+
+// ViewPreference entity bound to this client.
+Entity* linear_view_preference(LinearSDK* client, voxgig_value* entopts) {
+  return view_preference_entity_new(client, entopts);
+}
+
+// Webhook entity bound to this client.
+Entity* linear_webhook(LinearSDK* client, voxgig_value* entopts) {
+  return webhook_entity_new(client, entopts);
+}
+
+// WebhookFailureEvent entity bound to this client.
+Entity* linear_webhook_failure_event(LinearSDK* client, voxgig_value* entopts) {
+  return webhook_failure_event_entity_new(client, entopts);
+}
+
+// WorkflowState entity bound to this client.
+Entity* linear_workflow_state(LinearSDK* client, voxgig_value* entopts) {
+  return workflow_state_entity_new(client, entopts);
 }
 
 

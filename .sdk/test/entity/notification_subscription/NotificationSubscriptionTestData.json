@@ -1,0 +1,272 @@
+{
+  "existing": {
+    "notification_subscription": {
+      "NOTIFICATION_SUBSCRIPTION00": {
+        "active": true,
+        "archivedAt": "sa1",
+        "contextViewType": "sa2",
+        "createdAt": "sa3",
+        "customView": {},
+        "customer": {},
+        "cycle": {},
+        "id": "NOTIFICATION_SUBSCRIPTION00",
+        "initiative": {},
+        "label": {},
+        "project": {},
+        "subscriber": {},
+        "team": {},
+        "updatedAt": "sad",
+        "user": {},
+        "userContextViewType": "saf",
+        "after": "AFTER01",
+        "before": "BEFORE01",
+        "first": "FIRST01",
+        "include_archived": "INCLUDE_ARCHIVED01",
+        "last": "LAST01",
+        "order_by": "ORDER_BY01"
+      },
+      "NOTIFICATION_SUBSCRIPTION01": {
+        "active": true,
+        "archivedAt": "s141",
+        "contextViewType": "s142",
+        "createdAt": "s143",
+        "customView": {},
+        "customer": {},
+        "cycle": {},
+        "id": "NOTIFICATION_SUBSCRIPTION01",
+        "initiative": {},
+        "label": {},
+        "project": {},
+        "subscriber": {},
+        "team": {},
+        "updatedAt": "s14d",
+        "user": {},
+        "userContextViewType": "s14f",
+        "after": "AFTER01",
+        "before": "BEFORE01",
+        "first": "FIRST01",
+        "include_archived": "INCLUDE_ARCHIVED01",
+        "last": "LAST01",
+        "order_by": "ORDER_BY01"
+      },
+      "NOTIFICATION_SUBSCRIPTION02": {
+        "active": true,
+        "archivedAt": "s1e1",
+        "contextViewType": "s1e2",
+        "createdAt": "s1e3",
+        "customView": {},
+        "customer": {},
+        "cycle": {},
+        "id": "NOTIFICATION_SUBSCRIPTION02",
+        "initiative": {},
+        "label": {},
+        "project": {},
+        "subscriber": {},
+        "team": {},
+        "updatedAt": "s1ed",
+        "user": {},
+        "userContextViewType": "s1ef",
+        "after": "AFTER01",
+        "before": "BEFORE01",
+        "first": "FIRST01",
+        "include_archived": "INCLUDE_ARCHIVED01",
+        "last": "LAST01",
+        "order_by": "ORDER_BY01"
+      }
+    }
+  },
+  "new": {
+    "notification_subscription": {
+      "notification_subscription_ref01": {
+        "active": true,
+        "archivedAt": "s281",
+        "contextViewType": "s282",
+        "createdAt": "s283",
+        "customView": {},
+        "customer": {},
+        "cycle": {},
+        "initiative": {},
+        "label": {},
+        "project": {},
+        "subscriber": {},
+        "team": {},
+        "updatedAt": "s28d",
+        "user": {},
+        "userContextViewType": "s28f"
+      }
+    }
+  },
+  "requests": {
+    "POST notificationSubscriptions": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String",
+              "name": "after",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "before",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "Int",
+              "name": "first",
+              "reqd": false,
+              "type": "Int"
+            },
+            {
+              "gqltype": "Boolean",
+              "name": "includeArchived",
+              "reqd": false,
+              "type": "Boolean"
+            },
+            {
+              "gqltype": "Int",
+              "name": "last",
+              "reqd": false,
+              "type": "Int"
+            },
+            {
+              "gqltype": "PaginationOrderBy",
+              "name": "orderBy",
+              "reqd": false,
+              "type": "PaginationOrderBy"
+            }
+          ],
+          "deprecated": false,
+          "desc": "The authenticated user's notification subscriptions. These subscriptions control which notifications the user receives for specific entities such as teams, projects, cycles, labels, custom views, initiatives, customers, and users.",
+          "gqltype": "NotificationSubscriptionConnection!",
+          "list": false,
+          "name": "notificationSubscriptions",
+          "reqd": true,
+          "type": "NotificationSubscriptionConnection"
+        },
+        "invocation": {
+          "doc": "query NotificationSubscriptionList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { notificationSubscriptions(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...NotificationSubscriptionFields } pageInfo { endCursor hasNextPage } } } fragment NotificationSubscriptionFields on NotificationSubscription { active archivedAt contextViewType createdAt customView { id } customer { id } cycle { id } id initiative { id } label { id } project { id } subscriber { id } team { id } updatedAt user { id } userContextViewType }",
+          "field": "notificationSubscriptions",
+          "optype": "query",
+          "page": {
+            "cursor": "pageInfo.endCursor",
+            "more": "pageInfo.hasNextPage",
+            "nodes": "nodes",
+            "style": "relay"
+          },
+          "vars": [
+            {
+              "from": "after",
+              "gqltype": "String",
+              "name": "after"
+            },
+            {
+              "from": "before",
+              "gqltype": "String",
+              "name": "before"
+            },
+            {
+              "from": "first",
+              "gqltype": "Int",
+              "name": "first"
+            },
+            {
+              "from": "includeArchived",
+              "gqltype": "Boolean",
+              "name": "includeArchived"
+            },
+            {
+              "from": "last",
+              "gqltype": "Int",
+              "name": "last"
+            },
+            {
+              "from": "orderBy",
+              "gqltype": "PaginationOrderBy",
+              "name": "orderBy"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "Boolean": {
+            "desc": "The `Boolean` scalar type represents `true` or `false`.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "Boolean"
+          },
+          "Int": {
+            "desc": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "Int"
+          },
+          "PaginationOrderBy": {
+            "desc": "By which field should the pagination order by",
+            "fields": {},
+            "kind": "ENUM",
+            "name": "PaginationOrderBy",
+            "values": [
+              "createdAt",
+              "updatedAt"
+            ]
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST notificationSubscription": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "id",
+              "reqd": true,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "A specific notification subscription by ID.",
+          "gqltype": "NotificationSubscription!",
+          "list": false,
+          "name": "notificationSubscription",
+          "reqd": true,
+          "type": "NotificationSubscription"
+        },
+        "invocation": {
+          "doc": "query NotificationSubscriptionLoad($id: String!) { notificationSubscription(id: $id) { ...NotificationSubscriptionFields } } fragment NotificationSubscriptionFields on NotificationSubscription { active archivedAt contextViewType createdAt customView { id } customer { id } cycle { id } id initiative { id } label { id } project { id } subscriber { id } team { id } updatedAt user { id } userContextViewType }",
+          "field": "notificationSubscription",
+          "optype": "query",
+          "vars": [
+            {
+              "from": "id",
+              "gqltype": "String!",
+              "name": "id"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    }
+  }
+}

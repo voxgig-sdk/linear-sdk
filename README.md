@@ -18,14 +18,14 @@ Full documentation for this SDK: [https://voxgig-sdk.github.io/linear-sdk/](http
 
 ## Entities, not endpoints
 
-This SDK exposes the API as a small set of **semantic entities** — Issue and Team — that you
-call directly, instead of assembling URL paths and query strings. Entities are
+This SDK exposes the API as **87 semantic entities** that you
+call directly, instead of assembling URL paths and query strings. See the [Entities](#entities) table below for the full list. Entities are
 **Capitalised** to mark them as the primary surface, each with the operations they
-support (`list`, `load`, `create`, `update`):
+support (`list`, `load`, `create`, `update`, `remove`):
 
 ```ts
 const client = new LinearSDK()
-const items = await client.Issue().list()
+const items = await client.AccessKeyRelease().list()
 ```
 
 Thinking in entities keeps the mental model small — for people and AI agents alike —
@@ -44,23 +44,23 @@ network, and no credentials:
 // Shape: { entity: { <entity-name>: { <id>: <record> } } }
 const client = LinearSDK.test({
   entity: {
-    issue: {
-      test01: { id: 'test01', branchName: 'example_branchName', createdAt: 'example_createdAt' },
+    agent_activity: {
+      test01: { id: 'test01', createdAt: 'example_createdAt', ephemeral: true },
     },
   },
 })
-const issues = await client.Issue().list()
-// issues is an array of Issue entities, populated with mock data
-// — call issues[0].data() for the record itself
-console.log(issues)
+const agentactivitys = await client.AgentActivity().list()
+// agentactivitys is an array of AgentActivity entities, populated with mock data
+// — call agentactivitys[0].data() for the record itself
+console.log(agentactivitys)
 ```
 
 ### Python
 
 ```python
 client = LinearSDK.test()
-issues = client.Issue().list()
-print(issues)
+agentactivitys = client.AgentActivity().list()
+print(agentactivitys)
 ```
 
 ### PHP
@@ -68,16 +68,16 @@ print(issues)
 ```php
 // Seed fixture data so offline calls resolve without a live server.
 $client = LinearSDK::test([
-    "entity" => ["issue" => ["test01" => ["id" => "test01"]]],
+    "entity" => ["agentactivity" => ["test01" => ["id" => "test01"]]],
 ]);
-$issues = $client->Issue()->list();
+$agentactivitys = $client->AgentActivity()->list();
 ```
 
 ### Golang
 
 ```go
 client := sdk.Test()
-result, err := client.Issue(nil).List(
+result, err := client.AgentActivity(nil).List(
     nil, nil,
 )
 ```
@@ -87,16 +87,16 @@ result, err := client.Issue(nil).List(
 ```ruby
 # Seed fixture data so offline calls resolve without a live server.
 client = LinearSDK.test({
-  "entity" => { "issue" => { "test01" => { "id" => "test01" } } },
+  "entity" => { "agentactivity" => { "test01" => { "id" => "test01" } } },
 })
-issues = client.Issue.list()
+agentactivitys = client.AgentActivity.list()
 ```
 
 ### Lua
 
 ```lua
 local client = sdk.test()
-local results, err = client:Issue():list()
+local results, err = client:AgentActivity():list()
 ```
 
 ### C
@@ -106,9 +106,9 @@ local results, err = client:Issue():list()
 
 LinearSDK* client = test_sdk(NULL, NULL);
 PNError* err = NULL;
-Entity* issue = linear_issue(client, NULL);
-voxgig_value* issues = issue->vt->list(issue, NULL, NULL, &err);
-printf("%s\n", voxgig_to_json(issues));
+Entity* agent_activity = linear_agent_activity(client, NULL);
+voxgig_value* agent_activitys = agent_activity->vt->list(agent_activity, NULL, NULL, &err);
+printf("%s\n", voxgig_to_json(agent_activitys));
 ```
 
 ## Packages
@@ -136,10 +136,10 @@ const client = new LinearSDK({
   apikey: process.env.LINEAR_APIKEY,
 })
 
-// List all issues (returns IssueEntity[] — .data() for the record)
-const issues = await client.Issue().list()
-for (const issue of issues) {
-  console.log(issue)
+// List all accesskeyreleases (returns AccessKeyReleaseEntity[] — .data() for the record)
+const accesskeyreleases = await client.AccessKeyRelease().list()
+for (const accesskeyrelease of accesskeyreleases) {
+  console.log(accesskeyrelease)
 }
 ```
 
@@ -177,14 +177,99 @@ Then add it to your agent's MCP config (Claude Desktop, Cursor, etc.):
 
 ## Entities
 
-The API exposes 2 entities:
+The API exposes 87 entities:
 
 | Entity | Description | API path |
 | --- | --- | --- |
-| **Issue** | The Issue entity (create, list, load, update). | `issues` |
-| **Team** | The Team entity (list, load). | `teams` |
+| **AccessKeyRelease** | The AccessKeyRelease entity (create, list, load). | `recentReleasesByAccessKey` |
+| **AccessKeyReleasePipeline** | The AccessKeyReleasePipeline entity (load). | `releasePipelineByAccessKey` |
+| **AgentActivity** | The AgentActivity entity (create, list, load, update). | `agentActivities` |
+| **AgentSession** | The AgentSession entity (create, list, load, update). | `agentSessions` |
+| **AgentSkill** | The AgentSkill entity (create, list, load, remove, update). | `agentSkills` |
+| **Application** | The Application entity (load). | `applicationInfo` |
+| **Attachment** | The Attachment entity (create, list, load, remove, update). | `attachmentsForURL` |
+| **AuditEntry** | The AuditEntry entity (list). | `auditEntries` |
+| **AuditEntryType** | The AuditEntryType entity (list). | `auditEntryTypes` |
+| **AuthResolverResponse** | The AuthResolverResponse entity (create, load, update). | `availableUsers` |
+| **AuthenticationSessionResponse** | The AuthenticationSessionResponse entity (list). | `userSessions` |
+| **Comment** | The Comment entity (create, list, load, remove, update). | `comments` |
+| **CreateOrJoinOrganizationResponse** | The CreateOrJoinOrganizationResponse entity (create, update). | `createOrganizationFromOnboarding` |
+| **CustomView** | The CustomView entity (create, list, load, remove, update). | `customViews` |
+| **Customer** | The Customer entity (create, list, load, remove, update). | `customers` |
+| **CustomerNeed** | The CustomerNeed entity (create, list, load, remove, update). | `customerNeeds` |
+| **CustomerStatus** | The CustomerStatus entity (create, list, load, remove, update). | `customerStatuses` |
+| **CustomerTier** | The CustomerTier entity (create, list, load, remove, update). | `customerTiers` |
+| **Cycle** | The Cycle entity (create, list, load, update). | `cycles` |
+| **Diff** | The Diff entity (load). | `diff` |
+| **Document** | The Document entity (create, list, load, remove, update). | `documents` |
+| **DocumentSearchResult** | The DocumentSearchResult entity (list). | `searchDocuments` |
+| **EmailIntakeAddress** | The EmailIntakeAddress entity (create, load, remove, update). | `emailIntakeAddress` |
+| **EmailUserAccountAuthChallengeResponse** | The EmailUserAccountAuthChallengeResponse entity (create). | `emailUserAccountAuthChallenge` |
+| **Emoji** | The Emoji entity (create, list, load, remove). | `emojis` |
+| **EntityExternalLink** | The EntityExternalLink entity (create, load, remove, update). | `entityExternalLink` |
+| **ExternalUser** | The ExternalUser entity (list, load). | `externalUsers` |
+| **Favorite** | The Favorite entity (create, list, load, remove, update). | `favorites` |
+| **GitAutomationState** | The GitAutomationState entity (create, remove, update). | `gitAutomationStateCreate` |
+| **GitAutomationTargetBranch** | The GitAutomationTargetBranch entity (create, remove, update). | `gitAutomationTargetBranchCreate` |
+| **GitHubIntegrationConnectDetail** | The GitHubIntegrationConnectDetail entity (create, update). | `integrationAsksConnectChannel` |
+| **Initiative** | The Initiative entity (create, list, load, remove, update). | `initiatives` |
+| **InitiativeLabel** | The InitiativeLabel entity (create, list, load, remove, update). | `initiativeLabels` |
+| **InitiativeLeadTeamChangeImpact** | The InitiativeLeadTeamChangeImpact entity (load). | `initiativeLeadTeamChangeImpact` |
+| **InitiativeRelation** | The InitiativeRelation entity (create, list, load, remove, update). | `initiativeRelations` |
+| **InitiativeToProject** | The InitiativeToProject entity (create, list, load, remove, update). | `initiativeToProjects` |
+| **InitiativeUpdate** | The InitiativeUpdate entity (create, list, load, update). | `initiativeUpdates` |
+| **Integration** | The Integration entity (create, list, load, remove, update). | `integrations` |
+| **IntegrationTemplate** | The IntegrationTemplate entity (create, list, load, remove). | `integrationTemplates` |
+| **IntegrationsSetting** | The IntegrationsSetting entity (create, load, update). | `integrationsSettings` |
+| **Issue** | The Issue entity (create, list, load, remove, update). | `issueFigmaFileKeySearch` |
+| **IssueImport** | The IssueImport entity (create, remove, update). | `issueImportCreateJira` |
+| **IssueLabel** | The IssueLabel entity (create, list, load, remove, update). | `issueLabels` |
+| **IssuePriorityValue** | The IssuePriorityValue entity (list). | `issuePriorityValues` |
+| **IssueRelation** | The IssueRelation entity (create, list, load, remove, update). | `issueRelations` |
+| **IssueSearchResult** | The IssueSearchResult entity (list). | `searchIssues` |
+| **IssueToRelease** | The IssueToRelease entity (create, list, load, remove). | `issueToReleases` |
+| **LogoutResponse** | The LogoutResponse entity (create, update). | `logout` |
+| **Notification** | The Notification entity (list, load). | `inboxNotifications` |
+| **NotificationSubscription** | The NotificationSubscription entity (list, load). | `notificationSubscriptions` |
+| **OAuthApplication** | The OAuthApplication entity (create, list, load, update). | `oauthApplications` |
+| **Organization** | The Organization entity (load, remove, update). | `organization` |
+| **OrganizationDomain** | The OrganizationDomain entity (create, remove, update). | `organizationDomainCreate` |
+| **OrganizationInvite** | The OrganizationInvite entity (create, list, load, remove, update). | `organizationInvites` |
+| **OrganizationMeta** | The OrganizationMeta entity (load). | `organizationMeta` |
+| **PasskeyLoginStartResponse** | The PasskeyLoginStartResponse entity (update). | `passkeyLoginStart` |
+| **Project** | The Project entity (create, list, load, remove, update). | `projects` |
+| **ProjectLabel** | The ProjectLabel entity (create, list, load, remove, update). | `projectLabels` |
+| **ProjectMilestone** | The ProjectMilestone entity (create, list, load, remove, update). | `projectMilestones` |
+| **ProjectMilestoneMoveProjectTeam** | The ProjectMilestoneMoveProjectTeam entity (update). | `projectMilestoneMove` |
+| **ProjectRelation** | The ProjectRelation entity (create, list, load, remove, update). | `projectRelations` |
+| **ProjectSearchResult** | The ProjectSearchResult entity (list). | `searchProjects` |
+| **ProjectStatus** | The ProjectStatus entity (create, list, load, update). | `projectStatuses` |
+| **ProjectUpdate** | The ProjectUpdate entity (create, list, load, remove, update). | `projectUpdates` |
+| **PushSubscription** | The PushSubscription entity (create, remove). | `pushSubscriptionCreate` |
+| **Reaction** | The Reaction entity (create, remove). | `reactionCreate` |
+| **Release** | The Release entity (create, list, load, remove, update). | `releaseSearch` |
+| **ReleaseNote** | The ReleaseNote entity (create, list, load, remove, update). | `releaseNotes` |
+| **ReleasePipeline** | The ReleasePipeline entity (create, list, load, remove, update). | `releasePipelines` |
+| **ReleaseStage** | The ReleaseStage entity (create, list, load, update). | `releaseStages` |
+| **Roadmap** | The Roadmap entity (create, list, load, remove, update). | `roadmaps` |
+| **RoadmapToProject** | The RoadmapToProject entity (create, list, load, remove, update). | `roadmapToProjects` |
+| **SlaConfiguration** | The SlaConfiguration entity (list). | `slaConfigurations` |
+| **SsoUrlFromEmailResponse** | The SsoUrlFromEmailResponse entity (load). | `ssoUrlFromEmail` |
+| **Team** | The Team entity (create, list, load, remove, update). | `administrableTeams` |
+| **TeamMembership** | The TeamMembership entity (create, list, load, remove, update). | `teamMemberships` |
+| **Template** | The Template entity (create, list, load, remove, update). | `templatesForIntegration` |
+| **TimeSchedule** | The TimeSchedule entity (create, list, load, remove, update). | `timeSchedules` |
+| **TriageResponsibility** | The TriageResponsibility entity (create, list, load, remove, update). | `triageResponsibilities` |
+| **UploadFile** | The UploadFile entity (create). | `fileUpload` |
+| **UsageAlert** | The UsageAlert entity (list, load). | `usageAlerts` |
+| **User** | The User entity (create, list, load, update). | `users` |
+| **UserSetting** | The UserSetting entity (create, load, update). | `userSettings` |
+| **ViewPreference** | The ViewPreference entity (create, load, remove, update). | `userViewPreferences` |
+| **Webhook** | The Webhook entity (create, list, load, remove, update). | `webhooks` |
+| **WebhookFailureEvent** | The WebhookFailureEvent entity (list). | `failuresForOauthWebhooks` |
+| **WorkflowState** | The WorkflowState entity (create, list, load, update). | `workflowStates` |
 
-The operations available across these entities are **load**, **list**, **create**, **update** — see each entity's
+The operations available across these entities are **load**, **list**, **create**, **update**, **remove** — see each entity's
 own list above for exactly which it supports.
 
 ## Quickstart in other languages
@@ -199,14 +284,14 @@ client = LinearSDK({
     "apikey": os.environ.get("LINEAR_APIKEY"),
 })
 
-# List all issues (returns a list, raises on error)
-issues = client.Issue().list()
-for issue in issues:
-    print(issue)
+# List all accesskeyreleases (returns a list, raises on error)
+accesskeyreleases = client.AccessKeyRelease().list()
+for accesskeyrelease in accesskeyreleases:
+    print(accesskeyrelease)
 
-# Load a specific issue (returns the record, raises on error)
-issue = client.Issue().load({"id": "example_id"})
-print(issue)
+# Load a specific accesskeyrelease (returns the record, raises on error)
+accesskeyrelease = client.AccessKeyRelease().load({"id": "example_id"})
+print(accesskeyrelease)
 ```
 
 ### PHP
@@ -219,13 +304,13 @@ $client = new LinearSDK([
     "apikey" => getenv("LINEAR_APIKEY"),
 ]);
 
-// List all issues (returns an array; throws on error)
-$issues = $client->Issue()->list();
-print_r(array_map(fn($item) => $item->data_get(), $issues));
+// List all accesskeyreleases (returns an array; throws on error)
+$accesskeyreleases = $client->AccessKeyRelease()->list();
+print_r(array_map(fn($item) => $item->data_get(), $accesskeyreleases));
 
-// Load a specific issue (returns the ENTITY; call data_get() for the record; throws on error)
-$issue = $client->Issue()->load(["id" => "example_id"]);
-print_r($issue->data_get());
+// Load a specific accesskeyrelease (returns the ENTITY; call data_get() for the record; throws on error)
+$accesskeyrelease = $client->AccessKeyRelease()->load(["id" => "example_id"]);
+print_r($accesskeyrelease->data_get());
 ```
 
 ### Golang
@@ -237,12 +322,12 @@ client := sdk.NewLinearSDK(map[string]any{
     "apikey": os.Getenv("LINEAR_APIKEY"),
 })
 
-// List all issues
-issues, err := client.Issue(nil).List(nil, nil)
+// List all accesskeyreleases
+accessKeyReleases, err := client.AccessKeyRelease(nil).List(nil, nil)
 if err != nil {
     panic(err)
 }
-fmt.Println(issues)
+fmt.Println(accessKeyReleases)
 ```
 
 ### Ruby
@@ -254,13 +339,13 @@ client = LinearSDK.new({
   "apikey" => ENV["LINEAR_APIKEY"],
 })
 
-# List all issues (returns an Array; raises on error)
-issues = client.Issue.list
-puts issues
+# List all accesskeyreleases (returns an Array; raises on error)
+accesskeyreleases = client.AccessKeyRelease.list
+puts accesskeyreleases
 
-# Load a specific issue (returns the ENTITY; call data_get for the record)
-issue = client.Issue.load({ "id" => "example_id" })
-puts issue
+# Load a specific accesskeyrelease (returns the ENTITY; call data_get for the record)
+accesskeyrelease = client.AccessKeyRelease.load({ "id" => "example_id" })
+puts accesskeyrelease
 ```
 
 ### Lua
@@ -272,13 +357,13 @@ local client = sdk.new({
   apikey = os.getenv("LINEAR_APIKEY"),
 })
 
--- List all issues
-local issues, err = client:Issue():list()
-print(issues)
+-- List all accesskeyreleases
+local accesskeyreleases, err = client:AccessKeyRelease():list()
+print(accesskeyreleases)
 
--- Load a specific issue
-local issue, err = client:Issue():load({ id = "example_id" })
-print(issue)
+-- Load a specific accesskeyrelease
+local accesskeyrelease, err = client:AccessKeyRelease():load({ id = "example_id" })
+print(accesskeyrelease)
 ```
 
 ### C
@@ -290,17 +375,17 @@ LinearSDK* client = linear_sdk_new(cmap(1,
     "apikey", v_str(getenv("LINEAR_APIKEY"))));
 PNError* err = NULL;
 
-Entity* issue = linear_issue(client, NULL);
+Entity* access_key_release = linear_access_key_release(client, NULL);
 
-// List all issues (returns a List, sets *err on failure)
-voxgig_value* issues = issue->vt->list(issue, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(issues); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(issues, v_int(i), NULL)));
+// List all accesskeyreleases (returns a List, sets *err on failure)
+voxgig_value* access_key_releases = access_key_release->vt->list(access_key_release, NULL, NULL, &err);
+for (size_t i = 0; i < (size_t)voxgig_size(access_key_releases); i++) {
+    printf("%s\n", voxgig_to_json(voxgig_getelem(access_key_releases, v_int(i), NULL)));
 }
 
-// Load a specific issue (returns the record, sets *err on failure)
-voxgig_value* issue_rec = issue->vt->load(issue, cmap(1, "id", v_str("example_id")), NULL, &err);
-printf("%s\n", voxgig_to_json(issue_rec));
+// Load a specific accesskeyrelease (returns the record, sets *err on failure)
+voxgig_value* access_key_release_rec = access_key_release->vt->load(access_key_release, cmap(1, "id", v_str("example_id")), NULL, &err);
+printf("%s\n", voxgig_to_json(access_key_release_rec));
 ```
 
 ## Direct and prepare

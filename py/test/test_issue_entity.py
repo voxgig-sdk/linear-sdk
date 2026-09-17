@@ -61,7 +61,7 @@ class TestIssueEntity:
         # multiple ops; skipping any one skips the whole flow (steps depend
         # on each other).
         _live = setup.get("live", False)
-        for _op in ["create", "list", "update", "load"]:
+        for _op in ["create", "list", "update", "load", "remove"]:
             _skip, _reason = runner.is_control_skipped("entityOp", "issue." + _op, "live" if _live else "unit")
             if _skip:
                 pytest.skip(_reason or "skipped via sdk-test-control.json")
@@ -78,7 +78,22 @@ class TestIssueEntity:
         issue_ref01_data = helpers.to_map(vs.getprop(
             vs.getpath(setup["data"], "new.issue"), "issue_ref01"))
         issue_ref01_data["after"] = setup["idmap"]["after01"]
+        issue_ref01_data["attachment_id"] = setup["idmap"]["attachment01"]
+        issue_ref01_data["before"] = setup["idmap"]["before01"]
+        issue_ref01_data["branch_name"] = setup["idmap"]["branch_name01"]
+        issue_ref01_data["description"] = setup["idmap"]["description01"]
+        issue_ref01_data["file_key"] = setup["idmap"]["file_key01"]
         issue_ref01_data["first"] = setup["idmap"]["first01"]
+        issue_ref01_data["include_archived"] = setup["idmap"]["include_archived01"]
+        issue_ref01_data["label_id"] = setup["idmap"]["label01"]
+        issue_ref01_data["last"] = setup["idmap"]["last01"]
+        issue_ref01_data["order_by"] = setup["idmap"]["order_by01"]
+        issue_ref01_data["permanently_delete"] = setup["idmap"]["permanently_delete01"]
+        issue_ref01_data["query"] = setup["idmap"]["query01"]
+        issue_ref01_data["reminder_at"] = setup["idmap"]["reminder_at01"]
+        issue_ref01_data["trash"] = setup["idmap"]["trash01"]
+        issue_ref01_data["user_email"] = setup["idmap"]["user_email01"]
+        issue_ref01_data["user_id"] = setup["idmap"]["user01"]
 
         issue_ref01_data = helpers.to_map(runner.entity_data(issue_ref01_ent.create(issue_ref01_data, None)))
         assert issue_ref01_data is not None
@@ -87,7 +102,11 @@ class TestIssueEntity:
         # LIST
         issue_ref01_match = {
             "after": setup["idmap"]["after01"],
+            "before": setup["idmap"]["before01"],
             "first": setup["idmap"]["first01"],
+            "include_archived": setup["idmap"]["include_archived01"],
+            "last": setup["idmap"]["last01"],
+            "order_by": setup["idmap"]["order_by01"],
         }
 
         issue_ref01_list_result = issue_ref01_ent.list(issue_ref01_match, None)
@@ -121,6 +140,30 @@ class TestIssueEntity:
         assert issue_ref01_data_dt0_load_result is not None
         assert issue_ref01_data_dt0_load_result["id"] == issue_ref01_data["id"]
 
+        # REMOVE
+        issue_ref01_match_rm0 = {
+            "id": issue_ref01_data["id"],
+        }
+        issue_ref01_ent.remove(issue_ref01_match_rm0, None)
+
+        # LIST
+        issue_ref01_match_rt0 = {
+            "after": setup["idmap"]["after01"],
+            "before": setup["idmap"]["before01"],
+            "first": setup["idmap"]["first01"],
+            "include_archived": setup["idmap"]["include_archived01"],
+            "last": setup["idmap"]["last01"],
+            "order_by": setup["idmap"]["order_by01"],
+        }
+
+        issue_ref01_list_rt0_result = issue_ref01_ent.list(issue_ref01_match_rt0, None)
+        assert isinstance(issue_ref01_list_rt0_result, list)
+
+        not_found_item = vs.select(
+            runner.entity_list_to_data(issue_ref01_list_rt0_result),
+            {"id": issue_ref01_data["id"]})
+        assert vs.isempty(not_found_item)
+
 
 
 def _issue_basic_setup(extra):
@@ -139,7 +182,7 @@ def _issue_basic_setup(extra):
 
     # Generate idmap via transform.
     idmap = vs.transform(
-        ["issue01", "issue02", "issue03", "after01", "first01"],
+        ["issue01", "issue02", "issue03", "after01", "attachment01", "before01", "branch_name01", "description01", "file_key01", "first01", "include_archived01", "label01", "last01", "order_by01", "permanently_delete01", "query01", "reminder_at01", "trash01", "user_email01", "user01"],
         {
             "`$PACK`": ["", {
                 "`$KEY`": "`$COPY`",

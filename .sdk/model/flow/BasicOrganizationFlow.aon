@@ -1,0 +1,47 @@
+# BasicOrganizationFlow
+
+main: kit: flow: BasicOrganizationFlow:
+{
+  entity: "organization",
+  kind: "basic",
+  name: "BasicOrganizationFlow",
+  step: [
+    {
+      input: {
+        ref: "organization_ref01",
+        srcdatavar: "organization_ref01_data",
+        suffix: "_up0",
+        textfield: "allowedFileUploadContentTypes"
+      }
+
+      op: "update",
+      spec: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-organization_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "organization_ref01",
+        srcdatavar: "organization_ref01_data",
+        suffix: "_dt0"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-organization_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicOrganizationFlow"
+}

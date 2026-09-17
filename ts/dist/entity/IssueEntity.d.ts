@@ -1,7 +1,7 @@
 import { LinearEntityBase } from '../LinearEntityBase';
 import type { LinearSDK } from '../LinearSDK';
 import type { Control } from '../types';
-import type { Issue, IssueLoadMatch, IssueListMatch, IssueCreateData, IssueUpdateData } from '../LinearTypes';
+import type { Issue, IssueLoadMatch, IssueListMatch, IssueCreateData, IssueUpdateData, IssueRemoveMatch } from '../LinearTypes';
 declare class IssueEntity extends LinearEntityBase<Issue> {
     constructor(client: LinearSDK, entopts: any);
     make(this: IssueEntity): IssueEntity;
@@ -9,5 +9,6 @@ declare class IssueEntity extends LinearEntityBase<Issue> {
     list(this: any, reqmatch?: IssueListMatch, ctrl?: Control): Promise<IssueEntity[]>;
     create(this: any, reqdata?: IssueCreateData, ctrl?: Control): Promise<IssueEntity>;
     update(this: any, reqdata?: IssueUpdateData, ctrl?: Control): Promise<IssueEntity>;
+    remove(this: any, reqmatch?: IssueRemoveMatch, ctrl?: Control): Promise<IssueEntity>;
 }
 export { IssueEntity };

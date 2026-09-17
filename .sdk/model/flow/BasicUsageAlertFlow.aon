@@ -1,0 +1,53 @@
+# BasicUsageAlertFlow
+
+main: kit: flow: BasicUsageAlertFlow:
+{
+  entity: "usage_alert",
+  kind: "basic",
+  name: "BasicUsageAlertFlow",
+  step: [
+    {
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "usage_alert_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "usage_alert_ref01",
+        srcdatavar: "usage_alert_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        id: "usage_alert01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-usage_alert_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicUsageAlertFlow"
+}

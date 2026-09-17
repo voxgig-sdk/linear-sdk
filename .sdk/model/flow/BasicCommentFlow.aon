@@ -1,0 +1,135 @@
+# BasicCommentFlow
+
+main: kit: flow: BasicCommentFlow:
+{
+  entity: "comment",
+  kind: "basic",
+  name: "BasicCommentFlow",
+  step: [
+    {
+      input: {
+        ref: "comment_ref01"
+      }
+
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        hash: "hash01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01",
+        resolving_comment_id: "resolving_comment01",
+        skip_edited_at: "skip_edited_at01"
+      }
+
+      op: "create"
+    }
+
+    {
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "comment_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      data: {
+        skip_edited_at: "skip_edited_at01"
+      }
+
+      input: {
+        ref: "comment_ref01",
+        srcdatavar: "comment_ref01_data",
+        suffix: "_up0",
+        textfield: "body"
+      }
+
+      op: "update",
+      spec: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-comment_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "comment_ref01",
+        srcdatavar: "comment_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        hash: "hash01",
+        id: "comment01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-comment_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "comment_ref01",
+        suffix: "_rm0"
+      }
+
+      match: {
+        id: "comment01"
+      }
+
+      op: "remove"
+    }
+
+    {
+      input: {
+        suffix: "_rt0"
+      }
+
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemNotExists",
+          def: {
+            ref: "comment_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicCommentFlow"
+}

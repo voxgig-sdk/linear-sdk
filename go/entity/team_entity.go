@@ -327,19 +327,118 @@ func (e *TeamEntity) ListTyped(reqmatch TeamListMatch, ctrl map[string]any) ([]T
 
 
 
-func (e *TeamEntity) Create(_ map[string]any, _ map[string]any) (any, error) {
-	return core.UnsupportedOp("create", e.name)
+
+func (e *TeamEntity) Create(reqdata map[string]any, ctrl map[string]any) (any, error) {
+	utility := e.utility
+	ctx := utility.MakeContext(map[string]any{
+		"opname":  "create",
+		"ctrl":    ctrl,
+		"match":   e.match,
+		"data":    e.data,
+		"reqdata": reqdata,
+	}, e.entctx)
+
+	return e.runOp(ctx, func() {
+		if ctx.Result != nil {
+			if ctx.Result.Resdata != nil {
+				e.data = core.ToMapAny(vs.Clone(ctx.Result.Resdata))
+				if e.data == nil {
+					e.data = map[string]any{}
+				}
+			}
+		}
+	})
+}
+
+// CreateTyped is the statically-typed variant of Create: it takes an
+// TeamCreateData and returns an Team. It delegates to the untyped
+// Create (identical runtime) and converts at the typed boundary.
+func (e *TeamEntity) CreateTyped(reqdata TeamCreateData, ctrl map[string]any) (Team, error) {
+	res, err := e.Create(asMap(reqdata), ctrl)
+	if err != nil {
+		return Team{}, err
+	}
+	return typedFrom[Team](res), nil
 }
 
 
-func (e *TeamEntity) Update(_ map[string]any, _ map[string]any) (any, error) {
-	return core.UnsupportedOp("update", e.name)
+
+
+func (e *TeamEntity) Update(reqdata map[string]any, ctrl map[string]any) (any, error) {
+	utility := e.utility
+	ctx := utility.MakeContext(map[string]any{
+		"opname":  "update",
+		"ctrl":    ctrl,
+		"match":   e.match,
+		"data":    e.data,
+		"reqdata": reqdata,
+	}, e.entctx)
+
+	return e.runOp(ctx, func() {
+		if ctx.Result != nil {
+			if ctx.Result.Resmatch != nil {
+				e.match = ctx.Result.Resmatch
+			}
+			if ctx.Result.Resdata != nil {
+				e.data = core.ToMapAny(vs.Clone(ctx.Result.Resdata))
+				if e.data == nil {
+					e.data = map[string]any{}
+				}
+			}
+		}
+	})
+}
+
+// UpdateTyped is the statically-typed variant of Update: it takes an
+// TeamUpdateData and returns an Team. It delegates to the untyped
+// Update (identical runtime) and converts at the typed boundary.
+func (e *TeamEntity) UpdateTyped(reqdata TeamUpdateData, ctrl map[string]any) (Team, error) {
+	res, err := e.Update(asMap(reqdata), ctrl)
+	if err != nil {
+		return Team{}, err
+	}
+	return typedFrom[Team](res), nil
 }
 
 
-func (e *TeamEntity) Remove(_ map[string]any, _ map[string]any) (any, error) {
-	return core.UnsupportedOp("remove", e.name)
+
+
+func (e *TeamEntity) Remove(reqmatch map[string]any, ctrl map[string]any) (any, error) {
+	utility := e.utility
+	ctx := utility.MakeContext(map[string]any{
+		"opname":   "remove",
+		"ctrl":     ctrl,
+		"match":    e.match,
+		"data":     e.data,
+		"reqmatch": reqmatch,
+	}, e.entctx)
+
+	return e.runOp(ctx, func() {
+		if ctx.Result != nil {
+			if ctx.Result.Resmatch != nil {
+				e.match = ctx.Result.Resmatch
+			}
+			if ctx.Result.Resdata != nil {
+				e.data = core.ToMapAny(vs.Clone(ctx.Result.Resdata))
+				if e.data == nil {
+					e.data = map[string]any{}
+				}
+			}
+		}
+	})
 }
+
+// RemoveTyped is the statically-typed variant of Remove: it takes an
+// TeamRemoveMatch and returns an Team. It delegates to the untyped
+// Remove (identical runtime) and converts at the typed boundary.
+func (e *TeamEntity) RemoveTyped(reqmatch TeamRemoveMatch, ctrl map[string]any) (Team, error) {
+	res, err := e.Remove(asMap(reqmatch), ctrl)
+	if err != nil {
+		return Team{}, err
+	}
+	return typedFrom[Team](res), nil
+}
+
 
 
 func (e *TeamEntity) runOp(ctx *core.Context, postDone func()) (any, error) {

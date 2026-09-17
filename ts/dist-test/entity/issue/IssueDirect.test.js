@@ -36,17 +36,17 @@ const utility_1 = require("../../utility");
         const setup = directSetup();
         if ((0, utility_1.maybeSkipControl)(t, 'direct', 'direct-load-issue', setup.live))
             return;
-        if ((0, utility_1.skipIfMissingIds)(t, setup, ["issue01"]))
+        if ((0, utility_1.skipIfMissingIds)(t, setup, ["branchName01"]))
             return;
         const { client, calls } = setup;
         const variables = {};
         if (setup.live) {
-            variables["id"] = setup.idmap['issue01'];
+            variables["branchName"] = setup.idmap['branchName01'];
         }
         else {
-            variables["id"] = 'direct01';
+            variables["branchName"] = 'direct01';
         }
-        const result = await client.graphql("query IssueLoad($id: String!) { issue(id: $id) { ...IssueFields } } fragment IssueFields on Issue { archivedAt assignee { id } branchName canceledAt completedAt createdAt creator { id } description dueDate estimate id identifier number priority state { id } team { id } title updatedAt url }", variables);
+        const result = await client.graphql("query IssueLoad($branchName: String!) { issueVcsBranchSearch(branchName: $branchName) { ...IssueFields } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }", variables);
         if (setup.live) {
             // STRICT live mode: a non-2xx is a real failure - this project owns
             // the server it points at, so there is nothing to be lenient about.
@@ -77,19 +77,29 @@ const utility_1 = require("../../utility");
         const setup = directSetup();
         if ((0, utility_1.maybeSkipControl)(t, 'direct', 'direct-list-issue', setup.live))
             return;
-        if ((0, utility_1.skipIfMissingIds)(t, setup, ["first01", "after01"]))
+        if ((0, utility_1.skipIfMissingIds)(t, setup, ["after01", "before01", "fileKey01", "first01", "includeArchived01", "last01", "orderBy01"]))
             return;
         const { client, calls } = setup;
         const variables = {};
         if (setup.live) {
-            variables["first"] = setup.idmap['first01'];
             variables["after"] = setup.idmap['after01'];
+            variables["before"] = setup.idmap['before01'];
+            variables["fileKey"] = setup.idmap['fileKey01'];
+            variables["first"] = setup.idmap['first01'];
+            variables["includeArchived"] = setup.idmap['includeArchived01'];
+            variables["last"] = setup.idmap['last01'];
+            variables["orderBy"] = setup.idmap['orderBy01'];
         }
         else {
-            variables["first"] = 'direct01';
-            variables["after"] = 'direct02';
+            variables["after"] = 'direct01';
+            variables["before"] = 'direct02';
+            variables["fileKey"] = 'direct03';
+            variables["first"] = 'direct04';
+            variables["includeArchived"] = 'direct05';
+            variables["last"] = 'direct06';
+            variables["orderBy"] = 'direct07';
         }
-        const result = await client.graphql("query IssueList($first: Int, $after: String) { issues(first: $first, after: $after) { edges { node { ...IssueFields } } pageInfo { endCursor hasNextPage } } } fragment IssueFields on Issue { archivedAt assignee { id } branchName canceledAt completedAt createdAt creator { id } description dueDate estimate id identifier number priority state { id } team { id } title updatedAt url }", variables);
+        const result = await client.graphql("query IssueList($after: String, $before: String, $fileKey: String!, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { issueFigmaFileKeySearch(after: $after, before: $before, fileKey: $fileKey, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...IssueFields } pageInfo { endCursor hasNextPage } } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }", variables);
         if (setup.live) {
             // STRICT live mode: a non-2xx is a real failure - this project owns
             // the server it points at, so there is nothing to be lenient about.
@@ -111,6 +121,11 @@ const utility_1 = require("../../utility");
             (0, node_assert_1.default)(calls[0].init.method === 'POST');
             (0, node_assert_1.default)(calls[0].init.body.includes('direct01'));
             (0, node_assert_1.default)(calls[0].init.body.includes('direct02'));
+            (0, node_assert_1.default)(calls[0].init.body.includes('direct03'));
+            (0, node_assert_1.default)(calls[0].init.body.includes('direct04'));
+            (0, node_assert_1.default)(calls[0].init.body.includes('direct05'));
+            (0, node_assert_1.default)(calls[0].init.body.includes('direct06'));
+            (0, node_assert_1.default)(calls[0].init.body.includes('direct07'));
         }
     });
 });

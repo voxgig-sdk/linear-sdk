@@ -1,0 +1,962 @@
+{
+  "existing": {
+    "issue_import": {
+      "ISSUE_IMPORT00": {
+        "archivedAt": "s96",
+        "createdAt": "s97",
+        "creatorId": "s98",
+        "csvFileUrl": "s99",
+        "displayName": "s9a",
+        "error": "s9b",
+        "errorMetadata": "s9c",
+        "id": "ISSUE_IMPORT00",
+        "mapping": "s9e",
+        "progress": 159,
+        "service": "sa0",
+        "serviceMetadata": "sa1",
+        "status": "sa2",
+        "teamName": "sa3",
+        "updatedAt": "sa4",
+        "include_closed_issue": "INCLUDE_CLOSED_ISSUE01",
+        "instant_process": "INSTANT_PROCESS01",
+        "jira_email": "JIRA_EMAIL01",
+        "jira_hostname": "JIRA_HOSTNAME01",
+        "jira_project": "JIRA_PROJECT01",
+        "jira_token": "JIRA_TOKEN01",
+        "jql": "JQL01",
+        "team_id": "TEAM01",
+        "team_name": "TEAM_NAME01",
+        "asana_team_name": "ASANA_TEAM_NAME01",
+        "asana_token": "ASANA_TOKEN01",
+        "clubhouse_group_name": "CLUBHOUSE_GROUP_NAME01",
+        "clubhouse_token": "CLUBHOUSE_TOKEN01",
+        "csv_url": "CSV_URL01",
+        "github_label": "GITHUB_LABEL01",
+        "github_repo_id": "GITHUB_REPO01",
+        "issue_import_id": "ISSUE_IMPORT01",
+        "linear_source_organization_id": "LINEAR_SOURCE_ORGANIZATION01"
+      },
+      "ISSUE_IMPORT01": {
+        "archivedAt": "s12c",
+        "createdAt": "s12d",
+        "creatorId": "s12e",
+        "csvFileUrl": "s12f",
+        "displayName": "s130",
+        "error": "s131",
+        "errorMetadata": "s132",
+        "id": "ISSUE_IMPORT01",
+        "mapping": "s134",
+        "progress": 309,
+        "service": "s136",
+        "serviceMetadata": "s137",
+        "status": "s138",
+        "teamName": "s139",
+        "updatedAt": "s13a",
+        "include_closed_issue": "INCLUDE_CLOSED_ISSUE01",
+        "instant_process": "INSTANT_PROCESS01",
+        "jira_email": "JIRA_EMAIL01",
+        "jira_hostname": "JIRA_HOSTNAME01",
+        "jira_project": "JIRA_PROJECT01",
+        "jira_token": "JIRA_TOKEN01",
+        "jql": "JQL01",
+        "team_id": "TEAM01",
+        "team_name": "TEAM_NAME01",
+        "asana_team_name": "ASANA_TEAM_NAME01",
+        "asana_token": "ASANA_TOKEN01",
+        "clubhouse_group_name": "CLUBHOUSE_GROUP_NAME01",
+        "clubhouse_token": "CLUBHOUSE_TOKEN01",
+        "csv_url": "CSV_URL01",
+        "github_label": "GITHUB_LABEL01",
+        "github_repo_id": "GITHUB_REPO01",
+        "issue_import_id": "ISSUE_IMPORT01",
+        "linear_source_organization_id": "LINEAR_SOURCE_ORGANIZATION01"
+      },
+      "ISSUE_IMPORT02": {
+        "archivedAt": "s1c2",
+        "createdAt": "s1c3",
+        "creatorId": "s1c4",
+        "csvFileUrl": "s1c5",
+        "displayName": "s1c6",
+        "error": "s1c7",
+        "errorMetadata": "s1c8",
+        "id": "ISSUE_IMPORT02",
+        "mapping": "s1ca",
+        "progress": 459,
+        "service": "s1cc",
+        "serviceMetadata": "s1cd",
+        "status": "s1ce",
+        "teamName": "s1cf",
+        "updatedAt": "s1d0",
+        "include_closed_issue": "INCLUDE_CLOSED_ISSUE01",
+        "instant_process": "INSTANT_PROCESS01",
+        "jira_email": "JIRA_EMAIL01",
+        "jira_hostname": "JIRA_HOSTNAME01",
+        "jira_project": "JIRA_PROJECT01",
+        "jira_token": "JIRA_TOKEN01",
+        "jql": "JQL01",
+        "team_id": "TEAM01",
+        "team_name": "TEAM_NAME01",
+        "asana_team_name": "ASANA_TEAM_NAME01",
+        "asana_token": "ASANA_TOKEN01",
+        "clubhouse_group_name": "CLUBHOUSE_GROUP_NAME01",
+        "clubhouse_token": "CLUBHOUSE_TOKEN01",
+        "csv_url": "CSV_URL01",
+        "github_label": "GITHUB_LABEL01",
+        "github_repo_id": "GITHUB_REPO01",
+        "issue_import_id": "ISSUE_IMPORT01",
+        "linear_source_organization_id": "LINEAR_SOURCE_ORGANIZATION01"
+      }
+    }
+  },
+  "new": {
+    "issue_import": {
+      "issue_import_ref01": {
+        "archivedAt": "s258",
+        "createdAt": "s259",
+        "creatorId": "s25a",
+        "csvFileUrl": "s25b",
+        "displayName": "s25c",
+        "error": "s25d",
+        "errorMetadata": "s25e",
+        "mapping": "s260",
+        "progress": 609,
+        "service": "s262",
+        "serviceMetadata": "s263",
+        "status": "s264",
+        "teamName": "s265",
+        "updatedAt": "s266"
+      }
+    }
+  },
+  "requests": {
+    "POST issueImportCreateJira": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String",
+              "name": "id",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "Boolean",
+              "name": "includeClosedIssues",
+              "reqd": false,
+              "type": "Boolean"
+            },
+            {
+              "gqltype": "Boolean",
+              "name": "instantProcess",
+              "reqd": false,
+              "type": "Boolean"
+            },
+            {
+              "gqltype": "String!",
+              "name": "jiraEmail",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "String!",
+              "name": "jiraHostname",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "String!",
+              "name": "jiraProject",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "String!",
+              "name": "jiraToken",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "jql",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "teamId",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "teamName",
+              "reqd": false,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Kicks off a Jira import job.",
+          "gqltype": "IssueImportPayload!",
+          "list": false,
+          "name": "issueImportCreateJira",
+          "reqd": true,
+          "type": "IssueImportPayload"
+        },
+        "invocation": {
+          "doc": "mutation IssueImportCreateCreateJira($id: String, $includeClosedIssues: Boolean, $instantProcess: Boolean, $jiraEmail: String!, $jiraHostname: String!, $jiraProject: String!, $jiraToken: String!, $jql: String, $teamId: String, $teamName: String) { issueImportCreateJira(id: $id, includeClosedIssues: $includeClosedIssues, instantProcess: $instantProcess, jiraEmail: $jiraEmail, jiraHostname: $jiraHostname, jiraProject: $jiraProject, jiraToken: $jiraToken, jql: $jql, teamId: $teamId, teamName: $teamName) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }",
+          "field": "issueImportCreateJira",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "id",
+              "gqltype": "String",
+              "name": "id"
+            },
+            {
+              "from": "includeClosedIssues",
+              "gqltype": "Boolean",
+              "name": "includeClosedIssues"
+            },
+            {
+              "from": "instantProcess",
+              "gqltype": "Boolean",
+              "name": "instantProcess"
+            },
+            {
+              "from": "jiraEmail",
+              "gqltype": "String!",
+              "name": "jiraEmail"
+            },
+            {
+              "from": "jiraHostname",
+              "gqltype": "String!",
+              "name": "jiraHostname"
+            },
+            {
+              "from": "jiraProject",
+              "gqltype": "String!",
+              "name": "jiraProject"
+            },
+            {
+              "from": "jiraToken",
+              "gqltype": "String!",
+              "name": "jiraToken"
+            },
+            {
+              "from": "jql",
+              "gqltype": "String",
+              "name": "jql"
+            },
+            {
+              "from": "teamId",
+              "gqltype": "String",
+              "name": "teamId"
+            },
+            {
+              "from": "teamName",
+              "gqltype": "String",
+              "name": "teamName"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "Boolean": {
+            "desc": "The `Boolean` scalar type represents `true` or `false`.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "Boolean"
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST issueImportCreateAsana": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "asanaTeamName",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "String!",
+              "name": "asanaToken",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "id",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "Boolean",
+              "name": "includeClosedIssues",
+              "reqd": false,
+              "type": "Boolean"
+            },
+            {
+              "gqltype": "Boolean",
+              "name": "instantProcess",
+              "reqd": false,
+              "type": "Boolean"
+            },
+            {
+              "gqltype": "String",
+              "name": "teamId",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "teamName",
+              "reqd": false,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Kicks off an Asana import job.",
+          "gqltype": "IssueImportPayload!",
+          "list": false,
+          "name": "issueImportCreateAsana",
+          "reqd": true,
+          "type": "IssueImportPayload"
+        },
+        "invocation": {
+          "doc": "mutation IssueImportCreateCreateAsana($asanaTeamName: String!, $asanaToken: String!, $id: String, $includeClosedIssues: Boolean, $instantProcess: Boolean, $teamId: String, $teamName: String) { issueImportCreateAsana(asanaTeamName: $asanaTeamName, asanaToken: $asanaToken, id: $id, includeClosedIssues: $includeClosedIssues, instantProcess: $instantProcess, teamId: $teamId, teamName: $teamName) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }",
+          "field": "issueImportCreateAsana",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "asanaTeamName",
+              "gqltype": "String!",
+              "name": "asanaTeamName"
+            },
+            {
+              "from": "asanaToken",
+              "gqltype": "String!",
+              "name": "asanaToken"
+            },
+            {
+              "from": "id",
+              "gqltype": "String",
+              "name": "id"
+            },
+            {
+              "from": "includeClosedIssues",
+              "gqltype": "Boolean",
+              "name": "includeClosedIssues"
+            },
+            {
+              "from": "instantProcess",
+              "gqltype": "Boolean",
+              "name": "instantProcess"
+            },
+            {
+              "from": "teamId",
+              "gqltype": "String",
+              "name": "teamId"
+            },
+            {
+              "from": "teamName",
+              "gqltype": "String",
+              "name": "teamName"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "Boolean": {
+            "desc": "The `Boolean` scalar type represents `true` or `false`.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "Boolean"
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST issueImportCreateClubhouse": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "clubhouseGroupName",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "String!",
+              "name": "clubhouseToken",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "id",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "Boolean",
+              "name": "includeClosedIssues",
+              "reqd": false,
+              "type": "Boolean"
+            },
+            {
+              "gqltype": "Boolean",
+              "name": "instantProcess",
+              "reqd": false,
+              "type": "Boolean"
+            },
+            {
+              "gqltype": "String",
+              "name": "teamId",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "teamName",
+              "reqd": false,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Kicks off a Shortcut (formerly Clubhouse) import job.",
+          "gqltype": "IssueImportPayload!",
+          "list": false,
+          "name": "issueImportCreateClubhouse",
+          "reqd": true,
+          "type": "IssueImportPayload"
+        },
+        "invocation": {
+          "doc": "mutation IssueImportCreateCreateClubhouse($clubhouseGroupName: String!, $clubhouseToken: String!, $id: String, $includeClosedIssues: Boolean, $instantProcess: Boolean, $teamId: String, $teamName: String) { issueImportCreateClubhouse(clubhouseGroupName: $clubhouseGroupName, clubhouseToken: $clubhouseToken, id: $id, includeClosedIssues: $includeClosedIssues, instantProcess: $instantProcess, teamId: $teamId, teamName: $teamName) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }",
+          "field": "issueImportCreateClubhouse",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "clubhouseGroupName",
+              "gqltype": "String!",
+              "name": "clubhouseGroupName"
+            },
+            {
+              "from": "clubhouseToken",
+              "gqltype": "String!",
+              "name": "clubhouseToken"
+            },
+            {
+              "from": "id",
+              "gqltype": "String",
+              "name": "id"
+            },
+            {
+              "from": "includeClosedIssues",
+              "gqltype": "Boolean",
+              "name": "includeClosedIssues"
+            },
+            {
+              "from": "instantProcess",
+              "gqltype": "Boolean",
+              "name": "instantProcess"
+            },
+            {
+              "from": "teamId",
+              "gqltype": "String",
+              "name": "teamId"
+            },
+            {
+              "from": "teamName",
+              "gqltype": "String",
+              "name": "teamName"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "Boolean": {
+            "desc": "The `Boolean` scalar type represents `true` or `false`.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "Boolean"
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST issueImportCreateCSVJira": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "csvUrl",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "jiraEmail",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "jiraHostname",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "jiraToken",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "teamId",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "teamName",
+              "reqd": false,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Kicks off a Jira import job from a CSV.",
+          "gqltype": "IssueImportPayload!",
+          "list": false,
+          "name": "issueImportCreateCSVJira",
+          "reqd": true,
+          "type": "IssueImportPayload"
+        },
+        "invocation": {
+          "doc": "mutation IssueImportCreateCreateCsvJira($csvUrl: String!, $jiraEmail: String, $jiraHostname: String, $jiraToken: String, $teamId: String, $teamName: String) { issueImportCreateCSVJira(csvUrl: $csvUrl, jiraEmail: $jiraEmail, jiraHostname: $jiraHostname, jiraToken: $jiraToken, teamId: $teamId, teamName: $teamName) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }",
+          "field": "issueImportCreateCSVJira",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "csvUrl",
+              "gqltype": "String!",
+              "name": "csvUrl"
+            },
+            {
+              "from": "jiraEmail",
+              "gqltype": "String",
+              "name": "jiraEmail"
+            },
+            {
+              "from": "jiraHostname",
+              "gqltype": "String",
+              "name": "jiraHostname"
+            },
+            {
+              "from": "jiraToken",
+              "gqltype": "String",
+              "name": "jiraToken"
+            },
+            {
+              "from": "teamId",
+              "gqltype": "String",
+              "name": "teamId"
+            },
+            {
+              "from": "teamName",
+              "gqltype": "String",
+              "name": "teamName"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST issueImportCreateGithub": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "[String!]",
+              "name": "githubLabels",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "[Int!]",
+              "name": "githubRepoIds",
+              "reqd": false,
+              "type": "Int"
+            },
+            {
+              "gqltype": "Boolean",
+              "name": "includeClosedIssues",
+              "reqd": false,
+              "type": "Boolean"
+            },
+            {
+              "gqltype": "Boolean",
+              "name": "instantProcess",
+              "reqd": false,
+              "type": "Boolean"
+            },
+            {
+              "gqltype": "String",
+              "name": "teamId",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String",
+              "name": "teamName",
+              "reqd": false,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Kicks off a GitHub import job.",
+          "gqltype": "IssueImportPayload!",
+          "list": false,
+          "name": "issueImportCreateGithub",
+          "reqd": true,
+          "type": "IssueImportPayload"
+        },
+        "invocation": {
+          "doc": "mutation IssueImportCreateCreateGithub($githubLabels: [String!], $githubRepoIds: [Int!], $includeClosedIssues: Boolean, $instantProcess: Boolean, $teamId: String, $teamName: String) { issueImportCreateGithub(githubLabels: $githubLabels, githubRepoIds: $githubRepoIds, includeClosedIssues: $includeClosedIssues, instantProcess: $instantProcess, teamId: $teamId, teamName: $teamName) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }",
+          "field": "issueImportCreateGithub",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "githubLabels",
+              "gqltype": "[String!]",
+              "name": "githubLabels"
+            },
+            {
+              "from": "githubRepoIds",
+              "gqltype": "[Int!]",
+              "name": "githubRepoIds"
+            },
+            {
+              "from": "includeClosedIssues",
+              "gqltype": "Boolean",
+              "name": "includeClosedIssues"
+            },
+            {
+              "from": "instantProcess",
+              "gqltype": "Boolean",
+              "name": "instantProcess"
+            },
+            {
+              "from": "teamId",
+              "gqltype": "String",
+              "name": "teamId"
+            },
+            {
+              "from": "teamName",
+              "gqltype": "String",
+              "name": "teamName"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "Boolean": {
+            "desc": "The `Boolean` scalar type represents `true` or `false`.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "Boolean"
+          },
+          "Int": {
+            "desc": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "Int"
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST issueImportDelete": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "issueImportId",
+              "reqd": true,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Deletes an import job.",
+          "gqltype": "IssueImportDeletePayload!",
+          "list": false,
+          "name": "issueImportDelete",
+          "reqd": true,
+          "type": "IssueImportDeletePayload"
+        },
+        "invocation": {
+          "doc": "mutation IssueImportRemove($issueImportId: String!) { issueImportDelete(issueImportId: $issueImportId) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }",
+          "field": "issueImportDelete",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "issueImportId",
+              "gqltype": "String!",
+              "name": "issueImportId"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST issueImportProcess": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "issueImportId",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "JSONObject!",
+              "name": "mapping",
+              "reqd": true,
+              "type": "JSONObject"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Kicks off import processing.",
+          "gqltype": "IssueImportPayload!",
+          "list": false,
+          "name": "issueImportProcess",
+          "reqd": true,
+          "type": "IssueImportPayload"
+        },
+        "invocation": {
+          "doc": "mutation IssueImportUpdateProcess($issueImportId: String!, $mapping: JSONObject!) { issueImportProcess(issueImportId: $issueImportId, mapping: $mapping) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }",
+          "field": "issueImportProcess",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "issueImportId",
+              "gqltype": "String!",
+              "name": "issueImportId"
+            },
+            {
+              "from": "mapping",
+              "gqltype": "JSONObject!",
+              "name": "mapping"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "JSONObject": {
+            "desc": "The `JSONObject` scalar type represents arbitrary values as *embedded* JSON",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "JSONObject"
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST issueImportUpdate": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "id",
+              "reqd": true,
+              "type": "String"
+            },
+            {
+              "gqltype": "IssueImportUpdateInput!",
+              "name": "input",
+              "reqd": true,
+              "type": "IssueImportUpdateInput"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Updates the mapping for the issue import.",
+          "gqltype": "IssueImportPayload!",
+          "list": false,
+          "name": "issueImportUpdate",
+          "reqd": true,
+          "type": "IssueImportPayload"
+        },
+        "invocation": {
+          "doc": "mutation IssueImportUpdate($id: String!, $input: IssueImportUpdateInput!) { issueImportUpdate(id: $id, input: $input) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }",
+          "field": "issueImportUpdate",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "id",
+              "gqltype": "String!",
+              "name": "id"
+            },
+            {
+              "from": "",
+              "gqltype": "IssueImportUpdateInput!",
+              "name": "input"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "IssueImportUpdateInput": {
+            "desc": "Input for updating an import job's mapping configuration, such as user and workflow state mappings between the source service and Linear.",
+            "fields": {
+              "mapping": {
+                "args": [],
+                "deprecated": false,
+                "desc": "The mapping configuration for the import.",
+                "gqltype": "JSONObject!",
+                "list": false,
+                "name": "mapping",
+                "reqd": true,
+                "type": "JSONObject"
+              }
+            },
+            "kind": "INPUT_OBJECT",
+            "name": "IssueImportUpdateInput"
+          },
+          "JSONObject": {
+            "desc": "The `JSONObject` scalar type represents arbitrary values as *embedded* JSON",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "JSONObject"
+          },
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST issueImportCreateLinearV2": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String",
+              "name": "id",
+              "reqd": false,
+              "type": "String"
+            },
+            {
+              "gqltype": "String!",
+              "name": "linearSourceOrganizationId",
+              "reqd": true,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "[INTERNAL] Kicks off a Linear to Linear import job.",
+          "gqltype": "IssueImportPayload!",
+          "list": false,
+          "name": "issueImportCreateLinearV2",
+          "reqd": true,
+          "type": "IssueImportPayload"
+        },
+        "invocation": {
+          "doc": "mutation IssueImportUpdateCreateLinearV2($id: String, $linearSourceOrganizationId: String!) { issueImportCreateLinearV2(id: $id, linearSourceOrganizationId: $linearSourceOrganizationId) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }",
+          "field": "issueImportCreateLinearV2",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "id",
+              "gqltype": "String",
+              "name": "id"
+            },
+            {
+              "from": "linearSourceOrganizationId",
+              "gqltype": "String!",
+              "name": "linearSourceOrganizationId"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+# BasicAuthenticationSessionResponseFlow
+
+main: kit: flow: BasicAuthenticationSessionResponseFlow:
+{
+  entity: "authentication_session_response",
+  kind: "basic",
+  name: "BasicAuthenticationSessionResponseFlow",
+  step: [
+    {
+      op: "list",
+      valid: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "authentication_session_response_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicAuthenticationSessionResponseFlow"
+}

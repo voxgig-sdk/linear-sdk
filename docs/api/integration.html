@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Integration | linear</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body><a class="skip" href="#content">Skip to content</a>
+<header class="site-header"><a class="site-title" href="../index.html">linear<span>SDK documentation</span></a><div class="site-links"><a class="repo-link" href="https://github.com/voxgig-sdk/linear-sdk">voxgig-sdk/linear-sdk</a></div></header>
+<div class="site-notice" role="note"></div>
+<div class="shell"><nav class="site-nav" aria-label="Documentation"><div class="search"><label for="search">Search documentation</label><input id="search" type="search" data-base="../" placeholder="Find a guide or reference"><div id="results" aria-live="polite"></div></div><details><summary>Overview</summary><a href="../index.html">linear</a></details>
+<details open><summary>API</summary><a href="../api/index.html">API overview</a>
+<a href="../api/access_key_release.html">AccessKeyRelease</a>
+<a href="../api/access_key_release_pipeline.html">AccessKeyReleasePipeline</a>
+<a href="../api/agent_activity.html">AgentActivity</a>
+<a href="../api/agent_session.html">AgentSession</a>
+<a href="../api/agent_skill.html">AgentSkill</a>
+<a href="../api/application.html">Application</a>
+<a href="../api/attachment.html">Attachment</a>
+<a href="../api/audit_entry.html">AuditEntry</a>
+<a href="../api/audit_entry_type.html">AuditEntryType</a>
+<a href="../api/auth_resolver_response.html">AuthResolverResponse</a>
+<a href="../api/authentication_session_response.html">AuthenticationSessionResponse</a>
+<a href="../api/comment.html">Comment</a>
+<a href="../api/create_or_join_organization_response.html">CreateOrJoinOrganizationResponse</a>
+<a href="../api/custom_view.html">CustomView</a>
+<a href="../api/customer.html">Customer</a>
+<a href="../api/customer_need.html">CustomerNeed</a>
+<a href="../api/customer_status.html">CustomerStatus</a>
+<a href="../api/customer_tier.html">CustomerTier</a>
+<a href="../api/cycle.html">Cycle</a>
+<a href="../api/diff.html">Diff</a>
+<a href="../api/document.html">Document</a>
+<a href="../api/document_search_result.html">DocumentSearchResult</a>
+<a href="../api/email_intake_address.html">EmailIntakeAddress</a>
+<a href="../api/email_user_account_auth_challenge_response.html">EmailUserAccountAuthChallengeResponse</a>
+<a href="../api/emoji.html">Emoji</a>
+<a href="../api/entity_external_link.html">EntityExternalLink</a>
+<a href="../api/external_user.html">ExternalUser</a>
+<a href="../api/favorite.html">Favorite</a>
+<a href="../api/git_automation_state.html">GitAutomationState</a>
+<a href="../api/git_automation_target_branch.html">GitAutomationTargetBranch</a>
+<a href="../api/git_hub_integration_connect_detail.html">GitHubIntegrationConnectDetail</a>
+<a href="../api/initiative.html">Initiative</a>
+<a href="../api/initiative_label.html">InitiativeLabel</a>
+<a href="../api/initiative_lead_team_change_impact.html">InitiativeLeadTeamChangeImpact</a>
+<a href="../api/initiative_relation.html">InitiativeRelation</a>
+<a href="../api/initiative_to_project.html">InitiativeToProject</a>
+<a href="../api/initiative_update.html">InitiativeUpdate</a>
+<a aria-current="page" href="../api/integration.html">Integration</a><div class="nav-sections"><a class="nav-section" href="#post-integrationsalesforce">POST integrationSalesforce</a>
+<a class="nav-section" href="#post-integrationlaunchdarklyconnect">POST integrationLaunchDarklyConnect</a>
+<a class="nav-section" href="#post-integrationdiscord">POST integrationDiscord</a>
+<a class="nav-section" href="#post-integrationfigma">POST integrationFigma</a>
+<a class="nav-section" href="#post-integrationfront">POST integrationFront</a>
+<a class="nav-section" href="#post-integrationgong">POST integrationGong</a>
+<a class="nav-section" href="#post-integrationintercom">POST integrationIntercom</a>
+<a class="nav-section" href="#post-integrationmicrosoftpersonalconnect">POST integrationMicrosoftPersonalConnect</a>
+<a class="nav-section" href="#post-integrationmicrosoftteams">POST integrationMicrosoftTeams</a>
+<a class="nav-section" href="#post-integrationpagerdutyconnect">POST integrationPagerDutyConnect</a>
+<a class="nav-section" href="#post-integrationslack">POST integrationSlack</a>
+<a class="nav-section" href="#post-integrationslackasks">POST integrationSlackAsks</a>
+<a class="nav-section" href="#post-integrationslackimportemojis">POST integrationSlackImportEmojis</a>
+<a class="nav-section" href="#post-integrationslackpersonal">POST integrationSlackPersonal</a>
+<a class="nav-section" href="#post-integrationgithubpersonal">POST integrationGitHubPersonal</a>
+<a class="nav-section" href="#post-integrationgooglecalendarpersonalconnect">POST integrationGoogleCalendarPersonalConnect</a>
+<a class="nav-section" href="#post-integrationgooglesheets">POST integrationGoogleSheets</a>
+<a class="nav-section" href="#post-integrationlaunchdarklypersonalconnect">POST integrationLaunchDarklyPersonalConnect</a>
+<a class="nav-section" href="#post-integrationmcpserverconnect">POST integrationMcpServerConnect</a>
+<a class="nav-section" href="#post-integrationmcpserverpersonalconnect">POST integrationMcpServerPersonalConnect</a>
+<a class="nav-section" href="#post-integrationopsgenieconnect">POST integrationOpsgenieConnect</a>
+<a class="nav-section" href="#post-integrationzendesk">POST integrationZendesk</a>
+<a class="nav-section" href="#post-airbyteintegrationconnect">POST airbyteIntegrationConnect</a>
+<a class="nav-section" href="#post-integrationcustomerdataattributesrefresh">POST integrationCustomerDataAttributesRefresh</a>
+<a class="nav-section" href="#post-integrationintercomdelete">POST integrationIntercomDelete</a>
+<a class="nav-section" href="#post-integrationintercomsettingsupdate">POST integrationIntercomSettingsUpdate</a>
+<a class="nav-section" href="#post-jiraintegrationconnect">POST jiraIntegrationConnect</a>
+<a class="nav-section" href="#post-integrationjirapersonal">POST integrationJiraPersonal</a>
+<a class="nav-section" href="#post-integrationjiraupdate">POST integrationJiraUpdate</a>
+<a class="nav-section" href="#post-integrationloom">POST integrationLoom</a>
+<a class="nav-section" href="#post-integrationopsgenierefreshschedulemappings">POST integrationOpsgenieRefreshScheduleMappings</a>
+<a class="nav-section" href="#post-integrationpagerdutyrefreshschedulemappings">POST integrationPagerDutyRefreshScheduleMappings</a>
+<a class="nav-section" href="#post-integrations">POST integrations</a>
+<a class="nav-section" href="#post-integration">POST integration</a>
+<a class="nav-section" href="#post-integrationdelete">POST integrationDelete</a>
+<a class="nav-section" href="#post-integrationmicrosoftteamsprojectpost">POST integrationMicrosoftTeamsProjectPost</a>
+<a class="nav-section" href="#post-integrationdatadogconnect">POST integrationDatadogConnect</a>
+<a class="nav-section" href="#post-integrationsentryconnect">POST integrationSentryConnect</a>
+<a class="nav-section" href="#post-updateintegrationslackscopes">POST updateIntegrationSlackScopes</a>
+<a class="nav-section" href="#post-integrationgithubconnect">POST integrationGithubConnect</a>
+<a class="nav-section" href="#post-integrationgithubimportconnect">POST integrationGithubImportConnect</a>
+<a class="nav-section" href="#post-integrationslackworkflowaccessupdate">POST integrationSlackWorkflowAccessUpdate</a>
+<a class="nav-section" href="#post-integrationarchive">POST integrationArchive</a>
+<a class="nav-section" href="#post-integrationgithubimportrefresh">POST integrationGithubImportRefresh</a>
+<a class="nav-section" href="#post-refreshgooglesheetsdata">POST refreshGoogleSheetsData</a>
+<a class="nav-section" href="#post-integrationsalesforcemetadatarefresh">POST integrationSalesforceMetadataRefresh</a>
+<a class="nav-section" href="#post-integrationsettingsupdate">POST integrationSettingsUpdate</a>
+<a class="nav-section" href="#post-integrationupdate">POST integrationUpdate</a></div>
+<a href="../api/integration_template.html">IntegrationTemplate</a>
+<a href="../api/integrations_setting.html">IntegrationsSetting</a>
+<a href="../api/issue.html">Issue</a>
+<a href="../api/issue_import.html">IssueImport</a>
+<a href="../api/issue_label.html">IssueLabel</a>
+<a href="../api/issue_priority_value.html">IssuePriorityValue</a>
+<a href="../api/issue_relation.html">IssueRelation</a>
+<a href="../api/issue_search_result.html">IssueSearchResult</a>
+<a href="../api/issue_to_release.html">IssueToRelease</a>
+<a href="../api/logout_response.html">LogoutResponse</a>
+<a href="../api/notification.html">Notification</a>
+<a href="../api/notification_subscription.html">NotificationSubscription</a>
+<a href="../api/o_auth_application.html">OAuthApplication</a>
+<a href="../api/organization.html">Organization</a>
+<a href="../api/organization_domain.html">OrganizationDomain</a>
+<a href="../api/organization_invite.html">OrganizationInvite</a>
+<a href="../api/organization_meta.html">OrganizationMeta</a>
+<a href="../api/passkey_login_start_response.html">PasskeyLoginStartResponse</a>
+<a href="../api/project.html">Project</a>
+<a href="../api/project_label.html">ProjectLabel</a>
+<a href="../api/project_milestone.html">ProjectMilestone</a>
+<a href="../api/project_milestone_move_project_team.html">ProjectMilestoneMoveProjectTeam</a>
+<a href="../api/project_relation.html">ProjectRelation</a>
+<a href="../api/project_search_result.html">ProjectSearchResult</a>
+<a href="../api/project_status.html">ProjectStatus</a>
+<a href="../api/project_update.html">ProjectUpdate</a>
+<a href="../api/push_subscription.html">PushSubscription</a>
+<a href="../api/reaction.html">Reaction</a>
+<a href="../api/release.html">Release</a>
+<a href="../api/release_note.html">ReleaseNote</a>
+<a href="../api/release_pipeline.html">ReleasePipeline</a>
+<a href="../api/release_stage.html">ReleaseStage</a>
+<a href="../api/roadmap.html">Roadmap</a>
+<a href="../api/roadmap_to_project.html">RoadmapToProject</a>
+<a href="../api/sla_configuration.html">SlaConfiguration</a>
+<a href="../api/sso_url_from_email_response.html">SsoUrlFromEmailResponse</a>
+<a href="../api/team.html">Team</a>
+<a href="../api/team_membership.html">TeamMembership</a>
+<a href="../api/template.html">Template</a>
+<a href="../api/time_schedule.html">TimeSchedule</a>
+<a href="../api/triage_responsibility.html">TriageResponsibility</a>
+<a href="../api/upload_file.html">UploadFile</a>
+<a href="../api/usage_alert.html">UsageAlert</a>
+<a href="../api/user.html">User</a>
+<a href="../api/user_setting.html">UserSetting</a>
+<a href="../api/view_preference.html">ViewPreference</a>
+<a href="../api/webhook.html">Webhook</a>
+<a href="../api/webhook_failure_event.html">WebhookFailureEvent</a>
+<a href="../api/workflow_state.html">WorkflowState</a></details>
+<details><summary>Guides</summary><a href="../guides/authentication.html">Authentication</a>
+<a href="../guides/first-call.html">Make your first API call</a>
+<a href="../guides/errors.html">Handle errors</a>
+<a href="../guides/concepts.html">Entities, SDKs, and tools</a></details>
+<details><summary>SDKs</summary><a href="../sdks/c.html">C</a>
+<a href="../sdks/go.html">Golang</a>
+<a href="../sdks/lua.html">Lua</a>
+<a href="../sdks/php.html">PHP</a>
+<a href="../sdks/py.html">Python</a>
+<a href="../sdks/rb.html">Ruby</a>
+<a href="../sdks/ts.html">TypeScript</a></details>
+<details><summary>Tools</summary><a href="../tools/go-cli.html">Go CLI</a>
+<a href="../tools/go-mcp.html">Go MCP server</a></details>
+<details><summary>Features</summary><a href="../features/debug.html">Request/response capture ring buffer for debugging</a>
+<a href="../features/idempotency.html">Idempotency keys for safe retries of mutating operations</a>
+<a href="../features/metrics.html">Statistics capture: per-operation counters and latency</a>
+<a href="../features/paging.html">Pagination signals for list operations</a>
+<a href="../features/ratelimit.html">Client-side rate limiting via a token bucket</a>
+<a href="../features/retry.html">Automatic retry of transient failures with exponential backoff</a>
+<a href="../features/test.html">In-memory mock transport for testing without a live server</a>
+<a href="../features/timeout.html">Per-request timeout with transport abort</a></details></nav><main id="content"><div class="page-context"><span class="section-dot" aria-hidden="true"></span>API</div><h1 id="integration">Integration</h1>
+<h2 id="operations">Operations</h2>
+<p>Every route this entity exposes. Each route links to its own reference on this page.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Route</th>
+<th>SDK operation</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationsalesforce"><code>integrationSalesforce</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationlaunchdarklyconnect"><code>integrationLaunchDarklyConnect</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationdiscord"><code>integrationDiscord</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationfigma"><code>integrationFigma</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationfront"><code>integrationFront</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationgong"><code>integrationGong</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationintercom"><code>integrationIntercom</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationmicrosoftpersonalconnect"><code>integrationMicrosoftPersonalConnect</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationmicrosoftteams"><code>integrationMicrosoftTeams</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationpagerdutyconnect"><code>integrationPagerDutyConnect</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationslack"><code>integrationSlack</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationslackasks"><code>integrationSlackAsks</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationslackimportemojis"><code>integrationSlackImportEmojis</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationslackpersonal"><code>integrationSlackPersonal</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationgithubpersonal"><code>integrationGitHubPersonal</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationgooglecalendarpersonalconnect"><code>integrationGoogleCalendarPersonalConnect</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationgooglesheets"><code>integrationGoogleSheets</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationlaunchdarklypersonalconnect"><code>integrationLaunchDarklyPersonalConnect</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationmcpserverconnect"><code>integrationMcpServerConnect</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationmcpserverpersonalconnect"><code>integrationMcpServerPersonalConnect</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationopsgenieconnect"><code>integrationOpsgenieConnect</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationzendesk"><code>integrationZendesk</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-airbyteintegrationconnect"><code>airbyteIntegrationConnect</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationcustomerdataattributesrefresh"><code>integrationCustomerDataAttributesRefresh</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationintercomdelete"><code>integrationIntercomDelete</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationintercomsettingsupdate"><code>integrationIntercomSettingsUpdate</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-jiraintegrationconnect"><code>jiraIntegrationConnect</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationjirapersonal"><code>integrationJiraPersonal</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationjiraupdate"><code>integrationJiraUpdate</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationloom"><code>integrationLoom</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationopsgenierefreshschedulemappings"><code>integrationOpsgenieRefreshScheduleMappings</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationpagerdutyrefreshschedulemappings"><code>integrationPagerDutyRefreshScheduleMappings</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrations"><code>integrations</code></a></td>
+<td><code>list</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integration"><code>integration</code></a></td>
+<td><code>load</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationdelete"><code>integrationDelete</code></a></td>
+<td><code>remove</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationmicrosoftteamsprojectpost"><code>integrationMicrosoftTeamsProjectPost</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationdatadogconnect"><code>integrationDatadogConnect</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationsentryconnect"><code>integrationSentryConnect</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-updateintegrationslackscopes"><code>updateIntegrationSlackScopes</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationgithubconnect"><code>integrationGithubConnect</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationgithubimportconnect"><code>integrationGithubImportConnect</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationslackworkflowaccessupdate"><code>integrationSlackWorkflowAccessUpdate</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationarchive"><code>integrationArchive</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationgithubimportrefresh"><code>integrationGithubImportRefresh</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-refreshgooglesheetsdata"><code>refreshGoogleSheetsData</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationsalesforcemetadatarefresh"><code>integrationSalesforceMetadataRefresh</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationsettingsupdate"><code>integrationSettingsUpdate</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-integrationupdate"><code>integrationUpdate</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="fields">Fields</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>archivedAt</code></td>
+<td><code>any</code></td>
+<td>No</td>
+<td>The time at which the entity was archived.</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td><code>any</code></td>
+<td>Yes</td>
+<td>The time at which the entity was created.</td>
+</tr>
+<tr>
+<td><code>creator</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The user that added the integration.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>The unique identifier of the entity.</td>
+</tr>
+<tr>
+<td><code>organization</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The workspace that the integration is associated with.</td>
+</tr>
+<tr>
+<td><code>service</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>The integration's type, identifying which external service this integration connects to (for example, 'slack', 'github', 'jira', 'figma').</td>
+</tr>
+<tr>
+<td><code>team</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The team that the integration is associated with.</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td><code>any</code></td>
+<td>Yes</td>
+<td>The last time at which the entity was meaningfully updated.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="create">create</h2>
+<h3 id="post-integrationsalesforce" class="operation" data-method="post"><code>POST</code> integrationSalesforce</h3>
+<h3 id="post-integrationlaunchdarklyconnect" class="operation" data-method="post"><code>POST</code> integrationLaunchDarklyConnect</h3>
+<h3 id="post-integrationdiscord" class="operation" data-method="post"><code>POST</code> integrationDiscord</h3>
+<h3 id="post-integrationfigma" class="operation" data-method="post"><code>POST</code> integrationFigma</h3>
+<h3 id="post-integrationfront" class="operation" data-method="post"><code>POST</code> integrationFront</h3>
+<h3 id="post-integrationgong" class="operation" data-method="post"><code>POST</code> integrationGong</h3>
+<h3 id="post-integrationintercom" class="operation" data-method="post"><code>POST</code> integrationIntercom</h3>
+<h3 id="post-integrationmicrosoftpersonalconnect" class="operation" data-method="post"><code>POST</code> integrationMicrosoftPersonalConnect</h3>
+<h3 id="post-integrationmicrosoftteams" class="operation" data-method="post"><code>POST</code> integrationMicrosoftTeams</h3>
+<h3 id="post-integrationpagerdutyconnect" class="operation" data-method="post"><code>POST</code> integrationPagerDutyConnect</h3>
+<h3 id="post-integrationslack" class="operation" data-method="post"><code>POST</code> integrationSlack</h3>
+<h3 id="post-integrationslackasks" class="operation" data-method="post"><code>POST</code> integrationSlackAsks</h3>
+<h3 id="post-integrationslackimportemojis" class="operation" data-method="post"><code>POST</code> integrationSlackImportEmojis</h3>
+<h3 id="post-integrationslackpersonal" class="operation" data-method="post"><code>POST</code> integrationSlackPersonal</h3>
+<h3 id="post-integrationgithubpersonal" class="operation" data-method="post"><code>POST</code> integrationGitHubPersonal</h3>
+<h3 id="post-integrationgooglecalendarpersonalconnect" class="operation" data-method="post"><code>POST</code> integrationGoogleCalendarPersonalConnect</h3>
+<h3 id="post-integrationgooglesheets" class="operation" data-method="post"><code>POST</code> integrationGoogleSheets</h3>
+<h3 id="post-integrationlaunchdarklypersonalconnect" class="operation" data-method="post"><code>POST</code> integrationLaunchDarklyPersonalConnect</h3>
+<h3 id="post-integrationmcpserverconnect" class="operation" data-method="post"><code>POST</code> integrationMcpServerConnect</h3>
+<h3 id="post-integrationmcpserverpersonalconnect" class="operation" data-method="post"><code>POST</code> integrationMcpServerPersonalConnect</h3>
+<h3 id="post-integrationopsgenieconnect" class="operation" data-method="post"><code>POST</code> integrationOpsgenieConnect</h3>
+<h3 id="post-integrationzendesk" class="operation" data-method="post"><code>POST</code> integrationZendesk</h3>
+<h3 id="post-airbyteintegrationconnect" class="operation" data-method="post"><code>POST</code> airbyteIntegrationConnect</h3>
+<h3 id="post-integrationcustomerdataattributesrefresh" class="operation" data-method="post"><code>POST</code> integrationCustomerDataAttributesRefresh</h3>
+<h3 id="post-integrationintercomdelete" class="operation" data-method="post"><code>POST</code> integrationIntercomDelete</h3>
+<h3 id="post-integrationintercomsettingsupdate" class="operation" data-method="post"><code>POST</code> integrationIntercomSettingsUpdate</h3>
+<h3 id="post-jiraintegrationconnect" class="operation" data-method="post"><code>POST</code> jiraIntegrationConnect</h3>
+<h3 id="post-integrationjirapersonal" class="operation" data-method="post"><code>POST</code> integrationJiraPersonal</h3>
+<h3 id="post-integrationjiraupdate" class="operation" data-method="post"><code>POST</code> integrationJiraUpdate</h3>
+<h3 id="post-integrationloom" class="operation" data-method="post"><code>POST</code> integrationLoom</h3>
+<h3 id="post-integrationopsgenierefreshschedulemappings" class="operation" data-method="post"><code>POST</code> integrationOpsgenieRefreshScheduleMappings</h3>
+<h3 id="post-integrationpagerdutyrefreshschedulemappings" class="operation" data-method="post"><code>POST</code> integrationPagerDutyRefreshScheduleMappings</h3>
+<h2 id="list">list</h2>
+<h3 id="post-integrations" class="operation" data-method="post"><code>POST</code> integrations</h3>
+<h2 id="load">load</h2>
+<h3 id="post-integration" class="operation" data-method="post"><code>POST</code> integration</h3>
+<h2 id="remove">remove</h2>
+<h3 id="post-integrationdelete" class="operation" data-method="post"><code>POST</code> integrationDelete</h3>
+<h2 id="update">update</h2>
+<h3 id="post-integrationmicrosoftteamsprojectpost" class="operation" data-method="post"><code>POST</code> integrationMicrosoftTeamsProjectPost</h3>
+<h3 id="post-integrationdatadogconnect" class="operation" data-method="post"><code>POST</code> integrationDatadogConnect</h3>
+<h3 id="post-integrationsentryconnect" class="operation" data-method="post"><code>POST</code> integrationSentryConnect</h3>
+<h3 id="post-updateintegrationslackscopes" class="operation" data-method="post"><code>POST</code> updateIntegrationSlackScopes</h3>
+<h3 id="post-integrationgithubconnect" class="operation" data-method="post"><code>POST</code> integrationGithubConnect</h3>
+<h3 id="post-integrationgithubimportconnect" class="operation" data-method="post"><code>POST</code> integrationGithubImportConnect</h3>
+<h3 id="post-integrationslackworkflowaccessupdate" class="operation" data-method="post"><code>POST</code> integrationSlackWorkflowAccessUpdate</h3>
+<h3 id="post-integrationarchive" class="operation" data-method="post"><code>POST</code> integrationArchive</h3>
+<h3 id="post-integrationgithubimportrefresh" class="operation" data-method="post"><code>POST</code> integrationGithubImportRefresh</h3>
+<h3 id="post-refreshgooglesheetsdata" class="operation" data-method="post"><code>POST</code> refreshGoogleSheetsData</h3>
+<h3 id="post-integrationsalesforcemetadatarefresh" class="operation" data-method="post"><code>POST</code> integrationSalesforceMetadataRefresh</h3>
+<h3 id="post-integrationsettingsupdate" class="operation" data-method="post"><code>POST</code> integrationSettingsUpdate</h3>
+<h3 id="post-integrationupdate" class="operation" data-method="post"><code>POST</code> integrationUpdate</h3>
+</main></div>
+<script src="../assets/search.js" defer></script></body></html>

@@ -1,0 +1,233 @@
+# Entity: upload_file
+
+main: kit: entity: upload_file: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "assetUrl"
+      req: true
+      short: "The permanent asset URL where the file will be accessible after upload."
+      type: "`$STRING`"
+    }
+    {
+      name: "contentType"
+      req: true
+      short: "The content type."
+      type: "`$STRING`"
+    }
+    {
+      name: "filename"
+      req: true
+      short: "The filename."
+      type: "`$STRING`"
+    }
+    {
+      name: "metaData"
+      req: false
+      short: "Optional metadata associated with the upload, such as the related issue or comment ID."
+      type: "`$ANY`"
+    }
+    {
+      name: "size"
+      req: true
+      short: "The size of the uploaded file."
+      type: "`$INTEGER`"
+    }
+    {
+      name: "uploadUrl"
+      req: true
+      short: "The pre-signed URL to which the file should be uploaded via a PUT request."
+      type: "`$STRING`"
+    }
+  ]
+
+  name: "upload_file"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "content_type"
+                orig: "content_type"
+                reqd: true
+                type: "`$STRING`"
+              }
+              {
+                kind: "param"
+                name: "filename"
+                orig: "filename"
+                reqd: true
+                type: "`$STRING`"
+              }
+              {
+                kind: "param"
+                name: "make_public"
+                orig: "make_public"
+                reqd: false
+                type: "`$BOOLEAN`"
+              }
+              {
+                kind: "param"
+                name: "meta_data"
+                orig: "meta_data"
+                reqd: false
+                type: "`$ANY`"
+              }
+              {
+                kind: "param"
+                name: "size"
+                orig: "size"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          contract: {
+            id: "POST fileUpload"
+            json: "{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"contentType\",\"reqd\":true,\"type\":\"String\"},{\"gqltype\":\"String!\",\"name\":\"filename\",\"reqd\":true,\"type\":\"String\"},{\"gqltype\":\"Boolean\",\"name\":\"makePublic\",\"reqd\":false,\"type\":\"Boolean\"},{\"gqltype\":\"JSON\",\"name\":\"metaData\",\"reqd\":false,\"type\":\"JSON\"},{\"gqltype\":\"Int!\",\"name\":\"size\",\"reqd\":true,\"type\":\"Int\"}],\"deprecated\":false,\"desc\":\"XHR request payload to upload an images, video and other attachments directly to Linear's cloud storage.\",\"gqltype\":\"UploadPayload!\",\"list\":false,\"name\":\"fileUpload\",\"reqd\":true,\"type\":\"UploadPayload\"},\"invocation\":{\"doc\":\"mutation UploadFileCreateFileUpload($contentType: String!, $filename: String!, $makePublic: Boolean, $metaData: JSON, $size: Int!) { fileUpload(contentType: $contentType, filename: $filename, makePublic: $makePublic, metaData: $metaData, size: $size) { uploadFile { ...UploadFileFields } success } } fragment UploadFileFields on UploadFile { assetUrl contentType filename metaData size uploadUrl }\",\"field\":\"fileUpload\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"contentType\",\"gqltype\":\"String!\",\"name\":\"contentType\"},{\"from\":\"filename\",\"gqltype\":\"String!\",\"name\":\"filename\"},{\"from\":\"makePublic\",\"gqltype\":\"Boolean\",\"name\":\"makePublic\"},{\"from\":\"metaData\",\"gqltype\":\"JSON\",\"name\":\"metaData\"},{\"from\":\"size\",\"gqltype\":\"Int!\",\"name\":\"size\"}]},\"protocol\":\"graphql\",\"types\":{\"Boolean\":{\"desc\":\"The `Boolean` scalar type represents `true` or `false`.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Boolean\"},\"Int\":{\"desc\":\"The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Int\"},\"JSON\":{\"desc\":\"The `JSON` scalar type represents arbitrary values as *stringified* JSON\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"JSON\"},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}"
+            source: "graphql"
+            version: 1
+          }
+          graphql: {
+            doc: "mutation UploadFileCreateFileUpload($contentType: String!, $filename: String!, $makePublic: Boolean, $metaData: JSON, $size: Int!) { fileUpload(contentType: $contentType, filename: $filename, makePublic: $makePublic, metaData: $metaData, size: $size) { uploadFile { ...UploadFileFields } success } } fragment UploadFileFields on UploadFile { assetUrl contentType filename metaData size uploadUrl }"
+            field: "fileUpload"
+            optype: "mutation"
+            vars: [
+              {
+                from: "contentType"
+                gqltype: "String!"
+                name: "contentType"
+              }
+              {
+                from: "filename"
+                gqltype: "String!"
+                name: "filename"
+              }
+              {
+                from: "makePublic"
+                gqltype: "Boolean"
+                name: "makePublic"
+              }
+              {
+                from: "metaData"
+                gqltype: "JSON"
+                name: "metaData"
+              }
+              {
+                from: "size"
+                gqltype: "Int!"
+                name: "size"
+              }
+            ]
+          }
+          kind: "graphql"
+          method: "POST"
+          orig: "fileUpload"
+          select: {
+            "$action": "file_upload"
+            exist: [
+              "content_type"
+              "filename"
+              "size"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data.fileUpload.uploadFile`"
+          }
+        }
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "content_type"
+                orig: "content_type"
+                reqd: true
+                type: "`$STRING`"
+              }
+              {
+                kind: "param"
+                name: "filename"
+                orig: "filename"
+                reqd: true
+                type: "`$STRING`"
+              }
+              {
+                kind: "param"
+                name: "meta_data"
+                orig: "meta_data"
+                reqd: false
+                type: "`$ANY`"
+              }
+              {
+                kind: "param"
+                name: "size"
+                orig: "size"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          contract: {
+            id: "POST importFileUpload"
+            json: "{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"contentType\",\"reqd\":true,\"type\":\"String\"},{\"gqltype\":\"String!\",\"name\":\"filename\",\"reqd\":true,\"type\":\"String\"},{\"gqltype\":\"JSON\",\"name\":\"metaData\",\"reqd\":false,\"type\":\"JSON\"},{\"gqltype\":\"Int!\",\"name\":\"size\",\"reqd\":true,\"type\":\"Int\"}],\"deprecated\":false,\"desc\":\"XHR request payload to upload a file for import, directly to Linear's cloud storage.\",\"gqltype\":\"UploadPayload!\",\"list\":false,\"name\":\"importFileUpload\",\"reqd\":true,\"type\":\"UploadPayload\"},\"invocation\":{\"doc\":\"mutation UploadFileCreateImportFileUpload($contentType: String!, $filename: String!, $metaData: JSON, $size: Int!) { importFileUpload(contentType: $contentType, filename: $filename, metaData: $metaData, size: $size) { uploadFile { ...UploadFileFields } success } } fragment UploadFileFields on UploadFile { assetUrl contentType filename metaData size uploadUrl }\",\"field\":\"importFileUpload\",\"optype\":\"mutation\",\"vars\":[{\"from\":\"contentType\",\"gqltype\":\"String!\",\"name\":\"contentType\"},{\"from\":\"filename\",\"gqltype\":\"String!\",\"name\":\"filename\"},{\"from\":\"metaData\",\"gqltype\":\"JSON\",\"name\":\"metaData\"},{\"from\":\"size\",\"gqltype\":\"Int!\",\"name\":\"size\"}]},\"protocol\":\"graphql\",\"types\":{\"Int\":{\"desc\":\"The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"Int\"},\"JSON\":{\"desc\":\"The `JSON` scalar type represents arbitrary values as *stringified* JSON\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"JSON\"},\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}"
+            source: "graphql"
+            version: 1
+          }
+          graphql: {
+            doc: "mutation UploadFileCreateImportFileUpload($contentType: String!, $filename: String!, $metaData: JSON, $size: Int!) { importFileUpload(contentType: $contentType, filename: $filename, metaData: $metaData, size: $size) { uploadFile { ...UploadFileFields } success } } fragment UploadFileFields on UploadFile { assetUrl contentType filename metaData size uploadUrl }"
+            field: "importFileUpload"
+            optype: "mutation"
+            vars: [
+              {
+                from: "contentType"
+                gqltype: "String!"
+                name: "contentType"
+              }
+              {
+                from: "filename"
+                gqltype: "String!"
+                name: "filename"
+              }
+              {
+                from: "metaData"
+                gqltype: "JSON"
+                name: "metaData"
+              }
+              {
+                from: "size"
+                gqltype: "Int!"
+                name: "size"
+              }
+            ]
+          }
+          kind: "graphql"
+          method: "POST"
+          orig: "importFileUpload"
+          select: {
+            "$action": "import_file_upload"
+            exist: [
+              "content_type"
+              "filename"
+              "size"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.data.importFileUpload.uploadFile`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

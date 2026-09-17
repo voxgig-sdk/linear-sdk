@@ -42,7 +42,11 @@ int main(void) {
     LinearSDK* sdk = team_direct_setup(mockres);
     voxgig_value* params = v_map();
     setp(params, "after", v_str("direct01"));
-    setp(params, "first", v_str("direct02"));
+    setp(params, "before", v_str("direct02"));
+    setp(params, "first", v_str("direct03"));
+    setp(params, "include_archived", v_str("direct04"));
+    setp(params, "last", v_str("direct05"));
+    setp(params, "order_by", v_str("direct06"));
     PNError* err = NULL;
     voxgig_value* result = sdk_direct(sdk, cmap(3,
       "path", v_str(""),
@@ -58,6 +62,10 @@ int main(void) {
     CHECK_INT_EQ(CALLS, 1, "list: one call");
     CHECK(strstr(LAST_URL, "direct01") != NULL, "list: url has direct01");
     CHECK(strstr(LAST_URL, "direct02") != NULL, "list: url has direct02");
+    CHECK(strstr(LAST_URL, "direct03") != NULL, "list: url has direct03");
+    CHECK(strstr(LAST_URL, "direct04") != NULL, "list: url has direct04");
+    CHECK(strstr(LAST_URL, "direct05") != NULL, "list: url has direct05");
+    CHECK(strstr(LAST_URL, "direct06") != NULL, "list: url has direct06");
   }
 
   // LOAD

@@ -61,7 +61,7 @@ class TestTeamEntity:
         # multiple ops; skipping any one skips the whole flow (steps depend
         # on each other).
         _live = setup.get("live", False)
-        for _op in ["list", "load"]:
+        for _op in ["create", "list", "update", "load", "remove"]:
             _skip, _reason = runner.is_control_skipped("entityOp", "team." + _op, "live" if _live else "unit")
             if _skip:
                 pytest.skip(_reason or "skipped via sdk-test-control.json")
@@ -73,22 +73,53 @@ class TestTeamEntity:
                         "set LINEAR_TEST_TEAM_ENTID JSON to run live")
         client = setup["client"]
 
-        # Bootstrap entity data from existing test data.
-        team_ref01_data_raw = vs.items(helpers.to_map(
-            vs.getpath(setup["data"], "existing.team")))
-        team_ref01_data = None
-        if len(team_ref01_data_raw) > 0:
-            team_ref01_data = helpers.to_map(team_ref01_data_raw[0][1])
+        # CREATE
+        team_ref01_ent = client.Team(None)
+        team_ref01_data = helpers.to_map(vs.getprop(
+            vs.getpath(setup["data"], "new.team"), "team_ref01"))
+        team_ref01_data["after"] = setup["idmap"]["after01"]
+        team_ref01_data["before"] = setup["idmap"]["before01"]
+        team_ref01_data["copy_settings_from_team_id"] = setup["idmap"]["copy_settings_from_team01"]
+        team_ref01_data["first"] = setup["idmap"]["first01"]
+        team_ref01_data["include_archived"] = setup["idmap"]["include_archived01"]
+        team_ref01_data["last"] = setup["idmap"]["last01"]
+        team_ref01_data["order_by"] = setup["idmap"]["order_by01"]
+
+        team_ref01_data = helpers.to_map(runner.entity_data(team_ref01_ent.create(team_ref01_data, None)))
+        assert team_ref01_data is not None
+        assert team_ref01_data["id"] is not None
 
         # LIST
-        team_ref01_ent = client.Team(None)
         team_ref01_match = {
             "after": setup["idmap"]["after01"],
+            "before": setup["idmap"]["before01"],
             "first": setup["idmap"]["first01"],
+            "include_archived": setup["idmap"]["include_archived01"],
+            "last": setup["idmap"]["last01"],
+            "order_by": setup["idmap"]["order_by01"],
         }
 
         team_ref01_list_result = team_ref01_ent.list(team_ref01_match, None)
         assert isinstance(team_ref01_list_result, list)
+
+        found_item = vs.select(
+            runner.entity_list_to_data(team_ref01_list_result),
+            {"id": team_ref01_data["id"]})
+        assert not vs.isempty(found_item)
+
+        # UPDATE
+        team_ref01_data_up0_up = {
+            "id": team_ref01_data["id"],
+        }
+
+        team_ref01_markdef_up0_name = "autoCloseStateId"
+        team_ref01_markdef_up0_value = "Mark01-team_ref01_" + str(setup["now"])
+        team_ref01_data_up0_up[team_ref01_markdef_up0_name] = team_ref01_markdef_up0_value
+
+        team_ref01_resdata_up0 = helpers.to_map(runner.entity_data(team_ref01_ent.update(team_ref01_data_up0_up, None)))
+        assert team_ref01_resdata_up0 is not None
+        assert team_ref01_resdata_up0["id"] == team_ref01_data_up0_up["id"]
+        assert team_ref01_resdata_up0[team_ref01_markdef_up0_name] == team_ref01_markdef_up0_value
 
         # LOAD
         team_ref01_match_dt0 = {
@@ -98,6 +129,30 @@ class TestTeamEntity:
         team_ref01_data_dt0_load_result = helpers.to_map(runner.entity_data(team_ref01_data_dt0_loaded))
         assert team_ref01_data_dt0_load_result is not None
         assert team_ref01_data_dt0_load_result["id"] == team_ref01_data["id"]
+
+        # REMOVE
+        team_ref01_match_rm0 = {
+            "id": team_ref01_data["id"],
+        }
+        team_ref01_ent.remove(team_ref01_match_rm0, None)
+
+        # LIST
+        team_ref01_match_rt0 = {
+            "after": setup["idmap"]["after01"],
+            "before": setup["idmap"]["before01"],
+            "first": setup["idmap"]["first01"],
+            "include_archived": setup["idmap"]["include_archived01"],
+            "last": setup["idmap"]["last01"],
+            "order_by": setup["idmap"]["order_by01"],
+        }
+
+        team_ref01_list_rt0_result = team_ref01_ent.list(team_ref01_match_rt0, None)
+        assert isinstance(team_ref01_list_rt0_result, list)
+
+        not_found_item = vs.select(
+            runner.entity_list_to_data(team_ref01_list_rt0_result),
+            {"id": team_ref01_data["id"]})
+        assert vs.isempty(not_found_item)
 
 
 
@@ -117,7 +172,7 @@ def _team_basic_setup(extra):
 
     # Generate idmap via transform.
     idmap = vs.transform(
-        ["team01", "team02", "team03", "after01", "first01"],
+        ["team01", "team02", "team03", "after01", "before01", "copy_settings_from_team01", "first01", "include_archived01", "last01", "order_by01"],
         {
             "`$PACK`": ["", {
                 "`$KEY`": "`$COPY`",

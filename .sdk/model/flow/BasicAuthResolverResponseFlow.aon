@@ -1,0 +1,65 @@
+# BasicAuthResolverResponseFlow
+
+main: kit: flow: BasicAuthResolverResponseFlow:
+{
+  entity: "auth_resolver_response",
+  kind: "basic",
+  name: "BasicAuthResolverResponseFlow",
+  step: [
+    {
+      input: {
+        ref: "auth_resolver_response_ref01"
+      }
+
+      match: {
+        auth_id: "auth01",
+        response: "response01"
+      }
+
+      op: "create"
+    }
+
+    {
+      data: {
+        auth_id: "auth01",
+        response: "response01"
+      }
+
+      input: {
+        ref: "auth_resolver_response_ref01",
+        srcdatavar: "auth_resolver_response_ref01_data",
+        suffix: "_up0",
+        textfield: "email"
+      }
+
+      op: "update",
+      spec: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-auth_resolver_response_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "auth_resolver_response_ref01",
+        srcdatavar: "auth_resolver_response_ref01_data",
+        suffix: "_dt0"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-auth_resolver_response_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicAuthResolverResponseFlow"
+}

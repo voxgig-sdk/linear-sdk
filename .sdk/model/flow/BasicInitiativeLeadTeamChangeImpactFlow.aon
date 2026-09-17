@@ -1,0 +1,33 @@
+# BasicInitiativeLeadTeamChangeImpactFlow
+
+main: kit: flow: BasicInitiativeLeadTeamChangeImpactFlow:
+{
+  entity: "initiative_lead_team_change_impact",
+  kind: "basic",
+  name: "BasicInitiativeLeadTeamChangeImpactFlow",
+  step: [
+    {
+      input: {
+        ref: "initiative_lead_team_change_impact_ref01",
+        srcdatavar: "initiative_lead_team_change_impact_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        id: "initiative_lead_team_change_impact01",
+        lead_team_id: "lead_team01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-initiative_lead_team_change_impact_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicInitiativeLeadTeamChangeImpactFlow"
+}

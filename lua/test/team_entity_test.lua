@@ -60,7 +60,7 @@ describe("TeamEntity", function()
     local setup = team_basic_setup(nil)
     -- Per-op sdk-test-control.json skip.
     local _live = setup.live or false
-    for _, _op in ipairs({"list", "load"}) do
+    for _, _op in ipairs({"create", "list", "update", "load", "remove"}) do
       local _should_skip, _reason = runner.is_control_skipped("entityOp", "team." .. _op, _live and "live" or "unit")
       if _should_skip then
         pending(_reason or "skipped via sdk-test-control.json")
@@ -75,24 +75,58 @@ describe("TeamEntity", function()
     end
     local client = setup.client
 
-    -- Bootstrap entity data from existing test data.
-    local team_ref01_data_raw = vs.items(helpers.to_map(
-      vs.getpath(setup.data, "existing.team")))
-    local team_ref01_data = nil
-    if #team_ref01_data_raw > 0 then
-      team_ref01_data = helpers.to_map(team_ref01_data_raw[1][2])
-    end
+    -- CREATE
+    local team_ref01_ent = client:Team(nil)
+    local team_ref01_data = helpers.to_map(vs.getprop(
+      vs.getpath(setup.data, "new.team"), "team_ref01"))
+    team_ref01_data["after"] = setup.idmap["after01"]
+    team_ref01_data["before"] = setup.idmap["before01"]
+    team_ref01_data["copy_settings_from_team_id"] = setup.idmap["copy_settings_from_team01"]
+    team_ref01_data["first"] = setup.idmap["first01"]
+    team_ref01_data["include_archived"] = setup.idmap["include_archived01"]
+    team_ref01_data["last"] = setup.idmap["last01"]
+    team_ref01_data["order_by"] = setup.idmap["order_by01"]
+
+    local team_ref01_data_result, err = team_ref01_ent:create(team_ref01_data, nil)
+    assert.is_nil(err)
+    team_ref01_data = helpers.to_map(type(team_ref01_data_result) == 'table' and team_ref01_data_result.data_get and team_ref01_data_result:data_get() or team_ref01_data_result)
+    assert.is_not_nil(team_ref01_data)
+    assert.is_not_nil(team_ref01_data["id"])
 
     -- LIST
-    local team_ref01_ent = client:Team(nil)
     local team_ref01_match = {
       ["after"] = setup.idmap["after01"],
+      ["before"] = setup.idmap["before01"],
       ["first"] = setup.idmap["first01"],
+      ["include_archived"] = setup.idmap["include_archived01"],
+      ["last"] = setup.idmap["last01"],
+      ["order_by"] = setup.idmap["order_by01"],
     }
 
     local team_ref01_list_result, err = team_ref01_ent:list(team_ref01_match, nil)
     assert.is_nil(err)
     assert.is_table(team_ref01_list_result)
+
+    local found_item = vs.select(
+      runner.entity_list_to_data(team_ref01_list_result),
+      { id = team_ref01_data["id"] })
+    assert.is_false(vs.isempty(found_item))
+
+    -- UPDATE
+    local team_ref01_data_up0_up = {
+      id = team_ref01_data["id"],
+    }
+
+    local team_ref01_markdef_up0_name = "autoCloseStateId"
+    local team_ref01_markdef_up0_value = "Mark01-team_ref01_" .. tostring(setup.now)
+    team_ref01_data_up0_up[team_ref01_markdef_up0_name] = team_ref01_markdef_up0_value
+
+    local team_ref01_resdata_up0_result, err = team_ref01_ent:update(team_ref01_data_up0_up, nil)
+    assert.is_nil(err)
+    local team_ref01_resdata_up0 = helpers.to_map(type(team_ref01_resdata_up0_result) == 'table' and team_ref01_resdata_up0_result.data_get and team_ref01_resdata_up0_result:data_get() or team_ref01_resdata_up0_result)
+    assert.is_not_nil(team_ref01_resdata_up0)
+    assert.are.equal(team_ref01_resdata_up0["id"], team_ref01_data_up0_up["id"])
+    assert.are.equal(team_ref01_resdata_up0[team_ref01_markdef_up0_name], team_ref01_markdef_up0_value)
 
     -- LOAD
     local team_ref01_match_dt0 = {
@@ -103,6 +137,32 @@ describe("TeamEntity", function()
     local team_ref01_data_dt0_load_result = helpers.to_map(type(team_ref01_data_dt0_loaded) == 'table' and team_ref01_data_dt0_loaded.data_get and team_ref01_data_dt0_loaded:data_get() or team_ref01_data_dt0_loaded)
     assert.is_not_nil(team_ref01_data_dt0_load_result)
     assert.are.equal(team_ref01_data_dt0_load_result["id"], team_ref01_data["id"])
+
+    -- REMOVE
+    local team_ref01_match_rm0 = {
+      id = team_ref01_data["id"],
+    }
+    local _, err = team_ref01_ent:remove(team_ref01_match_rm0, nil)
+    assert.is_nil(err)
+
+    -- LIST
+    local team_ref01_match_rt0 = {
+      ["after"] = setup.idmap["after01"],
+      ["before"] = setup.idmap["before01"],
+      ["first"] = setup.idmap["first01"],
+      ["include_archived"] = setup.idmap["include_archived01"],
+      ["last"] = setup.idmap["last01"],
+      ["order_by"] = setup.idmap["order_by01"],
+    }
+
+    local team_ref01_list_rt0_result, err = team_ref01_ent:list(team_ref01_match_rt0, nil)
+    assert.is_nil(err)
+    assert.is_table(team_ref01_list_rt0_result)
+
+    local not_found_item = vs.select(
+      runner.entity_list_to_data(team_ref01_list_rt0_result),
+      { id = team_ref01_data["id"] })
+    assert.is_true(vs.isempty(not_found_item))
 
   end)
 end)
@@ -127,7 +187,7 @@ function team_basic_setup(extra)
 
   -- Generate idmap via transform.
   local idmap = vs.transform(
-    { "team01", "team02", "team03", "after01", "first01" },
+    { "team01", "team02", "team03", "after01", "before01", "copy_settings_from_team01", "first01", "include_archived01", "last01", "order_by01" },
     {
       ["`$PACK`"] = { "", {
         ["`$KEY`"] = "`$COPY`",

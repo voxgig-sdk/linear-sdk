@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CustomerNeed | linear</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body><a class="skip" href="#content">Skip to content</a>
+<header class="site-header"><a class="site-title" href="../index.html">linear<span>SDK documentation</span></a><div class="site-links"><a class="repo-link" href="https://github.com/voxgig-sdk/linear-sdk">voxgig-sdk/linear-sdk</a></div></header>
+<div class="site-notice" role="note"></div>
+<div class="shell"><nav class="site-nav" aria-label="Documentation"><div class="search"><label for="search">Search documentation</label><input id="search" type="search" data-base="../" placeholder="Find a guide or reference"><div id="results" aria-live="polite"></div></div><details><summary>Overview</summary><a href="../index.html">linear</a></details>
+<details open><summary>API</summary><a href="../api/index.html">API overview</a>
+<a href="../api/access_key_release.html">AccessKeyRelease</a>
+<a href="../api/access_key_release_pipeline.html">AccessKeyReleasePipeline</a>
+<a href="../api/agent_activity.html">AgentActivity</a>
+<a href="../api/agent_session.html">AgentSession</a>
+<a href="../api/agent_skill.html">AgentSkill</a>
+<a href="../api/application.html">Application</a>
+<a href="../api/attachment.html">Attachment</a>
+<a href="../api/audit_entry.html">AuditEntry</a>
+<a href="../api/audit_entry_type.html">AuditEntryType</a>
+<a href="../api/auth_resolver_response.html">AuthResolverResponse</a>
+<a href="../api/authentication_session_response.html">AuthenticationSessionResponse</a>
+<a href="../api/comment.html">Comment</a>
+<a href="../api/create_or_join_organization_response.html">CreateOrJoinOrganizationResponse</a>
+<a href="../api/custom_view.html">CustomView</a>
+<a href="../api/customer.html">Customer</a>
+<a aria-current="page" href="../api/customer_need.html">CustomerNeed</a><div class="nav-sections"><a class="nav-section" href="#post-customerneedcreate">POST customerNeedCreate</a>
+<a class="nav-section" href="#post-customerneedcreatefromattachment">POST customerNeedCreateFromAttachment</a>
+<a class="nav-section" href="#post-customerneeds">POST customerNeeds</a>
+<a class="nav-section" href="#post-customerneed">POST customerNeed</a>
+<a class="nav-section" href="#post-customerneeddelete">POST customerNeedDelete</a>
+<a class="nav-section" href="#post-customerneedarchive">POST customerNeedArchive</a>
+<a class="nav-section" href="#post-customerneedunarchive">POST customerNeedUnarchive</a>
+<a class="nav-section" href="#post-customerneedupdate">POST customerNeedUpdate</a></div>
+<a href="../api/customer_status.html">CustomerStatus</a>
+<a href="../api/customer_tier.html">CustomerTier</a>
+<a href="../api/cycle.html">Cycle</a>
+<a href="../api/diff.html">Diff</a>
+<a href="../api/document.html">Document</a>
+<a href="../api/document_search_result.html">DocumentSearchResult</a>
+<a href="../api/email_intake_address.html">EmailIntakeAddress</a>
+<a href="../api/email_user_account_auth_challenge_response.html">EmailUserAccountAuthChallengeResponse</a>
+<a href="../api/emoji.html">Emoji</a>
+<a href="../api/entity_external_link.html">EntityExternalLink</a>
+<a href="../api/external_user.html">ExternalUser</a>
+<a href="../api/favorite.html">Favorite</a>
+<a href="../api/git_automation_state.html">GitAutomationState</a>
+<a href="../api/git_automation_target_branch.html">GitAutomationTargetBranch</a>
+<a href="../api/git_hub_integration_connect_detail.html">GitHubIntegrationConnectDetail</a>
+<a href="../api/initiative.html">Initiative</a>
+<a href="../api/initiative_label.html">InitiativeLabel</a>
+<a href="../api/initiative_lead_team_change_impact.html">InitiativeLeadTeamChangeImpact</a>
+<a href="../api/initiative_relation.html">InitiativeRelation</a>
+<a href="../api/initiative_to_project.html">InitiativeToProject</a>
+<a href="../api/initiative_update.html">InitiativeUpdate</a>
+<a href="../api/integration.html">Integration</a>
+<a href="../api/integration_template.html">IntegrationTemplate</a>
+<a href="../api/integrations_setting.html">IntegrationsSetting</a>
+<a href="../api/issue.html">Issue</a>
+<a href="../api/issue_import.html">IssueImport</a>
+<a href="../api/issue_label.html">IssueLabel</a>
+<a href="../api/issue_priority_value.html">IssuePriorityValue</a>
+<a href="../api/issue_relation.html">IssueRelation</a>
+<a href="../api/issue_search_result.html">IssueSearchResult</a>
+<a href="../api/issue_to_release.html">IssueToRelease</a>
+<a href="../api/logout_response.html">LogoutResponse</a>
+<a href="../api/notification.html">Notification</a>
+<a href="../api/notification_subscription.html">NotificationSubscription</a>
+<a href="../api/o_auth_application.html">OAuthApplication</a>
+<a href="../api/organization.html">Organization</a>
+<a href="../api/organization_domain.html">OrganizationDomain</a>
+<a href="../api/organization_invite.html">OrganizationInvite</a>
+<a href="../api/organization_meta.html">OrganizationMeta</a>
+<a href="../api/passkey_login_start_response.html">PasskeyLoginStartResponse</a>
+<a href="../api/project.html">Project</a>
+<a href="../api/project_label.html">ProjectLabel</a>
+<a href="../api/project_milestone.html">ProjectMilestone</a>
+<a href="../api/project_milestone_move_project_team.html">ProjectMilestoneMoveProjectTeam</a>
+<a href="../api/project_relation.html">ProjectRelation</a>
+<a href="../api/project_search_result.html">ProjectSearchResult</a>
+<a href="../api/project_status.html">ProjectStatus</a>
+<a href="../api/project_update.html">ProjectUpdate</a>
+<a href="../api/push_subscription.html">PushSubscription</a>
+<a href="../api/reaction.html">Reaction</a>
+<a href="../api/release.html">Release</a>
+<a href="../api/release_note.html">ReleaseNote</a>
+<a href="../api/release_pipeline.html">ReleasePipeline</a>
+<a href="../api/release_stage.html">ReleaseStage</a>
+<a href="../api/roadmap.html">Roadmap</a>
+<a href="../api/roadmap_to_project.html">RoadmapToProject</a>
+<a href="../api/sla_configuration.html">SlaConfiguration</a>
+<a href="../api/sso_url_from_email_response.html">SsoUrlFromEmailResponse</a>
+<a href="../api/team.html">Team</a>
+<a href="../api/team_membership.html">TeamMembership</a>
+<a href="../api/template.html">Template</a>
+<a href="../api/time_schedule.html">TimeSchedule</a>
+<a href="../api/triage_responsibility.html">TriageResponsibility</a>
+<a href="../api/upload_file.html">UploadFile</a>
+<a href="../api/usage_alert.html">UsageAlert</a>
+<a href="../api/user.html">User</a>
+<a href="../api/user_setting.html">UserSetting</a>
+<a href="../api/view_preference.html">ViewPreference</a>
+<a href="../api/webhook.html">Webhook</a>
+<a href="../api/webhook_failure_event.html">WebhookFailureEvent</a>
+<a href="../api/workflow_state.html">WorkflowState</a></details>
+<details><summary>Guides</summary><a href="../guides/authentication.html">Authentication</a>
+<a href="../guides/first-call.html">Make your first API call</a>
+<a href="../guides/errors.html">Handle errors</a>
+<a href="../guides/concepts.html">Entities, SDKs, and tools</a></details>
+<details><summary>SDKs</summary><a href="../sdks/c.html">C</a>
+<a href="../sdks/go.html">Golang</a>
+<a href="../sdks/lua.html">Lua</a>
+<a href="../sdks/php.html">PHP</a>
+<a href="../sdks/py.html">Python</a>
+<a href="../sdks/rb.html">Ruby</a>
+<a href="../sdks/ts.html">TypeScript</a></details>
+<details><summary>Tools</summary><a href="../tools/go-cli.html">Go CLI</a>
+<a href="../tools/go-mcp.html">Go MCP server</a></details>
+<details><summary>Features</summary><a href="../features/debug.html">Request/response capture ring buffer for debugging</a>
+<a href="../features/idempotency.html">Idempotency keys for safe retries of mutating operations</a>
+<a href="../features/metrics.html">Statistics capture: per-operation counters and latency</a>
+<a href="../features/paging.html">Pagination signals for list operations</a>
+<a href="../features/ratelimit.html">Client-side rate limiting via a token bucket</a>
+<a href="../features/retry.html">Automatic retry of transient failures with exponential backoff</a>
+<a href="../features/test.html">In-memory mock transport for testing without a live server</a>
+<a href="../features/timeout.html">Per-request timeout with transport abort</a></details></nav><main id="content"><div class="page-context"><span class="section-dot" aria-hidden="true"></span>API</div><h1 id="customerneed">CustomerNeed</h1>
+<h2 id="operations">Operations</h2>
+<p>Every route this entity exposes. Each route links to its own reference on this page.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Route</th>
+<th>SDK operation</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-customerneedcreate"><code>customerNeedCreate</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-customerneedcreatefromattachment"><code>customerNeedCreateFromAttachment</code></a></td>
+<td><code>create</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-customerneeds"><code>customerNeeds</code></a></td>
+<td><code>list</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-customerneed"><code>customerNeed</code></a></td>
+<td><code>load</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-customerneeddelete"><code>customerNeedDelete</code></a></td>
+<td><code>remove</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-customerneedarchive"><code>customerNeedArchive</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-customerneedunarchive"><code>customerNeedUnarchive</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-customerneedupdate"><code>customerNeedUpdate</code></a></td>
+<td><code>update</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="fields">Fields</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>archivedAt</code></td>
+<td><code>any</code></td>
+<td>No</td>
+<td>The time at which the entity was archived.</td>
+</tr>
+<tr>
+<td><code>attachment</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The issue attachment linked to this need.</td>
+</tr>
+<tr>
+<td><code>body</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>The body content of the need in Markdown format.</td>
+</tr>
+<tr>
+<td><code>bodyData</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>[Internal] The body content of the need as a Prosemirror document JSON string.</td>
+</tr>
+<tr>
+<td><code>comment</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>An optional comment providing additional context for this need.</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>The effective Markdown content shown for this customer need.</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td><code>any</code></td>
+<td>Yes</td>
+<td>The time at which the entity was created.</td>
+</tr>
+<tr>
+<td><code>creator</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The user who manually created this customer need.</td>
+</tr>
+<tr>
+<td><code>customer</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The customer organization this need belongs to.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>The unique identifier of the entity.</td>
+</tr>
+<tr>
+<td><code>issue</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The issue this need is linked to.</td>
+</tr>
+<tr>
+<td><code>originalIssue</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The issue this customer need was originally created on, before being moved to a different issue or project.</td>
+</tr>
+<tr>
+<td><code>priority</code></td>
+<td><code>number</code></td>
+<td>Yes</td>
+<td>Whether the customer need is important or not.</td>
+</tr>
+<tr>
+<td><code>project</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The project this need is linked to.</td>
+</tr>
+<tr>
+<td><code>projectAttachment</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td>The project attachment linked to this need.</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td><code>any</code></td>
+<td>Yes</td>
+<td>The last time at which the entity was meaningfully updated.</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>The URL of the source attachment linked to this need, if any.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="create">create</h2>
+<h3 id="post-customerneedcreate" class="operation" data-method="post"><code>POST</code> customerNeedCreate</h3>
+<h3 id="post-customerneedcreatefromattachment" class="operation" data-method="post"><code>POST</code> customerNeedCreateFromAttachment</h3>
+<h2 id="list">list</h2>
+<h3 id="post-customerneeds" class="operation" data-method="post"><code>POST</code> customerNeeds</h3>
+<h2 id="load">load</h2>
+<h3 id="post-customerneed" class="operation" data-method="post"><code>POST</code> customerNeed</h3>
+<h2 id="remove">remove</h2>
+<h3 id="post-customerneeddelete" class="operation" data-method="post"><code>POST</code> customerNeedDelete</h3>
+<h2 id="update">update</h2>
+<h3 id="post-customerneedarchive" class="operation" data-method="post"><code>POST</code> customerNeedArchive</h3>
+<h3 id="post-customerneedunarchive" class="operation" data-method="post"><code>POST</code> customerNeedUnarchive</h3>
+<h3 id="post-customerneedupdate" class="operation" data-method="post"><code>POST</code> customerNeedUpdate</h3>
+</main></div>
+<script src="../assets/search.js" defer></script></body></html>

@@ -1,0 +1,89 @@
+# BasicAgentSessionFlow
+
+main: kit: flow: BasicAgentSessionFlow:
+{
+  entity: "agent_session",
+  kind: "basic",
+  name: "BasicAgentSessionFlow",
+  step: [
+    {
+      input: {
+        ref: "agent_session_ref01"
+      }
+
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "create"
+    }
+
+    {
+      match: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "agent_session_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "agent_session_ref01",
+        srcdatavar: "agent_session_ref01_data",
+        suffix: "_up0",
+        textfield: "codingHarnessModelLabel"
+      }
+
+      op: "update",
+      spec: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-agent_session_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "agent_session_ref01",
+        srcdatavar: "agent_session_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        id: "agent_session01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-agent_session_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicAgentSessionFlow"
+}

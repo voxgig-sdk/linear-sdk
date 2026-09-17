@@ -62,7 +62,7 @@ class TeamEntityTest extends TestCase
         $setup = team_basic_setup(null);
         // Per-op sdk-test-control.json skip.
         $_live = !empty($setup["live"]);
-        foreach (["list", "load"] as $_op) {
+        foreach (["create", "list", "update", "load", "remove"] as $_op) {
             [$_shouldSkip, $_reason] = Runner::is_control_skipped("entityOp", "team." . $_op, $_live ? "live" : "unit");
             if ($_shouldSkip) {
                 $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
@@ -77,23 +77,55 @@ class TeamEntityTest extends TestCase
         }
         $client = $setup["client"];
 
-        // Bootstrap entity data from existing test data.
-        $team_ref01_data_raw = Vs::items(Helpers::to_map(
-            Vs::getpath($setup["data"], "existing.team")));
-        $team_ref01_data = null;
-        if (count($team_ref01_data_raw) > 0) {
-            $team_ref01_data = Helpers::to_map($team_ref01_data_raw[0][1]);
-        }
+        // CREATE
+        $team_ref01_ent = $client->Team(null);
+        $team_ref01_data = Helpers::to_map(Vs::getprop(
+            Vs::getpath($setup["data"], "new.team"), "team_ref01"));
+        $team_ref01_data["after"] = $setup["idmap"]["after01"];
+        $team_ref01_data["before"] = $setup["idmap"]["before01"];
+        $team_ref01_data["copy_settings_from_team_id"] = $setup["idmap"]["copy_settings_from_team01"];
+        $team_ref01_data["first"] = $setup["idmap"]["first01"];
+        $team_ref01_data["include_archived"] = $setup["idmap"]["include_archived01"];
+        $team_ref01_data["last"] = $setup["idmap"]["last01"];
+        $team_ref01_data["order_by"] = $setup["idmap"]["order_by01"];
+
+        $team_ref01_data_result = $team_ref01_ent->create($team_ref01_data, null);
+        $team_ref01_data = Helpers::to_map(is_object($team_ref01_data_result) && method_exists($team_ref01_data_result, 'data_get') ? $team_ref01_data_result->data_get() : $team_ref01_data_result);
+        $this->assertNotNull($team_ref01_data);
+        $this->assertNotNull($team_ref01_data["id"]);
 
         // LIST
-        $team_ref01_ent = $client->Team(null);
         $team_ref01_match = [
             "after" => $setup["idmap"]["after01"],
+            "before" => $setup["idmap"]["before01"],
             "first" => $setup["idmap"]["first01"],
+            "include_archived" => $setup["idmap"]["include_archived01"],
+            "last" => $setup["idmap"]["last01"],
+            "order_by" => $setup["idmap"]["order_by01"],
         ];
 
         $team_ref01_list_result = $team_ref01_ent->list($team_ref01_match, null);
         $this->assertIsArray($team_ref01_list_result);
+
+        $found_item = sdk_select(
+            Runner::entity_list_to_data($team_ref01_list_result),
+            ["id" => $team_ref01_data["id"]]);
+        $this->assertNotEmpty($found_item);
+
+        // UPDATE
+        $team_ref01_data_up0_up = [
+            "id" => $team_ref01_data["id"],
+        ];
+
+        $team_ref01_markdef_up0_name = "autoCloseStateId";
+        $team_ref01_markdef_up0_value = "Mark01-team_ref01_" . $setup["now"];
+        $team_ref01_data_up0_up[$team_ref01_markdef_up0_name] = $team_ref01_markdef_up0_value;
+
+        $team_ref01_resdata_up0_result = $team_ref01_ent->update($team_ref01_data_up0_up, null);
+        $team_ref01_resdata_up0 = Helpers::to_map(is_object($team_ref01_resdata_up0_result) && method_exists($team_ref01_resdata_up0_result, 'data_get') ? $team_ref01_resdata_up0_result->data_get() : $team_ref01_resdata_up0_result);
+        $this->assertNotNull($team_ref01_resdata_up0);
+        $this->assertEquals($team_ref01_resdata_up0["id"], $team_ref01_data_up0_up["id"]);
+        $this->assertEquals($team_ref01_resdata_up0[$team_ref01_markdef_up0_name], $team_ref01_markdef_up0_value);
 
         // LOAD
         $team_ref01_match_dt0 = [
@@ -103,6 +135,30 @@ class TeamEntityTest extends TestCase
         $team_ref01_data_dt0_load_result = Helpers::to_map(is_object($team_ref01_data_dt0_loaded) && method_exists($team_ref01_data_dt0_loaded, 'data_get') ? $team_ref01_data_dt0_loaded->data_get() : $team_ref01_data_dt0_loaded);
         $this->assertNotNull($team_ref01_data_dt0_load_result);
         $this->assertEquals($team_ref01_data_dt0_load_result["id"], $team_ref01_data["id"]);
+
+        // REMOVE
+        $team_ref01_match_rm0 = [
+            "id" => $team_ref01_data["id"],
+        ];
+        $team_ref01_ent->remove($team_ref01_match_rm0, null);
+
+        // LIST
+        $team_ref01_match_rt0 = [
+            "after" => $setup["idmap"]["after01"],
+            "before" => $setup["idmap"]["before01"],
+            "first" => $setup["idmap"]["first01"],
+            "include_archived" => $setup["idmap"]["include_archived01"],
+            "last" => $setup["idmap"]["last01"],
+            "order_by" => $setup["idmap"]["order_by01"],
+        ];
+
+        $team_ref01_list_rt0_result = $team_ref01_ent->list($team_ref01_match_rt0, null);
+        $this->assertIsArray($team_ref01_list_rt0_result);
+
+        $not_found_item = sdk_select(
+            Runner::entity_list_to_data($team_ref01_list_rt0_result),
+            ["id" => $team_ref01_data["id"]]);
+        $this->assertEmpty($not_found_item);
 
     }
 }
@@ -122,7 +178,7 @@ function team_basic_setup($extra)
 
     // Generate idmap.
     $idmap = [];
-    foreach (["team01", "team02", "team03", "after01", "first01"] as $k) {
+    foreach (["team01", "team02", "team03", "after01", "before01", "copy_settings_from_team01", "first01", "include_archived01", "last01", "order_by01"] as $k) {
         $idmap[$k] = strtoupper($k);
     }
 

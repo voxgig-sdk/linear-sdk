@@ -17,7 +17,7 @@ class TeamDirectTest < Minitest::Test
       return
     end
     if setup[:live]
-      ["after01", "first01"].each do |_live_key|
+      ["after01", "before01", "first01", "include_archived01", "last01", "order_by01"].each do |_live_key|
         if setup[:idmap][_live_key].nil?
           skip "live test needs #{_live_key} via *_ENTID env var (synthetic IDs only)"
           return
@@ -33,9 +33,29 @@ class TeamDirectTest < Minitest::Test
       params["after"] = "direct01"
     end
     if setup[:live]
+      params["before"] = setup[:idmap]["before01"]
+    else
+      params["before"] = "direct01"
+    end
+    if setup[:live]
       params["first"] = setup[:idmap]["first01"]
     else
       params["first"] = "direct01"
+    end
+    if setup[:live]
+      params["include_archived"] = setup[:idmap]["include_archived01"]
+    else
+      params["include_archived"] = "direct01"
+    end
+    if setup[:live]
+      params["last"] = setup[:idmap]["last01"]
+    else
+      params["last"] = "direct01"
+    end
+    if setup[:live]
+      params["order_by"] = setup[:idmap]["order_by01"]
+    else
+      params["order_by"] = "direct01"
     end
 
     result = client.direct({

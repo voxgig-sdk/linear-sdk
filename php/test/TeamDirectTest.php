@@ -22,7 +22,7 @@ class TeamDirectTest extends TestCase
             return;
         }
         if ($setup["live"]) {
-            foreach (["after01", "first01"] as $_liveKey) {
+            foreach (["after01", "before01", "first01", "include_archived01", "last01", "order_by01"] as $_liveKey) {
                 if (!isset($setup["idmap"][$_liveKey]) || $setup["idmap"][$_liveKey] === null) {
                     $this->markTestSkipped("live test needs $_liveKey via *_ENTID env var (synthetic IDs only)");
                     return;
@@ -38,9 +38,29 @@ class TeamDirectTest extends TestCase
             $params["after"] = "direct01";
         }
         if ($setup["live"]) {
+            $params["before"] = $setup["idmap"]["before01"];
+        } else {
+            $params["before"] = "direct01";
+        }
+        if ($setup["live"]) {
             $params["first"] = $setup["idmap"]["first01"];
         } else {
             $params["first"] = "direct01";
+        }
+        if ($setup["live"]) {
+            $params["include_archived"] = $setup["idmap"]["include_archived01"];
+        } else {
+            $params["include_archived"] = "direct01";
+        }
+        if ($setup["live"]) {
+            $params["last"] = $setup["idmap"]["last01"];
+        } else {
+            $params["last"] = "direct01";
+        }
+        if ($setup["live"]) {
+            $params["order_by"] = $setup["idmap"]["order_by01"];
+        } else {
+            $params["order_by"] = "direct01";
         }
 
         $result = $client->direct([

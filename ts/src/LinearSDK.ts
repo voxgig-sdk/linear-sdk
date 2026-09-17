@@ -1,7 +1,92 @@
 // Linear Ts SDK
 
+import { AccessKeyReleaseEntity } from './entity/AccessKeyReleaseEntity'
+import { AccessKeyReleasePipelineEntity } from './entity/AccessKeyReleasePipelineEntity'
+import { AgentActivityEntity } from './entity/AgentActivityEntity'
+import { AgentSessionEntity } from './entity/AgentSessionEntity'
+import { AgentSkillEntity } from './entity/AgentSkillEntity'
+import { ApplicationEntity } from './entity/ApplicationEntity'
+import { AttachmentEntity } from './entity/AttachmentEntity'
+import { AuditEntryEntity } from './entity/AuditEntryEntity'
+import { AuditEntryTypeEntity } from './entity/AuditEntryTypeEntity'
+import { AuthResolverResponseEntity } from './entity/AuthResolverResponseEntity'
+import { AuthenticationSessionResponseEntity } from './entity/AuthenticationSessionResponseEntity'
+import { CommentEntity } from './entity/CommentEntity'
+import { CreateOrJoinOrganizationResponseEntity } from './entity/CreateOrJoinOrganizationResponseEntity'
+import { CustomViewEntity } from './entity/CustomViewEntity'
+import { CustomerEntity } from './entity/CustomerEntity'
+import { CustomerNeedEntity } from './entity/CustomerNeedEntity'
+import { CustomerStatusEntity } from './entity/CustomerStatusEntity'
+import { CustomerTierEntity } from './entity/CustomerTierEntity'
+import { CycleEntity } from './entity/CycleEntity'
+import { DiffEntity } from './entity/DiffEntity'
+import { DocumentEntity } from './entity/DocumentEntity'
+import { DocumentSearchResultEntity } from './entity/DocumentSearchResultEntity'
+import { EmailIntakeAddressEntity } from './entity/EmailIntakeAddressEntity'
+import { EmailUserAccountAuthChallengeResponseEntity } from './entity/EmailUserAccountAuthChallengeResponseEntity'
+import { EmojiEntity } from './entity/EmojiEntity'
+import { EntityExternalLinkEntity } from './entity/EntityExternalLinkEntity'
+import { ExternalUserEntity } from './entity/ExternalUserEntity'
+import { FavoriteEntity } from './entity/FavoriteEntity'
+import { GitAutomationStateEntity } from './entity/GitAutomationStateEntity'
+import { GitAutomationTargetBranchEntity } from './entity/GitAutomationTargetBranchEntity'
+import { GitHubIntegrationConnectDetailEntity } from './entity/GitHubIntegrationConnectDetailEntity'
+import { InitiativeEntity } from './entity/InitiativeEntity'
+import { InitiativeLabelEntity } from './entity/InitiativeLabelEntity'
+import { InitiativeLeadTeamChangeImpactEntity } from './entity/InitiativeLeadTeamChangeImpactEntity'
+import { InitiativeRelationEntity } from './entity/InitiativeRelationEntity'
+import { InitiativeToProjectEntity } from './entity/InitiativeToProjectEntity'
+import { InitiativeUpdateEntity } from './entity/InitiativeUpdateEntity'
+import { IntegrationEntity } from './entity/IntegrationEntity'
+import { IntegrationTemplateEntity } from './entity/IntegrationTemplateEntity'
+import { IntegrationsSettingEntity } from './entity/IntegrationsSettingEntity'
 import { IssueEntity } from './entity/IssueEntity'
+import { IssueImportEntity } from './entity/IssueImportEntity'
+import { IssueLabelEntity } from './entity/IssueLabelEntity'
+import { IssuePriorityValueEntity } from './entity/IssuePriorityValueEntity'
+import { IssueRelationEntity } from './entity/IssueRelationEntity'
+import { IssueSearchResultEntity } from './entity/IssueSearchResultEntity'
+import { IssueToReleaseEntity } from './entity/IssueToReleaseEntity'
+import { LogoutResponseEntity } from './entity/LogoutResponseEntity'
+import { NotificationEntity } from './entity/NotificationEntity'
+import { NotificationSubscriptionEntity } from './entity/NotificationSubscriptionEntity'
+import { OAuthApplicationEntity } from './entity/OAuthApplicationEntity'
+import { OrganizationEntity } from './entity/OrganizationEntity'
+import { OrganizationDomainEntity } from './entity/OrganizationDomainEntity'
+import { OrganizationInviteEntity } from './entity/OrganizationInviteEntity'
+import { OrganizationMetaEntity } from './entity/OrganizationMetaEntity'
+import { PasskeyLoginStartResponseEntity } from './entity/PasskeyLoginStartResponseEntity'
+import { ProjectEntity } from './entity/ProjectEntity'
+import { ProjectLabelEntity } from './entity/ProjectLabelEntity'
+import { ProjectMilestoneEntity } from './entity/ProjectMilestoneEntity'
+import { ProjectMilestoneMoveProjectTeamEntity } from './entity/ProjectMilestoneMoveProjectTeamEntity'
+import { ProjectRelationEntity } from './entity/ProjectRelationEntity'
+import { ProjectSearchResultEntity } from './entity/ProjectSearchResultEntity'
+import { ProjectStatusEntity } from './entity/ProjectStatusEntity'
+import { ProjectUpdateEntity } from './entity/ProjectUpdateEntity'
+import { PushSubscriptionEntity } from './entity/PushSubscriptionEntity'
+import { ReactionEntity } from './entity/ReactionEntity'
+import { ReleaseEntity } from './entity/ReleaseEntity'
+import { ReleaseNoteEntity } from './entity/ReleaseNoteEntity'
+import { ReleasePipelineEntity } from './entity/ReleasePipelineEntity'
+import { ReleaseStageEntity } from './entity/ReleaseStageEntity'
+import { RoadmapEntity } from './entity/RoadmapEntity'
+import { RoadmapToProjectEntity } from './entity/RoadmapToProjectEntity'
+import { SlaConfigurationEntity } from './entity/SlaConfigurationEntity'
+import { SsoUrlFromEmailResponseEntity } from './entity/SsoUrlFromEmailResponseEntity'
 import { TeamEntity } from './entity/TeamEntity'
+import { TeamMembershipEntity } from './entity/TeamMembershipEntity'
+import { TemplateEntity } from './entity/TemplateEntity'
+import { TimeScheduleEntity } from './entity/TimeScheduleEntity'
+import { TriageResponsibilityEntity } from './entity/TriageResponsibilityEntity'
+import { UploadFileEntity } from './entity/UploadFileEntity'
+import { UsageAlertEntity } from './entity/UsageAlertEntity'
+import { UserEntity } from './entity/UserEntity'
+import { UserSettingEntity } from './entity/UserSettingEntity'
+import { ViewPreferenceEntity } from './entity/ViewPreferenceEntity'
+import { WebhookEntity } from './entity/WebhookEntity'
+import { WebhookFailureEventEntity } from './entity/WebhookFailureEventEntity'
+import { WorkflowStateEntity } from './entity/WorkflowStateEntity'
 
 export type * from './LinearTypes'
 
@@ -298,6 +383,366 @@ class LinearSDK {
 
 
 
+  // Entity access: `client.AccessKeyRelease().list()` / `client.AccessKeyRelease().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  AccessKeyRelease(entopts?: Record<string, any>) {
+    const self = this
+    return new AccessKeyReleaseEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.AccessKeyReleasePipeline().list()` / `client.AccessKeyReleasePipeline().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  AccessKeyReleasePipeline(entopts?: Record<string, any>) {
+    const self = this
+    return new AccessKeyReleasePipelineEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.AgentActivity().list()` / `client.AgentActivity().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  AgentActivity(entopts?: Record<string, any>) {
+    const self = this
+    return new AgentActivityEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.AgentSession().list()` / `client.AgentSession().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  AgentSession(entopts?: Record<string, any>) {
+    const self = this
+    return new AgentSessionEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.AgentSkill().list()` / `client.AgentSkill().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  AgentSkill(entopts?: Record<string, any>) {
+    const self = this
+    return new AgentSkillEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Application().list()` / `client.Application().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Application(entopts?: Record<string, any>) {
+    const self = this
+    return new ApplicationEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Attachment().list()` / `client.Attachment().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Attachment(entopts?: Record<string, any>) {
+    const self = this
+    return new AttachmentEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.AuditEntry().list()` / `client.AuditEntry().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  AuditEntry(entopts?: Record<string, any>) {
+    const self = this
+    return new AuditEntryEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.AuditEntryType().list()` / `client.AuditEntryType().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  AuditEntryType(entopts?: Record<string, any>) {
+    const self = this
+    return new AuditEntryTypeEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.AuthResolverResponse().list()` / `client.AuthResolverResponse().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  AuthResolverResponse(entopts?: Record<string, any>) {
+    const self = this
+    return new AuthResolverResponseEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.AuthenticationSessionResponse().list()` / `client.AuthenticationSessionResponse().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  AuthenticationSessionResponse(entopts?: Record<string, any>) {
+    const self = this
+    return new AuthenticationSessionResponseEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Comment().list()` / `client.Comment().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Comment(entopts?: Record<string, any>) {
+    const self = this
+    return new CommentEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.CreateOrJoinOrganizationResponse().list()` / `client.CreateOrJoinOrganizationResponse().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  CreateOrJoinOrganizationResponse(entopts?: Record<string, any>) {
+    const self = this
+    return new CreateOrJoinOrganizationResponseEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.CustomView().list()` / `client.CustomView().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  CustomView(entopts?: Record<string, any>) {
+    const self = this
+    return new CustomViewEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Customer().list()` / `client.Customer().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Customer(entopts?: Record<string, any>) {
+    const self = this
+    return new CustomerEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.CustomerNeed().list()` / `client.CustomerNeed().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  CustomerNeed(entopts?: Record<string, any>) {
+    const self = this
+    return new CustomerNeedEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.CustomerStatus().list()` / `client.CustomerStatus().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  CustomerStatus(entopts?: Record<string, any>) {
+    const self = this
+    return new CustomerStatusEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.CustomerTier().list()` / `client.CustomerTier().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  CustomerTier(entopts?: Record<string, any>) {
+    const self = this
+    return new CustomerTierEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Cycle().list()` / `client.Cycle().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Cycle(entopts?: Record<string, any>) {
+    const self = this
+    return new CycleEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Diff().list()` / `client.Diff().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Diff(entopts?: Record<string, any>) {
+    const self = this
+    return new DiffEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Document().list()` / `client.Document().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Document(entopts?: Record<string, any>) {
+    const self = this
+    return new DocumentEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.DocumentSearchResult().list()` / `client.DocumentSearchResult().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  DocumentSearchResult(entopts?: Record<string, any>) {
+    const self = this
+    return new DocumentSearchResultEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.EmailIntakeAddress().list()` / `client.EmailIntakeAddress().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  EmailIntakeAddress(entopts?: Record<string, any>) {
+    const self = this
+    return new EmailIntakeAddressEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.EmailUserAccountAuthChallengeResponse().list()` / `client.EmailUserAccountAuthChallengeResponse().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  EmailUserAccountAuthChallengeResponse(entopts?: Record<string, any>) {
+    const self = this
+    return new EmailUserAccountAuthChallengeResponseEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Emoji().list()` / `client.Emoji().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Emoji(entopts?: Record<string, any>) {
+    const self = this
+    return new EmojiEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.EntityExternalLink().list()` / `client.EntityExternalLink().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  EntityExternalLink(entopts?: Record<string, any>) {
+    const self = this
+    return new EntityExternalLinkEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.ExternalUser().list()` / `client.ExternalUser().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  ExternalUser(entopts?: Record<string, any>) {
+    const self = this
+    return new ExternalUserEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Favorite().list()` / `client.Favorite().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Favorite(entopts?: Record<string, any>) {
+    const self = this
+    return new FavoriteEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.GitAutomationState().list()` / `client.GitAutomationState().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  GitAutomationState(entopts?: Record<string, any>) {
+    const self = this
+    return new GitAutomationStateEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.GitAutomationTargetBranch().list()` / `client.GitAutomationTargetBranch().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  GitAutomationTargetBranch(entopts?: Record<string, any>) {
+    const self = this
+    return new GitAutomationTargetBranchEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.GitHubIntegrationConnectDetail().list()` / `client.GitHubIntegrationConnectDetail().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  GitHubIntegrationConnectDetail(entopts?: Record<string, any>) {
+    const self = this
+    return new GitHubIntegrationConnectDetailEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Initiative().list()` / `client.Initiative().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Initiative(entopts?: Record<string, any>) {
+    const self = this
+    return new InitiativeEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.InitiativeLabel().list()` / `client.InitiativeLabel().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  InitiativeLabel(entopts?: Record<string, any>) {
+    const self = this
+    return new InitiativeLabelEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.InitiativeLeadTeamChangeImpact().list()` / `client.InitiativeLeadTeamChangeImpact().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  InitiativeLeadTeamChangeImpact(entopts?: Record<string, any>) {
+    const self = this
+    return new InitiativeLeadTeamChangeImpactEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.InitiativeRelation().list()` / `client.InitiativeRelation().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  InitiativeRelation(entopts?: Record<string, any>) {
+    const self = this
+    return new InitiativeRelationEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.InitiativeToProject().list()` / `client.InitiativeToProject().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  InitiativeToProject(entopts?: Record<string, any>) {
+    const self = this
+    return new InitiativeToProjectEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.InitiativeUpdate().list()` / `client.InitiativeUpdate().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  InitiativeUpdate(entopts?: Record<string, any>) {
+    const self = this
+    return new InitiativeUpdateEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Integration().list()` / `client.Integration().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Integration(entopts?: Record<string, any>) {
+    const self = this
+    return new IntegrationEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.IntegrationTemplate().list()` / `client.IntegrationTemplate().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  IntegrationTemplate(entopts?: Record<string, any>) {
+    const self = this
+    return new IntegrationTemplateEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.IntegrationsSetting().list()` / `client.IntegrationsSetting().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  IntegrationsSetting(entopts?: Record<string, any>) {
+    const self = this
+    return new IntegrationsSettingEntity(self, entopts)
+  }
+
+
   // Entity access: `client.Issue().list()` / `client.Issue().load({ id })`.
   // The argument is the entity OPTIONS object (passed to the entity
   // constructor as entopts), not initial entity data.
@@ -307,12 +752,417 @@ class LinearSDK {
   }
 
 
+  // Entity access: `client.IssueImport().list()` / `client.IssueImport().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  IssueImport(entopts?: Record<string, any>) {
+    const self = this
+    return new IssueImportEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.IssueLabel().list()` / `client.IssueLabel().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  IssueLabel(entopts?: Record<string, any>) {
+    const self = this
+    return new IssueLabelEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.IssuePriorityValue().list()` / `client.IssuePriorityValue().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  IssuePriorityValue(entopts?: Record<string, any>) {
+    const self = this
+    return new IssuePriorityValueEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.IssueRelation().list()` / `client.IssueRelation().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  IssueRelation(entopts?: Record<string, any>) {
+    const self = this
+    return new IssueRelationEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.IssueSearchResult().list()` / `client.IssueSearchResult().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  IssueSearchResult(entopts?: Record<string, any>) {
+    const self = this
+    return new IssueSearchResultEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.IssueToRelease().list()` / `client.IssueToRelease().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  IssueToRelease(entopts?: Record<string, any>) {
+    const self = this
+    return new IssueToReleaseEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.LogoutResponse().list()` / `client.LogoutResponse().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  LogoutResponse(entopts?: Record<string, any>) {
+    const self = this
+    return new LogoutResponseEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Notification().list()` / `client.Notification().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Notification(entopts?: Record<string, any>) {
+    const self = this
+    return new NotificationEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.NotificationSubscription().list()` / `client.NotificationSubscription().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  NotificationSubscription(entopts?: Record<string, any>) {
+    const self = this
+    return new NotificationSubscriptionEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.OAuthApplication().list()` / `client.OAuthApplication().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  OAuthApplication(entopts?: Record<string, any>) {
+    const self = this
+    return new OAuthApplicationEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Organization().list()` / `client.Organization().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Organization(entopts?: Record<string, any>) {
+    const self = this
+    return new OrganizationEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.OrganizationDomain().list()` / `client.OrganizationDomain().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  OrganizationDomain(entopts?: Record<string, any>) {
+    const self = this
+    return new OrganizationDomainEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.OrganizationInvite().list()` / `client.OrganizationInvite().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  OrganizationInvite(entopts?: Record<string, any>) {
+    const self = this
+    return new OrganizationInviteEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.OrganizationMeta().list()` / `client.OrganizationMeta().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  OrganizationMeta(entopts?: Record<string, any>) {
+    const self = this
+    return new OrganizationMetaEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.PasskeyLoginStartResponse().list()` / `client.PasskeyLoginStartResponse().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  PasskeyLoginStartResponse(entopts?: Record<string, any>) {
+    const self = this
+    return new PasskeyLoginStartResponseEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Project().list()` / `client.Project().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Project(entopts?: Record<string, any>) {
+    const self = this
+    return new ProjectEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.ProjectLabel().list()` / `client.ProjectLabel().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  ProjectLabel(entopts?: Record<string, any>) {
+    const self = this
+    return new ProjectLabelEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.ProjectMilestone().list()` / `client.ProjectMilestone().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  ProjectMilestone(entopts?: Record<string, any>) {
+    const self = this
+    return new ProjectMilestoneEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.ProjectMilestoneMoveProjectTeam().list()` / `client.ProjectMilestoneMoveProjectTeam().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  ProjectMilestoneMoveProjectTeam(entopts?: Record<string, any>) {
+    const self = this
+    return new ProjectMilestoneMoveProjectTeamEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.ProjectRelation().list()` / `client.ProjectRelation().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  ProjectRelation(entopts?: Record<string, any>) {
+    const self = this
+    return new ProjectRelationEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.ProjectSearchResult().list()` / `client.ProjectSearchResult().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  ProjectSearchResult(entopts?: Record<string, any>) {
+    const self = this
+    return new ProjectSearchResultEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.ProjectStatus().list()` / `client.ProjectStatus().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  ProjectStatus(entopts?: Record<string, any>) {
+    const self = this
+    return new ProjectStatusEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.ProjectUpdate().list()` / `client.ProjectUpdate().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  ProjectUpdate(entopts?: Record<string, any>) {
+    const self = this
+    return new ProjectUpdateEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.PushSubscription().list()` / `client.PushSubscription().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  PushSubscription(entopts?: Record<string, any>) {
+    const self = this
+    return new PushSubscriptionEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Reaction().list()` / `client.Reaction().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Reaction(entopts?: Record<string, any>) {
+    const self = this
+    return new ReactionEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Release().list()` / `client.Release().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Release(entopts?: Record<string, any>) {
+    const self = this
+    return new ReleaseEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.ReleaseNote().list()` / `client.ReleaseNote().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  ReleaseNote(entopts?: Record<string, any>) {
+    const self = this
+    return new ReleaseNoteEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.ReleasePipeline().list()` / `client.ReleasePipeline().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  ReleasePipeline(entopts?: Record<string, any>) {
+    const self = this
+    return new ReleasePipelineEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.ReleaseStage().list()` / `client.ReleaseStage().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  ReleaseStage(entopts?: Record<string, any>) {
+    const self = this
+    return new ReleaseStageEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Roadmap().list()` / `client.Roadmap().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Roadmap(entopts?: Record<string, any>) {
+    const self = this
+    return new RoadmapEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.RoadmapToProject().list()` / `client.RoadmapToProject().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  RoadmapToProject(entopts?: Record<string, any>) {
+    const self = this
+    return new RoadmapToProjectEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.SlaConfiguration().list()` / `client.SlaConfiguration().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  SlaConfiguration(entopts?: Record<string, any>) {
+    const self = this
+    return new SlaConfigurationEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.SsoUrlFromEmailResponse().list()` / `client.SsoUrlFromEmailResponse().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  SsoUrlFromEmailResponse(entopts?: Record<string, any>) {
+    const self = this
+    return new SsoUrlFromEmailResponseEntity(self, entopts)
+  }
+
+
   // Entity access: `client.Team().list()` / `client.Team().load({ id })`.
   // The argument is the entity OPTIONS object (passed to the entity
   // constructor as entopts), not initial entity data.
   Team(entopts?: Record<string, any>) {
     const self = this
     return new TeamEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.TeamMembership().list()` / `client.TeamMembership().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  TeamMembership(entopts?: Record<string, any>) {
+    const self = this
+    return new TeamMembershipEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Template().list()` / `client.Template().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Template(entopts?: Record<string, any>) {
+    const self = this
+    return new TemplateEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.TimeSchedule().list()` / `client.TimeSchedule().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  TimeSchedule(entopts?: Record<string, any>) {
+    const self = this
+    return new TimeScheduleEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.TriageResponsibility().list()` / `client.TriageResponsibility().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  TriageResponsibility(entopts?: Record<string, any>) {
+    const self = this
+    return new TriageResponsibilityEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.UploadFile().list()` / `client.UploadFile().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  UploadFile(entopts?: Record<string, any>) {
+    const self = this
+    return new UploadFileEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.UsageAlert().list()` / `client.UsageAlert().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  UsageAlert(entopts?: Record<string, any>) {
+    const self = this
+    return new UsageAlertEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.User().list()` / `client.User().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  User(entopts?: Record<string, any>) {
+    const self = this
+    return new UserEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.UserSetting().list()` / `client.UserSetting().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  UserSetting(entopts?: Record<string, any>) {
+    const self = this
+    return new UserSettingEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.ViewPreference().list()` / `client.ViewPreference().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  ViewPreference(entopts?: Record<string, any>) {
+    const self = this
+    return new ViewPreferenceEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.Webhook().list()` / `client.Webhook().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  Webhook(entopts?: Record<string, any>) {
+    const self = this
+    return new WebhookEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.WebhookFailureEvent().list()` / `client.WebhookFailureEvent().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  WebhookFailureEvent(entopts?: Record<string, any>) {
+    const self = this
+    return new WebhookFailureEventEntity(self, entopts)
+  }
+
+
+  // Entity access: `client.WorkflowState().list()` / `client.WorkflowState().load({ id })`.
+  // The argument is the entity OPTIONS object (passed to the entity
+  // constructor as entopts), not initial entity data.
+  WorkflowState(entopts?: Record<string, any>) {
+    const self = this
+    return new WorkflowStateEntity(self, entopts)
   }
 
 

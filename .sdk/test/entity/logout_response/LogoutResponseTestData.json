@@ -1,0 +1,209 @@
+{
+  "existing": {
+    "logout_response": {
+      "LOGOUT_RESPONSE00": {
+        "success": true,
+        "reason": "REASON01",
+        "session_id": "SESSION01",
+        "id": "LOGOUT_RESPONSE00"
+      },
+      "LOGOUT_RESPONSE01": {
+        "success": true,
+        "reason": "REASON01",
+        "session_id": "SESSION01",
+        "id": "LOGOUT_RESPONSE01"
+      },
+      "LOGOUT_RESPONSE02": {
+        "success": true,
+        "reason": "REASON01",
+        "session_id": "SESSION01",
+        "id": "LOGOUT_RESPONSE02"
+      }
+    }
+  },
+  "new": {
+    "logout_response": {
+      "logout_response_ref01": {
+        "success": true
+      }
+    }
+  },
+  "requests": {
+    "POST logout": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String",
+              "name": "reason",
+              "reqd": false,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Logout the client.",
+          "gqltype": "LogoutResponse!",
+          "list": false,
+          "name": "logout",
+          "reqd": true,
+          "type": "LogoutResponse"
+        },
+        "invocation": {
+          "doc": "mutation LogoutResponseCreateLogout($reason: String) { logout(reason: $reason) { ...LogoutResponseFields } } fragment LogoutResponseFields on LogoutResponse { success }",
+          "field": "logout",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "reason",
+              "gqltype": "String",
+              "name": "reason"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST logoutAllSessions": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String",
+              "name": "reason",
+              "reqd": false,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Logout all of user's sessions including the active one.",
+          "gqltype": "LogoutResponse!",
+          "list": false,
+          "name": "logoutAllSessions",
+          "reqd": true,
+          "type": "LogoutResponse"
+        },
+        "invocation": {
+          "doc": "mutation LogoutResponseCreateLogoutAllSession($reason: String) { logoutAllSessions(reason: $reason) { ...LogoutResponseFields } } fragment LogoutResponseFields on LogoutResponse { success }",
+          "field": "logoutAllSessions",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "reason",
+              "gqltype": "String",
+              "name": "reason"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST logoutOtherSessions": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String",
+              "name": "reason",
+              "reqd": false,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Logout all of user's sessions excluding the current one.",
+          "gqltype": "LogoutResponse!",
+          "list": false,
+          "name": "logoutOtherSessions",
+          "reqd": true,
+          "type": "LogoutResponse"
+        },
+        "invocation": {
+          "doc": "mutation LogoutResponseCreateLogoutOtherSession($reason: String) { logoutOtherSessions(reason: $reason) { ...LogoutResponseFields } } fragment LogoutResponseFields on LogoutResponse { success }",
+          "field": "logoutOtherSessions",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "reason",
+              "gqltype": "String",
+              "name": "reason"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    },
+    "POST logoutSession": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "sessionId",
+              "reqd": true,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Logout an individual session with its ID.",
+          "gqltype": "LogoutResponse!",
+          "list": false,
+          "name": "logoutSession",
+          "reqd": true,
+          "type": "LogoutResponse"
+        },
+        "invocation": {
+          "doc": "mutation LogoutResponseUpdateLogoutSession($sessionId: String!) { logoutSession(sessionId: $sessionId) { ...LogoutResponseFields } } fragment LogoutResponseFields on LogoutResponse { success }",
+          "field": "logoutSession",
+          "optype": "mutation",
+          "vars": [
+            {
+              "from": "sessionId",
+              "gqltype": "String!",
+              "name": "sessionId"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    }
+  }
+}

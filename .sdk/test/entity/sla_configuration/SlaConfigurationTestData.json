@@ -1,0 +1,94 @@
+{
+  "existing": {
+    "sla_configuration": {
+      "SLA_CONFIGURATION00": {
+        "conditions": "s46",
+        "id": "SLA_CONFIGURATION00",
+        "name": "s48",
+        "removesSla": false,
+        "sla": 74,
+        "slaType": "s4b",
+        "startMode": "s4c",
+        "team_id": "TEAM01"
+      },
+      "SLA_CONFIGURATION01": {
+        "conditions": "s8c",
+        "id": "SLA_CONFIGURATION01",
+        "name": "s8e",
+        "removesSla": false,
+        "sla": 144,
+        "slaType": "s91",
+        "startMode": "s92",
+        "team_id": "TEAM01"
+      },
+      "SLA_CONFIGURATION02": {
+        "conditions": "sd2",
+        "id": "SLA_CONFIGURATION02",
+        "name": "sd4",
+        "removesSla": false,
+        "sla": 214,
+        "slaType": "sd7",
+        "startMode": "sd8",
+        "team_id": "TEAM01"
+      }
+    }
+  },
+  "new": {
+    "sla_configuration": {
+      "sla_configuration_ref01": {
+        "conditions": "s118",
+        "name": "s11a",
+        "removesSla": false,
+        "sla": 284,
+        "slaType": "s11d",
+        "startMode": "s11e"
+      }
+    }
+  },
+  "requests": {
+    "POST slaConfigurations": {
+      "provenance": "operation-contract",
+      "contract": {
+        "field": {
+          "args": [
+            {
+              "gqltype": "String!",
+              "name": "teamId",
+              "reqd": true,
+              "type": "String"
+            }
+          ],
+          "deprecated": false,
+          "desc": "Active SLA configurations that can apply to the requested team.",
+          "gqltype": "[SlaConfiguration!]!",
+          "list": true,
+          "name": "slaConfigurations",
+          "reqd": true,
+          "type": "SlaConfiguration"
+        },
+        "invocation": {
+          "doc": "query SlaConfigurationList($teamId: String!) { slaConfigurations(teamId: $teamId) { ...SlaConfigurationFields } } fragment SlaConfigurationFields on SlaConfiguration { conditions id name removesSla sla slaType startMode }",
+          "field": "slaConfigurations",
+          "optype": "query",
+          "vars": [
+            {
+              "from": "teamId",
+              "gqltype": "String!",
+              "name": "teamId"
+            }
+          ]
+        },
+        "protocol": "graphql",
+        "types": {
+          "String": {
+            "desc": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "fields": {},
+            "kind": "SCALAR",
+            "name": "String"
+          }
+        },
+        "typesScope": "inputs"
+      }
+    }
+  }
+}
