@@ -17,10 +17,6 @@ import {
 } from '../../utility'
 
 
-// AFTER the imports on purpose: TypeScript hoists `import` above any
-// statement in the emitted CommonJS, so a loader placed above them would
-// run only after every imported module had already been evaluated - and
-// anything reading process.env at module scope would miss these values.
 loadEnvLocal(__dirname + '/../../../.env.local')
 
 
@@ -32,9 +28,6 @@ describe('EntityExternalLinkDirect', async () => {
 
   test('direct-exists', async () => {
     const sdk = new LinearSDK({
-      // Concrete base: a live construction must satisfy any server
-      // variables a templated base URL declares; overriding base with a
-      // literal (as the direct flow tests do) sidesteps the requirement.
       base: 'http://localhost:8080',
       system: { fetch: async () => ({}) }
     })
@@ -45,19 +38,20 @@ describe('EntityExternalLinkDirect', async () => {
 
   test('direct-load-entity_external_link', async (t: any) => {
     if (liveScenariosActive()) { t.skip('Covered by live operation scenarios'); return }
-    const setup = directSetup()
+    const setup = directSetup({ id: 'direct01' })
     if (maybeSkipControl(t, 'direct', 'direct-load-entity_external_link', setup.live)) return
-    if (skipIfMissingIds(t, setup, ["entity_external_link01"])) return
     const { client, calls } = setup
 
-    const variables: any = {}
-    if (setup.live) {
-      variables["id"] = setup.idmap['entity_external_link01']
-    } else {
-      variables["id"] = 'direct01'
-    }
+    const params: any = {}
+    const query: any = {}
 
-    const result: any = await client.graphql("query EntityExternalLinkLoad($id: String!) { entityExternalLink(id: $id) { ...EntityExternalLinkFields } } fragment EntityExternalLinkFields on EntityExternalLink { archivedAt createdAt creator { id } id initiative { id } label project { id } sortOrder updatedAt url }", variables)
+
+    const result: any = await client.direct({
+      path: '',
+      method: 'GET',
+      params,
+      query,
+    })
 
     if (setup.live) {
       // STRICT live mode: a non-2xx is a real failure - this project owns
@@ -76,9 +70,9 @@ describe('EntityExternalLinkDirect', async () => {
       assert(result.ok === true)
       assert(result.status === 200)
       assert(null != result.data)
+      assert(result.data.id === 'direct01')
       assert(calls.length === 1)
-      assert(calls[0].init.method === 'POST')
-      assert(calls[0].init.body.includes('direct01'))
+      assert(calls[0].init.method === 'GET')
     }
   })
 

@@ -1,0 +1,32 @@
+# BasicPasskeyLoginStartResponseFlow
+
+main: kit: flow: BasicPasskeyLoginStartResponseFlow:
+{
+  entity: "passkey_login_start_response",
+  kind: "basic",
+  name: "BasicPasskeyLoginStartResponseFlow",
+  step: [
+    {
+      d: {
+        auth_id: "auth01"
+      }
+
+      i: {
+        ref: "passkey_login_start_response_ref01",
+        srcdatavar: "passkey_login_start_response_ref01_data",
+        suffix: "_up0"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-passkey_login_start_response_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicPasskeyLoginStartResponseFlow"
+}

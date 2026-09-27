@@ -1,0 +1,127 @@
+# BasicRoadmapToProjectFlow
+
+main: kit: flow: BasicRoadmapToProjectFlow:
+{
+  entity: "roadmap_to_project",
+  kind: "basic",
+  name: "BasicRoadmapToProjectFlow",
+  step: [
+    {
+      i: {
+        ref: "roadmap_to_project_ref01"
+      }
+
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "create"
+    }
+
+    {
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "roadmap_to_project_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "roadmap_to_project_ref01",
+        srcdatavar: "roadmap_to_project_ref01_data",
+        suffix: "_up0",
+        textfield: "sortOrder"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-roadmap_to_project_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "roadmap_to_project_ref01",
+        srcdatavar: "roadmap_to_project_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "roadmap_to_project01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-roadmap_to_project_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "roadmap_to_project_ref01",
+        suffix: "_rm0"
+      }
+
+      m: {
+        id: "roadmap_to_project01"
+      }
+
+      o: "remove"
+    }
+
+    {
+      i: {
+        suffix: "_rt0"
+      }
+
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemNotExists",
+          def: {
+            ref: "roadmap_to_project_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicRoadmapToProjectFlow"
+}

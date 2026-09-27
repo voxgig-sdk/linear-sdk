@@ -8,10 +8,6 @@ const node_assert_1 = __importDefault(require("node:assert"));
 const live_runner_1 = require("../../live-runner");
 const __1 = require("../../..");
 const utility_1 = require("../../utility");
-// AFTER the imports on purpose: TypeScript hoists `import` above any
-// statement in the emitted CommonJS, so a loader placed above them would
-// run only after every imported module had already been evaluated - and
-// anything reading process.env at module scope would miss these values.
 (0, utility_1.loadEnvLocal)(__dirname + '/../../../.env.local');
 (0, node_test_1.describe)('IssueSearchResultDirect', async () => {
     // Per-test live pacing. Delay is read from sdk-test-control.json's
@@ -19,9 +15,6 @@ const utility_1 = require("../../utility");
     (0, node_test_1.afterEach)((0, utility_1.liveDelay)('LINEAR_TEST_LIVE'));
     (0, node_test_1.test)('direct-exists', async () => {
         const sdk = new __1.LinearSDK({
-            // Concrete base: a live construction must satisfy any server
-            // variables a templated base URL declares; overriding base with a
-            // literal (as the direct flow tests do) sidesteps the requirement.
             base: 'http://localhost:8080',
             system: { fetch: async () => ({}) }
         });
@@ -33,38 +26,42 @@ const utility_1 = require("../../utility");
             t.skip('Covered by live operation scenarios');
             return;
         }
-        const setup = directSetup();
+        const setup = directSetup([{ id: 'direct01' }, { id: 'direct02' }]);
         if ((0, utility_1.maybeSkipControl)(t, 'direct', 'direct-list-issue_search_result', setup.live))
             return;
-        if ((0, utility_1.skipIfMissingIds)(t, setup, ["after01", "before01", "filter01", "first01", "includeArchived01", "includeComments01", "last01", "orderBy01", "teamId01", "term01"]))
+        if ((0, utility_1.skipIfMissingIds)(t, setup, ["after01", "before01", "first01", "include_archived01", "include_comment01", "last01", "order_by01", "team01", "term01"]))
             return;
         const { client, calls } = setup;
-        const variables = {};
+        const params = {};
+        const query = {};
         if (setup.live) {
-            variables["after"] = setup.idmap['after01'];
-            variables["before"] = setup.idmap['before01'];
-            variables["filter"] = setup.idmap['filter01'];
-            variables["first"] = setup.idmap['first01'];
-            variables["includeArchived"] = setup.idmap['includeArchived01'];
-            variables["includeComments"] = setup.idmap['includeComments01'];
-            variables["last"] = setup.idmap['last01'];
-            variables["orderBy"] = setup.idmap['orderBy01'];
-            variables["teamId"] = setup.idmap['teamId01'];
-            variables["term"] = setup.idmap['term01'];
+            params.after = setup.idmap['after01'];
+            params.before = setup.idmap['before01'];
+            params.first = setup.idmap['first01'];
+            params.include_archived = setup.idmap['include_archived01'];
+            params.include_comment = setup.idmap['include_comment01'];
+            params.last = setup.idmap['last01'];
+            params.order_by = setup.idmap['order_by01'];
+            params.team_id = setup.idmap['team01'];
+            params.term = setup.idmap['term01'];
         }
         else {
-            variables["after"] = 'direct01';
-            variables["before"] = 'direct02';
-            variables["filter"] = 'direct03';
-            variables["first"] = 'direct04';
-            variables["includeArchived"] = 'direct05';
-            variables["includeComments"] = 'direct06';
-            variables["last"] = 'direct07';
-            variables["orderBy"] = 'direct08';
-            variables["teamId"] = 'direct09';
-            variables["term"] = 'direct010';
+            params.after = 'direct01';
+            params.before = 'direct02';
+            params.first = 'direct03';
+            params.include_archived = 'direct04';
+            params.include_comment = 'direct05';
+            params.last = 'direct06';
+            params.order_by = 'direct07';
+            params.team_id = 'direct08';
+            params.term = 'direct09';
         }
-        const result = await client.graphql("query IssueSearchResultList($after: String, $before: String, $filter: IssueFilter, $first: Int, $includeArchived: Boolean, $includeComments: Boolean, $last: Int, $orderBy: PaginationOrderBy, $teamId: String, $term: String!) { searchIssues(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, includeComments: $includeComments, last: $last, orderBy: $orderBy, teamId: $teamId, term: $term) { nodes { ...IssueSearchResultFields } pageInfo { endCursor hasNextPage } } } fragment IssueSearchResultFields on IssueSearchResult { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } metadata number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }", variables);
+        const result = await client.direct({
+            path: '',
+            method: 'GET',
+            params,
+            query,
+        });
         if (setup.live) {
             // STRICT live mode: a non-2xx is a real failure - this project owns
             // the server it points at, so there is nothing to be lenient about.
@@ -76,24 +73,26 @@ const utility_1 = require("../../utility");
             // could not pass against any real API, including this project's own.
             (0, node_assert_1.default)(result.ok === true, 'Live request failed: HTTP ' + result.status);
             (0, node_assert_1.default)(result.status >= 200 && result.status < 300);
-            (0, node_assert_1.default)(null != result.data);
+            (0, node_assert_1.default)(Array.isArray(unwrapListData(result.data)), 'Expected live list response');
         }
         else {
             (0, node_assert_1.default)(result.ok === true);
             (0, node_assert_1.default)(result.status === 200);
             (0, node_assert_1.default)(null != result.data);
+            const listArr = unwrapListData(result.data);
+            (0, node_assert_1.default)(Array.isArray(listArr));
+            (0, node_assert_1.default)(listArr.length === 2);
             (0, node_assert_1.default)(calls.length === 1);
-            (0, node_assert_1.default)(calls[0].init.method === 'POST');
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct01'));
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct02'));
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct03'));
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct04'));
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct05'));
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct06'));
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct07'));
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct08'));
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct09'));
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct010'));
+            (0, node_assert_1.default)(calls[0].init.method === 'GET');
+            (0, node_assert_1.default)(calls[0].url.includes('direct01'));
+            (0, node_assert_1.default)(calls[0].url.includes('direct02'));
+            (0, node_assert_1.default)(calls[0].url.includes('direct03'));
+            (0, node_assert_1.default)(calls[0].url.includes('direct04'));
+            (0, node_assert_1.default)(calls[0].url.includes('direct05'));
+            (0, node_assert_1.default)(calls[0].url.includes('direct06'));
+            (0, node_assert_1.default)(calls[0].url.includes('direct07'));
+            (0, node_assert_1.default)(calls[0].url.includes('direct08'));
+            (0, node_assert_1.default)(calls[0].url.includes('direct09'));
         }
     });
 });

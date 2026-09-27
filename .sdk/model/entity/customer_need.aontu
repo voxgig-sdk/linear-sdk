@@ -1,0 +1,576 @@
+# Entity: customer_need
+
+main: kit: entity: customer_need: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    attachment: {
+      h: "Attachment"
+      n: "attachment"
+      r: false
+      sh: "The issue attachment linked to this need."
+      t: "`$OBJECT`"
+    }
+    body: {
+      h: "Body"
+      n: "body"
+      r: false
+      sh: "The body content of the need in Markdown format."
+      t: "`$STRING`"
+    }
+    bodyData: {
+      h: "Body Data"
+      n: "bodyData"
+      r: false
+      sh: "[Internal] The body content of the need as a Prosemirror document JSON string."
+      t: "`$STRING`"
+    }
+    comment: {
+      h: "Comment"
+      n: "comment"
+      r: false
+      sh: "An optional comment providing additional context for this need."
+      t: "`$OBJECT`"
+    }
+    content: {
+      h: "Content"
+      n: "content"
+      r: false
+      sh: "The effective Markdown content shown for this customer need."
+      t: "`$STRING`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creator: {
+      h: "Creator"
+      n: "creator"
+      r: false
+      sh: "The user who manually created this customer need."
+      t: "`$OBJECT`"
+    }
+    customer: {
+      h: "Customer"
+      n: "customer"
+      r: false
+      sh: "The customer organization this need belongs to."
+      t: "`$OBJECT`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    issue: {
+      h: "Issue"
+      n: "issue"
+      r: false
+      sh: "The issue this need is linked to."
+      t: "`$OBJECT`"
+    }
+    originalIssue: {
+      h: "Original Issue"
+      n: "originalIssue"
+      r: false
+      sh: "The issue this customer need was originally created on, before being moved to a different issue or project."
+      t: "`$OBJECT`"
+    }
+    priority: {
+      h: "Priority"
+      n: "priority"
+      r: true
+      sh: "Whether the customer need is important or not."
+      t: "`$NUMBER`"
+    }
+    project: {
+      h: "Project"
+      n: "project"
+      r: false
+      sh: "The project this need is linked to."
+      t: "`$OBJECT`"
+    }
+    projectAttachment: {
+      h: "Project Attachment"
+      n: "projectAttachment"
+      r: false
+      sh: "The project attachment linked to this need."
+      t: "`$OBJECT`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    url: {
+      h: "Url"
+      n: "url"
+      r: false
+      sh: "The URL of the source attachment linked to this need, if any."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "customer_need"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST customerNeedCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation CustomerNeedCreate($input: CustomerNeedCreateInput!) { customerNeedCreate(input: $input) { need { ...CustomerNeedFields } success } } fragment CustomerNeedFields on CustomerNeed { archivedAt attachment { id } body bodyData comment { id } content createdAt creator { id } customer { id } id issue { id } originalIssue { id } priority project { id } projectAttachment { id } updatedAt url }"
+            field: "customerNeedCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "CustomerNeedCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customerNeedCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customerNeedCreate.need`"
+          }
+        }
+        {
+          co: {
+            id: "POST customerNeedCreateFromAttachment"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation CustomerNeedCreateCreateFromAttachment($input: CustomerNeedCreateFromAttachmentInput!) { customerNeedCreateFromAttachment(input: $input) { need { ...CustomerNeedFields } success } } fragment CustomerNeedFields on CustomerNeed { archivedAt attachment { id } body bodyData comment { id } content createdAt creator { id } customer { id } id issue { id } originalIssue { id } priority project { id } projectAttachment { id } updatedAt url }"
+            field: "customerNeedCreateFromAttachment"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "CustomerNeedCreateFromAttachmentInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customerNeedCreateFromAttachment"
+          q: {
+            "$action": "create_from_attachment"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customerNeedCreateFromAttachment.need`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST customerNeeds"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query CustomerNeedList($after: String, $before: String, $filter: CustomerNeedFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { customerNeeds(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...CustomerNeedFields } pageInfo { endCursor hasNextPage } } } fragment CustomerNeedFields on CustomerNeed { archivedAt attachment { id } body bodyData comment { id } content createdAt creator { id } customer { id } id issue { id } originalIssue { id } priority project { id } projectAttachment { id } updatedAt url }"
+            field: "customerNeeds"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: ""
+                gqltype: "CustomerNeedFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customerNeeds"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customerNeeds.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST customerNeed"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "hash"
+                or: "hash"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query CustomerNeedLoad($hash: String, $id: String) { customerNeed(hash: $hash, id: $id) { ...CustomerNeedFields } } fragment CustomerNeedFields on CustomerNeed { archivedAt attachment { id } body bodyData comment { id } content createdAt creator { id } customer { id } id issue { id } originalIssue { id } priority project { id } projectAttachment { id } updatedAt url }"
+            field: "customerNeed"
+            optype: "query"
+            vars: [
+              {
+                from: "hash"
+                gqltype: "String"
+                name: "hash"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customerNeed"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customerNeed`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST customerNeedDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "keep_attachment"
+                or: "keep_attachment"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation CustomerNeedRemove($id: String!, $keepAttachment: Boolean) { customerNeedDelete(id: $id, keepAttachment: $keepAttachment) { entityId lastSyncId success } }"
+            field: "customerNeedDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "keepAttachment"
+                gqltype: "Boolean"
+                name: "keepAttachment"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customerNeedDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customerNeedDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST customerNeedArchive"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation CustomerNeedUpdateArchive($id: String!) { customerNeedArchive(id: $id) { entity { ...CustomerNeedFields } success } } fragment CustomerNeedFields on CustomerNeed { archivedAt attachment { id } body bodyData comment { id } content createdAt creator { id } customer { id } id issue { id } originalIssue { id } priority project { id } projectAttachment { id } updatedAt url }"
+            field: "customerNeedArchive"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customerNeedArchive"
+          q: {
+            "$action": "archive"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customerNeedArchive.entity`"
+          }
+        }
+        {
+          co: {
+            id: "POST customerNeedUnarchive"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation CustomerNeedUpdateUnarchive($id: String!) { customerNeedUnarchive(id: $id) { entity { ...CustomerNeedFields } success } } fragment CustomerNeedFields on CustomerNeed { archivedAt attachment { id } body bodyData comment { id } content createdAt creator { id } customer { id } id issue { id } originalIssue { id } priority project { id } projectAttachment { id } updatedAt url }"
+            field: "customerNeedUnarchive"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customerNeedUnarchive"
+          q: {
+            "$action": "unarchive"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customerNeedUnarchive.entity`"
+          }
+        }
+        {
+          co: {
+            id: "POST customerNeedUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "clear_attachment"
+                or: "clear_attachment"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation CustomerNeedUpdate($clearAttachment: Boolean, $id: String!, $input: CustomerNeedUpdateInput!) { customerNeedUpdate(clearAttachment: $clearAttachment, id: $id, input: $input) { need { ...CustomerNeedFields } success } } fragment CustomerNeedFields on CustomerNeed { archivedAt attachment { id } body bodyData comment { id } content createdAt creator { id } customer { id } id issue { id } originalIssue { id } priority project { id } projectAttachment { id } updatedAt url }"
+            field: "customerNeedUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "clearAttachment"
+                gqltype: "Boolean"
+                name: "clearAttachment"
+              }
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "CustomerNeedUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customerNeedUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customerNeedUpdate.need`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

@@ -112,14 +112,14 @@
 <a href="../sdks/ts.html">TypeScript</a></details>
 <details><summary>Tools</summary><a href="../tools/go-cli.html">Go CLI</a>
 <a href="../tools/go-mcp.html">Go MCP server</a></details>
-<details><summary>Features</summary><a href="../features/debug.html">Request/response capture ring buffer for debugging</a>
-<a href="../features/idempotency.html">Idempotency keys for safe retries of mutating operations</a>
-<a href="../features/metrics.html">Statistics capture: per-operation counters and latency</a>
-<a href="../features/paging.html">Pagination signals for list operations</a>
-<a href="../features/ratelimit.html">Client-side rate limiting via a token bucket</a>
-<a href="../features/retry.html">Automatic retry of transient failures with exponential backoff</a>
-<a href="../features/test.html">In-memory mock transport for testing without a live server</a>
-<a href="../features/timeout.html">Per-request timeout with transport abort</a></details></nav><main id="content"><div class="page-context"><span class="section-dot" aria-hidden="true"></span>API</div><h1 id="releasepipeline">ReleasePipeline</h1>
+<details><summary>Features</summary><a href="../features/debug.html">Debug capture</a>
+<a href="../features/idempotency.html">Idempotency</a>
+<a href="../features/metrics.html">Metrics</a>
+<a href="../features/paging.html">Paging</a>
+<a href="../features/ratelimit.html">Rate limiting</a>
+<a href="../features/retry.html">Retry</a>
+<a href="../features/test.html">Test transport</a>
+<a href="../features/timeout.html">Timeout</a></details></nav><main id="content"><div class="page-context"><span class="section-dot" aria-hidden="true"></span>API</div><h1 id="releasepipeline">ReleasePipeline</h1>
 <h2 id="operations">Operations</h2>
 <p>Every route this entity exposes. Each route links to its own reference on this page.</p>
 <table>
@@ -176,6 +176,76 @@
 </tr>
 </tbody>
 </table>
+<h2 id="examples">Examples</h2>
+<p>One example per SDK, generated from the API model. The argument names are the parameters and fields of this entity, and the values are placeholders. The examples are not compiled or executed.</p>
+<h3 id="golang">Golang</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/go.html#set-up-the-client">Golang setup</a>, then call the operations:</p>
+<pre><code class="language-go">release_pipelines, err := client.ReleasePipeline(nil).List(nil, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(release_pipelines)
+release_pipeline, err := client.ReleasePipeline(nil).Load(map[string]any{&quot;id&quot;: &quot;example_id&quot;}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(release_pipeline)
+created, err := client.ReleasePipeline(nil).Create(map[string]any{&quot;approximateReleaseCount&quot;: 1, &quot;autoGenerateReleaseNotesOnCompletion&quot;: true, &quot;createdAt&quot;: &quot;example&quot;, &quot;id&quot;: &quot;example&quot;, &quot;includePathPatterns&quot;: &quot;example&quot;, &quot;isProduction&quot;: true, &quot;name&quot;: &quot;example&quot;, &quot;rolloverIssuesOnCompletion&quot;: true, &quot;slugId&quot;: &quot;example&quot;, &quot;type&quot;: &quot;example&quot;, &quot;updatedAt&quot;: &quot;example&quot;, &quot;url&quot;: &quot;example&quot;}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(created)
+updated, err := client.ReleasePipeline(nil).Update(map[string]any{&quot;id&quot;: &quot;example_id&quot;, &quot;approximateReleaseCount&quot;: 1, &quot;archivedAt&quot;: &quot;example&quot;}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(updated)
+removed, err := client.ReleasePipeline(nil).Remove(map[string]any{&quot;id&quot;: &quot;example_id&quot;}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(removed)
+</code></pre>
+<h3 id="lua">Lua</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/lua.html#set-up-the-client">Lua setup</a>, then call the operations:</p>
+<pre><code class="language-lua">local release_pipelines, err = client:ReleasePipeline():list()
+local release_pipeline, err = client:ReleasePipeline():load({ id = &quot;example_id&quot; })
+local created, err = client:ReleasePipeline():create({ approximateReleaseCount = 1, autoGenerateReleaseNotesOnCompletion = true, createdAt = &quot;example&quot;, id = &quot;example&quot;, includePathPatterns = &quot;example&quot;, isProduction = true, name = &quot;example&quot;, rolloverIssuesOnCompletion = true, slugId = &quot;example&quot;, type = &quot;example&quot;, updatedAt = &quot;example&quot;, url = &quot;example&quot; })
+local updated, err = client:ReleasePipeline():update({ id = &quot;example_id&quot;, approximateReleaseCount = 1, archivedAt = &quot;example&quot; })
+local removed, err = client:ReleasePipeline():remove({ id = &quot;example_id&quot; })
+</code></pre>
+<h3 id="php">PHP</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/php.html#set-up-the-client">PHP setup</a>, then call the operations:</p>
+<pre><code class="language-php">$release_pipelines = $client-&gt;ReleasePipeline()-&gt;list();
+$release_pipeline = $client-&gt;ReleasePipeline()-&gt;load([&quot;id&quot; =&gt; &quot;example_id&quot;]);
+$created = $client-&gt;ReleasePipeline()-&gt;create([&quot;approximateReleaseCount&quot; =&gt; 1, &quot;autoGenerateReleaseNotesOnCompletion&quot; =&gt; true, &quot;createdAt&quot; =&gt; &quot;example&quot;, &quot;id&quot; =&gt; &quot;example&quot;, &quot;includePathPatterns&quot; =&gt; &quot;example&quot;, &quot;isProduction&quot; =&gt; true, &quot;name&quot; =&gt; &quot;example&quot;, &quot;rolloverIssuesOnCompletion&quot; =&gt; true, &quot;slugId&quot; =&gt; &quot;example&quot;, &quot;type&quot; =&gt; &quot;example&quot;, &quot;updatedAt&quot; =&gt; &quot;example&quot;, &quot;url&quot; =&gt; &quot;example&quot;]);
+$updated = $client-&gt;ReleasePipeline()-&gt;update([&quot;id&quot; =&gt; &quot;example_id&quot;, &quot;approximateReleaseCount&quot; =&gt; 1, &quot;archivedAt&quot; =&gt; &quot;example&quot;]);
+$client-&gt;ReleasePipeline()-&gt;remove([&quot;id&quot; =&gt; &quot;example_id&quot;]);
+</code></pre>
+<h3 id="python">Python</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/py.html#set-up-the-client">Python setup</a>, then call the operations:</p>
+<pre><code class="language-py">release_pipelines = client.ReleasePipeline().list()
+release_pipeline = client.ReleasePipeline().load({&quot;id&quot;: &quot;example_id&quot;})
+created = client.ReleasePipeline().create({ &quot;approximateReleaseCount&quot;: 1, &quot;autoGenerateReleaseNotesOnCompletion&quot;: True, &quot;createdAt&quot;: &quot;example&quot;, &quot;id&quot;: &quot;example&quot;, &quot;includePathPatterns&quot;: &quot;example&quot;, &quot;isProduction&quot;: True, &quot;name&quot;: &quot;example&quot;, &quot;rolloverIssuesOnCompletion&quot;: True, &quot;slugId&quot;: &quot;example&quot;, &quot;type&quot;: &quot;example&quot;, &quot;updatedAt&quot;: &quot;example&quot;, &quot;url&quot;: &quot;example&quot; })
+updated = client.ReleasePipeline().update({&quot;id&quot;: &quot;example_id&quot;, &quot;approximateReleaseCount&quot;: 1, &quot;archivedAt&quot;: &quot;example&quot;})
+client.ReleasePipeline().remove({&quot;id&quot;: &quot;example_id&quot;})
+</code></pre>
+<h3 id="ruby">Ruby</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/rb.html#set-up-the-client">Ruby setup</a>, then call the operations:</p>
+<pre><code class="language-rb">release_pipelines = client.ReleasePipeline.list()
+release_pipeline = client.ReleasePipeline.load({ &quot;id&quot; =&gt; &quot;example_id&quot; })
+created = client.ReleasePipeline.create({ &quot;approximateReleaseCount&quot; =&gt; 1, &quot;autoGenerateReleaseNotesOnCompletion&quot; =&gt; true, &quot;createdAt&quot; =&gt; &quot;example&quot;, &quot;id&quot; =&gt; &quot;example&quot;, &quot;includePathPatterns&quot; =&gt; &quot;example&quot;, &quot;isProduction&quot; =&gt; true, &quot;name&quot; =&gt; &quot;example&quot;, &quot;rolloverIssuesOnCompletion&quot; =&gt; true, &quot;slugId&quot; =&gt; &quot;example&quot;, &quot;type&quot; =&gt; &quot;example&quot;, &quot;updatedAt&quot; =&gt; &quot;example&quot;, &quot;url&quot; =&gt; &quot;example&quot; })
+updated = client.ReleasePipeline.update({ &quot;id&quot; =&gt; &quot;example_id&quot;, &quot;approximateReleaseCount&quot; =&gt; 1, &quot;archivedAt&quot; =&gt; &quot;example&quot; })
+client.ReleasePipeline.remove({ &quot;id&quot; =&gt; &quot;example_id&quot; })
+</code></pre>
+<h3 id="typescript">TypeScript</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/ts.html#set-up-the-client">TypeScript setup</a>, then call the operations:</p>
+<pre><code class="language-ts">const release_pipelines = await client.ReleasePipeline().list()
+const release_pipeline = await client.ReleasePipeline().load({ id: &quot;example_id&quot; })
+const created = await client.ReleasePipeline().create({ approximateReleaseCount: 1, autoGenerateReleaseNotesOnCompletion: true, createdAt: &quot;example&quot;, id: &quot;example&quot;, includePathPatterns: &quot;example&quot;, isProduction: true, name: &quot;example&quot;, rolloverIssuesOnCompletion: true, slugId: &quot;example&quot;, type: &quot;example&quot;, updatedAt: &quot;example&quot;, url: &quot;example&quot; })
+const updated = await client.ReleasePipeline().update({ id: &quot;example_id&quot;, approximateReleaseCount: 1, archivedAt: &quot;example&quot; })
+await client.ReleasePipeline().remove({ id: &quot;example_id&quot; })
+</code></pre>
 <h2 id="fields">Fields</h2>
 <table>
 <thead>

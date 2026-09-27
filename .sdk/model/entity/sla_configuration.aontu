@@ -1,0 +1,117 @@
+# Entity: sla_configuration
+
+main: kit: entity: sla_configuration: {
+
+  alias: field: {}
+
+  fields: {
+    conditions: {
+      h: "Conditions"
+      n: "conditions"
+      r: true
+      sh: "The workflow conditions that determine when this SLA rule applies."
+      t: "`$ANY`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The identifier of the SLA rule."
+      t: "`$STRING`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "The name of the SLA rule."
+      t: "`$STRING`"
+    }
+    removesSla: {
+      h: "Removes Sla"
+      n: "removesSla"
+      r: true
+      sh: "Whether the rule removes an SLA instead of setting one."
+      t: "`$BOOLEAN`"
+    }
+    sla: {
+      h: "Sla"
+      n: "sla"
+      r: false
+      sh: "The SLA value configured by the rule, expressed in milliseconds or business days depending on the day-count type."
+      t: "`$NUMBER`"
+    }
+    slaType: {
+      h: "Sla Type"
+      n: "slaType"
+      r: false
+      sh: "The SLA type used when the rule sets an SLA."
+      t: "`$STRING`"
+    }
+    startMode: {
+      h: "Start Mode"
+      n: "startMode"
+      r: false
+      sh: "When SLA timing begins."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "sla_configuration"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST slaConfigurations"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "team_id"
+                or: "team_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query SlaConfigurationList($teamId: String!) { slaConfigurations(teamId: $teamId) { ...SlaConfigurationFields } } fragment SlaConfigurationFields on SlaConfiguration { conditions id name removesSla sla slaType startMode }"
+            field: "slaConfigurations"
+            optype: "query"
+            vars: [
+              {
+                from: "teamId"
+                gqltype: "String!"
+                name: "teamId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "slaConfigurations"
+          q: {
+            exist: [
+              "team_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.slaConfigurations`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

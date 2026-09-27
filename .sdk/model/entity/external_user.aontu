@@ -1,0 +1,246 @@
+# Entity: external_user
+
+main: kit: entity: external_user: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    avatarUrl: {
+      h: "Avatar Url"
+      n: "avatarUrl"
+      r: false
+      sh: "A URL to the external user's avatar image."
+      t: "`$STRING`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    displayName: {
+      h: "Display Name"
+      n: "displayName"
+      r: true
+      sh: "The external user's display name."
+      t: "`$STRING`"
+    }
+    email: {
+      h: "Email"
+      n: "email"
+      r: false
+      sh: "The external user's email address."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    lastSeen: {
+      h: "Last Seen"
+      n: "lastSeen"
+      r: false
+      sh: "The last time the external user was seen interacting with Linear through their external service."
+      t: "`$ANY`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "The external user's full name."
+      t: "`$STRING`"
+    }
+    organization: {
+      h: "Organization"
+      n: "organization"
+      r: false
+      sh: "The workspace that the external user belongs to."
+      t: "`$OBJECT`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "external_user"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST externalUsers"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ExternalUserList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { externalUsers(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...ExternalUserFields } pageInfo { endCursor hasNextPage } } } fragment ExternalUserFields on ExternalUser { archivedAt avatarUrl createdAt displayName email id lastSeen name organization { id } updatedAt }"
+            field: "externalUsers"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "externalUsers"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.externalUsers.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST externalUser"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ExternalUserLoad($id: String!) { externalUser(id: $id) { ...ExternalUserFields } } fragment ExternalUserFields on ExternalUser { archivedAt avatarUrl createdAt displayName email id lastSeen name organization { id } updatedAt }"
+            field: "externalUser"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "externalUser"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.externalUser`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

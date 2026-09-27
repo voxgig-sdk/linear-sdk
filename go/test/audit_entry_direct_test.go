@@ -12,7 +12,10 @@ import (
 
 func TestAuditEntryDirect(t *testing.T) {
 	t.Run("direct-list-audit_entry", func(t *testing.T) {
-		setup := audit_entryDirectSetup(map[string]any{"id": "direct01"})
+		setup := audit_entryDirectSetup([]any{
+			map[string]any{"id": "direct01"},
+			map[string]any{"id": "direct02"},
+		})
 		_mode := "unit"
 		if setup.live {
 			_mode = "live"
@@ -25,7 +28,7 @@ func TestAuditEntryDirect(t *testing.T) {
 			return
 		}
 		if setup.live {
-			for _, _liveKey := range []string{"after01", "before01", "filter01", "first01", "includeArchived01", "last01", "orderBy01"} {
+			for _, _liveKey := range []string{"after01", "before01", "first01", "include_archived01", "last01", "order_by01"} {
 				if v := setup.idmap[_liveKey]; v == nil {
 					t.Skipf("live test needs %s via *_ENTID env var (synthetic IDs only)", _liveKey)
 					return
@@ -34,36 +37,57 @@ func TestAuditEntryDirect(t *testing.T) {
 		}
 		client := setup.client
 
-		variables := map[string]any{}
+		params := map[string]any{}
 		if setup.live {
-		variables["after"] = setup.idmap["after01"]
-		variables["before"] = setup.idmap["before01"]
-		variables["filter"] = setup.idmap["filter01"]
-		variables["first"] = setup.idmap["first01"]
-		variables["includeArchived"] = setup.idmap["includeArchived01"]
-		variables["last"] = setup.idmap["last01"]
-		variables["orderBy"] = setup.idmap["orderBy01"]
+			params["after"] = setup.idmap["after01"]
 		} else {
-		variables["after"] = "direct01"
-		variables["before"] = "direct02"
-		variables["filter"] = "direct03"
-		variables["first"] = "direct04"
-		variables["includeArchived"] = "direct05"
-		variables["last"] = "direct06"
-		variables["orderBy"] = "direct07"
+			params["after"] = "direct01"
+		}
+		if setup.live {
+			params["before"] = setup.idmap["before01"]
+		} else {
+			params["before"] = "direct02"
+		}
+		if setup.live {
+			params["first"] = setup.idmap["first01"]
+		} else {
+			params["first"] = "direct03"
+		}
+		if setup.live {
+			params["include_archived"] = setup.idmap["include_archived01"]
+		} else {
+			params["include_archived"] = "direct04"
+		}
+		if setup.live {
+			params["last"] = setup.idmap["last01"]
+		} else {
+			params["last"] = "direct05"
+		}
+		if setup.live {
+			params["order_by"] = setup.idmap["order_by01"]
+		} else {
+			params["order_by"] = "direct06"
 		}
 
-		result, err := client.Graphql("query AuditEntryList($after: String, $before: String, $filter: AuditEntryFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { auditEntries(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...AuditEntryFields } pageInfo { endCursor hasNextPage } } } fragment AuditEntryFields on AuditEntry { actor { id } actorId archivedAt countryCode createdAt id ip metadata organization { id } requestInformation type updatedAt }", variables, nil)
-
+		result, err := client.Direct(map[string]any{
+			"path":   "",
+			"method": "GET",
+			"params": params,
+		})
 		if setup.live {
-			// Live mode is lenient: synthetic ids frequently fail server-side
-			// validation. Skip rather than fail when the call doesn't come
-			// back clean.
+			// Live-mode leniency is a model decision
+			// (main.kit.test.live.strict): synthetic IDs 4xx constantly
+			// against an arbitrary public API, so the default SKIPS here.
+			// A project that owns its test server sets strict and FAILS.
 			if err != nil {
-				t.Fatalf("graphql call failed (likely synthetic IDs against live API): %v", err)
+				t.Fatalf("list call failed (likely synthetic IDs against live API): %v", err)
 			}
 			if result["ok"] != true {
-				t.Fatalf("graphql call not ok (likely synthetic IDs against live API): %v", result)
+				t.Fatalf("list call not ok (likely synthetic IDs against live API): %v", result)
+			}
+			status := core.ToInt(result["status"])
+			if status < 200 || status >= 300 {
+				t.Fatalf("expected 2xx status, got %v", result["status"])
 			}
 		} else {
 			if err != nil {
@@ -75,38 +99,45 @@ func TestAuditEntryDirect(t *testing.T) {
 			if core.ToInt(result["status"]) != 200 {
 				t.Fatalf("expected status 200, got %v", result["status"])
 			}
-			if result["data"] == nil {
-				t.Fatal("expected data to be non-nil")
+		}
+
+		if !setup.live {
+			if dataList, ok := result["data"].([]any); ok {
+				if len(dataList) != 2 {
+					t.Fatalf("expected 2 items, got %d", len(dataList))
+				}
+			} else {
+				t.Fatalf("expected data to be an array, got %T", result["data"])
 			}
+
 			if len(*setup.calls) != 1 {
 				t.Fatalf("expected 1 call, got %d", len(*setup.calls))
 			}
 			call := (*setup.calls)[0]
-			initMap, _ := call["init"].(map[string]any)
-			if initMap["method"] != "POST" {
-				t.Fatalf("expected method POST, got %v", initMap["method"])
+			if initMap, ok := call["init"].(map[string]any); ok {
+				if initMap["method"] != "GET" {
+					t.Fatalf("expected method GET, got %v", initMap["method"])
+				}
 			}
-			bodyStr, _ := initMap["body"].(string)
-			if !strings.Contains(bodyStr, "direct01") {
-				t.Fatalf("expected body to contain direct01, got %v", bodyStr)
-			}
-			if !strings.Contains(bodyStr, "direct02") {
-				t.Fatalf("expected body to contain direct02, got %v", bodyStr)
-			}
-			if !strings.Contains(bodyStr, "direct03") {
-				t.Fatalf("expected body to contain direct03, got %v", bodyStr)
-			}
-			if !strings.Contains(bodyStr, "direct04") {
-				t.Fatalf("expected body to contain direct04, got %v", bodyStr)
-			}
-			if !strings.Contains(bodyStr, "direct05") {
-				t.Fatalf("expected body to contain direct05, got %v", bodyStr)
-			}
-			if !strings.Contains(bodyStr, "direct06") {
-				t.Fatalf("expected body to contain direct06, got %v", bodyStr)
-			}
-			if !strings.Contains(bodyStr, "direct07") {
-				t.Fatalf("expected body to contain direct07, got %v", bodyStr)
+			if url, ok := call["url"].(string); ok {
+				if !strings.Contains(url, "direct01") {
+					t.Fatalf("expected url to contain direct01, got %v", url)
+				}
+				if !strings.Contains(url, "direct02") {
+					t.Fatalf("expected url to contain direct02, got %v", url)
+				}
+				if !strings.Contains(url, "direct03") {
+					t.Fatalf("expected url to contain direct03, got %v", url)
+				}
+				if !strings.Contains(url, "direct04") {
+					t.Fatalf("expected url to contain direct04, got %v", url)
+				}
+				if !strings.Contains(url, "direct05") {
+					t.Fatalf("expected url to contain direct05, got %v", url)
+				}
+				if !strings.Contains(url, "direct06") {
+					t.Fatalf("expected url to contain direct06, got %v", url)
+				}
 			}
 		}
 	})

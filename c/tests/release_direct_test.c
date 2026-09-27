@@ -41,8 +41,8 @@ int main(void) {
       cmap(1, "id", v_str("direct02")));
     LinearSDK* sdk = release_direct_setup(mockres);
     voxgig_value* params = v_map();
-    setp(params, "first", v_str("direct01"));
-    setp(params, "term", v_str("direct02"));
+    setp(params, "undefined", v_str("direct01"));
+    setp(params, "undefined", v_str("direct02"));
     PNError* err = NULL;
     voxgig_value* result = sdk_direct(sdk, cmap(3,
       "path", v_str(""),

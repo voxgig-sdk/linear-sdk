@@ -1,0 +1,34 @@
+# BasicDocumentSearchResultFlow
+
+main: kit: flow: BasicDocumentSearchResultFlow:
+{
+  entity: "document_search_result",
+  kind: "basic",
+  name: "BasicDocumentSearchResultFlow",
+  step: [
+    {
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        include_comment: "include_comment01",
+        last: "last01",
+        order_by: "order_by01",
+        team_id: "team01",
+        term: "term01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "document_search_result_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicDocumentSearchResultFlow"
+}

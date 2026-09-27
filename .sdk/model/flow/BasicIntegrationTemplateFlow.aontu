@@ -1,0 +1,108 @@
+# BasicIntegrationTemplateFlow
+
+main: kit: flow: BasicIntegrationTemplateFlow:
+{
+  entity: "integration_template",
+  kind: "basic",
+  name: "BasicIntegrationTemplateFlow",
+  step: [
+    {
+      i: {
+        ref: "integration_template_ref01"
+      }
+
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "create"
+    }
+
+    {
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "integration_template_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "integration_template_ref01",
+        srcdatavar: "integration_template_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "integration_template01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-integration_template_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "integration_template_ref01",
+        suffix: "_rm0"
+      }
+
+      m: {
+        id: "integration_template01"
+      }
+
+      o: "remove"
+    }
+
+    {
+      i: {
+        suffix: "_rt0"
+      }
+
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemNotExists",
+          def: {
+            ref: "integration_template_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicIntegrationTemplateFlow"
+}

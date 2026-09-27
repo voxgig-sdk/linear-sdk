@@ -1,0 +1,139 @@
+# BasicIssueFlow
+
+main: kit: flow: BasicIssueFlow:
+{
+  entity: "issue",
+  kind: "basic",
+  name: "BasicIssueFlow",
+  step: [
+    {
+      i: {
+        ref: "issue_ref01"
+      }
+
+      m: {
+        after: "after01",
+        attachment_id: "attachment01",
+        before: "before01",
+        branch_name: "branch_name01",
+        description: "description01",
+        file_key: "file_key01",
+        first: "first01",
+        include_archived: "include_archived01",
+        label_id: "label01",
+        last: "last01",
+        order_by: "order_by01",
+        permanently_delete: "permanently_delete01",
+        query: "query01",
+        reminder_at: "reminder_at01",
+        trash: "trash01",
+        user_email: "user_email01",
+        user_id: "user01"
+      }
+
+      o: "create"
+    }
+
+    {
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "issue_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "issue_ref01",
+        srcdatavar: "issue_ref01_data",
+        suffix: "_up0",
+        textfield: "branchName"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-issue_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "issue_ref01",
+        srcdatavar: "issue_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "issue01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-issue_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "issue_ref01",
+        suffix: "_rm0"
+      }
+
+      m: {
+        id: "issue01",
+        permanently_delete: "permanently_delete01"
+      }
+
+      o: "remove"
+    }
+
+    {
+      i: {
+        suffix: "_rt0"
+      }
+
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemNotExists",
+          def: {
+            ref: "issue_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicIssueFlow"
+}

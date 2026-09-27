@@ -19,7 +19,6 @@ import type {
   AuthenticationSessionResponseListMatch,
 } from '../LinearTypes'
 
-// TODO: needs Entity superclass
 class AuthenticationSessionResponseEntity extends LinearEntityBase<AuthenticationSessionResponse> {
 
   constructor(client: LinearSDK, entopts: any) {

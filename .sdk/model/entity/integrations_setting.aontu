@@ -1,0 +1,291 @@
+# Entity: integrations_setting
+
+main: kit: entity: integrations_setting: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    contextViewType: {
+      h: "Context View Type"
+      n: "contextViewType"
+      r: false
+      sh: "The type of view to which the integration settings context is associated with."
+      t: "`$STRING`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    initiative: {
+      h: "Initiative"
+      n: "initiative"
+      r: false
+      sh: "Initiative which those settings apply to."
+      t: "`$OBJECT`"
+    }
+    microsoftTeamsProjectUpdateCreated: {
+      h: "Microsoft Teams Project Update Created"
+      n: "microsoftTeamsProjectUpdateCreated"
+      r: false
+      sh: "Whether to send a Microsoft Teams message when a project update is created."
+      t: "`$BOOLEAN`"
+    }
+    project: {
+      h: "Project"
+      n: "project"
+      r: false
+      sh: "Project which those settings apply to."
+      t: "`$OBJECT`"
+    }
+    slackInitiativeUpdateCreated: {
+      h: "Slack Initiative Update Created"
+      n: "slackInitiativeUpdateCreated"
+      r: false
+      sh: "Whether to send a Slack message when an initiative update is created."
+      t: "`$BOOLEAN`"
+    }
+    slackIssueAddedToTriage: {
+      h: "Slack Issue Added To Triage"
+      n: "slackIssueAddedToTriage"
+      r: false
+      sh: "Whether to send a Slack message when a new issue is added to triage."
+      t: "`$BOOLEAN`"
+    }
+    slackIssueAddedToView: {
+      h: "Slack Issue Added To View"
+      n: "slackIssueAddedToView"
+      r: false
+      sh: "Whether to send a Slack message when an issue is added to the custom view."
+      t: "`$BOOLEAN`"
+    }
+    slackIssueNewComment: {
+      h: "Slack Issue New Comment"
+      n: "slackIssueNewComment"
+      r: false
+      sh: "Whether to send a Slack message when a comment is created on any of the project or team's issues."
+      t: "`$BOOLEAN`"
+    }
+    slackIssueSlaBreached: {
+      h: "Slack Issue Sla Breached"
+      n: "slackIssueSlaBreached"
+      r: false
+      sh: "Whether to send a Slack message when an SLA is breached."
+      t: "`$BOOLEAN`"
+    }
+    slackIssueSlaHighRisk: {
+      h: "Slack Issue Sla High Risk"
+      n: "slackIssueSlaHighRisk"
+      r: false
+      sh: "Whether to send a Slack message when an SLA is at high risk."
+      t: "`$BOOLEAN`"
+    }
+    slackIssueStatusChangedAll: {
+      h: "Slack Issue Status Changed All"
+      n: "slackIssueStatusChangedAll"
+      r: false
+      sh: "Whether to send a Slack message when any of the project or team's issues has a change in status."
+      t: "`$BOOLEAN`"
+    }
+    slackIssueStatusChangedDone: {
+      h: "Slack Issue Status Changed Done"
+      n: "slackIssueStatusChangedDone"
+      r: false
+      sh: "Whether to send a Slack message when any of the project or team's issues change to completed or canceled."
+      t: "`$BOOLEAN`"
+    }
+    slackProjectUpdateCreated: {
+      h: "Slack Project Update Created"
+      n: "slackProjectUpdateCreated"
+      r: false
+      sh: "Whether to send a Slack message when a project update is created."
+      t: "`$BOOLEAN`"
+    }
+    slackProjectUpdateCreatedToTeam: {
+      h: "Slack Project Update Created To Team"
+      n: "slackProjectUpdateCreatedToTeam"
+      r: false
+      sh: "Whether to send a new project update to team Slack channels."
+      t: "`$BOOLEAN`"
+    }
+    slackProjectUpdateCreatedToWorkspace: {
+      h: "Slack Project Update Created To Workspace"
+      n: "slackProjectUpdateCreatedToWorkspace"
+      r: false
+      sh: "Whether to send a new project update to workspace Slack channel."
+      t: "`$BOOLEAN`"
+    }
+    team: {
+      h: "Team"
+      n: "team"
+      r: false
+      sh: "Team which those settings apply to."
+      t: "`$OBJECT`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "integrations_setting"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST integrationsSettingsCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation IntegrationsSettingCreate($input: IntegrationsSettingsCreateInput!) { integrationsSettingsCreate(input: $input) { integrationsSettings { ...IntegrationsSettingFields } success } } fragment IntegrationsSettingFields on IntegrationsSettings { archivedAt contextViewType createdAt id initiative { id } microsoftTeamsProjectUpdateCreated project { id } slackInitiativeUpdateCreated slackIssueAddedToTriage slackIssueAddedToView slackIssueNewComment slackIssueSlaBreached slackIssueSlaHighRisk slackIssueStatusChangedAll slackIssueStatusChangedDone slackProjectUpdateCreated slackProjectUpdateCreatedToTeam slackProjectUpdateCreatedToWorkspace team { id } updatedAt }"
+            field: "integrationsSettingsCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "IntegrationsSettingsCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "integrationsSettingsCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.integrationsSettingsCreate.integrationsSettings`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST integrationsSettings"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query IntegrationsSettingLoad($id: String!) { integrationsSettings(id: $id) { ...IntegrationsSettingFields } } fragment IntegrationsSettingFields on IntegrationsSettings { archivedAt contextViewType createdAt id initiative { id } microsoftTeamsProjectUpdateCreated project { id } slackInitiativeUpdateCreated slackIssueAddedToTriage slackIssueAddedToView slackIssueNewComment slackIssueSlaBreached slackIssueSlaHighRisk slackIssueStatusChangedAll slackIssueStatusChangedDone slackProjectUpdateCreated slackProjectUpdateCreatedToTeam slackProjectUpdateCreatedToWorkspace team { id } updatedAt }"
+            field: "integrationsSettings"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "integrationsSettings"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.integrationsSettings`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST integrationsSettingsUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IntegrationsSettingUpdate($id: String!, $input: IntegrationsSettingsUpdateInput!) { integrationsSettingsUpdate(id: $id, input: $input) { integrationsSettings { ...IntegrationsSettingFields } success } } fragment IntegrationsSettingFields on IntegrationsSettings { archivedAt contextViewType createdAt id initiative { id } microsoftTeamsProjectUpdateCreated project { id } slackInitiativeUpdateCreated slackIssueAddedToTriage slackIssueAddedToView slackIssueNewComment slackIssueSlaBreached slackIssueSlaHighRisk slackIssueStatusChangedAll slackIssueStatusChangedDone slackProjectUpdateCreated slackProjectUpdateCreatedToTeam slackProjectUpdateCreatedToWorkspace team { id } updatedAt }"
+            field: "integrationsSettingsUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "IntegrationsSettingsUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "integrationsSettingsUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.integrationsSettingsUpdate.integrationsSettings`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

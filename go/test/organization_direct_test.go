@@ -26,24 +26,26 @@ func TestOrganizationDirect(t *testing.T) {
 		}
 		client := setup.client
 
-		variables := map[string]any{}
-		if setup.live {
-		// no variables
-		} else {
-		// no variables
-		}
 
-		result, err := client.Graphql("query OrganizationLoad { organization { ...OrganizationFields } } fragment OrganizationFields on Organization { agentAutomationEnabled aiAddonEnabled aiDiscussionSummariesEnabled aiProviderConfiguration aiTelemetryEnabled aiThreadSummariesEnabled allowedFileUploadContentTypes archivedAt authSettings codeIntelligenceEnabled codeIntelligenceRepository codingAgentEnabled codingAgentSettings createdAt createdIssueCount customerCount customersConfiguration customersEnabled defaultFeedSummarySchedule defaultHomeView defaultHomeViewTargetId deletionRequestedAt feedEnabled fiscalYearStartMonth generatedUpdatesEnabled gitBranchFormat gitLinkbackDescriptionsEnabled gitLinkbackMessagesEnabled gitPublicLinkbackMessagesEnabled hipaaComplianceEnabled id initiativeUpdateReminderFrequencyInWeeks initiativeUpdateRemindersDay initiativeUpdateRemindersHour linearAgentEnabled linearAgentSettings logoUrl name periodUploadVolume previousUrlKeys projectUpdateReminderFrequencyInWeeks projectUpdateRemindersDay projectUpdateRemindersHour pullRequestIssueMode pullRequestTourEnabled releaseChannel releasesEnabled restrictAgentInvocationToMembers roadmapEnabled samlEnabled samlSettings scimEnabled scimSettings securitySettings slackAutoCreateProjectChannel slackProjectChannelIntegration { id } slackProjectChannelPrefix slackProjectChannelsEnabled subscription { id } themeSettings trialEndsAt trialStartsAt updatedAt urlKey userCount workingDays }", variables, nil)
-
+		result, err := client.Direct(map[string]any{
+			"path":   "",
+			"method": "GET",
+			"params": map[string]any{},
+		})
 		if setup.live {
-			// Live mode is lenient: synthetic ids frequently fail server-side
-			// validation. Skip rather than fail when the call doesn't come
-			// back clean.
+			// Live mode is lenient: synthetic IDs frequently 4xx. Skip
+			// rather than fail when the load endpoint isn't reachable with
+			// the IDs we can construct from setup.idmap — unless the model
+			// sets main.kit.test.live.strict.
 			if err != nil {
-				t.Fatalf("graphql call failed (likely synthetic IDs against live API): %v", err)
+				t.Fatalf("load call failed (likely synthetic IDs against live API): %v", err)
 			}
 			if result["ok"] != true {
-				t.Fatalf("graphql call not ok (likely synthetic IDs against live API): %v", result)
+				t.Fatalf("load call not ok (likely synthetic IDs against live API): %v", result)
+			}
+			status := core.ToInt(result["status"])
+			if status < 200 || status >= 300 {
+				t.Fatalf("expected 2xx status, got %v", result["status"])
 			}
 		} else {
 			if err != nil {
@@ -58,16 +60,26 @@ func TestOrganizationDirect(t *testing.T) {
 			if result["data"] == nil {
 				t.Fatal("expected data to be non-nil")
 			}
+		}
+
+		if !setup.live {
+			if dataMap, ok := result["data"].(map[string]any); ok {
+				if dataMap["id"] != "direct01" {
+					t.Fatalf("expected data.id to be direct01, got %v", dataMap["id"])
+				}
+			}
+
 			if len(*setup.calls) != 1 {
 				t.Fatalf("expected 1 call, got %d", len(*setup.calls))
 			}
 			call := (*setup.calls)[0]
-			initMap, _ := call["init"].(map[string]any)
-			if initMap["method"] != "POST" {
-				t.Fatalf("expected method POST, got %v", initMap["method"])
+			if initMap, ok := call["init"].(map[string]any); ok {
+				if initMap["method"] != "GET" {
+					t.Fatalf("expected method GET, got %v", initMap["method"])
+				}
 			}
-			bodyStr, _ := initMap["body"].(string)
-
+			if _, ok := call["url"].(string); ok {
+			}
 		}
 	})
 

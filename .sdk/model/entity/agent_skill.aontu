@@ -1,0 +1,437 @@
+# Entity: agent_skill
+
+main: kit: entity: agent_skill: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    body: {
+      h: "Body"
+      n: "body"
+      r: true
+      sh: "The skill instructions in markdown format."
+      t: "`$STRING`"
+    }
+    color: {
+      h: "Color"
+      n: "color"
+      r: false
+      sh: "The skill's color."
+      t: "`$STRING`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creator: {
+      h: "Creator"
+      n: "creator"
+      r: false
+      sh: "The user who created the skill."
+      t: "`$OBJECT`"
+    }
+    description: {
+      h: "Description"
+      n: "description"
+      r: false
+      sh: "The skill's description."
+      t: "`$STRING`"
+    }
+    icon: {
+      h: "Icon"
+      n: "icon"
+      r: false
+      sh: "The icon of the skill."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    inheritedFrom: {
+      h: "Inherited From"
+      n: "inheritedFrom"
+      r: false
+      sh: "The parent-team skill this skill was inherited from."
+      t: "`$OBJECT`"
+    }
+    lastUpdatedBy: {
+      h: "Last Updated By"
+      n: "lastUpdatedBy"
+      r: false
+      sh: "The user who last updated the skill."
+      t: "`$OBJECT`"
+    }
+    lastUsedAt: {
+      h: "Last Used At"
+      n: "lastUsedAt"
+      r: false
+      sh: "The time the skill was last used by anyone in the workspace."
+      t: "`$ANY`"
+    }
+    owner: {
+      h: "Owner"
+      n: "owner"
+      r: false
+      sh: "The user who owns the skill."
+      t: "`$OBJECT`"
+    }
+    recentUsageCount: {
+      h: "Recent Usage Count"
+      n: "recentUsageCount"
+      r: true
+      sh: "The number of times the skill was used by anyone in the workspace in the last 30 days."
+      t: "`$NUMBER`"
+    }
+    shared: {
+      h: "Shared"
+      n: "shared"
+      r: true
+      sh: "Whether the skill is shared with everyone in the workspace."
+      t: "`$BOOLEAN`"
+    }
+    slugId: {
+      h: "Slug Id"
+      n: "slugId"
+      r: true
+      sh: "The skill's unique URL slug."
+      t: "`$STRING`"
+    }
+    teamId: {
+      h: "Team Id"
+      n: "teamId"
+      r: false
+      sh: "The identifier of the team this skill is shared with."
+      t: "`$STRING`"
+    }
+    title: {
+      h: "Title"
+      n: "title"
+      r: true
+      sh: "The skill's title."
+      t: "`$STRING`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "agent_skill"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST agentSkillCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation AgentSkillCreate($input: AgentSkillCreateInput!) { agentSkillCreate(input: $input) { agentSkill { ...AgentSkillFields } success } } fragment AgentSkillFields on AgentSkill { archivedAt body color createdAt creator { id } description icon id inheritedFrom { id } lastUpdatedBy { id } lastUsedAt owner { id } recentUsageCount shared slugId teamId title updatedAt }"
+            field: "agentSkillCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "AgentSkillCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSkillCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSkillCreate.agentSkill`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST agentSkills"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query AgentSkillList($after: String, $before: String, $filter: AgentSkillFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { agentSkills(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...AgentSkillFields } pageInfo { endCursor hasNextPage } } } fragment AgentSkillFields on AgentSkill { archivedAt body color createdAt creator { id } description icon id inheritedFrom { id } lastUpdatedBy { id } lastUsedAt owner { id } recentUsageCount shared slugId teamId title updatedAt }"
+            field: "agentSkills"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: ""
+                gqltype: "AgentSkillFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSkills"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSkills.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST agentSkill"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query AgentSkillLoad($id: String!) { agentSkill(id: $id) { ...AgentSkillFields } } fragment AgentSkillFields on AgentSkill { archivedAt body color createdAt creator { id } description icon id inheritedFrom { id } lastUpdatedBy { id } lastUsedAt owner { id } recentUsageCount shared slugId teamId title updatedAt }"
+            field: "agentSkill"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSkill"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSkill`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST agentSkillDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AgentSkillRemove($id: String!) { agentSkillDelete(id: $id) { entityId lastSyncId success } }"
+            field: "agentSkillDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSkillDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSkillDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST agentSkillUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AgentSkillUpdate($id: String!, $input: AgentSkillUpdateInput!) { agentSkillUpdate(id: $id, input: $input) { agentSkill { ...AgentSkillFields } success } } fragment AgentSkillFields on AgentSkill { archivedAt body color createdAt creator { id } description icon id inheritedFrom { id } lastUpdatedBy { id } lastUsedAt owner { id } recentUsageCount shared slugId teamId title updatedAt }"
+            field: "agentSkillUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "AgentSkillUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSkillUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSkillUpdate.agentSkill`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

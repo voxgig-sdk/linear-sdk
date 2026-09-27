@@ -1,0 +1,618 @@
+# Entity: user
+
+main: kit: entity: user: {
+
+  alias: field: {}
+
+  fields: {
+    active: {
+      h: "Active"
+      n: "active"
+      r: true
+      sh: "Whether the user account is active or disabled (suspended)."
+      t: "`$BOOLEAN`"
+    }
+    admin: {
+      h: "Admin"
+      n: "admin"
+      r: true
+      sh: "Whether the user is a workspace administrator."
+      t: "`$BOOLEAN`"
+    }
+    app: {
+      h: "App"
+      n: "app"
+      r: true
+      sh: "Whether the user is an app."
+      t: "`$BOOLEAN`"
+    }
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    avatarBackgroundColor: {
+      h: "Avatar Background Color"
+      n: "avatarBackgroundColor"
+      r: true
+      sh: "The background color of the avatar for users without set avatar."
+      t: "`$STRING`"
+    }
+    avatarUrl: {
+      h: "Avatar Url"
+      n: "avatarUrl"
+      r: false
+      sh: "An URL to the user's avatar image."
+      t: "`$STRING`"
+    }
+    calendarHash: {
+      h: "Calendar Hash"
+      n: "calendarHash"
+      r: false
+      sh: "[DEPRECATED] Hash for the user to be used in calendar URLs."
+      t: "`$STRING`"
+    }
+    canAccessAnyPublicTeam: {
+      h: "Can Access Any Public Team"
+      n: "canAccessAnyPublicTeam"
+      r: true
+      sh: "Whether this user can access any public team in the workspace."
+      t: "`$BOOLEAN`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    createdIssueCount: {
+      h: "Created Issue Count"
+      n: "createdIssueCount"
+      r: true
+      sh: "Number of issues created."
+      t: "`$INTEGER`"
+    }
+    description: {
+      h: "Description"
+      n: "description"
+      r: false
+      sh: "A short description of the user, such as their title or a brief bio."
+      t: "`$STRING`"
+    }
+    disableReason: {
+      h: "Disable Reason"
+      n: "disableReason"
+      r: false
+      sh: "The reason why the user account is disabled."
+      t: "`$STRING`"
+    }
+    displayName: {
+      h: "Display Name"
+      n: "displayName"
+      r: true
+      sh: "The user's display (nick) name."
+      t: "`$STRING`"
+    }
+    email: {
+      h: "Email"
+      n: "email"
+      r: true
+      sh: "The user's email address."
+      t: "`$STRING`"
+    }
+    gitHubUserId: {
+      h: "Git Hub User Id"
+      n: "gitHubUserId"
+      r: false
+      sh: "The user's GitHub user ID."
+      t: "`$STRING`"
+    }
+    guest: {
+      h: "Guest"
+      n: "guest"
+      r: true
+      sh: "Whether the user is a guest in the workspace and limited to accessing a subset of teams."
+      t: "`$BOOLEAN`"
+    }
+    hasGitHubCodeAccess: {
+      h: "Has Git Hub Code Access"
+      n: "hasGitHubCodeAccess"
+      r: true
+      sh: "[Internal] Whether this user can access GitHub source code through Linear."
+      t: "`$BOOLEAN`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    identityProvider: {
+      h: "Identity Provider"
+      n: "identityProvider"
+      r: false
+      sh: "[INTERNAL] Identity provider the user is managed by."
+      t: "`$OBJECT`"
+    }
+    initials: {
+      h: "Initials"
+      n: "initials"
+      r: true
+      sh: "The initials of the user."
+      t: "`$STRING`"
+    }
+    isAssignable: {
+      h: "Is Assignable"
+      n: "isAssignable"
+      r: true
+      sh: "Whether the user can be assigned to issues."
+      t: "`$BOOLEAN`"
+    }
+    isMe: {
+      h: "Is Me"
+      n: "isMe"
+      r: true
+      sh: "Whether the user is the currently authenticated user."
+      t: "`$BOOLEAN`"
+    }
+    isMentionable: {
+      h: "Is Mentionable"
+      n: "isMentionable"
+      r: true
+      sh: "Whether the user is mentionable."
+      t: "`$BOOLEAN`"
+    }
+    lastSeen: {
+      h: "Last Seen"
+      n: "lastSeen"
+      r: false
+      sh: "The last time the user was seen online."
+      t: "`$ANY`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "The user's full name."
+      t: "`$STRING`"
+    }
+    organization: {
+      h: "Organization"
+      n: "organization"
+      r: false
+      sh: "The workspace that the user belongs to."
+      t: "`$OBJECT`"
+    }
+    owner: {
+      h: "Owner"
+      n: "owner"
+      r: true
+      sh: "Whether the user is a workspace owner, which is the highest permission level."
+      t: "`$BOOLEAN`"
+    }
+    statusEmoji: {
+      h: "Status Emoji"
+      n: "statusEmoji"
+      r: false
+      sh: "The emoji representing the user's current status."
+      t: "`$STRING`"
+    }
+    statusLabel: {
+      h: "Status Label"
+      n: "statusLabel"
+      r: false
+      sh: "The text label of the user's current status."
+      t: "`$STRING`"
+    }
+    statusUntilAt: {
+      h: "Status Until At"
+      n: "statusUntilAt"
+      r: false
+      sh: "The date and time at which the user's current status should be automatically cleared."
+      t: "`$ANY`"
+    }
+    supportsAgentSessions: {
+      h: "Supports Agent Sessions"
+      n: "supportsAgentSessions"
+      r: true
+      sh: "Whether this agent user supports agent sessions."
+      t: "`$BOOLEAN`"
+    }
+    timezone: {
+      h: "Timezone"
+      n: "timezone"
+      r: false
+      sh: "The local timezone of the user."
+      t: "`$STRING`"
+    }
+    title: {
+      h: "Title"
+      n: "title"
+      r: false
+      sh: "The user's job title."
+      t: "`$STRING`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    url: {
+      h: "Url"
+      n: "url"
+      r: true
+      sh: "User's profile URL."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "user"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST userDiscordConnect"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "code"
+                or: "code"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "redirect_uri"
+                or: "redirect_uri"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation UserCreateDiscordConnect($code: String!, $redirectUri: String!) { userDiscordConnect(code: $code, redirectUri: $redirectUri) { user { ...UserFields } success } } fragment UserFields on User { active admin app archivedAt avatarBackgroundColor avatarUrl calendarHash canAccessAnyPublicTeam createdAt createdIssueCount description disableReason displayName email gitHubUserId guest hasGitHubCodeAccess id identityProvider { id } initials isAssignable isMe isMentionable lastSeen name organization { id } owner statusEmoji statusLabel statusUntilAt supportsAgentSessions timezone title updatedAt url }"
+            field: "userDiscordConnect"
+            optype: "mutation"
+            vars: [
+              {
+                from: "code"
+                gqltype: "String!"
+                name: "code"
+              }
+              {
+                from: "redirectUri"
+                gqltype: "String!"
+                name: "redirectUri"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "userDiscordConnect"
+          q: {
+            "$action": "discord_connect"
+            exist: [
+              "code"
+              "redirect_uri"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.userDiscordConnect.user`"
+          }
+        }
+        {
+          co: {
+            id: "POST userExternalUserDisconnect"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "service"
+                or: "service"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation UserCreateExternalUserDisconnect($service: String!) { userExternalUserDisconnect(service: $service) { user { ...UserFields } success } } fragment UserFields on User { active admin app archivedAt avatarBackgroundColor avatarUrl calendarHash canAccessAnyPublicTeam createdAt createdIssueCount description disableReason displayName email gitHubUserId guest hasGitHubCodeAccess id identityProvider { id } initials isAssignable isMe isMentionable lastSeen name organization { id } owner statusEmoji statusLabel statusUntilAt supportsAgentSessions timezone title updatedAt url }"
+            field: "userExternalUserDisconnect"
+            optype: "mutation"
+            vars: [
+              {
+                from: "service"
+                gqltype: "String!"
+                name: "service"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "userExternalUserDisconnect"
+          q: {
+            "$action": "external_user_disconnect"
+            exist: [
+              "service"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.userExternalUserDisconnect.user`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST users"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "include_disabled"
+                or: "include_disabled"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query UserList($after: String, $before: String, $filter: UserFilter, $first: Int, $includeArchived: Boolean, $includeDisabled: Boolean, $last: Int, $orderBy: PaginationOrderBy, $sort: [UserSortInput!]) { users(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, includeDisabled: $includeDisabled, last: $last, orderBy: $orderBy, sort: $sort) { nodes { ...UserFields } pageInfo { endCursor hasNextPage } } } fragment UserFields on User { active admin app archivedAt avatarBackgroundColor avatarUrl calendarHash canAccessAnyPublicTeam createdAt createdIssueCount description disableReason displayName email gitHubUserId guest hasGitHubCodeAccess id identityProvider { id } initials isAssignable isMe isMentionable lastSeen name organization { id } owner statusEmoji statusLabel statusUntilAt supportsAgentSessions timezone title updatedAt url }"
+            field: "users"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "filter"
+                gqltype: "UserFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "includeDisabled"
+                gqltype: "Boolean"
+                name: "includeDisabled"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+              {
+                from: "sort"
+                gqltype: "[UserSortInput!]"
+                name: "sort"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "users"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.users.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST user"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query UserLoad($id: String!) { user(id: $id) { ...UserFields } } fragment UserFields on User { active admin app archivedAt avatarBackgroundColor avatarUrl calendarHash canAccessAnyPublicTeam createdAt createdIssueCount description disableReason displayName email gitHubUserId guest hasGitHubCodeAccess id identityProvider { id } initials isAssignable isMe isMentionable lastSeen name organization { id } owner statusEmoji statusLabel statusUntilAt supportsAgentSessions timezone title updatedAt url }"
+            field: "user"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "user"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.user`"
+          }
+        }
+        {
+          co: {
+            id: "POST viewer"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "query UserLoad { viewer { ...UserFields } } fragment UserFields on User { active admin app archivedAt avatarBackgroundColor avatarUrl calendarHash canAccessAnyPublicTeam createdAt createdIssueCount description disableReason displayName email gitHubUserId guest hasGitHubCodeAccess id identityProvider { id } initials isAssignable isMe isMentionable lastSeen name organization { id } owner statusEmoji statusLabel statusUntilAt supportsAgentSessions timezone title updatedAt url }"
+            field: "viewer"
+            optype: "query"
+          }
+          k: "graphql"
+          m: "POST"
+          o: "viewer"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.viewer`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST userUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation UserUpdate($id: String!, $input: UserUpdateInput!) { userUpdate(id: $id, input: $input) { user { ...UserFields } success } } fragment UserFields on User { active admin app archivedAt avatarBackgroundColor avatarUrl calendarHash canAccessAnyPublicTeam createdAt createdIssueCount description disableReason displayName email gitHubUserId guest hasGitHubCodeAccess id identityProvider { id } initials isAssignable isMe isMentionable lastSeen name organization { id } owner statusEmoji statusLabel statusUntilAt supportsAgentSessions timezone title updatedAt url }"
+            field: "userUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "UserUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "userUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.userUpdate.user`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

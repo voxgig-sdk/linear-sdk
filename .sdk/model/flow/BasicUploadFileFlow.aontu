@@ -1,0 +1,25 @@
+# BasicUploadFileFlow
+
+main: kit: flow: BasicUploadFileFlow:
+{
+  entity: "upload_file",
+  kind: "basic",
+  name: "BasicUploadFileFlow",
+  step: [
+    {
+      i: {
+        ref: "upload_file_ref01"
+      }
+
+      m: {
+        content_type: "content_type01",
+        filename: "filename01",
+        meta_data: "meta_data01",
+        size: "size01"
+      }
+
+      o: "create"
+    }
+  ],
+  "key$": "BasicUploadFileFlow"
+}

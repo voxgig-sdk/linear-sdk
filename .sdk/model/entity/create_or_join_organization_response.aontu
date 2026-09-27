@@ -1,0 +1,174 @@
+# Entity: create_or_join_organization_response
+
+main: kit: entity: create_or_join_organization_response: {
+
+  alias: field: {}
+
+  fields: {
+    organization: {
+      h: "Organization"
+      n: "organization"
+      r: false
+      sh: "The workspace that was created or joined."
+      t: "`$OBJECT`"
+    }
+    user: {
+      h: "User"
+      n: "user"
+      r: false
+      sh: "The user who created or joined the workspace."
+      t: "`$OBJECT`"
+    }
+  }
+
+  name: "create_or_join_organization_response"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST createOrganizationFromOnboarding"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "partner_offer_token"
+                or: "partner_offer_token"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "session_id"
+                or: "session_id"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation CreateOrJoinOrganizationResponseCreateCreateOrganizationFromOnboarding($input: CreateOrganizationInput!, $partnerOfferToken: String, $sessionId: String, $survey: OnboardingCustomerSurvey) { createOrganizationFromOnboarding(input: $input, partnerOfferToken: $partnerOfferToken, sessionId: $sessionId, survey: $survey) { ...CreateOrJoinOrganizationResponseFields } } fragment CreateOrJoinOrganizationResponseFields on CreateOrJoinOrganizationResponse { organization { id } user { id } }"
+            field: "createOrganizationFromOnboarding"
+            optype: "mutation"
+            vars: [
+              {
+                from: "input"
+                gqltype: "CreateOrganizationInput!"
+                name: "input"
+              }
+              {
+                from: "partnerOfferToken"
+                gqltype: "String"
+                name: "partnerOfferToken"
+              }
+              {
+                from: "sessionId"
+                gqltype: "String"
+                name: "sessionId"
+              }
+              {
+                from: "survey"
+                gqltype: "OnboardingCustomerSurvey"
+                name: "survey"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "createOrganizationFromOnboarding"
+          q: {
+            "$action": "create_organization_from_onboarding"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.createOrganizationFromOnboarding`"
+          }
+        }
+        {
+          co: {
+            id: "POST joinOrganizationFromOnboarding"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation CreateOrJoinOrganizationResponseCreateJoinOrganizationFromOnboarding($input: JoinOrganizationInput!) { joinOrganizationFromOnboarding(input: $input) { ...CreateOrJoinOrganizationResponseFields } } fragment CreateOrJoinOrganizationResponseFields on CreateOrJoinOrganizationResponse { organization { id } user { id } }"
+            field: "joinOrganizationFromOnboarding"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "JoinOrganizationInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "joinOrganizationFromOnboarding"
+          q: {
+            "$action": "join_organization_from_onboarding"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.joinOrganizationFromOnboarding`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST leaveOrganization"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "organization_id"
+                or: "organization_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation CreateOrJoinOrganizationResponseUpdateLeaveOrganization($organizationId: String!) { leaveOrganization(organizationId: $organizationId) { ...CreateOrJoinOrganizationResponseFields } } fragment CreateOrJoinOrganizationResponseFields on CreateOrJoinOrganizationResponse { organization { id } user { id } }"
+            field: "leaveOrganization"
+            optype: "mutation"
+            vars: [
+              {
+                from: "organizationId"
+                gqltype: "String!"
+                name: "organizationId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "leaveOrganization"
+          q: {
+            "$action": "leave_organization"
+            exist: [
+              "organization_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.leaveOrganization`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

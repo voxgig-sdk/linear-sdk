@@ -1,0 +1,1842 @@
+# Entity: attachment
+
+main: kit: entity: attachment: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    bodyData: {
+      h: "Body Data"
+      n: "bodyData"
+      r: false
+      sh: "The body data of the attachment, if any."
+      t: "`$STRING`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creator: {
+      h: "Creator"
+      n: "creator"
+      r: false
+      sh: "The creator of the attachment."
+      t: "`$OBJECT`"
+    }
+    externalUserCreator: {
+      h: "External User Creator"
+      n: "externalUserCreator"
+      r: false
+      sh: "The non-Linear user who created the attachment."
+      t: "`$OBJECT`"
+    }
+    groupBySource: {
+      h: "Group By Source"
+      n: "groupBySource"
+      r: true
+      sh: "Whether attachments from the same source application should be visually grouped together in the Linear issue detail view."
+      t: "`$BOOLEAN`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    issue: {
+      h: "Issue"
+      n: "issue"
+      r: false
+      sh: "The issue this attachment belongs to."
+      t: "`$OBJECT`"
+    }
+    metadata: {
+      h: "Metadata"
+      n: "metadata"
+      r: true
+      sh: "Integration-specific metadata for this attachment."
+      t: "`$ANY`"
+    }
+    originalIssue: {
+      h: "Original Issue"
+      n: "originalIssue"
+      r: false
+      sh: "The issue this attachment was originally created on."
+      t: "`$OBJECT`"
+    }
+    source: {
+      h: "Source"
+      n: "source"
+      r: false
+      sh: "Information about the source which created the attachment."
+      t: "`$ANY`"
+    }
+    sourceType: {
+      h: "Source Type"
+      n: "sourceType"
+      r: false
+      sh: "The source type of the attachment, derived from the source metadata."
+      t: "`$STRING`"
+    }
+    subtitle: {
+      h: "Subtitle"
+      n: "subtitle"
+      r: false
+      sh: "Content for the subtitle line in the Linear attachment widget."
+      t: "`$STRING`"
+    }
+    title: {
+      h: "Title"
+      n: "title"
+      r: true
+      sh: "Content for the title line in the Linear attachment widget."
+      t: "`$STRING`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    url: {
+      h: "Url"
+      n: "url"
+      r: true
+      sh: "The URL of the external resource this attachment links to."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "attachment"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST attachmentCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation AttachmentCreate($input: AttachmentCreateInput!) { attachmentCreate(input: $input) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "AttachmentCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentCreate.attachment`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST attachmentsForURL"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+              {
+                k: "param"
+                n: "url"
+                or: "url"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query AttachmentList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy, $url: String!) { attachmentsForURL(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy, url: $url) { nodes { ...AttachmentFields } pageInfo { endCursor hasNextPage } } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentsForURL"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+              {
+                from: "url"
+                gqltype: "String!"
+                name: "url"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentsForURL"
+          q: {
+            exist: [
+              "url"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentsForURL.nodes`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachments"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query AttachmentList($after: String, $before: String, $filter: AttachmentFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { attachments(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...AttachmentFields } pageInfo { endCursor hasNextPage } } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachments"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: ""
+                gqltype: "AttachmentFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachments"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachments.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST attachment"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query AttachmentLoad($id: String!) { attachment(id: $id) { ...AttachmentFields } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachment"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachment"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachment`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST attachmentDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentRemove($id: String!) { attachmentDelete(id: $id) { entityId lastSyncId success } }"
+            field: "attachmentDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST attachmentLinkDiscord"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "channel_id"
+                or: "channel_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "create_as_user"
+                or: "create_as_user"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "display_icon_url"
+                or: "display_icon_url"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "issue_id"
+                or: "issue_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "message_id"
+                or: "message_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "title"
+                or: "title"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "url"
+                or: "url"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdateLinkDiscord($channelId: String!, $createAsUser: String, $displayIconUrl: String, $id: String, $issueId: String!, $messageId: String!, $title: String, $url: String!) { attachmentLinkDiscord(channelId: $channelId, createAsUser: $createAsUser, displayIconUrl: $displayIconUrl, id: $id, issueId: $issueId, messageId: $messageId, title: $title, url: $url) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentLinkDiscord"
+            optype: "mutation"
+            vars: [
+              {
+                from: "channelId"
+                gqltype: "String!"
+                name: "channelId"
+              }
+              {
+                from: "createAsUser"
+                gqltype: "String"
+                name: "createAsUser"
+              }
+              {
+                from: "displayIconUrl"
+                gqltype: "String"
+                name: "displayIconUrl"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "issueId"
+                gqltype: "String!"
+                name: "issueId"
+              }
+              {
+                from: "messageId"
+                gqltype: "String!"
+                name: "messageId"
+              }
+              {
+                from: "title"
+                gqltype: "String"
+                name: "title"
+              }
+              {
+                from: "url"
+                gqltype: "String!"
+                name: "url"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentLinkDiscord"
+          q: {
+            "$action": "link_discord"
+            exist: [
+              "channel_id"
+              "issue_id"
+              "message_id"
+              "url"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentLinkDiscord.attachment`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentLinkGitLabMR"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "create_as_user"
+                or: "create_as_user"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "display_icon_url"
+                or: "display_icon_url"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "issue_id"
+                or: "issue_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "number"
+                or: "number"
+                r: true
+                t: "`$NUMBER`"
+              }
+              {
+                k: "param"
+                n: "project_path_with_namespace"
+                or: "project_path_with_namespace"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "title"
+                or: "title"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "url"
+                or: "url"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdateLinkGitLabMr($createAsUser: String, $displayIconUrl: String, $id: String, $issueId: String!, $number: Float!, $projectPathWithNamespace: String!, $title: String, $url: String!) { attachmentLinkGitLabMR(createAsUser: $createAsUser, displayIconUrl: $displayIconUrl, id: $id, issueId: $issueId, number: $number, projectPathWithNamespace: $projectPathWithNamespace, title: $title, url: $url) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentLinkGitLabMR"
+            optype: "mutation"
+            vars: [
+              {
+                from: "createAsUser"
+                gqltype: "String"
+                name: "createAsUser"
+              }
+              {
+                from: "displayIconUrl"
+                gqltype: "String"
+                name: "displayIconUrl"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "issueId"
+                gqltype: "String!"
+                name: "issueId"
+              }
+              {
+                from: "number"
+                gqltype: "Float!"
+                name: "number"
+              }
+              {
+                from: "projectPathWithNamespace"
+                gqltype: "String!"
+                name: "projectPathWithNamespace"
+              }
+              {
+                from: "title"
+                gqltype: "String"
+                name: "title"
+              }
+              {
+                from: "url"
+                gqltype: "String!"
+                name: "url"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentLinkGitLabMR"
+          q: {
+            "$action": "link_git_lab_mr"
+            exist: [
+              "issue_id"
+              "number"
+              "project_path_with_namespace"
+              "url"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentLinkGitLabMR.attachment`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentLinkFront"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "conversation_id"
+                or: "conversation_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "create_as_user"
+                or: "create_as_user"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "display_icon_url"
+                or: "display_icon_url"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "issue_id"
+                or: "issue_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "title"
+                or: "title"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdateLinkFront($conversationId: String!, $createAsUser: String, $displayIconUrl: String, $id: String, $issueId: String!, $title: String) { attachmentLinkFront(conversationId: $conversationId, createAsUser: $createAsUser, displayIconUrl: $displayIconUrl, id: $id, issueId: $issueId, title: $title) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentLinkFront"
+            optype: "mutation"
+            vars: [
+              {
+                from: "conversationId"
+                gqltype: "String!"
+                name: "conversationId"
+              }
+              {
+                from: "createAsUser"
+                gqltype: "String"
+                name: "createAsUser"
+              }
+              {
+                from: "displayIconUrl"
+                gqltype: "String"
+                name: "displayIconUrl"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "issueId"
+                gqltype: "String!"
+                name: "issueId"
+              }
+              {
+                from: "title"
+                gqltype: "String"
+                name: "title"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentLinkFront"
+          q: {
+            "$action": "link_front"
+            exist: [
+              "conversation_id"
+              "issue_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentLinkFront.attachment`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentLinkGitHubIssue"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "create_as_user"
+                or: "create_as_user"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "display_icon_url"
+                or: "display_icon_url"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "issue_id"
+                or: "issue_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "title"
+                or: "title"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "url"
+                or: "url"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdateLinkGitHubIssue($createAsUser: String, $displayIconUrl: String, $id: String, $issueId: String!, $title: String, $url: String!) { attachmentLinkGitHubIssue(createAsUser: $createAsUser, displayIconUrl: $displayIconUrl, id: $id, issueId: $issueId, title: $title, url: $url) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentLinkGitHubIssue"
+            optype: "mutation"
+            vars: [
+              {
+                from: "createAsUser"
+                gqltype: "String"
+                name: "createAsUser"
+              }
+              {
+                from: "displayIconUrl"
+                gqltype: "String"
+                name: "displayIconUrl"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "issueId"
+                gqltype: "String!"
+                name: "issueId"
+              }
+              {
+                from: "title"
+                gqltype: "String"
+                name: "title"
+              }
+              {
+                from: "url"
+                gqltype: "String!"
+                name: "url"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentLinkGitHubIssue"
+          q: {
+            "$action": "link_git_hub_issue"
+            exist: [
+              "issue_id"
+              "url"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentLinkGitHubIssue.attachment`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentLinkGitHubPR"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "create_as_user"
+                or: "create_as_user"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "display_icon_url"
+                or: "display_icon_url"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "issue_id"
+                or: "issue_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "link_kind"
+                or: "link_kind"
+                r: false
+                t: "`$ANY`"
+              }
+              {
+                k: "param"
+                n: "title"
+                or: "title"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "url"
+                or: "url"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdateLinkGitHubPr($createAsUser: String, $displayIconUrl: String, $id: String, $issueId: String!, $linkKind: GitLinkKind, $title: String, $url: String!) { attachmentLinkGitHubPR(createAsUser: $createAsUser, displayIconUrl: $displayIconUrl, id: $id, issueId: $issueId, linkKind: $linkKind, title: $title, url: $url) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentLinkGitHubPR"
+            optype: "mutation"
+            vars: [
+              {
+                from: "createAsUser"
+                gqltype: "String"
+                name: "createAsUser"
+              }
+              {
+                from: "displayIconUrl"
+                gqltype: "String"
+                name: "displayIconUrl"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "issueId"
+                gqltype: "String!"
+                name: "issueId"
+              }
+              {
+                from: "linkKind"
+                gqltype: "GitLinkKind"
+                name: "linkKind"
+              }
+              {
+                from: "title"
+                gqltype: "String"
+                name: "title"
+              }
+              {
+                from: "url"
+                gqltype: "String!"
+                name: "url"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentLinkGitHubPR"
+          q: {
+            "$action": "link_git_hub_pr"
+            exist: [
+              "issue_id"
+              "url"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentLinkGitHubPR.attachment`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentLinkIntercom"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "conversation_id"
+                or: "conversation_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "create_as_user"
+                or: "create_as_user"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "display_icon_url"
+                or: "display_icon_url"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "issue_id"
+                or: "issue_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "part_id"
+                or: "part_id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "title"
+                or: "title"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdateLinkIntercom($conversationId: String!, $createAsUser: String, $displayIconUrl: String, $id: String, $issueId: String!, $partId: String, $title: String) { attachmentLinkIntercom(conversationId: $conversationId, createAsUser: $createAsUser, displayIconUrl: $displayIconUrl, id: $id, issueId: $issueId, partId: $partId, title: $title) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentLinkIntercom"
+            optype: "mutation"
+            vars: [
+              {
+                from: "conversationId"
+                gqltype: "String!"
+                name: "conversationId"
+              }
+              {
+                from: "createAsUser"
+                gqltype: "String"
+                name: "createAsUser"
+              }
+              {
+                from: "displayIconUrl"
+                gqltype: "String"
+                name: "displayIconUrl"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "issueId"
+                gqltype: "String!"
+                name: "issueId"
+              }
+              {
+                from: "partId"
+                gqltype: "String"
+                name: "partId"
+              }
+              {
+                from: "title"
+                gqltype: "String"
+                name: "title"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentLinkIntercom"
+          q: {
+            "$action": "link_intercom"
+            exist: [
+              "conversation_id"
+              "issue_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentLinkIntercom.attachment`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentLinkJiraIssue"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "create_as_user"
+                or: "create_as_user"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "display_icon_url"
+                or: "display_icon_url"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "issue_id"
+                or: "issue_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "jira_issue_id"
+                or: "jira_issue_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "title"
+                or: "title"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "url"
+                or: "url"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdateLinkJiraIssue($createAsUser: String, $displayIconUrl: String, $id: String, $issueId: String!, $jiraIssueId: String!, $title: String, $url: String) { attachmentLinkJiraIssue(createAsUser: $createAsUser, displayIconUrl: $displayIconUrl, id: $id, issueId: $issueId, jiraIssueId: $jiraIssueId, title: $title, url: $url) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentLinkJiraIssue"
+            optype: "mutation"
+            vars: [
+              {
+                from: "createAsUser"
+                gqltype: "String"
+                name: "createAsUser"
+              }
+              {
+                from: "displayIconUrl"
+                gqltype: "String"
+                name: "displayIconUrl"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "issueId"
+                gqltype: "String!"
+                name: "issueId"
+              }
+              {
+                from: "jiraIssueId"
+                gqltype: "String!"
+                name: "jiraIssueId"
+              }
+              {
+                from: "title"
+                gqltype: "String"
+                name: "title"
+              }
+              {
+                from: "url"
+                gqltype: "String"
+                name: "url"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentLinkJiraIssue"
+          q: {
+            "$action": "link_jira_issue"
+            exist: [
+              "issue_id"
+              "jira_issue_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentLinkJiraIssue.attachment`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentLinkSalesforce"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "create_as_user"
+                or: "create_as_user"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "display_icon_url"
+                or: "display_icon_url"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "issue_id"
+                or: "issue_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "title"
+                or: "title"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "url"
+                or: "url"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdateLinkSalesforce($createAsUser: String, $displayIconUrl: String, $id: String, $issueId: String!, $title: String, $url: String!) { attachmentLinkSalesforce(createAsUser: $createAsUser, displayIconUrl: $displayIconUrl, id: $id, issueId: $issueId, title: $title, url: $url) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentLinkSalesforce"
+            optype: "mutation"
+            vars: [
+              {
+                from: "createAsUser"
+                gqltype: "String"
+                name: "createAsUser"
+              }
+              {
+                from: "displayIconUrl"
+                gqltype: "String"
+                name: "displayIconUrl"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "issueId"
+                gqltype: "String!"
+                name: "issueId"
+              }
+              {
+                from: "title"
+                gqltype: "String"
+                name: "title"
+              }
+              {
+                from: "url"
+                gqltype: "String!"
+                name: "url"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentLinkSalesforce"
+          q: {
+            "$action": "link_salesforce"
+            exist: [
+              "issue_id"
+              "url"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentLinkSalesforce.attachment`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentLinkSlack"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "create_as_user"
+                or: "create_as_user"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "display_icon_url"
+                or: "display_icon_url"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "issue_id"
+                or: "issue_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "sync_to_comment_thread"
+                or: "sync_to_comment_thread"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "title"
+                or: "title"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "url"
+                or: "url"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdateLinkSlack($createAsUser: String, $displayIconUrl: String, $id: String, $issueId: String!, $syncToCommentThread: Boolean, $title: String, $url: String!) { attachmentLinkSlack(createAsUser: $createAsUser, displayIconUrl: $displayIconUrl, id: $id, issueId: $issueId, syncToCommentThread: $syncToCommentThread, title: $title, url: $url) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentLinkSlack"
+            optype: "mutation"
+            vars: [
+              {
+                from: "createAsUser"
+                gqltype: "String"
+                name: "createAsUser"
+              }
+              {
+                from: "displayIconUrl"
+                gqltype: "String"
+                name: "displayIconUrl"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "issueId"
+                gqltype: "String!"
+                name: "issueId"
+              }
+              {
+                from: "syncToCommentThread"
+                gqltype: "Boolean"
+                name: "syncToCommentThread"
+              }
+              {
+                from: "title"
+                gqltype: "String"
+                name: "title"
+              }
+              {
+                from: "url"
+                gqltype: "String!"
+                name: "url"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentLinkSlack"
+          q: {
+            "$action": "link_slack"
+            exist: [
+              "issue_id"
+              "url"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentLinkSlack.attachment`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentLinkURL"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "create_as_user"
+                or: "create_as_user"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "display_icon_url"
+                or: "display_icon_url"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "issue_id"
+                or: "issue_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "title"
+                or: "title"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "url"
+                or: "url"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdateLinkUrl($createAsUser: String, $displayIconUrl: String, $id: String, $issueId: String!, $title: String, $url: String!) { attachmentLinkURL(createAsUser: $createAsUser, displayIconUrl: $displayIconUrl, id: $id, issueId: $issueId, title: $title, url: $url) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentLinkURL"
+            optype: "mutation"
+            vars: [
+              {
+                from: "createAsUser"
+                gqltype: "String"
+                name: "createAsUser"
+              }
+              {
+                from: "displayIconUrl"
+                gqltype: "String"
+                name: "displayIconUrl"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "issueId"
+                gqltype: "String!"
+                name: "issueId"
+              }
+              {
+                from: "title"
+                gqltype: "String"
+                name: "title"
+              }
+              {
+                from: "url"
+                gqltype: "String!"
+                name: "url"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentLinkURL"
+          q: {
+            "$action": "link_url"
+            exist: [
+              "issue_id"
+              "url"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentLinkURL.attachment`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentLinkZendesk"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "create_as_user"
+                or: "create_as_user"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "display_icon_url"
+                or: "display_icon_url"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "issue_id"
+                or: "issue_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "ticket_id"
+                or: "ticket_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "title"
+                or: "title"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "url"
+                or: "url"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdateLinkZendesk($createAsUser: String, $displayIconUrl: String, $id: String, $issueId: String!, $ticketId: String!, $title: String, $url: String) { attachmentLinkZendesk(createAsUser: $createAsUser, displayIconUrl: $displayIconUrl, id: $id, issueId: $issueId, ticketId: $ticketId, title: $title, url: $url) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentLinkZendesk"
+            optype: "mutation"
+            vars: [
+              {
+                from: "createAsUser"
+                gqltype: "String"
+                name: "createAsUser"
+              }
+              {
+                from: "displayIconUrl"
+                gqltype: "String"
+                name: "displayIconUrl"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "issueId"
+                gqltype: "String!"
+                name: "issueId"
+              }
+              {
+                from: "ticketId"
+                gqltype: "String!"
+                name: "ticketId"
+              }
+              {
+                from: "title"
+                gqltype: "String"
+                name: "title"
+              }
+              {
+                from: "url"
+                gqltype: "String"
+                name: "url"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentLinkZendesk"
+          q: {
+            "$action": "link_zendesk"
+            exist: [
+              "issue_id"
+              "ticket_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentLinkZendesk.attachment`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentSyncToSlack"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdateSyncToSlack($id: String!) { attachmentSyncToSlack(id: $id) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentSyncToSlack"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentSyncToSlack"
+          q: {
+            "$action": "sync_to_slack"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentSyncToSlack.attachment`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AttachmentUpdate($id: String!, $input: AttachmentUpdateInput!) { attachmentUpdate(id: $id, input: $input) { attachment { ...AttachmentFields } success } } fragment AttachmentFields on Attachment { archivedAt bodyData createdAt creator { id } externalUserCreator { id } groupBySource id issue { id } metadata originalIssue { id } source sourceType subtitle title updatedAt url }"
+            field: "attachmentUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "AttachmentUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentUpdate.attachment`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

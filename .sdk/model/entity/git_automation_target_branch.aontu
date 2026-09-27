@@ -1,0 +1,200 @@
+# Entity: git_automation_target_branch
+
+main: kit: entity: git_automation_target_branch: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    branchPattern: {
+      h: "Branch Pattern"
+      n: "branchPattern"
+      r: true
+      sh: "The branch name or pattern to match against pull request target branches."
+      t: "`$STRING`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    isRegex: {
+      h: "Is Regex"
+      n: "isRegex"
+      r: true
+      sh: "Whether the branch pattern should be interpreted as a regular expression."
+      t: "`$BOOLEAN`"
+    }
+    team: {
+      h: "Team"
+      n: "team"
+      r: false
+      sh: "The team that this target branch definition belongs to."
+      t: "`$OBJECT`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "git_automation_target_branch"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST gitAutomationTargetBranchCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation GitAutomationTargetBranchCreate($input: GitAutomationTargetBranchCreateInput!) { gitAutomationTargetBranchCreate(input: $input) { targetBranch { ...GitAutomationTargetBranchFields } success } } fragment GitAutomationTargetBranchFields on GitAutomationTargetBranch { archivedAt branchPattern createdAt id isRegex team { id } updatedAt }"
+            field: "gitAutomationTargetBranchCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "GitAutomationTargetBranchCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "gitAutomationTargetBranchCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.gitAutomationTargetBranchCreate.targetBranch`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST gitAutomationTargetBranchDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation GitAutomationTargetBranchRemove($id: String!) { gitAutomationTargetBranchDelete(id: $id) { entityId lastSyncId success } }"
+            field: "gitAutomationTargetBranchDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "gitAutomationTargetBranchDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.gitAutomationTargetBranchDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST gitAutomationTargetBranchUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation GitAutomationTargetBranchUpdate($id: String!, $input: GitAutomationTargetBranchUpdateInput!) { gitAutomationTargetBranchUpdate(id: $id, input: $input) { targetBranch { ...GitAutomationTargetBranchFields } success } } fragment GitAutomationTargetBranchFields on GitAutomationTargetBranch { archivedAt branchPattern createdAt id isRegex team { id } updatedAt }"
+            field: "gitAutomationTargetBranchUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "GitAutomationTargetBranchUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "gitAutomationTargetBranchUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.gitAutomationTargetBranchUpdate.targetBranch`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

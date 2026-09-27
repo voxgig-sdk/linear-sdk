@@ -1,0 +1,183 @@
+# Entity: reaction
+
+main: kit: entity: reaction: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    comment: {
+      h: "Comment"
+      n: "comment"
+      r: false
+      sh: "The comment that the reaction is associated with."
+      t: "`$OBJECT`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    emoji: {
+      h: "Emoji"
+      n: "emoji"
+      r: true
+      sh: "The name of the emoji used for this reaction."
+      t: "`$STRING`"
+    }
+    externalUser: {
+      h: "External User"
+      n: "externalUser"
+      r: false
+      sh: "The external user that created the reaction through an integration."
+      t: "`$OBJECT`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    initiativeUpdate: {
+      h: "Initiative Update"
+      n: "initiativeUpdate"
+      r: false
+      sh: "The initiative update that the reaction is associated with."
+      t: "`$OBJECT`"
+    }
+    issue: {
+      h: "Issue"
+      n: "issue"
+      r: false
+      sh: "The issue that the reaction is associated with."
+      t: "`$OBJECT`"
+    }
+    post: {
+      h: "Post"
+      n: "post"
+      r: false
+      sh: "The post that the reaction is associated with."
+      t: "`$OBJECT`"
+    }
+    projectUpdate: {
+      h: "Project Update"
+      n: "projectUpdate"
+      r: false
+      sh: "The project update that the reaction is associated with."
+      t: "`$OBJECT`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    user: {
+      h: "User"
+      n: "user"
+      r: false
+      sh: "The workspace user that created the reaction."
+      t: "`$OBJECT`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "reaction"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST reactionCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation ReactionCreate($input: ReactionCreateInput!) { reactionCreate(input: $input) { reaction { ...ReactionFields } success } } fragment ReactionFields on Reaction { archivedAt comment { id } createdAt emoji externalUser { id } id initiativeUpdate { id } issue { id } post { id } projectUpdate { id } updatedAt user { id } }"
+            field: "reactionCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "ReactionCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "reactionCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.reactionCreate.reaction`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST reactionDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ReactionRemove($id: String!) { reactionDelete(id: $id) { entityId lastSyncId success } }"
+            field: "reactionDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "reactionDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.reactionDelete`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

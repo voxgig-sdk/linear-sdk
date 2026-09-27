@@ -1,0 +1,72 @@
+# BasicEntityExternalLinkFlow
+
+main: kit: flow: BasicEntityExternalLinkFlow:
+{
+  entity: "entity_external_link",
+  kind: "basic",
+  name: "BasicEntityExternalLinkFlow",
+  step: [
+    {
+      i: {
+        ref: "entity_external_link_ref01"
+      }
+
+      o: "create"
+    }
+
+    {
+      i: {
+        ref: "entity_external_link_ref01",
+        srcdatavar: "entity_external_link_ref01_data",
+        suffix: "_up0",
+        textfield: "label"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-entity_external_link_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "entity_external_link_ref01",
+        srcdatavar: "entity_external_link_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "entity_external_link01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-entity_external_link_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "entity_external_link_ref01",
+        suffix: "_rm0"
+      }
+
+      m: {
+        id: "entity_external_link01"
+      }
+
+      o: "remove"
+    }
+  ],
+  "key$": "BasicEntityExternalLinkFlow"
+}

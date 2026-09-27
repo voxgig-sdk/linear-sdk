@@ -1,0 +1,694 @@
+# Entity: comment
+
+main: kit: entity: comment: {
+
+  alias: field: {}
+
+  fields: {
+    agentSession: {
+      h: "Agent Session"
+      n: "agentSession"
+      r: false
+      sh: "Agent session associated with this comment."
+      t: "`$OBJECT`"
+    }
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    body: {
+      h: "Body"
+      n: "body"
+      r: true
+      sh: "The comment content in markdown format."
+      t: "`$STRING`"
+    }
+    bodyData: {
+      h: "Body Data"
+      n: "bodyData"
+      r: true
+      sh: "[Internal] The comment content as a ProseMirror document."
+      t: "`$STRING`"
+    }
+    botActor: {
+      h: "Bot Actor"
+      n: "botActor"
+      r: false
+      sh: "The bot that created the comment."
+      t: "`$OBJECT`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    documentContent: {
+      h: "Document Content"
+      n: "documentContent"
+      r: false
+      sh: "The document content that the comment is associated with."
+      t: "`$OBJECT`"
+    }
+    documentContentId: {
+      h: "Document Content Id"
+      n: "documentContentId"
+      r: false
+      sh: "The ID of the document content that the comment is associated with."
+      t: "`$STRING`"
+    }
+    editedAt: {
+      h: "Edited At"
+      n: "editedAt"
+      r: false
+      sh: "The time the comment was last edited by its author."
+      t: "`$ANY`"
+    }
+    externalThread: {
+      h: "External Thread"
+      n: "externalThread"
+      r: false
+      sh: "The external thread that the comment is synced with."
+      t: "`$OBJECT`"
+    }
+    externalUser: {
+      h: "External User"
+      n: "externalUser"
+      r: false
+      sh: "The external user who wrote the comment, when the comment was created through an integration such as Slack or Intercom."
+      t: "`$OBJECT`"
+    }
+    hideInLinear: {
+      h: "Hide In Linear"
+      n: "hideInLinear"
+      r: true
+      sh: "[Internal] Whether the comment should be hidden from Linear clients."
+      t: "`$BOOLEAN`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    initiative: {
+      h: "Initiative"
+      n: "initiative"
+      r: false
+      sh: "The initiative that the comment is associated with."
+      t: "`$OBJECT`"
+    }
+    initiativeId: {
+      h: "Initiative Id"
+      n: "initiativeId"
+      r: false
+      sh: "The ID of the initiative that the comment is associated with."
+      t: "`$STRING`"
+    }
+    initiativeUpdate: {
+      h: "Initiative Update"
+      n: "initiativeUpdate"
+      r: false
+      sh: "The initiative update that the comment is associated with."
+      t: "`$OBJECT`"
+    }
+    initiativeUpdateId: {
+      h: "Initiative Update Id"
+      n: "initiativeUpdateId"
+      r: false
+      sh: "The ID of the initiative update that the comment is associated with."
+      t: "`$STRING`"
+    }
+    isArtificialAgentSessionRoot: {
+      h: "Is Artificial Agent Session Root"
+      n: "isArtificialAgentSessionRoot"
+      r: true
+      sh: "[Internal] Whether the comment is an artificial placeholder for an agent session thread created without a comment mention."
+      t: "`$BOOLEAN`"
+    }
+    issue: {
+      h: "Issue"
+      n: "issue"
+      r: false
+      sh: "The issue that the comment is associated with."
+      t: "`$OBJECT`"
+    }
+    issueId: {
+      h: "Issue Id"
+      n: "issueId"
+      r: false
+      sh: "The ID of the issue that the comment is associated with."
+      t: "`$STRING`"
+    }
+    onBehalfOf: {
+      h: "On Behalf Of"
+      n: "onBehalfOf"
+      r: false
+      sh: "[Internal] The user on whose behalf the comment was created, e.g."
+      t: "`$OBJECT`"
+    }
+    parent: {
+      h: "Parent"
+      n: "parent"
+      r: false
+      sh: "The parent comment under which the current comment is nested."
+      t: "`$OBJECT`"
+    }
+    parentId: {
+      h: "Parent Id"
+      n: "parentId"
+      r: false
+      sh: "The ID of the parent comment under which the current comment is nested."
+      t: "`$STRING`"
+    }
+    post: {
+      h: "Post"
+      n: "post"
+      r: false
+      sh: "The post that the comment is associated with."
+      t: "`$OBJECT`"
+    }
+    project: {
+      h: "Project"
+      n: "project"
+      r: false
+      sh: "The project that the comment is associated with."
+      t: "`$OBJECT`"
+    }
+    projectId: {
+      h: "Project Id"
+      n: "projectId"
+      r: false
+      sh: "The ID of the project that the comment is associated with."
+      t: "`$STRING`"
+    }
+    projectUpdate: {
+      h: "Project Update"
+      n: "projectUpdate"
+      r: false
+      sh: "The project update that the comment is associated with."
+      t: "`$OBJECT`"
+    }
+    projectUpdateId: {
+      h: "Project Update Id"
+      n: "projectUpdateId"
+      r: false
+      sh: "The ID of the project update that the comment is associated with."
+      t: "`$STRING`"
+    }
+    quotedText: {
+      h: "Quoted Text"
+      n: "quotedText"
+      r: false
+      sh: "The text that this comment references, used for inline comments on documents or issue descriptions."
+      t: "`$STRING`"
+    }
+    reactionData: {
+      h: "Reaction Data"
+      n: "reactionData"
+      r: true
+      sh: "Emoji reaction summary for this comment, grouped by emoji type."
+      t: "`$ANY`"
+    }
+    resolvedAt: {
+      h: "Resolved At"
+      n: "resolvedAt"
+      r: false
+      sh: "The time when the comment thread was resolved."
+      t: "`$ANY`"
+    }
+    resolvingComment: {
+      h: "Resolving Comment"
+      n: "resolvingComment"
+      r: false
+      sh: "The child comment that resolved this thread."
+      t: "`$OBJECT`"
+    }
+    resolvingCommentId: {
+      h: "Resolving Comment Id"
+      n: "resolvingCommentId"
+      r: false
+      sh: "The ID of the child comment that resolved this thread."
+      t: "`$STRING`"
+    }
+    resolvingUser: {
+      h: "Resolving User"
+      n: "resolvingUser"
+      r: false
+      sh: "The user that resolved the comment thread."
+      t: "`$OBJECT`"
+    }
+    threadSummary: {
+      h: "Thread Summary"
+      n: "threadSummary"
+      r: false
+      sh: "[Internal] An AI-generated summary of the comment thread."
+      t: "`$ANY`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    url: {
+      h: "Url"
+      n: "url"
+      r: true
+      sh: "Comment's URL."
+      t: "`$STRING`"
+    }
+    user: {
+      h: "User"
+      n: "user"
+      r: false
+      sh: "The user who wrote the comment."
+      t: "`$OBJECT`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "comment"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST commentCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation CommentCreate($input: CommentCreateInput!) { commentCreate(input: $input) { comment { ...CommentFields } success } } fragment CommentFields on Comment { agentSession { id } archivedAt body bodyData botActor { id } createdAt documentContent { id } documentContentId editedAt externalThread { id } externalUser { id } hideInLinear id initiative { id } initiativeId initiativeUpdate { id } initiativeUpdateId isArtificialAgentSessionRoot issue { id } issueId onBehalfOf { id } parent { id } parentId post { id } project { id } projectId projectUpdate { id } projectUpdateId quotedText reactionData resolvedAt resolvingComment { id } resolvingCommentId resolvingUser { id } threadSummary updatedAt url user { id } }"
+            field: "commentCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "CommentCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "commentCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.commentCreate.comment`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST comments"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query CommentList($after: String, $before: String, $filter: CommentFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { comments(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...CommentFields } pageInfo { endCursor hasNextPage } } } fragment CommentFields on Comment { agentSession { id } archivedAt body bodyData botActor { id } createdAt documentContent { id } documentContentId editedAt externalThread { id } externalUser { id } hideInLinear id initiative { id } initiativeId initiativeUpdate { id } initiativeUpdateId isArtificialAgentSessionRoot issue { id } issueId onBehalfOf { id } parent { id } parentId post { id } project { id } projectId projectUpdate { id } projectUpdateId quotedText reactionData resolvedAt resolvingComment { id } resolvingCommentId resolvingUser { id } threadSummary updatedAt url user { id } }"
+            field: "comments"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: ""
+                gqltype: "CommentFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "comments"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.comments.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST comment"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "hash"
+                or: "hash"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query CommentLoad($hash: String, $id: String) { comment(hash: $hash, id: $id) { ...CommentFields } } fragment CommentFields on Comment { agentSession { id } archivedAt body bodyData botActor { id } createdAt documentContent { id } documentContentId editedAt externalThread { id } externalUser { id } hideInLinear id initiative { id } initiativeId initiativeUpdate { id } initiativeUpdateId isArtificialAgentSessionRoot issue { id } issueId onBehalfOf { id } parent { id } parentId post { id } project { id } projectId projectUpdate { id } projectUpdateId quotedText reactionData resolvedAt resolvingComment { id } resolvingCommentId resolvingUser { id } threadSummary updatedAt url user { id } }"
+            field: "comment"
+            optype: "query"
+            vars: [
+              {
+                from: "hash"
+                gqltype: "String"
+                name: "hash"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "comment"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.comment`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST commentDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation CommentRemove($id: String!) { commentDelete(id: $id) { entityId lastSyncId success } }"
+            field: "commentDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "commentDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.commentDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST commentResolve"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "resolving_comment_id"
+                or: "resolving_comment_id"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation CommentUpdateResolve($id: String!, $resolvingCommentId: String) { commentResolve(id: $id, resolvingCommentId: $resolvingCommentId) { comment { ...CommentFields } success } } fragment CommentFields on Comment { agentSession { id } archivedAt body bodyData botActor { id } createdAt documentContent { id } documentContentId editedAt externalThread { id } externalUser { id } hideInLinear id initiative { id } initiativeId initiativeUpdate { id } initiativeUpdateId isArtificialAgentSessionRoot issue { id } issueId onBehalfOf { id } parent { id } parentId post { id } project { id } projectId projectUpdate { id } projectUpdateId quotedText reactionData resolvedAt resolvingComment { id } resolvingCommentId resolvingUser { id } threadSummary updatedAt url user { id } }"
+            field: "commentResolve"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "resolvingCommentId"
+                gqltype: "String"
+                name: "resolvingCommentId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "commentResolve"
+          q: {
+            "$action": "resolve"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.commentResolve.comment`"
+          }
+        }
+        {
+          co: {
+            id: "POST commentUnresolve"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation CommentUpdateUnresolve($id: String!) { commentUnresolve(id: $id) { comment { ...CommentFields } success } } fragment CommentFields on Comment { agentSession { id } archivedAt body bodyData botActor { id } createdAt documentContent { id } documentContentId editedAt externalThread { id } externalUser { id } hideInLinear id initiative { id } initiativeId initiativeUpdate { id } initiativeUpdateId isArtificialAgentSessionRoot issue { id } issueId onBehalfOf { id } parent { id } parentId post { id } project { id } projectId projectUpdate { id } projectUpdateId quotedText reactionData resolvedAt resolvingComment { id } resolvingCommentId resolvingUser { id } threadSummary updatedAt url user { id } }"
+            field: "commentUnresolve"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "commentUnresolve"
+          q: {
+            "$action": "unresolve"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.commentUnresolve.comment`"
+          }
+        }
+        {
+          co: {
+            id: "POST commentUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "skip_edited_at"
+                or: "skip_edited_at"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation CommentUpdate($id: String!, $input: CommentUpdateInput!, $skipEditedAt: Boolean) { commentUpdate(id: $id, input: $input, skipEditedAt: $skipEditedAt) { comment { ...CommentFields } success } } fragment CommentFields on Comment { agentSession { id } archivedAt body bodyData botActor { id } createdAt documentContent { id } documentContentId editedAt externalThread { id } externalUser { id } hideInLinear id initiative { id } initiativeId initiativeUpdate { id } initiativeUpdateId isArtificialAgentSessionRoot issue { id } issueId onBehalfOf { id } parent { id } parentId post { id } project { id } projectId projectUpdate { id } projectUpdateId quotedText reactionData resolvedAt resolvingComment { id } resolvingCommentId resolvingUser { id } threadSummary updatedAt url user { id } }"
+            field: "commentUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "CommentUpdateInput!"
+                name: "input"
+              }
+              {
+                from: "skipEditedAt"
+                gqltype: "Boolean"
+                name: "skipEditedAt"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "commentUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.commentUpdate.comment`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

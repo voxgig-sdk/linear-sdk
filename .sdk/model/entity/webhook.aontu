@@ -1,0 +1,397 @@
+# Entity: webhook
+
+main: kit: entity: webhook: {
+
+  alias: field: {}
+
+  fields: {
+    allPublicTeams: {
+      h: "All Public Teams"
+      n: "allPublicTeams"
+      r: true
+      sh: "Whether the webhook receives events from all public (non-private) teams in the organization, including teams created after the webhook was set up."
+      t: "`$BOOLEAN`"
+    }
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creator: {
+      h: "Creator"
+      n: "creator"
+      r: false
+      sh: "The user who created the webhook."
+      t: "`$OBJECT`"
+    }
+    enabled: {
+      h: "Enabled"
+      n: "enabled"
+      r: true
+      sh: "Whether the webhook is enabled."
+      t: "`$BOOLEAN`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    label: {
+      h: "Label"
+      n: "label"
+      r: false
+      sh: "A human-readable label for the webhook, used for identification in the UI."
+      t: "`$STRING`"
+    }
+    resourceTypes: {
+      h: "Resource Types"
+      n: "resourceTypes"
+      r: true
+      sh: "The resource types this webhook is subscribed to (e.g., 'Issue', 'Comment', 'Project', 'Cycle')."
+      t: "`$STRING`"
+    }
+    secret: {
+      h: "Secret"
+      n: "secret"
+      r: false
+      sh: "A secret token used to sign webhook payloads with HMAC-SHA256, allowing the recipient to verify that the payload originated from Linear and was not tampered with."
+      t: "`$STRING`"
+    }
+    team: {
+      h: "Team"
+      n: "team"
+      r: false
+      sh: "The single team that the webhook is scoped to."
+      t: "`$OBJECT`"
+    }
+    teamIds: {
+      h: "Team Ids"
+      n: "teamIds"
+      r: false
+      sh: "[INTERNAL] An array of team IDs that the webhook is subscribed to."
+      t: "`$STRING`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    url: {
+      h: "Url"
+      n: "url"
+      r: false
+      sh: "The destination URL where webhook payloads will be sent via HTTP POST."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "webhook"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST webhookCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation WebhookCreate($input: WebhookCreateInput!) { webhookCreate(input: $input) { webhook { ...WebhookFields } success } } fragment WebhookFields on Webhook { allPublicTeams archivedAt createdAt creator { id } enabled id label resourceTypes secret team { id } teamIds updatedAt url }"
+            field: "webhookCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "WebhookCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "webhookCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.webhookCreate.webhook`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST webhooks"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query WebhookList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { webhooks(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...WebhookFields } pageInfo { endCursor hasNextPage } } } fragment WebhookFields on Webhook { allPublicTeams archivedAt createdAt creator { id } enabled id label resourceTypes secret team { id } teamIds updatedAt url }"
+            field: "webhooks"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "webhooks"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.webhooks.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST webhook"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query WebhookLoad($id: String!) { webhook(id: $id) { ...WebhookFields } } fragment WebhookFields on Webhook { allPublicTeams archivedAt createdAt creator { id } enabled id label resourceTypes secret team { id } teamIds updatedAt url }"
+            field: "webhook"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "webhook"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.webhook`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST webhookDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation WebhookRemove($id: String!) { webhookDelete(id: $id) { entityId lastSyncId success } }"
+            field: "webhookDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "webhookDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.webhookDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST webhookUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation WebhookUpdate($id: String!, $input: WebhookUpdateInput!) { webhookUpdate(id: $id, input: $input) { webhook { ...WebhookFields } success } } fragment WebhookFields on Webhook { allPublicTeams archivedAt createdAt creator { id } enabled id label resourceTypes secret team { id } teamIds updatedAt url }"
+            field: "webhookUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "WebhookUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "webhookUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.webhookUpdate.webhook`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

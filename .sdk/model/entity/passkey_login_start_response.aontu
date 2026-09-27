@@ -1,0 +1,78 @@
+# Entity: passkey_login_start_response
+
+main: kit: entity: passkey_login_start_response: {
+
+  alias: field: {}
+
+  fields: {
+    options: {
+      h: "Options"
+      n: "options"
+      r: true
+      sh: "The passkey authentication options to pass to the WebAuthn API."
+      t: "`$ANY`"
+    }
+    success: {
+      h: "Success"
+      n: "success"
+      r: true
+      sh: "Whether the operation was successful."
+      t: "`$BOOLEAN`"
+    }
+  }
+
+  name: "passkey_login_start_response"
+  op: {
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST passkeyLoginStart"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "auth_id"
+                or: "auth_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation PasskeyLoginStartResponseUpdatePasskeyLoginStart($authId: String!) { passkeyLoginStart(authId: $authId) { ...PasskeyLoginStartResponseFields } } fragment PasskeyLoginStartResponseFields on PasskeyLoginStartResponse { options success }"
+            field: "passkeyLoginStart"
+            optype: "mutation"
+            vars: [
+              {
+                from: "authId"
+                gqltype: "String!"
+                name: "authId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "passkeyLoginStart"
+          q: {
+            "$action": "passkey_login_start"
+            exist: [
+              "auth_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.passkeyLoginStart`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

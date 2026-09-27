@@ -1,0 +1,196 @@
+# Entity: logout_response
+
+main: kit: entity: logout_response: {
+
+  alias: field: {}
+
+  fields: {
+    success: {
+      h: "Success"
+      n: "success"
+      r: true
+      sh: "Whether the operation was successful."
+      t: "`$BOOLEAN`"
+    }
+  }
+
+  name: "logout_response"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST logout"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "reason"
+                or: "reason"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation LogoutResponseCreateLogout($reason: String) { logout(reason: $reason) { ...LogoutResponseFields } } fragment LogoutResponseFields on LogoutResponse { success }"
+            field: "logout"
+            optype: "mutation"
+            vars: [
+              {
+                from: "reason"
+                gqltype: "String"
+                name: "reason"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "logout"
+          q: {
+            "$action": "logout"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.logout`"
+          }
+        }
+        {
+          co: {
+            id: "POST logoutAllSessions"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "reason"
+                or: "reason"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation LogoutResponseCreateLogoutAllSession($reason: String) { logoutAllSessions(reason: $reason) { ...LogoutResponseFields } } fragment LogoutResponseFields on LogoutResponse { success }"
+            field: "logoutAllSessions"
+            optype: "mutation"
+            vars: [
+              {
+                from: "reason"
+                gqltype: "String"
+                name: "reason"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "logoutAllSessions"
+          q: {
+            "$action": "logout_all_session"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.logoutAllSessions`"
+          }
+        }
+        {
+          co: {
+            id: "POST logoutOtherSessions"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "reason"
+                or: "reason"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation LogoutResponseCreateLogoutOtherSession($reason: String) { logoutOtherSessions(reason: $reason) { ...LogoutResponseFields } } fragment LogoutResponseFields on LogoutResponse { success }"
+            field: "logoutOtherSessions"
+            optype: "mutation"
+            vars: [
+              {
+                from: "reason"
+                gqltype: "String"
+                name: "reason"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "logoutOtherSessions"
+          q: {
+            "$action": "logout_other_session"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.logoutOtherSessions`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST logoutSession"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "session_id"
+                or: "session_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation LogoutResponseUpdateLogoutSession($sessionId: String!) { logoutSession(sessionId: $sessionId) { ...LogoutResponseFields } } fragment LogoutResponseFields on LogoutResponse { success }"
+            field: "logoutSession"
+            optype: "mutation"
+            vars: [
+              {
+                from: "sessionId"
+                gqltype: "String!"
+                name: "sessionId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "logoutSession"
+          q: {
+            "$action": "logout_session"
+            exist: [
+              "session_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.logoutSession`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

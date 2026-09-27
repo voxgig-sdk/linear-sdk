@@ -1,0 +1,18 @@
+# BasicEmailUserAccountAuthChallengeResponseFlow
+
+main: kit: flow: BasicEmailUserAccountAuthChallengeResponseFlow:
+{
+  entity: "email_user_account_auth_challenge_response",
+  kind: "basic",
+  name: "BasicEmailUserAccountAuthChallengeResponseFlow",
+  step: [
+    {
+      i: {
+        ref: "email_user_account_auth_challenge_response_ref01"
+      }
+
+      o: "create"
+    }
+  ],
+  "key$": "BasicEmailUserAccountAuthChallengeResponseFlow"
+}

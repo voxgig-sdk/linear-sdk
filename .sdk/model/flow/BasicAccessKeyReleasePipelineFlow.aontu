@@ -1,0 +1,28 @@
+# BasicAccessKeyReleasePipelineFlow
+
+main: kit: flow: BasicAccessKeyReleasePipelineFlow:
+{
+  entity: "access_key_release_pipeline",
+  kind: "basic",
+  name: "BasicAccessKeyReleasePipelineFlow",
+  step: [
+    {
+      i: {
+        ref: "access_key_release_pipeline_ref01",
+        srcdatavar: "access_key_release_pipeline_ref01_data",
+        suffix: "_dt0"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-access_key_release_pipeline_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicAccessKeyReleasePipelineFlow"
+}

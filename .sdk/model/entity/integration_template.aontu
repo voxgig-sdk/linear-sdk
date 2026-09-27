@@ -1,0 +1,303 @@
+# Entity: integration_template
+
+main: kit: entity: integration_template: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    foreignEntityId: {
+      h: "Foreign Entity Id"
+      n: "foreignEntityId"
+      r: false
+      sh: "The identifier of the foreign entity in the external service that this template is scoped to."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    integration: {
+      h: "Integration"
+      n: "integration"
+      r: false
+      sh: "The integration that the template is associated with."
+      t: "`$OBJECT`"
+    }
+    template: {
+      h: "Template"
+      n: "template"
+      r: false
+      sh: "The template that the integration is associated with."
+      t: "`$OBJECT`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "integration_template"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST integrationTemplateCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation IntegrationTemplateCreate($input: IntegrationTemplateCreateInput!) { integrationTemplateCreate(input: $input) { integrationTemplate { ...IntegrationTemplateFields } success } } fragment IntegrationTemplateFields on IntegrationTemplate { archivedAt createdAt foreignEntityId id integration { id } template { id } updatedAt }"
+            field: "integrationTemplateCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "IntegrationTemplateCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "integrationTemplateCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.integrationTemplateCreate.integrationTemplate`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST integrationTemplates"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query IntegrationTemplateList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { integrationTemplates(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...IntegrationTemplateFields } pageInfo { endCursor hasNextPage } } } fragment IntegrationTemplateFields on IntegrationTemplate { archivedAt createdAt foreignEntityId id integration { id } template { id } updatedAt }"
+            field: "integrationTemplates"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "integrationTemplates"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.integrationTemplates.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST integrationTemplate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query IntegrationTemplateLoad($id: String!) { integrationTemplate(id: $id) { ...IntegrationTemplateFields } } fragment IntegrationTemplateFields on IntegrationTemplate { archivedAt createdAt foreignEntityId id integration { id } template { id } updatedAt }"
+            field: "integrationTemplate"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "integrationTemplate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.integrationTemplate`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST integrationTemplateDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IntegrationTemplateRemove($id: String!) { integrationTemplateDelete(id: $id) { entityId lastSyncId success } }"
+            field: "integrationTemplateDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "integrationTemplateDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.integrationTemplateDelete`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

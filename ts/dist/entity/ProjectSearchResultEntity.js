@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProjectSearchResultEntity = void 0;
 const LinearEntityBase_1 = require("../LinearEntityBase");
-// TODO: needs Entity superclass
 class ProjectSearchResultEntity extends LinearEntityBase_1.LinearEntityBase {
     constructor(client, entopts) {
         super(client, entopts);

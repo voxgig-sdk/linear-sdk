@@ -1,0 +1,237 @@
+# Entity: upload_file
+
+main: kit: entity: upload_file: {
+
+  alias: field: {}
+
+  fields: {
+    assetUrl: {
+      h: "Asset Url"
+      n: "assetUrl"
+      r: true
+      sh: "The permanent asset URL where the file will be accessible after upload."
+      t: "`$STRING`"
+    }
+    contentType: {
+      h: "Content Type"
+      n: "contentType"
+      r: true
+      sh: "The content type."
+      t: "`$STRING`"
+    }
+    filename: {
+      h: "Filename"
+      n: "filename"
+      r: true
+      sh: "The filename."
+      t: "`$STRING`"
+    }
+    metaData: {
+      h: "Meta Data"
+      n: "metaData"
+      r: false
+      sh: "Optional metadata associated with the upload, such as the related issue or comment ID."
+      t: "`$ANY`"
+    }
+    size: {
+      h: "Size"
+      n: "size"
+      r: true
+      sh: "The size of the uploaded file."
+      t: "`$INTEGER`"
+    }
+    uploadUrl: {
+      h: "Upload Url"
+      n: "uploadUrl"
+      r: true
+      sh: "The pre-signed URL to which the file should be uploaded via a PUT request."
+      t: "`$STRING`"
+    }
+  }
+
+  name: "upload_file"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST fileUpload"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "content_type"
+                or: "content_type"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "filename"
+                or: "filename"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "make_public"
+                or: "make_public"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "meta_data"
+                or: "meta_data"
+                r: false
+                t: "`$ANY`"
+              }
+              {
+                k: "param"
+                n: "size"
+                or: "size"
+                r: true
+                t: "`$INTEGER`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation UploadFileCreateFileUpload($contentType: String!, $filename: String!, $makePublic: Boolean, $metaData: JSON, $size: Int!) { fileUpload(contentType: $contentType, filename: $filename, makePublic: $makePublic, metaData: $metaData, size: $size) { uploadFile { ...UploadFileFields } success } } fragment UploadFileFields on UploadFile { assetUrl contentType filename metaData size uploadUrl }"
+            field: "fileUpload"
+            optype: "mutation"
+            vars: [
+              {
+                from: "contentType"
+                gqltype: "String!"
+                name: "contentType"
+              }
+              {
+                from: "filename"
+                gqltype: "String!"
+                name: "filename"
+              }
+              {
+                from: "makePublic"
+                gqltype: "Boolean"
+                name: "makePublic"
+              }
+              {
+                from: "metaData"
+                gqltype: "JSON"
+                name: "metaData"
+              }
+              {
+                from: "size"
+                gqltype: "Int!"
+                name: "size"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "fileUpload"
+          q: {
+            "$action": "file_upload"
+            exist: [
+              "content_type"
+              "filename"
+              "size"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.fileUpload.uploadFile`"
+          }
+        }
+        {
+          co: {
+            id: "POST importFileUpload"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "content_type"
+                or: "content_type"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "filename"
+                or: "filename"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "meta_data"
+                or: "meta_data"
+                r: false
+                t: "`$ANY`"
+              }
+              {
+                k: "param"
+                n: "size"
+                or: "size"
+                r: true
+                t: "`$INTEGER`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation UploadFileCreateImportFileUpload($contentType: String!, $filename: String!, $metaData: JSON, $size: Int!) { importFileUpload(contentType: $contentType, filename: $filename, metaData: $metaData, size: $size) { uploadFile { ...UploadFileFields } success } } fragment UploadFileFields on UploadFile { assetUrl contentType filename metaData size uploadUrl }"
+            field: "importFileUpload"
+            optype: "mutation"
+            vars: [
+              {
+                from: "contentType"
+                gqltype: "String!"
+                name: "contentType"
+              }
+              {
+                from: "filename"
+                gqltype: "String!"
+                name: "filename"
+              }
+              {
+                from: "metaData"
+                gqltype: "JSON"
+                name: "metaData"
+              }
+              {
+                from: "size"
+                gqltype: "Int!"
+                name: "size"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "importFileUpload"
+          q: {
+            "$action": "import_file_upload"
+            exist: [
+              "content_type"
+              "filename"
+              "size"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.importFileUpload.uploadFile`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

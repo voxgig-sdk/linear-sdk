@@ -41,9 +41,9 @@ int main(void) {
       cmap(1, "id", v_str("direct02")));
     LinearSDK* sdk = notification_direct_setup(mockres);
     voxgig_value* params = v_map();
-    setp(params, "after", v_str("direct01"));
-    setp(params, "first", v_str("direct02"));
-    setp(params, "unread_only", v_str("direct03"));
+    setp(params, "undefined", v_str("direct01"));
+    setp(params, "undefined", v_str("direct02"));
+    setp(params, "undefined", v_str("direct03"));
     PNError* err = NULL;
     voxgig_value* result = sdk_direct(sdk, cmap(3,
       "path", v_str(""),

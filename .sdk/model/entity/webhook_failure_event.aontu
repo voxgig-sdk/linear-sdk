@@ -1,0 +1,159 @@
+# Entity: webhook_failure_event
+
+main: kit: entity: webhook_failure_event: {
+
+  alias: field: {}
+
+  fields: {
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    executionId: {
+      h: "Execution Id"
+      n: "executionId"
+      r: true
+      sh: "A stable identifier for the webhook delivery attempt."
+      t: "`$STRING`"
+    }
+    httpStatus: {
+      h: "Http Status"
+      n: "httpStatus"
+      r: false
+      sh: "The HTTP status code returned by the webhook recipient."
+      t: "`$NUMBER`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    responseOrError: {
+      h: "Response Or Error"
+      n: "responseOrError"
+      r: false
+      sh: "The HTTP response body returned by the recipient, or the error message if the request failed before receiving a response."
+      t: "`$STRING`"
+    }
+    url: {
+      h: "Url"
+      n: "url"
+      r: true
+      sh: "The URL that the webhook was trying to push to."
+      t: "`$STRING`"
+    }
+    webhook: {
+      h: "Webhook"
+      n: "webhook"
+      r: false
+      sh: "The webhook that this failure event is associated with."
+      t: "`$OBJECT`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "webhook_failure_event"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST failuresForOauthWebhooks"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "oauth_client_id"
+                or: "oauth_client_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query WebhookFailureEventList($oauthClientId: String!) { failuresForOauthWebhooks(oauthClientId: $oauthClientId) { ...WebhookFailureEventFields } } fragment WebhookFailureEventFields on WebhookFailureEvent { createdAt executionId httpStatus id responseOrError url webhook { id } }"
+            field: "failuresForOauthWebhooks"
+            optype: "query"
+            vars: [
+              {
+                from: "oauthClientId"
+                gqltype: "String!"
+                name: "oauthClientId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "failuresForOauthWebhooks"
+          q: {
+            exist: [
+              "oauth_client_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.failuresForOauthWebhooks`"
+          }
+        }
+        {
+          co: {
+            id: "POST auditLogWebhookFailureEvents"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "webhook_id"
+                or: "webhook_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query WebhookFailureEventList($webhookId: String!) { auditLogWebhookFailureEvents(webhookId: $webhookId) { ...WebhookFailureEventFields } } fragment WebhookFailureEventFields on WebhookFailureEvent { createdAt executionId httpStatus id responseOrError url webhook { id } }"
+            field: "auditLogWebhookFailureEvents"
+            optype: "query"
+            vars: [
+              {
+                from: "webhookId"
+                gqltype: "String!"
+                name: "webhookId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "auditLogWebhookFailureEvents"
+          q: {
+            exist: [
+              "webhook_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.auditLogWebhookFailureEvents`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

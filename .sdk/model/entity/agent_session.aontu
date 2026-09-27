@@ -1,0 +1,585 @@
+# Entity: agent_session
+
+main: kit: entity: agent_session: {
+
+  alias: field: {}
+
+  fields: {
+    appUser: {
+      h: "App User"
+      n: "appUser"
+      r: false
+      sh: "The agent user that is associated with this agent session."
+      t: "`$OBJECT`"
+    }
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    codingHarnessModelLabel: {
+      h: "Coding Harness Model Label"
+      n: "codingHarnessModelLabel"
+      r: false
+      sh: "[Internal] Compact display label for the coding harness model used by this session, derived from the latest associated sandbox."
+      t: "`$STRING`"
+    }
+    comment: {
+      h: "Comment"
+      n: "comment"
+      r: false
+      sh: "The comment this agent session is associated with."
+      t: "`$OBJECT`"
+    }
+    context: {
+      h: "Context"
+      n: "context"
+      r: true
+      sh: "The entity contexts this session is related to, such as issues or projects referenced in direct chat sessions."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creator: {
+      h: "Creator"
+      n: "creator"
+      r: false
+      sh: "The human user responsible for the agent session."
+      t: "`$OBJECT`"
+    }
+    dismissedAt: {
+      h: "Dismissed At"
+      n: "dismissedAt"
+      r: false
+      sh: "The time a user dismissed this agent session."
+      t: "`$ANY`"
+    }
+    dismissedBy: {
+      h: "Dismissed By"
+      n: "dismissedBy"
+      r: false
+      sh: "The user who dismissed the agent session."
+      t: "`$OBJECT`"
+    }
+    endedAt: {
+      h: "Ended At"
+      n: "endedAt"
+      r: false
+      sh: "The time the agent session completed."
+      t: "`$ANY`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    issue: {
+      h: "Issue"
+      n: "issue"
+      r: false
+      sh: "The issue this agent session is associated with."
+      t: "`$OBJECT`"
+    }
+    modelSelection: {
+      h: "Model Selection"
+      n: "modelSelection"
+      r: false
+      sh: "[Internal] How Adaptive selected the model route used by this coding session."
+      t: "`$ANY`"
+    }
+    plan: {
+      h: "Plan"
+      n: "plan"
+      r: false
+      sh: "A dynamically updated plan describing the agent's execution strategy, including steps to be taken and their current status."
+      t: "`$ANY`"
+    }
+    pullRequest: {
+      h: "Pull Request"
+      n: "pullRequest"
+      r: false
+      sh: "The pull request this agent session is anchored to, when started from a pull request."
+      t: "`$OBJECT`"
+    }
+    slugId: {
+      h: "Slug Id"
+      n: "slugId"
+      r: true
+      sh: "The agent session's unique URL slug."
+      t: "`$STRING`"
+    }
+    sourceComment: {
+      h: "Source Comment"
+      n: "sourceComment"
+      r: false
+      sh: "The comment that this agent session was spawned from, if from a different thread."
+      t: "`$OBJECT`"
+    }
+    sourceMetadata: {
+      h: "Source Metadata"
+      n: "sourceMetadata"
+      r: false
+      sh: "Metadata about the external source that created this agent session."
+      t: "`$ANY`"
+    }
+    startedAt: {
+      h: "Started At"
+      n: "startedAt"
+      r: false
+      sh: "The time the agent session transitioned to active status and began work."
+      t: "`$ANY`"
+    }
+    status: {
+      h: "Status"
+      n: "status"
+      r: true
+      sh: "The current status of the agent session, such as pending, active, awaiting input, complete, error, or stale."
+      t: "`$STRING`"
+    }
+    summary: {
+      h: "Summary"
+      n: "summary"
+      r: false
+      sh: "The session title, generated automatically or set by the owning OAuth application."
+      t: "`$STRING`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    url: {
+      h: "Url"
+      n: "url"
+      r: false
+      sh: "The URL to the agent session page in the Linear app."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "agent_session"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST agentSessionCreate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "pull_request_id"
+                or: "pull_request_id"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AgentSessionCreate($input: AgentSessionCreateInput!, $pullRequestId: String) { agentSessionCreate(input: $input, pullRequestId: $pullRequestId) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessionCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "AgentSessionCreateInput!"
+                name: "input"
+              }
+              {
+                from: "pullRequestId"
+                gqltype: "String"
+                name: "pullRequestId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSessionCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessionCreate.agentSession`"
+          }
+        }
+        {
+          co: {
+            id: "POST agentSessionCreateOnComment"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation AgentSessionCreateCreateOnComment($input: AgentSessionCreateOnComment!) { agentSessionCreateOnComment(input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessionCreateOnComment"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "AgentSessionCreateOnComment!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSessionCreateOnComment"
+          q: {
+            "$action": "create_on_comment"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessionCreateOnComment.agentSession`"
+          }
+        }
+        {
+          co: {
+            id: "POST agentSessionCreateOnIssue"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation AgentSessionCreateCreateOnIssue($input: AgentSessionCreateOnIssue!) { agentSessionCreateOnIssue(input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessionCreateOnIssue"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "AgentSessionCreateOnIssue!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSessionCreateOnIssue"
+          q: {
+            "$action": "create_on_issue"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessionCreateOnIssue.agentSession`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST agentSessions"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query AgentSessionList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { agentSessions(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...AgentSessionFields } pageInfo { endCursor hasNextPage } } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessions"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSessions"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessions.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST agentSession"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query AgentSessionLoad($id: String!) { agentSession(id: $id) { ...AgentSessionFields } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSession"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSession"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSession`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST agentSessionRestartWithDefaultModel"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AgentSessionUpdateRestartWithDefaultModel($id: String!) { agentSessionRestartWithDefaultModel(id: $id) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessionRestartWithDefaultModel"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSessionRestartWithDefaultModel"
+          q: {
+            "$action": "restart_with_default_model"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessionRestartWithDefaultModel.agentSession`"
+          }
+        }
+        {
+          co: {
+            id: "POST agentSessionUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AgentSessionUpdate($id: String!, $input: AgentSessionUpdateInput!) { agentSessionUpdate(id: $id, input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessionUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "AgentSessionUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSessionUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessionUpdate.agentSession`"
+          }
+        }
+        {
+          co: {
+            id: "POST agentSessionUpdateExternalUrl"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AgentSessionUpdateUpdateExternalUrl($id: String!, $input: AgentSessionUpdateExternalUrlInput!) { agentSessionUpdateExternalUrl(id: $id, input: $input) { agentSession { ...AgentSessionFields } success } } fragment AgentSessionFields on AgentSession { appUser { id } archivedAt codingHarnessModelLabel comment { id } context createdAt creator { id } dismissedAt dismissedBy { id } endedAt id issue { id } modelSelection plan pullRequest { id } slugId sourceComment { id } sourceMetadata startedAt status summary updatedAt url }"
+            field: "agentSessionUpdateExternalUrl"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "AgentSessionUpdateExternalUrlInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "agentSessionUpdateExternalUrl"
+          q: {
+            "$action": "update_external_url"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.agentSessionUpdateExternalUrl.agentSession`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

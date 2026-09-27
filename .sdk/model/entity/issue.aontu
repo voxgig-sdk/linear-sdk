@@ -1,0 +1,1711 @@
+# Entity: issue
+
+main: kit: entity: issue: {
+
+  alias: field: {}
+
+  fields: {
+    activitySummary: {
+      h: "Activity Summary"
+      n: "activitySummary"
+      r: false
+      sh: "[Internal] The activity summary information for this issue."
+      t: "`$ANY`"
+    }
+    addedToCycleAt: {
+      h: "Added To Cycle At"
+      n: "addedToCycleAt"
+      r: false
+      sh: "The time at which the issue was added to a cycle."
+      t: "`$ANY`"
+    }
+    addedToProjectAt: {
+      h: "Added To Project At"
+      n: "addedToProjectAt"
+      r: false
+      sh: "The time at which the issue was added to a project."
+      t: "`$ANY`"
+    }
+    addedToTeamAt: {
+      h: "Added To Team At"
+      n: "addedToTeamAt"
+      r: false
+      sh: "The time at which the issue was added to a team."
+      t: "`$ANY`"
+    }
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    asksExternalUserRequester: {
+      h: "Asks External User Requester"
+      n: "asksExternalUserRequester"
+      r: false
+      sh: "The external user who requested creation of the Asks issue on behalf of the creator."
+      t: "`$OBJECT`"
+    }
+    asksRequester: {
+      h: "Asks Requester"
+      n: "asksRequester"
+      r: false
+      sh: "The internal user who requested creation of the Asks issue on behalf of the creator."
+      t: "`$OBJECT`"
+    }
+    assignee: {
+      h: "Assignee"
+      n: "assignee"
+      r: false
+      sh: "The user to whom the issue is assigned."
+      t: "`$OBJECT`"
+    }
+    autoArchivedAt: {
+      h: "Auto Archived At"
+      n: "autoArchivedAt"
+      r: false
+      sh: "The time at which the issue was automatically archived by the auto pruning process."
+      t: "`$ANY`"
+    }
+    autoClosedAt: {
+      h: "Auto Closed At"
+      n: "autoClosedAt"
+      r: false
+      sh: "The time at which the issue was automatically closed by the auto pruning process."
+      t: "`$ANY`"
+    }
+    botActor: {
+      h: "Bot Actor"
+      n: "botActor"
+      r: false
+      sh: "The bot that created the issue, if applicable."
+      t: "`$OBJECT`"
+    }
+    branchName: {
+      h: "Branch Name"
+      n: "branchName"
+      r: true
+      sh: "Suggested branch name for the issue."
+      t: "`$STRING`"
+    }
+    canceledAt: {
+      h: "Canceled At"
+      n: "canceledAt"
+      r: false
+      sh: "The time at which the issue was moved into canceled state."
+      t: "`$ANY`"
+    }
+    completedAt: {
+      h: "Completed At"
+      n: "completedAt"
+      r: false
+      sh: "The time at which the issue was moved into completed state."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creator: {
+      h: "Creator"
+      n: "creator"
+      r: false
+      sh: "The user who created the issue."
+      t: "`$OBJECT`"
+    }
+    customerTicketCount: {
+      h: "Customer Ticket Count"
+      n: "customerTicketCount"
+      r: true
+      sh: "Returns the number of Attachment resources which are created by customer support ticketing systems (e.g."
+      t: "`$INTEGER`"
+    }
+    cycle: {
+      h: "Cycle"
+      n: "cycle"
+      r: false
+      sh: "The cycle that the issue is associated with."
+      t: "`$OBJECT`"
+    }
+    delegate: {
+      h: "Delegate"
+      n: "delegate"
+      r: false
+      sh: "The agent user that is delegated to work on this issue."
+      t: "`$OBJECT`"
+    }
+    description: {
+      h: "Description"
+      n: "description"
+      r: false
+      sh: "The issue's description in markdown format."
+      t: "`$STRING`"
+    }
+    descriptionState: {
+      h: "Description State"
+      n: "descriptionState"
+      r: false
+      sh: "[Internal] The issue's description content as YJS state."
+      t: "`$STRING`"
+    }
+    documentContent: {
+      h: "Document Content"
+      n: "documentContent"
+      r: false
+      sh: "[ALPHA] The document content representing this issue description."
+      t: "`$OBJECT`"
+    }
+    dueDate: {
+      h: "Due Date"
+      n: "dueDate"
+      r: false
+      sh: "The date at which the issue is due."
+      t: "`$ANY`"
+    }
+    estimate: {
+      h: "Estimate"
+      n: "estimate"
+      r: false
+      sh: "The estimate of the complexity of the issue."
+      t: "`$NUMBER`"
+    }
+    externalUserCreator: {
+      h: "External User Creator"
+      n: "externalUserCreator"
+      r: false
+      sh: "The external user who created the issue."
+      t: "`$OBJECT`"
+    }
+    favorite: {
+      h: "Favorite"
+      n: "favorite"
+      r: false
+      sh: "The users favorite associated with this issue."
+      t: "`$OBJECT`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    identifier: {
+      h: "Identifier"
+      n: "identifier"
+      r: true
+      sh: "Issue's human readable identifier (e.g."
+      t: "`$STRING`"
+    }
+    inheritsSharedAccess: {
+      h: "Inherits Shared Access"
+      n: "inheritsSharedAccess"
+      r: true
+      sh: "Whether this issue inherits shared access from its parent issue."
+      t: "`$BOOLEAN`"
+    }
+    integrationSourceType: {
+      h: "Integration Source Type"
+      n: "integrationSourceType"
+      r: false
+      sh: "Integration type that created this issue, if applicable."
+      t: "`$STRING`"
+    }
+    labelIds: {
+      h: "Label Ids"
+      n: "labelIds"
+      r: true
+      sh: "Identifiers of the labels associated with this issue."
+      t: "`$STRING`"
+    }
+    lastAppliedTemplate: {
+      h: "Last Applied Template"
+      n: "lastAppliedTemplate"
+      r: false
+      sh: "The last template that was applied to this issue."
+      t: "`$OBJECT`"
+    }
+    number: {
+      h: "Number"
+      n: "number"
+      r: true
+      sh: "The issue's unique number, scoped to the issue's team."
+      t: "`$NUMBER`"
+    }
+    parent: {
+      h: "Parent"
+      n: "parent"
+      r: false
+      sh: "The parent of the issue."
+      t: "`$OBJECT`"
+    }
+    previousIdentifiers: {
+      h: "Previous Identifiers"
+      n: "previousIdentifiers"
+      r: true
+      sh: "Previous identifiers of the issue if it has been moved between teams."
+      t: "`$STRING`"
+    }
+    priority: {
+      h: "Priority"
+      n: "priority"
+      r: true
+      sh: "The priority of the issue."
+      t: "`$NUMBER`"
+    }
+    priorityLabel: {
+      h: "Priority Label"
+      n: "priorityLabel"
+      r: true
+      sh: "Label for the priority."
+      t: "`$STRING`"
+    }
+    prioritySortOrder: {
+      h: "Priority Sort Order"
+      n: "prioritySortOrder"
+      r: true
+      sh: "The order of the item in relation to other items in the workspace, when ordered by priority."
+      t: "`$NUMBER`"
+    }
+    project: {
+      h: "Project"
+      n: "project"
+      r: false
+      sh: "The project that the issue is associated with."
+      t: "`$OBJECT`"
+    }
+    projectMilestone: {
+      h: "Project Milestone"
+      n: "projectMilestone"
+      r: false
+      sh: "The project milestone that the issue is associated with."
+      t: "`$OBJECT`"
+    }
+    reactionData: {
+      h: "Reaction Data"
+      n: "reactionData"
+      r: true
+      sh: "Emoji reaction summary for the issue, grouped by emoji type."
+      t: "`$ANY`"
+    }
+    recurringIssueTemplate: {
+      h: "Recurring Issue Template"
+      n: "recurringIssueTemplate"
+      r: false
+      sh: "The recurring issue template that created this issue."
+      t: "`$OBJECT`"
+    }
+    slaBreachesAt: {
+      h: "Sla Breaches At"
+      n: "slaBreachesAt"
+      r: false
+      sh: "The time at which the issue's SLA will breach."
+      t: "`$ANY`"
+    }
+    slaHighRiskAt: {
+      h: "Sla High Risk At"
+      n: "slaHighRiskAt"
+      r: false
+      sh: "The time at which the issue's SLA will enter high risk state."
+      t: "`$ANY`"
+    }
+    slaMediumRiskAt: {
+      h: "Sla Medium Risk At"
+      n: "slaMediumRiskAt"
+      r: false
+      sh: "The time at which the issue's SLA will enter medium risk state."
+      t: "`$ANY`"
+    }
+    slaStartedAt: {
+      h: "Sla Started At"
+      n: "slaStartedAt"
+      r: false
+      sh: "The time at which the issue's SLA began."
+      t: "`$ANY`"
+    }
+    slaType: {
+      h: "Sla Type"
+      n: "slaType"
+      r: false
+      sh: "The type of SLA set on the issue."
+      t: "`$STRING`"
+    }
+    snoozedBy: {
+      h: "Snoozed By"
+      n: "snoozedBy"
+      r: false
+      sh: "The user who snoozed the issue."
+      t: "`$OBJECT`"
+    }
+    snoozedUntilAt: {
+      h: "Snoozed Until At"
+      n: "snoozedUntilAt"
+      r: false
+      sh: "The time until an issue will be snoozed in Triage view."
+      t: "`$ANY`"
+    }
+    sortOrder: {
+      h: "Sort Order"
+      n: "sortOrder"
+      r: true
+      sh: "The order of the item in relation to other items in the organization."
+      t: "`$NUMBER`"
+    }
+    sourceComment: {
+      h: "Source Comment"
+      n: "sourceComment"
+      r: false
+      sh: "The comment that this issue was created from, when an issue is created from an existing comment."
+      t: "`$OBJECT`"
+    }
+    startedAt: {
+      h: "Started At"
+      n: "startedAt"
+      r: false
+      sh: "The time at which the issue was moved into started state."
+      t: "`$ANY`"
+    }
+    startedTriageAt: {
+      h: "Started Triage At"
+      n: "startedTriageAt"
+      r: false
+      sh: "The time at which the issue entered triage."
+      t: "`$ANY`"
+    }
+    state: {
+      h: "State"
+      n: "state"
+      r: false
+      sh: "The workflow state (issue status) that the issue is currently in."
+      t: "`$OBJECT`"
+    }
+    subIssueSortOrder: {
+      h: "Sub Issue Sort Order"
+      n: "subIssueSortOrder"
+      r: false
+      sh: "The order of the item in the sub-issue list."
+      t: "`$NUMBER`"
+    }
+    suggestionsGeneratedAt: {
+      h: "Suggestions Generated At"
+      n: "suggestionsGeneratedAt"
+      r: false
+      sh: "[Internal] The time at which the most recent suggestions for this issue were generated."
+      t: "`$ANY`"
+    }
+    summary: {
+      h: "Summary"
+      n: "summary"
+      r: false
+      sh: "[Internal] AI-generated activity summary for this issue."
+      t: "`$OBJECT`"
+    }
+    team: {
+      h: "Team"
+      n: "team"
+      r: false
+      sh: "The team that the issue belongs to."
+      t: "`$OBJECT`"
+    }
+    title: {
+      h: "Title"
+      n: "title"
+      r: true
+      sh: "The issue's title."
+      t: "`$STRING`"
+    }
+    trashed: {
+      h: "Trashed"
+      n: "trashed"
+      r: false
+      sh: "A flag that indicates whether the issue is in the trash bin."
+      t: "`$BOOLEAN`"
+    }
+    triagedAt: {
+      h: "Triaged At"
+      n: "triagedAt"
+      r: false
+      sh: "The time at which the issue left triage."
+      t: "`$ANY`"
+    }
+    trusted: {
+      h: "Trusted"
+      n: "trusted"
+      r: false
+      sh: "[Internal] Whether this issue has been explicitly marked as trusted."
+      t: "`$BOOLEAN`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    url: {
+      h: "Url"
+      n: "url"
+      r: true
+      sh: "Issue URL."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "issue"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST issueCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation IssueCreate($input: IssueCreateInput!) { issueCreate(input: $input) { issue { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "IssueCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueCreate.issue`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST issueFigmaFileKeySearch"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "file_key"
+                or: "file_key"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query IssueList($after: String, $before: String, $fileKey: String!, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { issueFigmaFileKeySearch(after: $after, before: $before, fileKey: $fileKey, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...IssueFields } pageInfo { endCursor hasNextPage } } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueFigmaFileKeySearch"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "fileKey"
+                gqltype: "String!"
+                name: "fileKey"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueFigmaFileKeySearch"
+          q: {
+            exist: [
+              "file_key"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueFigmaFileKeySearch.nodes`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueSearch"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+              {
+                k: "param"
+                n: "query"
+                or: "query"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query IssueList($after: String, $before: String, $filter: IssueFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy, $query: String) { issueSearch(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy, query: $query) { nodes { ...IssueFields } pageInfo { endCursor hasNextPage } } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueSearch"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: ""
+                gqltype: "IssueFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+              {
+                from: "query"
+                gqltype: "String"
+                name: "query"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueSearch"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueSearch.nodes`"
+          }
+        }
+        {
+          co: {
+            id: "POST issues"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query IssueList($after: String, $before: String, $filter: IssueFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy, $sort: [IssueSortInput!]) { issues(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy, sort: $sort) { nodes { ...IssueFields } pageInfo { endCursor hasNextPage } } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issues"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "filter"
+                gqltype: "IssueFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+              {
+                from: "sort"
+                gqltype: "[IssueSortInput!]"
+                name: "sort"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issues"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issues.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST issueVcsBranchSearch"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "branch_name"
+                or: "branch_name"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query IssueLoad($branchName: String!) { issueVcsBranchSearch(branchName: $branchName) { ...IssueFields } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueVcsBranchSearch"
+            optype: "query"
+            vars: [
+              {
+                from: "branchName"
+                gqltype: "String!"
+                name: "branchName"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueVcsBranchSearch"
+          q: {
+            exist: [
+              "branch_name"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueVcsBranchSearch`"
+          }
+        }
+        {
+          co: {
+            id: "POST attachmentIssue"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query IssueLoad($id: String!) { attachmentIssue(id: $id) { ...IssueFields } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "attachmentIssue"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "attachmentIssue"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.attachmentIssue`"
+          }
+        }
+        {
+          co: {
+            id: "POST issue"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query IssueLoad($id: String!) { issue(id: $id) { ...IssueFields } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issue"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issue"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issue`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST issueDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "permanently_delete"
+                or: "permanently_delete"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueRemove($id: String!, $permanentlyDelete: Boolean) { issueDelete(id: $id, permanentlyDelete: $permanentlyDelete) { entity { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "permanentlyDelete"
+                gqltype: "Boolean"
+                name: "permanentlyDelete"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueDelete.entity`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST issueAddLabel"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "label_id"
+                or: "label_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueUpdateAddLabel($id: String!, $labelId: String!) { issueAddLabel(id: $id, labelId: $labelId) { issue { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueAddLabel"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "labelId"
+                gqltype: "String!"
+                name: "labelId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueAddLabel"
+          q: {
+            "$action": "add_label"
+            exist: [
+              "id"
+              "label_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueAddLabel.issue`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueDescriptionUpdateFromFront"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "description"
+                or: "description"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueUpdateDescriptionUpdateFromFront($description: String!, $id: String!) { issueDescriptionUpdateFromFront(description: $description, id: $id) { issue { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueDescriptionUpdateFromFront"
+            optype: "mutation"
+            vars: [
+              {
+                from: "description"
+                gqltype: "String!"
+                name: "description"
+              }
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueDescriptionUpdateFromFront"
+          q: {
+            "$action": "description_update_from_front"
+            exist: [
+              "description"
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueDescriptionUpdateFromFront.issue`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueReminder"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "reminder_at"
+                or: "reminder_at"
+                r: true
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueUpdateReminder($id: String!, $reminderAt: DateTime!) { issueReminder(id: $id, reminderAt: $reminderAt) { issue { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueReminder"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "reminderAt"
+                gqltype: "DateTime!"
+                name: "reminderAt"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueReminder"
+          q: {
+            "$action": "reminder"
+            exist: [
+              "id"
+              "reminder_at"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueReminder.issue`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueRemoveLabel"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "label_id"
+                or: "label_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueUpdateRemoveLabel($id: String!, $labelId: String!) { issueRemoveLabel(id: $id, labelId: $labelId) { issue { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueRemoveLabel"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "labelId"
+                gqltype: "String!"
+                name: "labelId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueRemoveLabel"
+          q: {
+            "$action": "remove_label"
+            exist: [
+              "id"
+              "label_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueRemoveLabel.issue`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueShare"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "user_id"
+                or: "user_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueUpdateShare($id: String!, $userId: String!) { issueShare(id: $id, userId: $userId) { issue { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueShare"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "userId"
+                gqltype: "String!"
+                name: "userId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueShare"
+          q: {
+            "$action": "share"
+            exist: [
+              "id"
+              "user_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueShare.issue`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueUnshare"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "user_id"
+                or: "user_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueUpdateUnshare($id: String!, $userId: String!) { issueUnshare(id: $id, userId: $userId) { issue { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueUnshare"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "userId"
+                gqltype: "String!"
+                name: "userId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueUnshare"
+          q: {
+            "$action": "unshare"
+            exist: [
+              "id"
+              "user_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueUnshare.issue`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueArchive"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "trash"
+                or: "trash"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueUpdateArchive($id: String!, $trash: Boolean) { issueArchive(id: $id, trash: $trash) { entity { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueArchive"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "trash"
+                gqltype: "Boolean"
+                name: "trash"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueArchive"
+          q: {
+            "$action": "archive"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueArchive.entity`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueExternalSyncDisable"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "attachment_id"
+                or: "attachment_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueUpdateExternalSyncDisable($attachmentId: String!) { issueExternalSyncDisable(attachmentId: $attachmentId) { issue { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueExternalSyncDisable"
+            optype: "mutation"
+            vars: [
+              {
+                from: "attachmentId"
+                gqltype: "String!"
+                name: "attachmentId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueExternalSyncDisable"
+          q: {
+            "$action": "external_sync_disable"
+            exist: [
+              "attachment_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueExternalSyncDisable.issue`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueSubscribe"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "user_email"
+                or: "user_email"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "user_id"
+                or: "user_id"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueUpdateSubscribe($id: String!, $userEmail: String, $userId: String) { issueSubscribe(id: $id, userEmail: $userEmail, userId: $userId) { issue { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueSubscribe"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "userEmail"
+                gqltype: "String"
+                name: "userEmail"
+              }
+              {
+                from: "userId"
+                gqltype: "String"
+                name: "userId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueSubscribe"
+          q: {
+            "$action": "subscribe"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueSubscribe.issue`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueUnarchive"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueUpdateUnarchive($id: String!) { issueUnarchive(id: $id) { entity { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueUnarchive"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueUnarchive"
+          q: {
+            "$action": "unarchive"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueUnarchive.entity`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueUnsubscribe"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "user_email"
+                or: "user_email"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "user_id"
+                or: "user_id"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueUpdateUnsubscribe($id: String!, $userEmail: String, $userId: String) { issueUnsubscribe(id: $id, userEmail: $userEmail, userId: $userId) { issue { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueUnsubscribe"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "userEmail"
+                gqltype: "String"
+                name: "userEmail"
+              }
+              {
+                from: "userId"
+                gqltype: "String"
+                name: "userId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueUnsubscribe"
+          q: {
+            "$action": "unsubscribe"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueUnsubscribe.issue`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueUpdate($id: String!, $input: IssueUpdateInput!) { issueUpdate(id: $id, input: $input) { issue { ...IssueFields } success } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
+            field: "issueUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "IssueUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueUpdate.issue`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

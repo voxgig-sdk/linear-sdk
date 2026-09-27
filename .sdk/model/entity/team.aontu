@@ -1,0 +1,993 @@
+# Entity: team
+
+main: kit: entity: team: {
+
+  alias: field: {}
+
+  fields: {
+    activeCycle: {
+      h: "Active Cycle"
+      n: "activeCycle"
+      r: false
+      sh: "Team's currently active cycle."
+      t: "`$OBJECT`"
+    }
+    aiDiscussionSummariesEnabled: {
+      h: "Ai Discussion Summaries Enabled"
+      n: "aiDiscussionSummariesEnabled"
+      r: true
+      sh: "Whether to enable AI discussion summaries for issues in this team."
+      t: "`$BOOLEAN`"
+    }
+    aiThreadSummariesEnabled: {
+      h: "Ai Thread Summaries Enabled"
+      n: "aiThreadSummariesEnabled"
+      r: true
+      sh: "Whether to enable resolved thread AI summaries."
+      t: "`$BOOLEAN`"
+    }
+    allMembersCanJoin: {
+      h: "All Members Can Join"
+      n: "allMembersCanJoin"
+      r: false
+      sh: "Whether all members in the workspace can join the team."
+      t: "`$BOOLEAN`"
+    }
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    autoArchivePeriod: {
+      h: "Auto Archive Period"
+      n: "autoArchivePeriod"
+      r: true
+      sh: "Period after which automatically closed, completed, and duplicate issues are automatically archived in months."
+      t: "`$NUMBER`"
+    }
+    autoCloseChildIssues: {
+      h: "Auto Close Child Issues"
+      n: "autoCloseChildIssues"
+      r: false
+      sh: "Whether child issues should automatically close when their parent issue is closed"
+      t: "`$BOOLEAN`"
+    }
+    autoCloseParentIssues: {
+      h: "Auto Close Parent Issues"
+      n: "autoCloseParentIssues"
+      r: false
+      sh: "Whether parent issues should automatically close when all child issues are closed"
+      t: "`$BOOLEAN`"
+    }
+    autoClosePeriod: {
+      h: "Auto Close Period"
+      n: "autoClosePeriod"
+      r: false
+      sh: "Period after which issues are automatically closed in months."
+      t: "`$NUMBER`"
+    }
+    autoCloseStateId: {
+      h: "Auto Close State Id"
+      n: "autoCloseStateId"
+      r: false
+      sh: "The canceled workflow state which auto closed issues will be set to."
+      t: "`$STRING`"
+    }
+    color: {
+      h: "Color"
+      n: "color"
+      r: false
+      sh: "The team's color."
+      t: "`$STRING`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    currentProgress: {
+      h: "Current Progress"
+      n: "currentProgress"
+      r: true
+      sh: "[Internal] The current progress of the team."
+      t: "`$ANY`"
+    }
+    cycleCalenderUrl: {
+      h: "Cycle Calender Url"
+      n: "cycleCalenderUrl"
+      r: true
+      sh: "Calendar feed URL (iCal) for cycles."
+      t: "`$STRING`"
+    }
+    cycleCooldownTime: {
+      h: "Cycle Cooldown Time"
+      n: "cycleCooldownTime"
+      r: true
+      sh: "The cooldown time after each cycle in weeks."
+      t: "`$NUMBER`"
+    }
+    cycleDuration: {
+      h: "Cycle Duration"
+      n: "cycleDuration"
+      r: true
+      sh: "The duration of each cycle in weeks."
+      t: "`$NUMBER`"
+    }
+    cycleIssueAutoAssignCompleted: {
+      h: "Cycle Issue Auto Assign Completed"
+      n: "cycleIssueAutoAssignCompleted"
+      r: true
+      sh: "Auto assign completed issues to current cycle."
+      t: "`$BOOLEAN`"
+    }
+    cycleIssueAutoAssignStarted: {
+      h: "Cycle Issue Auto Assign Started"
+      n: "cycleIssueAutoAssignStarted"
+      r: true
+      sh: "Auto assign started issues to current cycle."
+      t: "`$BOOLEAN`"
+    }
+    cycleLockToActive: {
+      h: "Cycle Lock To Active"
+      n: "cycleLockToActive"
+      r: true
+      sh: "Auto assign issues to current cycle if in active status."
+      t: "`$BOOLEAN`"
+    }
+    cycleStartDay: {
+      h: "Cycle Start Day"
+      n: "cycleStartDay"
+      r: true
+      sh: "The day of the week that a new cycle starts (0 = Sunday, 1 = Monday, ..., 6 = Saturday)."
+      t: "`$NUMBER`"
+    }
+    cyclesEnabled: {
+      h: "Cycles Enabled"
+      n: "cyclesEnabled"
+      r: true
+      sh: "Whether the team uses cycles for sprint-style issue management."
+      t: "`$BOOLEAN`"
+    }
+    defaultIssueEstimate: {
+      h: "Default Issue Estimate"
+      n: "defaultIssueEstimate"
+      r: true
+      sh: "What to use as a default estimate for unestimated issues."
+      t: "`$NUMBER`"
+    }
+    defaultIssueState: {
+      h: "Default Issue State"
+      n: "defaultIssueState"
+      r: false
+      sh: "The default workflow state into which issues are set when they are opened by team members."
+      t: "`$OBJECT`"
+    }
+    defaultProjectTemplate: {
+      h: "Default Project Template"
+      n: "defaultProjectTemplate"
+      r: false
+      sh: "The default template to use for new projects created for the team."
+      t: "`$OBJECT`"
+    }
+    defaultTemplateForMembers: {
+      h: "Default Template For Members"
+      n: "defaultTemplateForMembers"
+      r: false
+      sh: "The default template to use for new issues created by members of the team."
+      t: "`$OBJECT`"
+    }
+    defaultTemplateForNonMembers: {
+      h: "Default Template For Non Members"
+      n: "defaultTemplateForNonMembers"
+      r: false
+      sh: "The default template to use for new issues created by non-members of the team."
+      t: "`$OBJECT`"
+    }
+    description: {
+      h: "Description"
+      n: "description"
+      r: false
+      sh: "The team's description."
+      t: "`$STRING`"
+    }
+    displayName: {
+      h: "Display Name"
+      n: "displayName"
+      r: true
+      sh: "The name of the team including its parent team name if it has one."
+      t: "`$STRING`"
+    }
+    groupIssueHistory: {
+      h: "Group Issue History"
+      n: "groupIssueHistory"
+      r: true
+      sh: "Whether to group recent issue history entries."
+      t: "`$BOOLEAN`"
+    }
+    icon: {
+      h: "Icon"
+      n: "icon"
+      r: false
+      sh: "The icon of the team."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    inheritIssueEstimation: {
+      h: "Inherit Issue Estimation"
+      n: "inheritIssueEstimation"
+      r: true
+      sh: "Whether the team should inherit its estimation settings from its parent."
+      t: "`$BOOLEAN`"
+    }
+    inheritProjectStatuses: {
+      h: "Inherit Project Statuses"
+      n: "inheritProjectStatuses"
+      r: true
+      sh: "[Internal] Whether the team should inherit its project statuses from its parent team, or from the workspace when it has no parent."
+      t: "`$BOOLEAN`"
+    }
+    inheritSlackAutoCreateProjectChannel: {
+      h: "Inherit Slack Auto Create Project Channel"
+      n: "inheritSlackAutoCreateProjectChannel"
+      r: true
+      sh: "[Internal] Whether the team should inherit its Slack auto-create project channel setting from its parent."
+      t: "`$BOOLEAN`"
+    }
+    inheritWorkflowStatuses: {
+      h: "Inherit Workflow Statuses"
+      n: "inheritWorkflowStatuses"
+      r: true
+      sh: "Whether the team should inherit its workflow statuses from its parent."
+      t: "`$BOOLEAN`"
+    }
+    initiativesEnabled: {
+      h: "Initiatives Enabled"
+      n: "initiativesEnabled"
+      r: true
+      sh: "Whether team initiatives are enabled and shown in the team's sidebar."
+      t: "`$BOOLEAN`"
+    }
+    integrationsSettings: {
+      h: "Integrations Settings"
+      n: "integrationsSettings"
+      r: false
+      sh: "Settings for all integrations associated with that team."
+      t: "`$OBJECT`"
+    }
+    issueCount: {
+      h: "Issue Count"
+      n: "issueCount"
+      r: true
+      sh: "The total number of issues in the team."
+      t: "`$INTEGER`"
+    }
+    issueEstimationAllowZero: {
+      h: "Issue Estimation Allow Zero"
+      n: "issueEstimationAllowZero"
+      r: true
+      sh: "Whether to allow zeros in issues estimates."
+      t: "`$BOOLEAN`"
+    }
+    issueEstimationExtended: {
+      h: "Issue Estimation Extended"
+      n: "issueEstimationExtended"
+      r: true
+      sh: "Whether to add additional points to the estimate scale."
+      t: "`$BOOLEAN`"
+    }
+    issueEstimationType: {
+      h: "Issue Estimation Type"
+      n: "issueEstimationType"
+      r: true
+      sh: "The issue estimation type to use."
+      t: "`$STRING`"
+    }
+    joinByDefault: {
+      h: "Join By Default"
+      n: "joinByDefault"
+      r: false
+      sh: "[Internal] Whether new users should join this team by default."
+      t: "`$BOOLEAN`"
+    }
+    key: {
+      h: "Key"
+      n: "key"
+      r: true
+      sh: "The team's unique key, used as a prefix in issue identifiers (e.g., 'ENG' in 'ENG-123') and in URLs."
+      t: "`$STRING`"
+    }
+    ledInitiativeCount: {
+      h: "Led Initiative Count"
+      n: "ledInitiativeCount"
+      r: true
+      sh: "The number of initiatives led by this team that would be deleted along with it."
+      t: "`$INTEGER`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "The team's name."
+      t: "`$STRING`"
+    }
+    organization: {
+      h: "Organization"
+      n: "organization"
+      r: false
+      sh: "The workspace that the team belongs to."
+      t: "`$OBJECT`"
+    }
+    parent: {
+      h: "Parent"
+      n: "parent"
+      r: false
+      sh: "The team's parent team."
+      t: "`$OBJECT`"
+    }
+    progressHistory: {
+      h: "Progress History"
+      n: "progressHistory"
+      r: true
+      sh: "[Internal] The progress history of the team."
+      t: "`$ANY`"
+    }
+    requirePriorityToLeaveTriage: {
+      h: "Require Priority To Leave Triage"
+      n: "requirePriorityToLeaveTriage"
+      r: true
+      sh: "Whether an issue needs to have a priority set before leaving triage."
+      t: "`$BOOLEAN`"
+    }
+    restrictedBy: {
+      h: "Restricted By"
+      n: "restrictedBy"
+      r: false
+      sh: "[Internal] For restricted teams, the enclosing private team that forms the visibility boundary."
+      t: "`$OBJECT`"
+    }
+    restrictedById: {
+      h: "Restricted By Id"
+      n: "restrictedById"
+      r: false
+      sh: "[Internal] The identifier of the enclosing private team that forms the visibility boundary for restricted teams."
+      t: "`$STRING`"
+    }
+    retiredAt: {
+      h: "Retired At"
+      n: "retiredAt"
+      r: false
+      sh: "The time at which the team was retired."
+      t: "`$ANY`"
+    }
+    scimGroupName: {
+      h: "Scim Group Name"
+      n: "scimGroupName"
+      r: false
+      sh: "The SCIM group name for the team."
+      t: "`$STRING`"
+    }
+    scimManaged: {
+      h: "Scim Managed"
+      n: "scimManaged"
+      r: true
+      sh: "Whether the team is managed by a SCIM integration."
+      t: "`$BOOLEAN`"
+    }
+    securitySettings: {
+      h: "Security Settings"
+      n: "securitySettings"
+      r: true
+      sh: "Security settings for the team, including role-based restrictions for issue sharing, label management, member management, template management, and agent skills."
+      t: "`$ANY`"
+    }
+    setIssueSortOrderOnStateChange: {
+      h: "Set Issue Sort Order On State Change"
+      n: "setIssueSortOrderOnStateChange"
+      r: true
+      sh: "Where to move issues when changing state."
+      t: "`$STRING`"
+    }
+    slackAutoCreateProjectChannel: {
+      h: "Slack Auto Create Project Channel"
+      n: "slackAutoCreateProjectChannel"
+      r: false
+      sh: "[Internal] Whether to automatically create a Slack channel when a new project is created in this team."
+      t: "`$BOOLEAN`"
+    }
+    timezone: {
+      h: "Timezone"
+      n: "timezone"
+      r: true
+      sh: "The timezone of the team."
+      t: "`$STRING`"
+    }
+    triageEnabled: {
+      h: "Triage Enabled"
+      n: "triageEnabled"
+      r: true
+      sh: "Whether triage mode is enabled for the team."
+      t: "`$BOOLEAN`"
+    }
+    triageIssueState: {
+      h: "Triage Issue State"
+      n: "triageIssueState"
+      r: false
+      sh: "The workflow state into which issues are set when they are opened by non-team members or integrations if triage is enabled."
+      t: "`$OBJECT`"
+    }
+    triageResponsibility: {
+      h: "Triage Responsibility"
+      n: "triageResponsibility"
+      r: false
+      sh: "Team's triage responsibility."
+      t: "`$OBJECT`"
+    }
+    upcomingCycleCount: {
+      h: "Upcoming Cycle Count"
+      n: "upcomingCycleCount"
+      r: true
+      sh: "How many upcoming cycles to create."
+      t: "`$NUMBER`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    visibility: {
+      h: "Visibility"
+      n: "visibility"
+      r: true
+      sh: "The visibility of the team."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "team"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST teamCreate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "copy_settings_from_team_id"
+                or: "copy_settings_from_team_id"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation TeamCreate($copySettingsFromTeamId: String, $input: TeamCreateInput!) { teamCreate(copySettingsFromTeamId: $copySettingsFromTeamId, input: $input) { team { ...TeamFields } success } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }"
+            field: "teamCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "copySettingsFromTeamId"
+                gqltype: "String"
+                name: "copySettingsFromTeamId"
+              }
+              {
+                from: ""
+                gqltype: "TeamCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "teamCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.teamCreate.team`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST administrableTeams"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query TeamList($after: String, $before: String, $filter: TeamFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { administrableTeams(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...TeamFields } pageInfo { endCursor hasNextPage } } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }"
+            field: "administrableTeams"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: ""
+                gqltype: "TeamFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "administrableTeams"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.administrableTeams.nodes`"
+          }
+        }
+        {
+          co: {
+            id: "POST archivedTeams"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "query TeamList { archivedTeams { ...TeamFields } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }"
+            field: "archivedTeams"
+            optype: "query"
+          }
+          k: "graphql"
+          m: "POST"
+          o: "archivedTeams"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.archivedTeams`"
+          }
+        }
+        {
+          co: {
+            id: "POST teams"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query TeamList($after: String, $before: String, $filter: TeamFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { teams(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...TeamFields } pageInfo { endCursor hasNextPage } } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }"
+            field: "teams"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: ""
+                gqltype: "TeamFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "teams"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.teams.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST team"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query TeamLoad($id: String!) { team(id: $id) { ...TeamFields } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }"
+            field: "team"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "team"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.team`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST teamDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation TeamRemove($id: String!) { teamDelete(id: $id) { entityId lastSyncId success } }"
+            field: "teamDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "teamDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.teamDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST teamCyclesDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation TeamUpdateCyclesDelete($id: String!) { teamCyclesDelete(id: $id) { team { ...TeamFields } success } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }"
+            field: "teamCyclesDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "teamCyclesDelete"
+          q: {
+            "$action": "cycles_delete"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.teamCyclesDelete.team`"
+          }
+        }
+        {
+          co: {
+            id: "POST teamUnarchive"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation TeamUpdateUnarchive($id: String!) { teamUnarchive(id: $id) { entity { ...TeamFields } success } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }"
+            field: "teamUnarchive"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "teamUnarchive"
+          q: {
+            "$action": "unarchive"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.teamUnarchive.entity`"
+          }
+        }
+        {
+          co: {
+            id: "POST teamUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation TeamUpdate($id: String!, $input: TeamUpdateInput!, $mapping: InheritanceEntityMapping) { teamUpdate(id: $id, input: $input, mapping: $mapping) { team { ...TeamFields } success } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }"
+            field: "teamUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "input"
+                gqltype: "TeamUpdateInput!"
+                name: "input"
+              }
+              {
+                from: "mapping"
+                gqltype: "InheritanceEntityMapping"
+                name: "mapping"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "teamUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.teamUpdate.team`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

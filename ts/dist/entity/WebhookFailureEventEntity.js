@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WebhookFailureEventEntity = void 0;
 const LinearEntityBase_1 = require("../LinearEntityBase");
-// TODO: needs Entity superclass
 class WebhookFailureEventEntity extends LinearEntityBase_1.LinearEntityBase {
     constructor(client, entopts) {
         super(client, entopts);

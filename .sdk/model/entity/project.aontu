@@ -1,0 +1,1139 @@
+# Entity: project
+
+main: kit: entity: project: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    autoArchivedAt: {
+      h: "Auto Archived At"
+      n: "autoArchivedAt"
+      r: false
+      sh: "The time at which the project was automatically archived by the auto-pruning process."
+      t: "`$ANY`"
+    }
+    canceledAt: {
+      h: "Canceled At"
+      n: "canceledAt"
+      r: false
+      sh: "The time at which the project was moved into a canceled status."
+      t: "`$ANY`"
+    }
+    color: {
+      h: "Color"
+      n: "color"
+      r: true
+      sh: "The project's color as a HEX string."
+      t: "`$STRING`"
+    }
+    completedAt: {
+      h: "Completed At"
+      n: "completedAt"
+      r: false
+      sh: "The time at which the project was moved into a completed status."
+      t: "`$ANY`"
+    }
+    completedIssueCountHistory: {
+      h: "Completed Issue Count History"
+      n: "completedIssueCountHistory"
+      r: true
+      sh: "The number of completed issues in the project at the end of each week since project creation."
+      t: "`$NUMBER`"
+    }
+    completedScopeHistory: {
+      h: "Completed Scope History"
+      n: "completedScopeHistory"
+      r: true
+      sh: "The number of completed estimation points at the end of each week since project creation."
+      t: "`$NUMBER`"
+    }
+    content: {
+      h: "Content"
+      n: "content"
+      r: false
+      sh: "The project's content in markdown format."
+      t: "`$STRING`"
+    }
+    contentState: {
+      h: "Content State"
+      n: "contentState"
+      r: false
+      sh: "[Internal] The project's content as YJS state."
+      t: "`$STRING`"
+    }
+    convertedFromIssue: {
+      h: "Converted From Issue"
+      n: "convertedFromIssue"
+      r: false
+      sh: "The issue that was converted into this project."
+      t: "`$OBJECT`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creator: {
+      h: "Creator"
+      n: "creator"
+      r: false
+      sh: "The user who created the project."
+      t: "`$OBJECT`"
+    }
+    currentProgress: {
+      h: "Current Progress"
+      n: "currentProgress"
+      r: true
+      sh: "[INTERNAL] The current progress of the project, broken down by issue status category."
+      t: "`$ANY`"
+    }
+    description: {
+      h: "Description"
+      n: "description"
+      r: true
+      sh: "The short description of the project."
+      t: "`$STRING`"
+    }
+    documentContent: {
+      h: "Document Content"
+      n: "documentContent"
+      r: false
+      sh: "The content of the project description."
+      t: "`$OBJECT`"
+    }
+    favorite: {
+      h: "Favorite"
+      n: "favorite"
+      r: false
+      sh: "The user's favorite associated with this project."
+      t: "`$OBJECT`"
+    }
+    frequencyResolution: {
+      h: "Frequency Resolution"
+      n: "frequencyResolution"
+      r: true
+      sh: "The resolution of the reminder frequency."
+      t: "`$STRING`"
+    }
+    health: {
+      h: "Health"
+      n: "health"
+      r: false
+      sh: "The overall health of the project, derived from the most recent project update."
+      t: "`$STRING`"
+    }
+    healthUpdatedAt: {
+      h: "Health Updated At"
+      n: "healthUpdatedAt"
+      r: false
+      sh: "The time at which the project health was last updated, typically when a new project update is posted."
+      t: "`$ANY`"
+    }
+    icon: {
+      h: "Icon"
+      n: "icon"
+      r: false
+      sh: "The icon of the project."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    identifier: {
+      h: "Identifier"
+      n: "identifier"
+      r: false
+      sh: "[Internal] The human-readable identifier of the project."
+      t: "`$STRING`"
+    }
+    inProgressScopeHistory: {
+      h: "In Progress Scope History"
+      n: "inProgressScopeHistory"
+      r: true
+      sh: "The number of in-progress estimation points at the end of each week since project creation."
+      t: "`$NUMBER`"
+    }
+    integrationsSettings: {
+      h: "Integrations Settings"
+      n: "integrationsSettings"
+      r: false
+      sh: "Settings for all integrations associated with that project."
+      t: "`$OBJECT`"
+    }
+    issueCountHistory: {
+      h: "Issue Count History"
+      n: "issueCountHistory"
+      r: true
+      sh: "The total number of issues in the project at the end of each week since project creation."
+      t: "`$NUMBER`"
+    }
+    labelIds: {
+      h: "Label Ids"
+      n: "labelIds"
+      r: true
+      sh: "The IDs of the project labels associated with this project."
+      t: "`$STRING`"
+    }
+    lastAppliedTemplate: {
+      h: "Last Applied Template"
+      n: "lastAppliedTemplate"
+      r: false
+      sh: "The last template that was applied to this project."
+      t: "`$OBJECT`"
+    }
+    lastUpdate: {
+      h: "Last Update"
+      n: "lastUpdate"
+      r: false
+      sh: "The most recent status update posted for this project."
+      t: "`$OBJECT`"
+    }
+    lead: {
+      h: "Lead"
+      n: "lead"
+      r: false
+      sh: "The user who leads the project."
+      t: "`$OBJECT`"
+    }
+    leadTeam: {
+      h: "Lead Team"
+      n: "leadTeam"
+      r: false
+      sh: "[Internal] The team that leads the project."
+      t: "`$OBJECT`"
+    }
+    microsoftTeamsChannelId: {
+      h: "Microsoft Teams Channel Id"
+      n: "microsoftTeamsChannelId"
+      r: false
+      sh: "The ID of the Microsoft Teams channel connected to the project, if any."
+      t: "`$STRING`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "The name of the project."
+      t: "`$STRING`"
+    }
+    previousIdentifiers: {
+      h: "Previous Identifiers"
+      n: "previousIdentifiers"
+      r: true
+      sh: "[Internal] Identifiers (default and custom) that this project has previously held."
+      t: "`$STRING`"
+    }
+    priority: {
+      h: "Priority"
+      n: "priority"
+      r: true
+      sh: "The priority of the project."
+      t: "`$INTEGER`"
+    }
+    priorityLabel: {
+      h: "Priority Label"
+      n: "priorityLabel"
+      r: true
+      sh: "The priority of the project as a label."
+      t: "`$STRING`"
+    }
+    prioritySortOrder: {
+      h: "Priority Sort Order"
+      n: "prioritySortOrder"
+      r: true
+      sh: "The sort order for the project within the workspace when ordered by priority."
+      t: "`$NUMBER`"
+    }
+    progress: {
+      h: "Progress"
+      n: "progress"
+      r: true
+      sh: "The overall progress of the project."
+      t: "`$NUMBER`"
+    }
+    progressHistory: {
+      h: "Progress History"
+      n: "progressHistory"
+      r: true
+      sh: "[INTERNAL] The progress history of the project, tracking issue completion over time."
+      t: "`$ANY`"
+    }
+    projectUpdateRemindersPausedUntilAt: {
+      h: "Project Update Reminders Paused Until At"
+      n: "projectUpdateRemindersPausedUntilAt"
+      r: false
+      sh: "The time until which project update reminders are paused."
+      t: "`$ANY`"
+    }
+    resourceCount: {
+      h: "Resource Count"
+      n: "resourceCount"
+      r: true
+      sh: "The number of resources associated with the project, including documents, external links, and attachments."
+      t: "`$INTEGER`"
+    }
+    scope: {
+      h: "Scope"
+      n: "scope"
+      r: true
+      sh: "The overall scope (total estimate points) of the project."
+      t: "`$NUMBER`"
+    }
+    scopeHistory: {
+      h: "Scope History"
+      n: "scopeHistory"
+      r: true
+      sh: "The total scope (estimation points) of the project at the end of each week since project creation."
+      t: "`$NUMBER`"
+    }
+    slackChannelId: {
+      h: "Slack Channel Id"
+      n: "slackChannelId"
+      r: false
+      sh: "The ID of the Slack channel connected to the project, if any."
+      t: "`$STRING`"
+    }
+    slugId: {
+      h: "Slug Id"
+      n: "slugId"
+      r: true
+      sh: "The project's unique URL slug, used to construct human-readable URLs."
+      t: "`$STRING`"
+    }
+    sortOrder: {
+      h: "Sort Order"
+      n: "sortOrder"
+      r: true
+      sh: "The sort order for the project within the workspace."
+      t: "`$NUMBER`"
+    }
+    startDate: {
+      h: "Start Date"
+      n: "startDate"
+      r: false
+      sh: "The estimated start date of the project."
+      t: "`$ANY`"
+    }
+    startDateResolution: {
+      h: "Start Date Resolution"
+      n: "startDateResolution"
+      r: false
+      sh: "The resolution of the project's start date, indicating whether it refers to a specific month, quarter, half-year, or year."
+      t: "`$STRING`"
+    }
+    startedAt: {
+      h: "Started At"
+      n: "startedAt"
+      r: false
+      sh: "The time at which the project was moved into a started status."
+      t: "`$ANY`"
+    }
+    status: {
+      h: "Status"
+      n: "status"
+      r: false
+      sh: "The current project status."
+      t: "`$OBJECT`"
+    }
+    targetDate: {
+      h: "Target Date"
+      n: "targetDate"
+      r: false
+      sh: "The estimated completion date of the project."
+      t: "`$ANY`"
+    }
+    targetDateResolution: {
+      h: "Target Date Resolution"
+      n: "targetDateResolution"
+      r: false
+      sh: "The resolution of the project's estimated completion date, indicating whether it refers to a specific month, quarter, half-year, or year."
+      t: "`$STRING`"
+    }
+    trashed: {
+      h: "Trashed"
+      n: "trashed"
+      r: false
+      sh: "A flag that indicates whether the project is in the trash bin."
+      t: "`$BOOLEAN`"
+    }
+    updateReminderFrequency: {
+      h: "Update Reminder Frequency"
+      n: "updateReminderFrequency"
+      r: false
+      sh: "The frequency at which to prompt for updates."
+      t: "`$NUMBER`"
+    }
+    updateReminderFrequencyInWeeks: {
+      h: "Update Reminder Frequency In Weeks"
+      n: "updateReminderFrequencyInWeeks"
+      r: false
+      sh: "The n-weekly frequency at which to prompt for updates."
+      t: "`$NUMBER`"
+    }
+    updateRemindersDay: {
+      h: "Update Reminders Day"
+      n: "updateRemindersDay"
+      r: false
+      sh: "The day at which to prompt for updates."
+      t: "`$STRING`"
+    }
+    updateRemindersHour: {
+      h: "Update Reminders Hour"
+      n: "updateRemindersHour"
+      r: false
+      sh: "The hour at which to prompt for updates."
+      t: "`$NUMBER`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    url: {
+      h: "Url"
+      n: "url"
+      r: true
+      sh: "Project URL."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "project"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST projectCreate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "ai_conversation_id"
+                or: "ai_conversation_id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "project_draft_id"
+                or: "project_draft_id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "slack_channel_name"
+                or: "slack_channel_name"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectCreate($aiConversationId: String, $input: ProjectCreateInput!, $projectDraftId: String, $slackChannelName: String) { projectCreate(aiConversationId: $aiConversationId, input: $input, projectDraftId: $projectDraftId, slackChannelName: $slackChannelName) { project { ...ProjectFields } success } } fragment ProjectFields on Project { archivedAt autoArchivedAt canceledAt color completedAt completedIssueCountHistory completedScopeHistory content contentState convertedFromIssue { id } createdAt creator { id } currentProgress description documentContent { id } favorite { id } frequencyResolution health healthUpdatedAt icon id identifier inProgressScopeHistory integrationsSettings { id } issueCountHistory labelIds lastAppliedTemplate { id } lastUpdate { id } lead { id } leadTeam { id } microsoftTeamsChannelId name previousIdentifiers priority priorityLabel prioritySortOrder progress progressHistory projectUpdateRemindersPausedUntilAt resourceCount scope scopeHistory slackChannelId slugId sortOrder startDate startDateResolution startedAt status { id } targetDate targetDateResolution trashed updateReminderFrequency updateReminderFrequencyInWeeks updateRemindersDay updateRemindersHour updatedAt url }"
+            field: "projectCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "aiConversationId"
+                gqltype: "String"
+                name: "aiConversationId"
+              }
+              {
+                from: ""
+                gqltype: "ProjectCreateInput!"
+                name: "input"
+              }
+              {
+                from: "projectDraftId"
+                gqltype: "String"
+                name: "projectDraftId"
+              }
+              {
+                from: "slackChannelName"
+                gqltype: "String"
+                name: "slackChannelName"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectCreate.project`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST projects"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ProjectList($after: String, $before: String, $filter: ProjectFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy, $sort: [ProjectSortInput!]) { projects(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy, sort: $sort) { nodes { ...ProjectFields } pageInfo { endCursor hasNextPage } } } fragment ProjectFields on Project { archivedAt autoArchivedAt canceledAt color completedAt completedIssueCountHistory completedScopeHistory content contentState convertedFromIssue { id } createdAt creator { id } currentProgress description documentContent { id } favorite { id } frequencyResolution health healthUpdatedAt icon id identifier inProgressScopeHistory integrationsSettings { id } issueCountHistory labelIds lastAppliedTemplate { id } lastUpdate { id } lead { id } leadTeam { id } microsoftTeamsChannelId name previousIdentifiers priority priorityLabel prioritySortOrder progress progressHistory projectUpdateRemindersPausedUntilAt resourceCount scope scopeHistory slackChannelId slugId sortOrder startDate startDateResolution startedAt status { id } targetDate targetDateResolution trashed updateReminderFrequency updateReminderFrequencyInWeeks updateRemindersDay updateRemindersHour updatedAt url }"
+            field: "projects"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "filter"
+                gqltype: "ProjectFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+              {
+                from: "sort"
+                gqltype: "[ProjectSortInput!]"
+                name: "sort"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projects"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projects.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST project"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ProjectLoad($id: String!) { project(id: $id) { ...ProjectFields } } fragment ProjectFields on Project { archivedAt autoArchivedAt canceledAt color completedAt completedIssueCountHistory completedScopeHistory content contentState convertedFromIssue { id } createdAt creator { id } currentProgress description documentContent { id } favorite { id } frequencyResolution health healthUpdatedAt icon id identifier inProgressScopeHistory integrationsSettings { id } issueCountHistory labelIds lastAppliedTemplate { id } lastUpdate { id } lead { id } leadTeam { id } microsoftTeamsChannelId name previousIdentifiers priority priorityLabel prioritySortOrder progress progressHistory projectUpdateRemindersPausedUntilAt resourceCount scope scopeHistory slackChannelId slugId sortOrder startDate startDateResolution startedAt status { id } targetDate targetDateResolution trashed updateReminderFrequency updateReminderFrequencyInWeeks updateRemindersDay updateRemindersHour updatedAt url }"
+            field: "project"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "project"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.project`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST projectDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectRemove($id: String!) { projectDelete(id: $id) { entity { ...ProjectFields } success } } fragment ProjectFields on Project { archivedAt autoArchivedAt canceledAt color completedAt completedIssueCountHistory completedScopeHistory content contentState convertedFromIssue { id } createdAt creator { id } currentProgress description documentContent { id } favorite { id } frequencyResolution health healthUpdatedAt icon id identifier inProgressScopeHistory integrationsSettings { id } issueCountHistory labelIds lastAppliedTemplate { id } lastUpdate { id } lead { id } leadTeam { id } microsoftTeamsChannelId name previousIdentifiers priority priorityLabel prioritySortOrder progress progressHistory projectUpdateRemindersPausedUntilAt resourceCount scope scopeHistory slackChannelId slugId sortOrder startDate startDateResolution startedAt status { id } targetDate targetDateResolution trashed updateReminderFrequency updateReminderFrequencyInWeeks updateRemindersDay updateRemindersHour updatedAt url }"
+            field: "projectDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectDelete.entity`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST projectAddLabel"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "label_id"
+                or: "label_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectUpdateAddLabel($id: String!, $labelId: String!) { projectAddLabel(id: $id, labelId: $labelId) { project { ...ProjectFields } success } } fragment ProjectFields on Project { archivedAt autoArchivedAt canceledAt color completedAt completedIssueCountHistory completedScopeHistory content contentState convertedFromIssue { id } createdAt creator { id } currentProgress description documentContent { id } favorite { id } frequencyResolution health healthUpdatedAt icon id identifier inProgressScopeHistory integrationsSettings { id } issueCountHistory labelIds lastAppliedTemplate { id } lastUpdate { id } lead { id } leadTeam { id } microsoftTeamsChannelId name previousIdentifiers priority priorityLabel prioritySortOrder progress progressHistory projectUpdateRemindersPausedUntilAt resourceCount scope scopeHistory slackChannelId slugId sortOrder startDate startDateResolution startedAt status { id } targetDate targetDateResolution trashed updateReminderFrequency updateReminderFrequencyInWeeks updateRemindersDay updateRemindersHour updatedAt url }"
+            field: "projectAddLabel"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "labelId"
+                gqltype: "String!"
+                name: "labelId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectAddLabel"
+          q: {
+            "$action": "add_label"
+            exist: [
+              "id"
+              "label_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectAddLabel.project`"
+          }
+        }
+        {
+          co: {
+            id: "POST projectCreateSlackChannel"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "integration_id"
+                or: "integration_id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "slack_channel_name"
+                or: "slack_channel_name"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectUpdateCreateSlackChannel($id: String!, $integrationId: String, $slackChannelName: String!) { projectCreateSlackChannel(id: $id, integrationId: $integrationId, slackChannelName: $slackChannelName) { project { ...ProjectFields } success } } fragment ProjectFields on Project { archivedAt autoArchivedAt canceledAt color completedAt completedIssueCountHistory completedScopeHistory content contentState convertedFromIssue { id } createdAt creator { id } currentProgress description documentContent { id } favorite { id } frequencyResolution health healthUpdatedAt icon id identifier inProgressScopeHistory integrationsSettings { id } issueCountHistory labelIds lastAppliedTemplate { id } lastUpdate { id } lead { id } leadTeam { id } microsoftTeamsChannelId name previousIdentifiers priority priorityLabel prioritySortOrder progress progressHistory projectUpdateRemindersPausedUntilAt resourceCount scope scopeHistory slackChannelId slugId sortOrder startDate startDateResolution startedAt status { id } targetDate targetDateResolution trashed updateReminderFrequency updateReminderFrequencyInWeeks updateRemindersDay updateRemindersHour updatedAt url }"
+            field: "projectCreateSlackChannel"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "integrationId"
+                gqltype: "String"
+                name: "integrationId"
+              }
+              {
+                from: "slackChannelName"
+                gqltype: "String!"
+                name: "slackChannelName"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectCreateSlackChannel"
+          q: {
+            "$action": "create_slack_channel"
+            exist: [
+              "id"
+              "slack_channel_name"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectCreateSlackChannel.project`"
+          }
+        }
+        {
+          co: {
+            id: "POST projectExternalSyncDisable"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "project_id"
+                or: "project_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "sync_source"
+                or: "sync_source"
+                r: true
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectUpdateExternalSyncDisable($projectId: String!, $syncSource: ExternalSyncService!) { projectExternalSyncDisable(projectId: $projectId, syncSource: $syncSource) { project { ...ProjectFields } success } } fragment ProjectFields on Project { archivedAt autoArchivedAt canceledAt color completedAt completedIssueCountHistory completedScopeHistory content contentState convertedFromIssue { id } createdAt creator { id } currentProgress description documentContent { id } favorite { id } frequencyResolution health healthUpdatedAt icon id identifier inProgressScopeHistory integrationsSettings { id } issueCountHistory labelIds lastAppliedTemplate { id } lastUpdate { id } lead { id } leadTeam { id } microsoftTeamsChannelId name previousIdentifiers priority priorityLabel prioritySortOrder progress progressHistory projectUpdateRemindersPausedUntilAt resourceCount scope scopeHistory slackChannelId slugId sortOrder startDate startDateResolution startedAt status { id } targetDate targetDateResolution trashed updateReminderFrequency updateReminderFrequencyInWeeks updateRemindersDay updateRemindersHour updatedAt url }"
+            field: "projectExternalSyncDisable"
+            optype: "mutation"
+            vars: [
+              {
+                from: "projectId"
+                gqltype: "String!"
+                name: "projectId"
+              }
+              {
+                from: "syncSource"
+                gqltype: "ExternalSyncService!"
+                name: "syncSource"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectExternalSyncDisable"
+          q: {
+            "$action": "external_sync_disable"
+            exist: [
+              "project_id"
+              "sync_source"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectExternalSyncDisable.project`"
+          }
+        }
+        {
+          co: {
+            id: "POST projectRemoveLabel"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "label_id"
+                or: "label_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectUpdateRemoveLabel($id: String!, $labelId: String!) { projectRemoveLabel(id: $id, labelId: $labelId) { project { ...ProjectFields } success } } fragment ProjectFields on Project { archivedAt autoArchivedAt canceledAt color completedAt completedIssueCountHistory completedScopeHistory content contentState convertedFromIssue { id } createdAt creator { id } currentProgress description documentContent { id } favorite { id } frequencyResolution health healthUpdatedAt icon id identifier inProgressScopeHistory integrationsSettings { id } issueCountHistory labelIds lastAppliedTemplate { id } lastUpdate { id } lead { id } leadTeam { id } microsoftTeamsChannelId name previousIdentifiers priority priorityLabel prioritySortOrder progress progressHistory projectUpdateRemindersPausedUntilAt resourceCount scope scopeHistory slackChannelId slugId sortOrder startDate startDateResolution startedAt status { id } targetDate targetDateResolution trashed updateReminderFrequency updateReminderFrequencyInWeeks updateRemindersDay updateRemindersHour updatedAt url }"
+            field: "projectRemoveLabel"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "labelId"
+                gqltype: "String!"
+                name: "labelId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectRemoveLabel"
+          q: {
+            "$action": "remove_label"
+            exist: [
+              "id"
+              "label_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectRemoveLabel.project`"
+          }
+        }
+        {
+          co: {
+            id: "POST projectArchive"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "trash"
+                or: "trash"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectUpdateArchive($id: String!, $trash: Boolean) { projectArchive(id: $id, trash: $trash) { entity { ...ProjectFields } success } } fragment ProjectFields on Project { archivedAt autoArchivedAt canceledAt color completedAt completedIssueCountHistory completedScopeHistory content contentState convertedFromIssue { id } createdAt creator { id } currentProgress description documentContent { id } favorite { id } frequencyResolution health healthUpdatedAt icon id identifier inProgressScopeHistory integrationsSettings { id } issueCountHistory labelIds lastAppliedTemplate { id } lastUpdate { id } lead { id } leadTeam { id } microsoftTeamsChannelId name previousIdentifiers priority priorityLabel prioritySortOrder progress progressHistory projectUpdateRemindersPausedUntilAt resourceCount scope scopeHistory slackChannelId slugId sortOrder startDate startDateResolution startedAt status { id } targetDate targetDateResolution trashed updateReminderFrequency updateReminderFrequencyInWeeks updateRemindersDay updateRemindersHour updatedAt url }"
+            field: "projectArchive"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: "trash"
+                gqltype: "Boolean"
+                name: "trash"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectArchive"
+          q: {
+            "$action": "archive"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectArchive.entity`"
+          }
+        }
+        {
+          co: {
+            id: "POST projectDismissSlackChannelCreationFailure"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectUpdateDismissSlackChannelCreationFailure($id: String!) { projectDismissSlackChannelCreationFailure(id: $id) { project { ...ProjectFields } success } } fragment ProjectFields on Project { archivedAt autoArchivedAt canceledAt color completedAt completedIssueCountHistory completedScopeHistory content contentState convertedFromIssue { id } createdAt creator { id } currentProgress description documentContent { id } favorite { id } frequencyResolution health healthUpdatedAt icon id identifier inProgressScopeHistory integrationsSettings { id } issueCountHistory labelIds lastAppliedTemplate { id } lastUpdate { id } lead { id } leadTeam { id } microsoftTeamsChannelId name previousIdentifiers priority priorityLabel prioritySortOrder progress progressHistory projectUpdateRemindersPausedUntilAt resourceCount scope scopeHistory slackChannelId slugId sortOrder startDate startDateResolution startedAt status { id } targetDate targetDateResolution trashed updateReminderFrequency updateReminderFrequencyInWeeks updateRemindersDay updateRemindersHour updatedAt url }"
+            field: "projectDismissSlackChannelCreationFailure"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectDismissSlackChannelCreationFailure"
+          q: {
+            "$action": "dismiss_slack_channel_creation_failure"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectDismissSlackChannelCreationFailure.project`"
+          }
+        }
+        {
+          co: {
+            id: "POST projectUnarchive"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectUpdateUnarchive($id: String!) { projectUnarchive(id: $id) { entity { ...ProjectFields } success } } fragment ProjectFields on Project { archivedAt autoArchivedAt canceledAt color completedAt completedIssueCountHistory completedScopeHistory content contentState convertedFromIssue { id } createdAt creator { id } currentProgress description documentContent { id } favorite { id } frequencyResolution health healthUpdatedAt icon id identifier inProgressScopeHistory integrationsSettings { id } issueCountHistory labelIds lastAppliedTemplate { id } lastUpdate { id } lead { id } leadTeam { id } microsoftTeamsChannelId name previousIdentifiers priority priorityLabel prioritySortOrder progress progressHistory projectUpdateRemindersPausedUntilAt resourceCount scope scopeHistory slackChannelId slugId sortOrder startDate startDateResolution startedAt status { id } targetDate targetDateResolution trashed updateReminderFrequency updateReminderFrequencyInWeeks updateRemindersDay updateRemindersHour updatedAt url }"
+            field: "projectUnarchive"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectUnarchive"
+          q: {
+            "$action": "unarchive"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectUnarchive.entity`"
+          }
+        }
+        {
+          co: {
+            id: "POST projectUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectUpdate($id: String!, $input: ProjectUpdateInput!) { projectUpdate(id: $id, input: $input) { project { ...ProjectFields } success } } fragment ProjectFields on Project { archivedAt autoArchivedAt canceledAt color completedAt completedIssueCountHistory completedScopeHistory content contentState convertedFromIssue { id } createdAt creator { id } currentProgress description documentContent { id } favorite { id } frequencyResolution health healthUpdatedAt icon id identifier inProgressScopeHistory integrationsSettings { id } issueCountHistory labelIds lastAppliedTemplate { id } lastUpdate { id } lead { id } leadTeam { id } microsoftTeamsChannelId name previousIdentifiers priority priorityLabel prioritySortOrder progress progressHistory projectUpdateRemindersPausedUntilAt resourceCount scope scopeHistory slackChannelId slugId sortOrder startDate startDateResolution startedAt status { id } targetDate targetDateResolution trashed updateReminderFrequency updateReminderFrequencyInWeeks updateRemindersDay updateRemindersHour updatedAt url }"
+            field: "projectUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "ProjectUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectUpdate.project`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

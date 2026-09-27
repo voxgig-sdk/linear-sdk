@@ -1,0 +1,54 @@
+# Entity: issue_priority_value
+
+main: kit: entity: issue_priority_value: {
+
+  alias: field: {}
+
+  fields: {
+    label: {
+      h: "Label"
+      n: "label"
+      r: true
+      sh: "Priority's label."
+      t: "`$STRING`"
+    }
+    priority: {
+      h: "Priority"
+      n: "priority"
+      r: true
+      sh: "Priority's number value."
+      t: "`$INTEGER`"
+    }
+  }
+
+  name: "issue_priority_value"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST issuePriorityValues"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "query IssuePriorityValueList { issuePriorityValues { ...IssuePriorityValueFields } } fragment IssuePriorityValueFields on IssuePriorityValue { label priority }"
+            field: "issuePriorityValues"
+            optype: "query"
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issuePriorityValues"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issuePriorityValues`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

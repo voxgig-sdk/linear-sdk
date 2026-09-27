@@ -12,7 +12,10 @@ import (
 
 func TestAuthenticationSessionResponseDirect(t *testing.T) {
 	t.Run("direct-list-authentication_session_response", func(t *testing.T) {
-		setup := authentication_session_responseDirectSetup(map[string]any{"id": "direct01"})
+		setup := authentication_session_responseDirectSetup([]any{
+			map[string]any{"id": "direct01"},
+			map[string]any{"id": "direct02"},
+		})
 		_mode := "unit"
 		if setup.live {
 			_mode = "live"
@@ -34,24 +37,32 @@ func TestAuthenticationSessionResponseDirect(t *testing.T) {
 		}
 		client := setup.client
 
-		variables := map[string]any{}
+		params := map[string]any{}
 		if setup.live {
-		variables["id"] = setup.idmap["authentication_session_response01"]
+			params["id"] = setup.idmap["authentication_session_response01"]
 		} else {
-		variables["id"] = "direct01"
+			params["id"] = "direct01"
 		}
 
-		result, err := client.Graphql("query AuthenticationSessionResponseList($id: String!) { userSessions(id: $id) { ...AuthenticationSessionResponseFields } } fragment AuthenticationSessionResponseFields on AuthenticationSessionResponse { browserType client countryCodes createdAt detailedName id ip isCurrentSession lastActiveAt location locationCity locationCountry locationCountryCode locationRegionCode name operatingSystem service type updatedAt userAgent }", variables, nil)
-
+		result, err := client.Direct(map[string]any{
+			"path":   "",
+			"method": "GET",
+			"params": params,
+		})
 		if setup.live {
-			// Live mode is lenient: synthetic ids frequently fail server-side
-			// validation. Skip rather than fail when the call doesn't come
-			// back clean.
+			// Live-mode leniency is a model decision
+			// (main.kit.test.live.strict): synthetic IDs 4xx constantly
+			// against an arbitrary public API, so the default SKIPS here.
+			// A project that owns its test server sets strict and FAILS.
 			if err != nil {
-				t.Fatalf("graphql call failed (likely synthetic IDs against live API): %v", err)
+				t.Fatalf("list call failed (likely synthetic IDs against live API): %v", err)
 			}
 			if result["ok"] != true {
-				t.Fatalf("graphql call not ok (likely synthetic IDs against live API): %v", result)
+				t.Fatalf("list call not ok (likely synthetic IDs against live API): %v", result)
+			}
+			status := core.ToInt(result["status"])
+			if status < 200 || status >= 300 {
+				t.Fatalf("expected 2xx status, got %v", result["status"])
 			}
 		} else {
 			if err != nil {
@@ -63,20 +74,30 @@ func TestAuthenticationSessionResponseDirect(t *testing.T) {
 			if core.ToInt(result["status"]) != 200 {
 				t.Fatalf("expected status 200, got %v", result["status"])
 			}
-			if result["data"] == nil {
-				t.Fatal("expected data to be non-nil")
+		}
+
+		if !setup.live {
+			if dataList, ok := result["data"].([]any); ok {
+				if len(dataList) != 2 {
+					t.Fatalf("expected 2 items, got %d", len(dataList))
+				}
+			} else {
+				t.Fatalf("expected data to be an array, got %T", result["data"])
 			}
+
 			if len(*setup.calls) != 1 {
 				t.Fatalf("expected 1 call, got %d", len(*setup.calls))
 			}
 			call := (*setup.calls)[0]
-			initMap, _ := call["init"].(map[string]any)
-			if initMap["method"] != "POST" {
-				t.Fatalf("expected method POST, got %v", initMap["method"])
+			if initMap, ok := call["init"].(map[string]any); ok {
+				if initMap["method"] != "GET" {
+					t.Fatalf("expected method GET, got %v", initMap["method"])
+				}
 			}
-			bodyStr, _ := initMap["body"].(string)
-			if !strings.Contains(bodyStr, "direct01") {
-				t.Fatalf("expected body to contain direct01, got %v", bodyStr)
+			if url, ok := call["url"].(string); ok {
+				if !strings.Contains(url, "direct01") {
+					t.Fatalf("expected url to contain direct01, got %v", url)
+				}
 			}
 		}
 	})

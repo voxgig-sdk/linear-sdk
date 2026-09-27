@@ -1,0 +1,374 @@
+# Entity: team_membership
+
+main: kit: entity: team_membership: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    owner: {
+      h: "Owner"
+      n: "owner"
+      r: true
+      sh: "Whether the user is an owner of the team."
+      t: "`$BOOLEAN`"
+    }
+    sortOrder: {
+      h: "Sort Order"
+      n: "sortOrder"
+      r: true
+      sh: "The sort order of this team in the user's personal team list."
+      t: "`$NUMBER`"
+    }
+    team: {
+      h: "Team"
+      n: "team"
+      r: false
+      sh: "The team that the membership is associated with."
+      t: "`$OBJECT`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    user: {
+      h: "User"
+      n: "user"
+      r: false
+      sh: "The user that the membership is associated with."
+      t: "`$OBJECT`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "team_membership"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST teamMembershipCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation TeamMembershipCreate($input: TeamMembershipCreateInput!) { teamMembershipCreate(input: $input) { teamMembership { ...TeamMembershipFields } success } } fragment TeamMembershipFields on TeamMembership { archivedAt createdAt id owner sortOrder team { id } updatedAt user { id } }"
+            field: "teamMembershipCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "TeamMembershipCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "teamMembershipCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.teamMembershipCreate.teamMembership`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST teamMemberships"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query TeamMembershipList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { teamMemberships(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...TeamMembershipFields } pageInfo { endCursor hasNextPage } } } fragment TeamMembershipFields on TeamMembership { archivedAt createdAt id owner sortOrder team { id } updatedAt user { id } }"
+            field: "teamMemberships"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "teamMemberships"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.teamMemberships.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST teamMembership"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query TeamMembershipLoad($id: String!) { teamMembership(id: $id) { ...TeamMembershipFields } } fragment TeamMembershipFields on TeamMembership { archivedAt createdAt id owner sortOrder team { id } updatedAt user { id } }"
+            field: "teamMembership"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "teamMembership"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.teamMembership`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST teamMembershipDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "also_leave_parent_team"
+                or: "also_leave_parent_team"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation TeamMembershipRemove($alsoLeaveParentTeams: Boolean, $id: String!) { teamMembershipDelete(alsoLeaveParentTeams: $alsoLeaveParentTeams, id: $id) { entityId lastSyncId success } }"
+            field: "teamMembershipDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "alsoLeaveParentTeams"
+                gqltype: "Boolean"
+                name: "alsoLeaveParentTeams"
+              }
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "teamMembershipDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.teamMembershipDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST teamMembershipUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation TeamMembershipUpdate($id: String!, $input: TeamMembershipUpdateInput!) { teamMembershipUpdate(id: $id, input: $input) { teamMembership { ...TeamMembershipFields } success } } fragment TeamMembershipFields on TeamMembership { archivedAt createdAt id owner sortOrder team { id } updatedAt user { id } }"
+            field: "teamMembershipUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "TeamMembershipUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "teamMembershipUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.teamMembershipUpdate.teamMembership`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

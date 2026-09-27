@@ -1,0 +1,94 @@
+# Entity: project_milestone_move_project_team
+
+main: kit: entity: project_milestone_move_project_team: {
+
+  alias: field: {}
+
+  fields: {
+    id: {
+      h: "Id"
+      n: "id"
+      r: false
+      t: "`$STRING`"
+    }
+    projectId: {
+      h: "Project Id"
+      n: "projectId"
+      r: true
+      sh: "The project id"
+      t: "`$STRING`"
+    }
+    teamIds: {
+      h: "Team Ids"
+      n: "teamIds"
+      r: true
+      sh: "The team ids for the project"
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "project_milestone_move_project_team"
+  op: {
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST projectMilestoneMove"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectMilestoneMoveProjectTeamUpdateProjectMilestoneMove($id: String!, $input: ProjectMilestoneMoveInput!) { projectMilestoneMove(id: $id, input: $input) { previousProjectTeamIds { ...ProjectMilestoneMoveProjectTeamFields } success } } fragment ProjectMilestoneMoveProjectTeamFields on ProjectMilestoneMoveProjectTeams { projectId teamIds }"
+            field: "projectMilestoneMove"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "ProjectMilestoneMoveInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectMilestoneMove"
+          q: {
+            "$action": "project_milestone_move"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectMilestoneMove.previousProjectTeamIds`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

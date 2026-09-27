@@ -19,7 +19,6 @@ import type {
   AuditEntryTypeListMatch,
 } from '../LinearTypes'
 
-// TODO: needs Entity superclass
 class AuditEntryTypeEntity extends LinearEntityBase<AuditEntryType> {
 
   constructor(client: LinearSDK, entopts: any) {

@@ -1,0 +1,477 @@
+# Entity: custom_view
+
+main: kit: entity: custom_view: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    color: {
+      h: "Color"
+      n: "color"
+      r: false
+      sh: "The hex color code of the custom view icon."
+      t: "`$STRING`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creator: {
+      h: "Creator"
+      n: "creator"
+      r: false
+      sh: "The user who originally created the custom view."
+      t: "`$OBJECT`"
+    }
+    description: {
+      h: "Description"
+      n: "description"
+      r: false
+      sh: "The description of the custom view."
+      t: "`$STRING`"
+    }
+    facet: {
+      h: "Facet"
+      n: "facet"
+      r: false
+      sh: "[INTERNAL] The facet that links this custom view to its parent entity (project, initiative, team page, etc.)."
+      t: "`$OBJECT`"
+    }
+    feedItemFilterData: {
+      h: "Feed Item Filter Data"
+      n: "feedItemFilterData"
+      r: false
+      sh: "The filter applied to feed items in the custom view."
+      t: "`$ANY`"
+    }
+    filterData: {
+      h: "Filter Data"
+      n: "filterData"
+      r: true
+      sh: "The structured filter applied to issues in the custom view."
+      t: "`$ANY`"
+    }
+    icon: {
+      h: "Icon"
+      n: "icon"
+      r: false
+      sh: "The icon of the custom view."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    initiativeFilterData: {
+      h: "Initiative Filter Data"
+      n: "initiativeFilterData"
+      r: false
+      sh: "The filter applied to initiatives in the custom view."
+      t: "`$ANY`"
+    }
+    modelName: {
+      h: "Model Name"
+      n: "modelName"
+      r: true
+      sh: "The entity type this view displays."
+      t: "`$STRING`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "The name of the custom view, displayed in the sidebar and navigation."
+      t: "`$STRING`"
+    }
+    organization: {
+      h: "Organization"
+      n: "organization"
+      r: false
+      sh: "The workspace of the custom view."
+      t: "`$OBJECT`"
+    }
+    organizationViewPreferences: {
+      h: "Organization View Preferences"
+      n: "organizationViewPreferences"
+      r: false
+      sh: "The workspace-level default view preferences for this custom view, if any have been set."
+      t: "`$OBJECT`"
+    }
+    owner: {
+      h: "Owner"
+      n: "owner"
+      r: false
+      sh: "The user who owns the custom view."
+      t: "`$OBJECT`"
+    }
+    projectFilterData: {
+      h: "Project Filter Data"
+      n: "projectFilterData"
+      r: false
+      sh: "The filter applied to projects in the custom view."
+      t: "`$ANY`"
+    }
+    shared: {
+      h: "Shared"
+      n: "shared"
+      r: true
+      sh: "Whether the custom view is shared with everyone in the organization."
+      t: "`$BOOLEAN`"
+    }
+    slugId: {
+      h: "Slug Id"
+      n: "slugId"
+      r: true
+      sh: "The custom view's unique URL slug, used to construct human-readable URLs."
+      t: "`$STRING`"
+    }
+    team: {
+      h: "Team"
+      n: "team"
+      r: false
+      sh: "The team that the custom view is scoped to."
+      t: "`$OBJECT`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    updatedBy: {
+      h: "Updated By"
+      n: "updatedBy"
+      r: false
+      sh: "The user who last updated the custom view."
+      t: "`$OBJECT`"
+    }
+    userViewPreferences: {
+      h: "User View Preferences"
+      n: "userViewPreferences"
+      r: false
+      sh: "The current user's personal view preferences for this custom view, if they have set any."
+      t: "`$OBJECT`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "custom_view"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST customViewCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation CustomViewCreate($input: CustomViewCreateInput!) { customViewCreate(input: $input) { customView { ...CustomViewFields } success } } fragment CustomViewFields on CustomView { archivedAt color createdAt creator { id } description facet { id } feedItemFilterData filterData icon id initiativeFilterData modelName name organization { id } organizationViewPreferences { id } owner { id } projectFilterData shared slugId team { id } updatedAt updatedBy { id } userViewPreferences { id } }"
+            field: "customViewCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "CustomViewCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customViewCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customViewCreate.customView`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST customViews"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query CustomViewList($after: String, $before: String, $filter: CustomViewFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy, $sort: [CustomViewSortInput!]) { customViews(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy, sort: $sort) { nodes { ...CustomViewFields } pageInfo { endCursor hasNextPage } } } fragment CustomViewFields on CustomView { archivedAt color createdAt creator { id } description facet { id } feedItemFilterData filterData icon id initiativeFilterData modelName name organization { id } organizationViewPreferences { id } owner { id } projectFilterData shared slugId team { id } updatedAt updatedBy { id } userViewPreferences { id } }"
+            field: "customViews"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "filter"
+                gqltype: "CustomViewFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+              {
+                from: "sort"
+                gqltype: "[CustomViewSortInput!]"
+                name: "sort"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customViews"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customViews.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST customView"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query CustomViewLoad($id: String!) { customView(id: $id) { ...CustomViewFields } } fragment CustomViewFields on CustomView { archivedAt color createdAt creator { id } description facet { id } feedItemFilterData filterData icon id initiativeFilterData modelName name organization { id } organizationViewPreferences { id } owner { id } projectFilterData shared slugId team { id } updatedAt updatedBy { id } userViewPreferences { id } }"
+            field: "customView"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customView"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customView`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST customViewDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation CustomViewRemove($id: String!) { customViewDelete(id: $id) { entityId lastSyncId success } }"
+            field: "customViewDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customViewDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customViewDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST customViewUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation CustomViewUpdate($id: String!, $input: CustomViewUpdateInput!) { customViewUpdate(id: $id, input: $input) { customView { ...CustomViewFields } success } } fragment CustomViewFields on CustomView { archivedAt color createdAt creator { id } description facet { id } feedItemFilterData filterData icon id initiativeFilterData modelName name organization { id } organizationViewPreferences { id } owner { id } projectFilterData shared slugId team { id } updatedAt updatedBy { id } userViewPreferences { id } }"
+            field: "customViewUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "CustomViewUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "customViewUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.customViewUpdate.customView`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

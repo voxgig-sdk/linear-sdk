@@ -1,0 +1,495 @@
+# Entity: initiative_label
+
+main: kit: entity: initiative_label: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    color: {
+      h: "Color"
+      n: "color"
+      r: true
+      sh: "The label's color as a HEX string (e.g., '#EB5757')."
+      t: "`$STRING`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creator: {
+      h: "Creator"
+      n: "creator"
+      r: false
+      sh: "The user who created the label."
+      t: "`$OBJECT`"
+    }
+    description: {
+      h: "Description"
+      n: "description"
+      r: false
+      sh: "The label's description."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    isGroup: {
+      h: "Is Group"
+      n: "isGroup"
+      r: true
+      sh: "Whether the label is a group."
+      t: "`$BOOLEAN`"
+    }
+    lastAppliedAt: {
+      h: "Last Applied At"
+      n: "lastAppliedAt"
+      r: false
+      sh: "The date when the label was last applied to an issue, project, or initiative."
+      t: "`$ANY`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "The label's name."
+      t: "`$STRING`"
+    }
+    organization: {
+      h: "Organization"
+      n: "organization"
+      r: false
+      sh: "The workspace that the initiative label belongs to."
+      t: "`$OBJECT`"
+    }
+    parent: {
+      h: "Parent"
+      n: "parent"
+      r: false
+      sh: "The parent label group."
+      t: "`$OBJECT`"
+    }
+    retiredAt: {
+      h: "Retired At"
+      n: "retiredAt"
+      r: false
+      sh: "[Internal] When the label was retired."
+      t: "`$ANY`"
+    }
+    retiredBy: {
+      h: "Retired By"
+      n: "retiredBy"
+      r: false
+      sh: "The user who retired the label."
+      t: "`$OBJECT`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "initiative_label"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST initiativeLabelCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation InitiativeLabelCreate($input: InitiativeLabelCreateInput!) { initiativeLabelCreate(input: $input) { initiativeLabel { ...InitiativeLabelFields } success } } fragment InitiativeLabelFields on InitiativeLabel { archivedAt color createdAt creator { id } description id isGroup lastAppliedAt name organization { id } parent { id } retiredAt retiredBy { id } updatedAt }"
+            field: "initiativeLabelCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "InitiativeLabelCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "initiativeLabelCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.initiativeLabelCreate.initiativeLabel`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST initiativeLabels"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query InitiativeLabelList($after: String, $before: String, $filter: InitiativeLabelFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { initiativeLabels(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...InitiativeLabelFields } pageInfo { endCursor hasNextPage } } } fragment InitiativeLabelFields on InitiativeLabel { archivedAt color createdAt creator { id } description id isGroup lastAppliedAt name organization { id } parent { id } retiredAt retiredBy { id } updatedAt }"
+            field: "initiativeLabels"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: ""
+                gqltype: "InitiativeLabelFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "initiativeLabels"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.initiativeLabels.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST initiativeLabel"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query InitiativeLabelLoad($id: String!) { initiativeLabel(id: $id) { ...InitiativeLabelFields } } fragment InitiativeLabelFields on InitiativeLabel { archivedAt color createdAt creator { id } description id isGroup lastAppliedAt name organization { id } parent { id } retiredAt retiredBy { id } updatedAt }"
+            field: "initiativeLabel"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "initiativeLabel"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.initiativeLabel`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST initiativeLabelDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation InitiativeLabelRemove($id: String!) { initiativeLabelDelete(id: $id) { entityId lastSyncId success } }"
+            field: "initiativeLabelDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "initiativeLabelDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.initiativeLabelDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST initiativeLabelRestore"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation InitiativeLabelUpdateRestore($id: String!) { initiativeLabelRestore(id: $id) { initiativeLabel { ...InitiativeLabelFields } success } } fragment InitiativeLabelFields on InitiativeLabel { archivedAt color createdAt creator { id } description id isGroup lastAppliedAt name organization { id } parent { id } retiredAt retiredBy { id } updatedAt }"
+            field: "initiativeLabelRestore"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "initiativeLabelRestore"
+          q: {
+            "$action": "restore"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.initiativeLabelRestore.initiativeLabel`"
+          }
+        }
+        {
+          co: {
+            id: "POST initiativeLabelRetire"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation InitiativeLabelUpdateRetire($id: String!) { initiativeLabelRetire(id: $id) { initiativeLabel { ...InitiativeLabelFields } success } } fragment InitiativeLabelFields on InitiativeLabel { archivedAt color createdAt creator { id } description id isGroup lastAppliedAt name organization { id } parent { id } retiredAt retiredBy { id } updatedAt }"
+            field: "initiativeLabelRetire"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "initiativeLabelRetire"
+          q: {
+            "$action": "retire"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.initiativeLabelRetire.initiativeLabel`"
+          }
+        }
+        {
+          co: {
+            id: "POST initiativeLabelUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation InitiativeLabelUpdate($id: String!, $input: InitiativeLabelUpdateInput!) { initiativeLabelUpdate(id: $id, input: $input) { initiativeLabel { ...InitiativeLabelFields } success } } fragment InitiativeLabelFields on InitiativeLabel { archivedAt color createdAt creator { id } description id isGroup lastAppliedAt name organization { id } parent { id } retiredAt retiredBy { id } updatedAt }"
+            field: "initiativeLabelUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "InitiativeLabelUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "initiativeLabelUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.initiativeLabelUpdate.initiativeLabel`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

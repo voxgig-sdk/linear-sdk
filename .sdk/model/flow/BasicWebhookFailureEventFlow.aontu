@@ -1,0 +1,26 @@
+# BasicWebhookFailureEventFlow
+
+main: kit: flow: BasicWebhookFailureEventFlow:
+{
+  entity: "webhook_failure_event",
+  kind: "basic",
+  name: "BasicWebhookFailureEventFlow",
+  step: [
+    {
+      m: {
+        webhook_id: "webhook01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "webhook_failure_event_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicWebhookFailureEventFlow"
+}

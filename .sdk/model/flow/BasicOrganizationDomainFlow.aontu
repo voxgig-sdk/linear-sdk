@@ -1,0 +1,50 @@
+# BasicOrganizationDomainFlow
+
+main: kit: flow: BasicOrganizationDomainFlow:
+{
+  entity: "organization_domain",
+  kind: "basic",
+  name: "BasicOrganizationDomainFlow",
+  step: [
+    {
+      i: {
+        ref: "organization_domain_ref01"
+      }
+
+      o: "create"
+    }
+
+    {
+      i: {
+        ref: "organization_domain_ref01",
+        srcdatavar: "organization_domain_ref01_data",
+        suffix: "_up0",
+        textfield: "authType"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-organization_domain_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "organization_domain_ref01",
+        suffix: "_rm0"
+      }
+
+      m: {
+        id: "organization_domain01"
+      }
+
+      o: "remove"
+    }
+  ],
+  "key$": "BasicOrganizationDomainFlow"
+}

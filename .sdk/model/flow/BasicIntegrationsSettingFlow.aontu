@@ -1,0 +1,59 @@
+# BasicIntegrationsSettingFlow
+
+main: kit: flow: BasicIntegrationsSettingFlow:
+{
+  entity: "integrations_setting",
+  kind: "basic",
+  name: "BasicIntegrationsSettingFlow",
+  step: [
+    {
+      i: {
+        ref: "integrations_setting_ref01"
+      }
+
+      o: "create"
+    }
+
+    {
+      i: {
+        ref: "integrations_setting_ref01",
+        srcdatavar: "integrations_setting_ref01_data",
+        suffix: "_up0",
+        textfield: "contextViewType"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-integrations_setting_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "integrations_setting_ref01",
+        srcdatavar: "integrations_setting_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "integrations_setting01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-integrations_setting_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicIntegrationsSettingFlow"
+}

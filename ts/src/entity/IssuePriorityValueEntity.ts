@@ -19,7 +19,6 @@ import type {
   IssuePriorityValueListMatch,
 } from '../LinearTypes'
 
-// TODO: needs Entity superclass
 class IssuePriorityValueEntity extends LinearEntityBase<IssuePriorityValue> {
 
   constructor(client: LinearSDK, entopts: any) {

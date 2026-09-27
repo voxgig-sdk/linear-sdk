@@ -1,0 +1,362 @@
+# Entity: initiative_relation
+
+main: kit: entity: initiative_relation: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    initiative: {
+      h: "Initiative"
+      n: "initiative"
+      r: false
+      sh: "The parent initiative in this hierarchical relation."
+      t: "`$OBJECT`"
+    }
+    relatedInitiative: {
+      h: "Related Initiative"
+      n: "relatedInitiative"
+      r: false
+      sh: "The child initiative in this hierarchical relation."
+      t: "`$OBJECT`"
+    }
+    sortOrder: {
+      h: "Sort Order"
+      n: "sortOrder"
+      r: true
+      sh: "The sort order of the child initiative within its parent initiative."
+      t: "`$NUMBER`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    user: {
+      h: "User"
+      n: "user"
+      r: false
+      sh: "The user who last created or modified the relation."
+      t: "`$OBJECT`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "initiative_relation"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST initiativeRelationCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation InitiativeRelationCreate($input: InitiativeRelationCreateInput!) { initiativeRelationCreate(input: $input) { initiativeRelation { ...InitiativeRelationFields } success } } fragment InitiativeRelationFields on InitiativeRelation { archivedAt createdAt id initiative { id } relatedInitiative { id } sortOrder updatedAt user { id } }"
+            field: "initiativeRelationCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "InitiativeRelationCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "initiativeRelationCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.initiativeRelationCreate.initiativeRelation`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST initiativeRelations"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query InitiativeRelationList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { initiativeRelations(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...InitiativeRelationFields } pageInfo { endCursor hasNextPage } } } fragment InitiativeRelationFields on InitiativeRelation { archivedAt createdAt id initiative { id } relatedInitiative { id } sortOrder updatedAt user { id } }"
+            field: "initiativeRelations"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "initiativeRelations"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.initiativeRelations.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST initiativeRelation"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query InitiativeRelationLoad($id: String!) { initiativeRelation(id: $id) { ...InitiativeRelationFields } } fragment InitiativeRelationFields on InitiativeRelation { archivedAt createdAt id initiative { id } relatedInitiative { id } sortOrder updatedAt user { id } }"
+            field: "initiativeRelation"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "initiativeRelation"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.initiativeRelation`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST initiativeRelationDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation InitiativeRelationRemove($id: String!) { initiativeRelationDelete(id: $id) { entityId lastSyncId success } }"
+            field: "initiativeRelationDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "initiativeRelationDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.initiativeRelationDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST initiativeRelationUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation InitiativeRelationUpdate($id: String!, $input: InitiativeRelationUpdateInput!) { initiativeRelationUpdate(id: $id, input: $input) { initiativeRelation { ...InitiativeRelationFields } success } } fragment InitiativeRelationFields on InitiativeRelation { archivedAt createdAt id initiative { id } relatedInitiative { id } sortOrder updatedAt user { id } }"
+            field: "initiativeRelationUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "InitiativeRelationUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "initiativeRelationUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.initiativeRelationUpdate.initiativeRelation`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

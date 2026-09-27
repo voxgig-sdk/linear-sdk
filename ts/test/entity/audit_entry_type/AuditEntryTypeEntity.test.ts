@@ -25,10 +25,6 @@ import {
 } from '../../utility'
 
 
-// AFTER the imports on purpose: TypeScript hoists `import` above any
-// statement in the emitted CommonJS, so a loader placed above them would
-// run only after every imported module had already been evaluated - and
-// anything reading process.env at module scope would miss these values.
 loadEnvLocal(__dirname + '/../../../.env.local')
 
 
@@ -55,7 +51,7 @@ describe('AuditEntryTypeEntity', async () => {
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":[{"active":true,"name":"description","req":true,"short":"Description of the audit entry type.","type":"`$STRING`","index$":0},{"active":true,"name":"type","req":true,"short":"The audit entry type.","type":"`$STRING`","index$":1}],"name":"audit_entry_type","op":{"list":{"input":"data","name":"list","points":[{"active":true,"args":{},"contract":{"id":"POST auditEntryTypes","json":"{\"field\":{\"args\":[],\"deprecated\":false,\"desc\":\"List of audit entry types.\",\"gqltype\":\"[AuditEntryType!]!\",\"list\":true,\"name\":\"auditEntryTypes\",\"reqd\":true,\"type\":\"AuditEntryType\"},\"invocation\":{\"doc\":\"query AuditEntryTypeList { auditEntryTypes { ...AuditEntryTypeFields } } fragment AuditEntryTypeFields on AuditEntryType { description type }\",\"field\":\"auditEntryTypes\",\"optype\":\"query\",\"vars\":[]},\"protocol\":\"graphql\",\"types\":{},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"query AuditEntryTypeList { auditEntryTypes { ...AuditEntryTypeFields } } fragment AuditEntryTypeFields on AuditEntryType { description type }","field":"auditEntryTypes","optype":"query","vars":[]},"kind":"graphql","method":"POST","orig":"auditEntryTypes","segments":[],"select":{},"transform":{"req":"`reqdata`","res":"`body.data.auditEntryTypes`"},"index$":0}],"key$":"list"}},"relations":{"ancestors":[]},"key$":"audit_entry_type","name__orig":"audit_entry_type","Name":"AuditEntryType","name_":"audit_entry_type","name-":"audit-entry-type","NAME":"AUDIT_ENTRY_TYPE","index$":8}, {"active":true,"entity":"audit_entry_type","key$":"BasicAuditEntryTypeFlow","kind":"basic","name":"BasicAuditEntryTypeFlow","param":{},"step":[{"active":true,"data":{},"input":{},"match":{},"op":"list","spec":[],"valid":[{"apply":"ItemExists","def":{"ref":"audit_entry_type_ref01"}}],"index$":0}]}, 'AuditEntryType')
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"description":{"a":true,"h":"Description","n":"description","r":true,"sh":"Description of the audit entry type.","t":"`$STRING`","key$":"description","index$":0},"type":{"a":true,"h":"Type","n":"type","r":true,"sh":"The audit entry type.","t":"`$STRING`","key$":"type","index$":1}},"name":"audit_entry_type","op":{"list":{"input":"data","name":"list","points":[{"a":true,"co":{"id":"POST auditEntryTypes","source":"graphql","version":2},"g":{},"gq":{"doc":"query AuditEntryTypeList { auditEntryTypes { ...AuditEntryTypeFields } } fragment AuditEntryTypeFields on AuditEntryType { description type }","field":"auditEntryTypes","optype":"query","vars":[]},"k":"graphql","m":"POST","o":"auditEntryTypes","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.auditEntryTypes`"},"index$":0}],"key$":"list"}},"relations":{"ancestors":[]},"key$":"audit_entry_type","name__orig":"audit_entry_type","Name":"AuditEntryType","name_":"audit_entry_type","name-":"audit-entry-type","NAME":"AUDIT_ENTRY_TYPE","index$":8}, {"active":true,"entity":"audit_entry_type","key$":"BasicAuditEntryTypeFlow","kind":"basic","name":"BasicAuditEntryTypeFlow","param":{},"step":[{"a":true,"d":{},"i":{},"m":{},"o":"list","s":[],"v":[{"apply":"ItemExists","def":{"ref":"audit_entry_type_ref01"}}],"index$":0}]}, 'AuditEntryType', {"POST auditEntryTypes":{"protocol":"graphql"}})
     }
     const client = setup.client
     const struct = setup.struct

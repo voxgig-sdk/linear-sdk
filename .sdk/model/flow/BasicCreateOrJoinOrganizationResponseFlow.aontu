@@ -1,0 +1,44 @@
+# BasicCreateOrJoinOrganizationResponseFlow
+
+main: kit: flow: BasicCreateOrJoinOrganizationResponseFlow:
+{
+  entity: "create_or_join_organization_response",
+  kind: "basic",
+  name: "BasicCreateOrJoinOrganizationResponseFlow",
+  step: [
+    {
+      i: {
+        ref: "create_or_join_organization_response_ref01"
+      }
+
+      m: {
+        organization_id: "organization01"
+      }
+
+      o: "create"
+    }
+
+    {
+      d: {
+        organization_id: "organization01"
+      }
+
+      i: {
+        ref: "create_or_join_organization_response_ref01",
+        srcdatavar: "create_or_join_organization_response_ref01_data",
+        suffix: "_up0"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-create_or_join_organization_response_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicCreateOrJoinOrganizationResponseFlow"
+}

@@ -1,0 +1,53 @@
+# BasicNotificationSubscriptionFlow
+
+main: kit: flow: BasicNotificationSubscriptionFlow:
+{
+  entity: "notification_subscription",
+  kind: "basic",
+  name: "BasicNotificationSubscriptionFlow",
+  step: [
+    {
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "notification_subscription_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "notification_subscription_ref01",
+        srcdatavar: "notification_subscription_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "notification_subscription01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-notification_subscription_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicNotificationSubscriptionFlow"
+}

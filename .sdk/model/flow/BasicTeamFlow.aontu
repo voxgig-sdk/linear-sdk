@@ -1,0 +1,128 @@
+# BasicTeamFlow
+
+main: kit: flow: BasicTeamFlow:
+{
+  entity: "team",
+  kind: "basic",
+  name: "BasicTeamFlow",
+  step: [
+    {
+      i: {
+        ref: "team_ref01"
+      }
+
+      m: {
+        after: "after01",
+        before: "before01",
+        copy_settings_from_team_id: "copy_settings_from_team01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "create"
+    }
+
+    {
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "team_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "team_ref01",
+        srcdatavar: "team_ref01_data",
+        suffix: "_up0",
+        textfield: "autoCloseStateId"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-team_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "team_ref01",
+        srcdatavar: "team_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "team01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-team_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "team_ref01",
+        suffix: "_rm0"
+      }
+
+      m: {
+        id: "team01"
+      }
+
+      o: "remove"
+    }
+
+    {
+      i: {
+        suffix: "_rt0"
+      }
+
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemNotExists",
+          def: {
+            ref: "team_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicTeamFlow"
+}

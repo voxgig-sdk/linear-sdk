@@ -1,0 +1,416 @@
+# Entity: project_milestone
+
+main: kit: entity: project_milestone: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    currentProgress: {
+      h: "Current Progress"
+      n: "currentProgress"
+      r: true
+      sh: "[Internal] The current progress of the milestone, broken down by issue status category."
+      t: "`$ANY`"
+    }
+    description: {
+      h: "Description"
+      n: "description"
+      r: false
+      sh: "The project milestone's description in markdown format."
+      t: "`$STRING`"
+    }
+    descriptionState: {
+      h: "Description State"
+      n: "descriptionState"
+      r: false
+      sh: "[Internal] The project milestone's description as YJS state."
+      t: "`$STRING`"
+    }
+    documentContent: {
+      h: "Document Content"
+      n: "documentContent"
+      r: false
+      sh: "The rich-text content of the milestone description."
+      t: "`$OBJECT`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "The name of the project milestone."
+      t: "`$STRING`"
+    }
+    progress: {
+      h: "Progress"
+      n: "progress"
+      r: true
+      sh: "The progress % of the project milestone."
+      t: "`$NUMBER`"
+    }
+    progressHistory: {
+      h: "Progress History"
+      n: "progressHistory"
+      r: true
+      sh: "[Internal] The progress history of the milestone, tracking issue completion over time."
+      t: "`$ANY`"
+    }
+    project: {
+      h: "Project"
+      n: "project"
+      r: false
+      sh: "The project that this milestone belongs to."
+      t: "`$OBJECT`"
+    }
+    sortOrder: {
+      h: "Sort Order"
+      n: "sortOrder"
+      r: true
+      sh: "The order of the milestone in relation to other milestones within a project."
+      t: "`$NUMBER`"
+    }
+    status: {
+      h: "Status"
+      n: "status"
+      r: true
+      sh: "The status of the project milestone."
+      t: "`$STRING`"
+    }
+    targetDate: {
+      h: "Target Date"
+      n: "targetDate"
+      r: false
+      sh: "The planned completion date of the milestone."
+      t: "`$ANY`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "project_milestone"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST projectMilestoneCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation ProjectMilestoneCreate($input: ProjectMilestoneCreateInput!) { projectMilestoneCreate(input: $input) { projectMilestone { ...ProjectMilestoneFields } success } } fragment ProjectMilestoneFields on ProjectMilestone { archivedAt createdAt currentProgress description descriptionState documentContent { id } id name progress progressHistory project { id } sortOrder status targetDate updatedAt }"
+            field: "projectMilestoneCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "ProjectMilestoneCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectMilestoneCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectMilestoneCreate.projectMilestone`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST projectMilestones"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ProjectMilestoneList($after: String, $before: String, $filter: ProjectMilestoneFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { projectMilestones(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...ProjectMilestoneFields } pageInfo { endCursor hasNextPage } } } fragment ProjectMilestoneFields on ProjectMilestone { archivedAt createdAt currentProgress description descriptionState documentContent { id } id name progress progressHistory project { id } sortOrder status targetDate updatedAt }"
+            field: "projectMilestones"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: ""
+                gqltype: "ProjectMilestoneFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectMilestones"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectMilestones.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST projectMilestone"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ProjectMilestoneLoad($id: String!) { projectMilestone(id: $id) { ...ProjectMilestoneFields } } fragment ProjectMilestoneFields on ProjectMilestone { archivedAt createdAt currentProgress description descriptionState documentContent { id } id name progress progressHistory project { id } sortOrder status targetDate updatedAt }"
+            field: "projectMilestone"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectMilestone"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectMilestone`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST projectMilestoneDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectMilestoneRemove($id: String!) { projectMilestoneDelete(id: $id) { entityId lastSyncId success } }"
+            field: "projectMilestoneDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectMilestoneDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectMilestoneDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST projectMilestoneUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectMilestoneUpdate($id: String!, $input: ProjectMilestoneUpdateInput!) { projectMilestoneUpdate(id: $id, input: $input) { projectMilestone { ...ProjectMilestoneFields } success } } fragment ProjectMilestoneFields on ProjectMilestone { archivedAt createdAt currentProgress description descriptionState documentContent { id } id name progress progressHistory project { id } sortOrder status targetDate updatedAt }"
+            field: "projectMilestoneUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "ProjectMilestoneUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectMilestoneUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectMilestoneUpdate.projectMilestone`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

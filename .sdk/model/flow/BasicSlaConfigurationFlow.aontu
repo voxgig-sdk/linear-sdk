@@ -1,0 +1,26 @@
+# BasicSlaConfigurationFlow
+
+main: kit: flow: BasicSlaConfigurationFlow:
+{
+  entity: "sla_configuration",
+  kind: "basic",
+  name: "BasicSlaConfigurationFlow",
+  step: [
+    {
+      m: {
+        team_id: "team01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "sla_configuration_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicSlaConfigurationFlow"
+}

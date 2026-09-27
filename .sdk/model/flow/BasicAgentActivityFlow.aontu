@@ -1,0 +1,89 @@
+# BasicAgentActivityFlow
+
+main: kit: flow: BasicAgentActivityFlow:
+{
+  entity: "agent_activity",
+  kind: "basic",
+  name: "BasicAgentActivityFlow",
+  step: [
+    {
+      i: {
+        ref: "agent_activity_ref01"
+      }
+
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "create"
+    }
+
+    {
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "agent_activity_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "agent_activity_ref01",
+        srcdatavar: "agent_activity_ref01_data",
+        suffix: "_up0",
+        textfield: "executionSkippedReason"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-agent_activity_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "agent_activity_ref01",
+        srcdatavar: "agent_activity_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "agent_activity01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-agent_activity_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicAgentActivityFlow"
+}

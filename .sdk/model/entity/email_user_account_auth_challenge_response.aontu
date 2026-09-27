@@ -1,0 +1,64 @@
+# Entity: email_user_account_auth_challenge_response
+
+main: kit: entity: email_user_account_auth_challenge_response: {
+
+  alias: field: {}
+
+  fields: {
+    authType: {
+      h: "Auth Type"
+      n: "authType"
+      r: true
+      sh: "Supported challenge for this user account."
+      t: "`$STRING`"
+    }
+    success: {
+      h: "Success"
+      n: "success"
+      r: true
+      sh: "Whether the operation was successful."
+      t: "`$BOOLEAN`"
+    }
+  }
+
+  name: "email_user_account_auth_challenge_response"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST emailUserAccountAuthChallenge"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation EmailUserAccountAuthChallengeResponseCreateEmailUserAccountAuthChallenge($input: EmailUserAccountAuthChallengeInput!) { emailUserAccountAuthChallenge(input: $input) { ...EmailUserAccountAuthChallengeResponseFields } } fragment EmailUserAccountAuthChallengeResponseFields on EmailUserAccountAuthChallengeResponse { authType success }"
+            field: "emailUserAccountAuthChallenge"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "EmailUserAccountAuthChallengeInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "emailUserAccountAuthChallenge"
+          q: {
+            "$action": "email_user_account_auth_challenge"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.emailUserAccountAuthChallenge`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

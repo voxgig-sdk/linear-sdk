@@ -1,0 +1,71 @@
+# BasicOAuthApplicationFlow
+
+main: kit: flow: BasicOAuthApplicationFlow:
+{
+  entity: "o_auth_application",
+  kind: "basic",
+  name: "BasicOAuthApplicationFlow",
+  step: [
+    {
+      i: {
+        ref: "o_auth_application_ref01"
+      }
+
+      o: "create"
+    }
+
+    {
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "o_auth_application_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "o_auth_application_ref01",
+        srcdatavar: "o_auth_application_ref01_data",
+        suffix: "_up0",
+        textfield: "clientId"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-o_auth_application_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "o_auth_application_ref01",
+        srcdatavar: "o_auth_application_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "o_auth_application01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-o_auth_application_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicOAuthApplicationFlow"
+}

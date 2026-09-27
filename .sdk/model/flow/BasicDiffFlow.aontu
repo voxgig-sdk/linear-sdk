@@ -1,0 +1,32 @@
+# BasicDiffFlow
+
+main: kit: flow: BasicDiffFlow:
+{
+  entity: "diff",
+  kind: "basic",
+  name: "BasicDiffFlow",
+  step: [
+    {
+      i: {
+        ref: "diff_ref01",
+        srcdatavar: "diff_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "diff01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-diff_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicDiffFlow"
+}

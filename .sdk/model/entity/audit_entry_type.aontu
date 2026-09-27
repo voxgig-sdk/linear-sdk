@@ -1,0 +1,54 @@
+# Entity: audit_entry_type
+
+main: kit: entity: audit_entry_type: {
+
+  alias: field: {}
+
+  fields: {
+    description: {
+      h: "Description"
+      n: "description"
+      r: true
+      sh: "Description of the audit entry type."
+      t: "`$STRING`"
+    }
+    type: {
+      h: "Type"
+      n: "type"
+      r: true
+      sh: "The audit entry type."
+      t: "`$STRING`"
+    }
+  }
+
+  name: "audit_entry_type"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST auditEntryTypes"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "query AuditEntryTypeList { auditEntryTypes { ...AuditEntryTypeFields } } fragment AuditEntryTypeFields on AuditEntryType { description type }"
+            field: "auditEntryTypes"
+            optype: "query"
+          }
+          k: "graphql"
+          m: "POST"
+          o: "auditEntryTypes"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.auditEntryTypes`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

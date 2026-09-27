@@ -17,10 +17,6 @@ import {
 } from '../../utility'
 
 
-// AFTER the imports on purpose: TypeScript hoists `import` above any
-// statement in the emitted CommonJS, so a loader placed above them would
-// run only after every imported module had already been evaluated - and
-// anything reading process.env at module scope would miss these values.
 loadEnvLocal(__dirname + '/../../../.env.local')
 
 
@@ -32,9 +28,6 @@ describe('NotificationDirect', async () => {
 
   test('direct-exists', async () => {
     const sdk = new LinearSDK({
-      // Concrete base: a live construction must satisfy any server
-      // variables a templated base URL declares; overriding base with a
-      // literal (as the direct flow tests do) sidesteps the requirement.
       base: 'http://localhost:8080',
       system: { fetch: async () => ({}) }
     })
@@ -45,19 +38,44 @@ describe('NotificationDirect', async () => {
 
   test('direct-load-notification', async (t: any) => {
     if (liveScenariosActive()) { t.skip('Covered by live operation scenarios'); return }
-    const setup = directSetup()
+    const setup = directSetup({ id: 'direct01' })
     if (maybeSkipControl(t, 'direct', 'direct-load-notification', setup.live)) return
-    if (skipIfMissingIds(t, setup, ["notification01"])) return
     const { client, calls } = setup
 
-    const variables: any = {}
+    const params: any = {}
+    const query: any = {}
     if (setup.live) {
-      variables["id"] = setup.idmap['notification01']
+      const listResult: any = await client.direct({
+        path: '',
+        method: 'GET',
+        params: {
+        after: setup.idmap['after01'],
+        first: setup.idmap['first01'],
+        unread_only: setup.idmap['unread_only01'],
+        },
+      })
+      assert(listResult.ok && listResult.status >= 200 && listResult.status < 300,
+        'Live list discovery failed')
+      const listArr = unwrapListData(listResult.data)
+      if (null == listArr || listArr.length === 0) {
+        throw new Error('Live load blocked: discovery returned no entities')
+      }
+      const candidateId = listArr[0]?.id ?? listArr[0]?.id
+      if (null == candidateId) {
+        throw new Error('Live load blocked: discovery returned no usable identity')
+      }
+      params.id = candidateId
+
     } else {
-      variables["id"] = 'direct01'
+
     }
 
-    const result: any = await client.graphql("query NotificationLoad($id: String!) { notification(id: $id) { ...NotificationFields } } fragment NotificationFields on Notification { actor { id } actorAvatarColor actorAvatarUrl actorInactive actorInitials archivedAt botActor { id } category createdAt emailedAt externalUserActor { id } groupingKey groupingPriority id inboxUrl initiativeUpdateHealth isLinearActor issueStatusType projectUpdateHealth readAt snoozedUntilAt subtitle title type unsnoozedAt updatedAt url user { id } }", variables)
+    const result: any = await client.direct({
+      path: '',
+      method: 'GET',
+      params,
+      query,
+    })
 
     if (setup.live) {
       // STRICT live mode: a non-2xx is a real failure - this project owns
@@ -76,31 +94,37 @@ describe('NotificationDirect', async () => {
       assert(result.ok === true)
       assert(result.status === 200)
       assert(null != result.data)
+      assert(result.data.id === 'direct01')
       assert(calls.length === 1)
-      assert(calls[0].init.method === 'POST')
-      assert(calls[0].init.body.includes('direct01'))
+      assert(calls[0].init.method === 'GET')
     }
   })
 
   test('direct-list-notification', async (t: any) => {
     if (liveScenariosActive()) { t.skip('Covered by live operation scenarios'); return }
-    const setup = directSetup()
+    const setup = directSetup([{ id: 'direct01' }, { id: 'direct02' }])
     if (maybeSkipControl(t, 'direct', 'direct-list-notification', setup.live)) return
-    if (skipIfMissingIds(t, setup, ["after01","first01","unreadOnly01"])) return
+    if (skipIfMissingIds(t, setup, ["after01","first01","unread_only01"])) return
     const { client, calls } = setup
 
-    const variables: any = {}
+    const params: any = {}
+    const query: any = {}
     if (setup.live) {
-      variables["after"] = setup.idmap['after01']
-      variables["first"] = setup.idmap['first01']
-      variables["unreadOnly"] = setup.idmap['unreadOnly01']
+      params.after = setup.idmap['after01']
+      params.first = setup.idmap['first01']
+      params.unread_only = setup.idmap['unread_only01']
     } else {
-      variables["after"] = 'direct01'
-      variables["first"] = 'direct02'
-      variables["unreadOnly"] = 'direct03'
+      params.after = 'direct01'
+      params.first = 'direct02'
+      params.unread_only = 'direct03'
     }
 
-    const result: any = await client.graphql("query NotificationList($after: String, $first: Int, $unreadOnly: Boolean) { inboxNotifications(after: $after, first: $first, unreadOnly: $unreadOnly) { nodes { ...NotificationFields } pageInfo { endCursor hasNextPage } } } fragment NotificationFields on Notification { actor { id } actorAvatarColor actorAvatarUrl actorInactive actorInitials archivedAt botActor { id } category createdAt emailedAt externalUserActor { id } groupingKey groupingPriority id inboxUrl initiativeUpdateHealth isLinearActor issueStatusType projectUpdateHealth readAt snoozedUntilAt subtitle title type unsnoozedAt updatedAt url user { id } }", variables)
+    const result: any = await client.direct({
+      path: '',
+      method: 'GET',
+      params,
+      query,
+    })
 
     if (setup.live) {
       // STRICT live mode: a non-2xx is a real failure - this project owns
@@ -114,16 +138,19 @@ describe('NotificationDirect', async () => {
       assert(result.ok === true,
         'Live request failed: HTTP ' + result.status)
       assert(result.status >= 200 && result.status < 300)
-      assert(null != result.data)
+      assert(Array.isArray(unwrapListData(result.data)), 'Expected live list response')
     } else {
       assert(result.ok === true)
       assert(result.status === 200)
       assert(null != result.data)
+      const listArr = unwrapListData(result.data)
+      assert(Array.isArray(listArr))
+      assert(listArr!.length === 2)
       assert(calls.length === 1)
-      assert(calls[0].init.method === 'POST')
-      assert(calls[0].init.body.includes('direct01'))
-      assert(calls[0].init.body.includes('direct02'))
-      assert(calls[0].init.body.includes('direct03'))
+      assert(calls[0].init.method === 'GET')
+      assert(calls[0].url.includes('direct01'))
+      assert(calls[0].url.includes('direct02'))
+      assert(calls[0].url.includes('direct03'))
     }
   })
 

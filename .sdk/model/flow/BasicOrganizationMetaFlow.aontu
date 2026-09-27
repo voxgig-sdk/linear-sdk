@@ -1,0 +1,32 @@
+# BasicOrganizationMetaFlow
+
+main: kit: flow: BasicOrganizationMetaFlow:
+{
+  entity: "organization_meta",
+  kind: "basic",
+  name: "BasicOrganizationMetaFlow",
+  step: [
+    {
+      i: {
+        ref: "organization_meta_ref01",
+        srcdatavar: "organization_meta_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        url_key: "url_key01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-organization_meta_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicOrganizationMetaFlow"
+}

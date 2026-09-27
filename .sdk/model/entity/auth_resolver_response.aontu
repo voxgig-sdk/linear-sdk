@@ -1,0 +1,233 @@
+# Entity: auth_resolver_response
+
+main: kit: entity: auth_resolver_response: {
+
+  alias: field: {}
+
+  fields: {
+    allowDomainAccess: {
+      h: "Allow Domain Access"
+      n: "allowDomainAccess"
+      r: false
+      sh: "Should the signup flow allow access for the domain."
+      t: "`$BOOLEAN`"
+    }
+    email: {
+      h: "Email"
+      n: "email"
+      r: true
+      sh: "Email for the authenticated account."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "User account ID."
+      t: "`$STRING`"
+    }
+    lastUsedOrganizationId: {
+      h: "Last Used Organization Id"
+      n: "lastUsedOrganizationId"
+      r: false
+      sh: "ID of the organization last accessed by the user."
+      t: "`$STRING`"
+    }
+    service: {
+      h: "Service"
+      n: "service"
+      r: false
+      sh: "The authentication service used for the current session (e.g., google, email, saml)."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "auth_resolver_response"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST emailTokenUserAccountAuth"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation AuthResolverResponseCreateEmailTokenUserAccountAuth($input: TokenUserAccountAuthInput!) { emailTokenUserAccountAuth(input: $input) { ...AuthResolverResponseFields } } fragment AuthResolverResponseFields on AuthResolverResponse { allowDomainAccess email id lastUsedOrganizationId service }"
+            field: "emailTokenUserAccountAuth"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "TokenUserAccountAuthInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "emailTokenUserAccountAuth"
+          q: {
+            "$action": "email_token_user_account_auth"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.emailTokenUserAccountAuth`"
+          }
+        }
+        {
+          co: {
+            id: "POST googleUserAccountAuth"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation AuthResolverResponseCreateGoogleUserAccountAuth($input: GoogleUserAccountAuthInput!) { googleUserAccountAuth(input: $input) { ...AuthResolverResponseFields } } fragment AuthResolverResponseFields on AuthResolverResponse { allowDomainAccess email id lastUsedOrganizationId service }"
+            field: "googleUserAccountAuth"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "GoogleUserAccountAuthInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "googleUserAccountAuth"
+          q: {
+            "$action": "google_user_account_auth"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.googleUserAccountAuth`"
+          }
+        }
+        {
+          co: {
+            id: "POST samlTokenUserAccountAuth"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation AuthResolverResponseCreateSamlTokenUserAccountAuth($input: TokenUserAccountAuthInput!) { samlTokenUserAccountAuth(input: $input) { ...AuthResolverResponseFields } } fragment AuthResolverResponseFields on AuthResolverResponse { allowDomainAccess email id lastUsedOrganizationId service }"
+            field: "samlTokenUserAccountAuth"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "TokenUserAccountAuthInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "samlTokenUserAccountAuth"
+          q: {
+            "$action": "saml_token_user_account_auth"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.samlTokenUserAccountAuth`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST availableUsers"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "query AuthResolverResponseLoad { availableUsers { ...AuthResolverResponseFields } } fragment AuthResolverResponseFields on AuthResolverResponse { allowDomainAccess email id lastUsedOrganizationId service }"
+            field: "availableUsers"
+            optype: "query"
+          }
+          k: "graphql"
+          m: "POST"
+          o: "availableUsers"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.availableUsers`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST passkeyLoginFinish"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "auth_id"
+                or: "auth_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "response"
+                or: "response"
+                r: true
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation AuthResolverResponseUpdatePasskeyLoginFinish($authId: String!, $response: JSONObject!) { passkeyLoginFinish(authId: $authId, response: $response) { ...AuthResolverResponseFields } } fragment AuthResolverResponseFields on AuthResolverResponse { allowDomainAccess email id lastUsedOrganizationId service }"
+            field: "passkeyLoginFinish"
+            optype: "mutation"
+            vars: [
+              {
+                from: "authId"
+                gqltype: "String!"
+                name: "authId"
+              }
+              {
+                from: "response"
+                gqltype: "JSONObject!"
+                name: "response"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "passkeyLoginFinish"
+          q: {
+            "$action": "passkey_login_finish"
+            exist: [
+              "auth_id"
+              "response"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.passkeyLoginFinish`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

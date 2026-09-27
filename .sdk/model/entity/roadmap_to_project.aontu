@@ -1,0 +1,355 @@
+# Entity: roadmap_to_project
+
+main: kit: entity: roadmap_to_project: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    project: {
+      h: "Project"
+      n: "project"
+      r: false
+      sh: "The project that the roadmap is associated with."
+      t: "`$OBJECT`"
+    }
+    roadmap: {
+      h: "Roadmap"
+      n: "roadmap"
+      r: false
+      sh: "The roadmap that the project is associated with."
+      t: "`$OBJECT`"
+    }
+    sortOrder: {
+      h: "Sort Order"
+      n: "sortOrder"
+      r: true
+      sh: "The sort order of the project within the roadmap."
+      t: "`$STRING`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "roadmap_to_project"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST roadmapToProjectCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation RoadmapToProjectCreate($input: RoadmapToProjectCreateInput!) { roadmapToProjectCreate(input: $input) { roadmapToProject { ...RoadmapToProjectFields } success } } fragment RoadmapToProjectFields on RoadmapToProject { archivedAt createdAt id project { id } roadmap { id } sortOrder updatedAt }"
+            field: "roadmapToProjectCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "RoadmapToProjectCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "roadmapToProjectCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.roadmapToProjectCreate.roadmapToProject`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST roadmapToProjects"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query RoadmapToProjectList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { roadmapToProjects(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...RoadmapToProjectFields } pageInfo { endCursor hasNextPage } } } fragment RoadmapToProjectFields on RoadmapToProject { archivedAt createdAt id project { id } roadmap { id } sortOrder updatedAt }"
+            field: "roadmapToProjects"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "roadmapToProjects"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.roadmapToProjects.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST roadmapToProject"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query RoadmapToProjectLoad($id: String!) { roadmapToProject(id: $id) { ...RoadmapToProjectFields } } fragment RoadmapToProjectFields on RoadmapToProject { archivedAt createdAt id project { id } roadmap { id } sortOrder updatedAt }"
+            field: "roadmapToProject"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "roadmapToProject"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.roadmapToProject`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST roadmapToProjectDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation RoadmapToProjectRemove($id: String!) { roadmapToProjectDelete(id: $id) { entityId lastSyncId success } }"
+            field: "roadmapToProjectDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "roadmapToProjectDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.roadmapToProjectDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST roadmapToProjectUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation RoadmapToProjectUpdate($id: String!, $input: RoadmapToProjectUpdateInput!) { roadmapToProjectUpdate(id: $id, input: $input) { roadmapToProject { ...RoadmapToProjectFields } success } } fragment RoadmapToProjectFields on RoadmapToProject { archivedAt createdAt id project { id } roadmap { id } sortOrder updatedAt }"
+            field: "roadmapToProjectUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "RoadmapToProjectUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "roadmapToProjectUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.roadmapToProjectUpdate.roadmapToProject`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

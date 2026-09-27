@@ -19,7 +19,6 @@ import type {
   ProjectSearchResultListMatch,
 } from '../LinearTypes'
 
-// TODO: needs Entity superclass
 class ProjectSearchResultEntity extends LinearEntityBase<ProjectSearchResult> {
 
   constructor(client: LinearSDK, entopts: any) {

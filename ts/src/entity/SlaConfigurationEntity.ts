@@ -19,7 +19,6 @@ import type {
   SlaConfigurationListMatch,
 } from '../LinearTypes'
 
-// TODO: needs Entity superclass
 class SlaConfigurationEntity extends LinearEntityBase<SlaConfiguration> {
 
   constructor(client: LinearSDK, entopts: any) {

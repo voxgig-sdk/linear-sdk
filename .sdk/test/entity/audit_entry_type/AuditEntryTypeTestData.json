@@ -26,27 +26,8 @@
   "requests": {
     "POST auditEntryTypes": {
       "provenance": "operation-contract",
-      "contract": {
-        "field": {
-          "args": [],
-          "deprecated": false,
-          "desc": "List of audit entry types.",
-          "gqltype": "[AuditEntryType!]!",
-          "list": true,
-          "name": "auditEntryTypes",
-          "reqd": true,
-          "type": "AuditEntryType"
-        },
-        "invocation": {
-          "doc": "query AuditEntryTypeList { auditEntryTypes { ...AuditEntryTypeFields } } fragment AuditEntryTypeFields on AuditEntryType { description type }",
-          "field": "auditEntryTypes",
-          "optype": "query",
-          "vars": []
-        },
-        "protocol": "graphql",
-        "types": {},
-        "typesScope": "inputs"
-      }
+      "version": 2,
+      "source": "graphql"
     }
   }
 }

@@ -1,0 +1,235 @@
+# Entity: access_key_release
+
+main: kit: entity: access_key_release: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the release was archived."
+      t: "`$ANY`"
+    }
+    commitSha: {
+      h: "Commit Sha"
+      n: "commitSha"
+      r: false
+      sh: "The Git commit SHA associated with the release."
+      t: "`$STRING`"
+    }
+    completedAt: {
+      h: "Completed At"
+      n: "completedAt"
+      r: false
+      sh: "The time at which the release was completed."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the release was created."
+      t: "`$ANY`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the release."
+      t: "`$STRING`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "The name of the release."
+      t: "`$STRING`"
+    }
+    url: {
+      h: "Url"
+      n: "url"
+      r: true
+      sh: "The URL to the release page in the Linear app."
+      t: "`$STRING`"
+    }
+    version: {
+      h: "Version"
+      n: "version"
+      r: false
+      sh: "The version identifier for this release."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "access_key_release"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST releaseCompleteByAccessKey"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation AccessKeyReleaseCreateReleaseCompleteByAccessKey($input: ReleaseCompleteInputBase!) { releaseCompleteByAccessKey(input: $input) { release { ...AccessKeyReleaseFields } success } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }"
+            field: "releaseCompleteByAccessKey"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "ReleaseCompleteInputBase!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releaseCompleteByAccessKey"
+          q: {
+            "$action": "release_complete_by_access_key"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releaseCompleteByAccessKey.release`"
+          }
+        }
+        {
+          co: {
+            id: "POST releaseSyncByAccessKey"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation AccessKeyReleaseCreateReleaseSyncByAccessKey($input: ReleaseSyncInputBase!) { releaseSyncByAccessKey(input: $input) { release { ...AccessKeyReleaseFields } success } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }"
+            field: "releaseSyncByAccessKey"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "ReleaseSyncInputBase!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releaseSyncByAccessKey"
+          q: {
+            "$action": "release_sync_by_access_key"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releaseSyncByAccessKey.release`"
+          }
+        }
+        {
+          co: {
+            id: "POST releaseUpdateByPipelineByAccessKey"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation AccessKeyReleaseCreateReleaseUpdateByPipelineByAccessKey($input: ReleaseUpdateByPipelineInputBase!) { releaseUpdateByPipelineByAccessKey(input: $input) { release { ...AccessKeyReleaseFields } success } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }"
+            field: "releaseUpdateByPipelineByAccessKey"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "ReleaseUpdateByPipelineInputBase!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releaseUpdateByPipelineByAccessKey"
+          q: {
+            "$action": "release_update_by_pipeline_by_access_key"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releaseUpdateByPipelineByAccessKey.release`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST recentReleasesByAccessKey"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "limit"
+                or: "limit"
+                r: false
+                t: "`$INTEGER`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query AccessKeyReleaseList($limit: Int) { recentReleasesByAccessKey(limit: $limit) { ...AccessKeyReleaseFields } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }"
+            field: "recentReleasesByAccessKey"
+            optype: "query"
+            vars: [
+              {
+                from: "limit"
+                gqltype: "Int"
+                name: "limit"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "recentReleasesByAccessKey"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.recentReleasesByAccessKey`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST latestReleaseByAccessKey"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "query AccessKeyReleaseLoad { latestReleaseByAccessKey { ...AccessKeyReleaseFields } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }"
+            field: "latestReleaseByAccessKey"
+            optype: "query"
+          }
+          k: "graphql"
+          m: "POST"
+          o: "latestReleaseByAccessKey"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.latestReleaseByAccessKey`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

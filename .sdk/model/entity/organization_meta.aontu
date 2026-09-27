@@ -1,0 +1,77 @@
+# Entity: organization_meta
+
+main: kit: entity: organization_meta: {
+
+  alias: field: {}
+
+  fields: {
+    allowedAuthServices: {
+      h: "Allowed Auth Services"
+      n: "allowedAuthServices"
+      r: true
+      sh: "Allowed authentication providers, empty array means all are allowed."
+      t: "`$STRING`"
+    }
+    region: {
+      h: "Region"
+      n: "region"
+      r: true
+      sh: "The region the workspace is hosted in."
+      t: "`$STRING`"
+    }
+  }
+
+  name: "organization_meta"
+  op: {
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST organizationMeta"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "url_key"
+                or: "url_key"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query OrganizationMetaLoad($urlKey: String!) { organizationMeta(urlKey: $urlKey) { ...OrganizationMetaFields } } fragment OrganizationMetaFields on OrganizationMeta { allowedAuthServices region }"
+            field: "organizationMeta"
+            optype: "query"
+            vars: [
+              {
+                from: "urlKey"
+                gqltype: "String!"
+                name: "urlKey"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organizationMeta"
+          q: {
+            exist: [
+              "url_key"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organizationMeta`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

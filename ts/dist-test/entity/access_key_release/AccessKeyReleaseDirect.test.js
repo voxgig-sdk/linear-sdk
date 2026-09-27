@@ -8,10 +8,6 @@ const node_assert_1 = __importDefault(require("node:assert"));
 const live_runner_1 = require("../../live-runner");
 const __1 = require("../../..");
 const utility_1 = require("../../utility");
-// AFTER the imports on purpose: TypeScript hoists `import` above any
-// statement in the emitted CommonJS, so a loader placed above them would
-// run only after every imported module had already been evaluated - and
-// anything reading process.env at module scope would miss these values.
 (0, utility_1.loadEnvLocal)(__dirname + '/../../../.env.local');
 (0, node_test_1.describe)('AccessKeyReleaseDirect', async () => {
     // Per-test live pacing. Delay is read from sdk-test-control.json's
@@ -19,9 +15,6 @@ const utility_1 = require("../../utility");
     (0, node_test_1.afterEach)((0, utility_1.liveDelay)('LINEAR_TEST_LIVE'));
     (0, node_test_1.test)('direct-exists', async () => {
         const sdk = new __1.LinearSDK({
-            // Concrete base: a live construction must satisfy any server
-            // variables a templated base URL declares; overriding base with a
-            // literal (as the direct flow tests do) sidesteps the requirement.
             base: 'http://localhost:8080',
             system: { fetch: async () => ({}) }
         });
@@ -33,18 +26,39 @@ const utility_1 = require("../../utility");
             t.skip('Covered by live operation scenarios');
             return;
         }
-        const setup = directSetup();
+        const setup = directSetup({ id: 'direct01' });
         if ((0, utility_1.maybeSkipControl)(t, 'direct', 'direct-load-access_key_release', setup.live))
             return;
         const { client, calls } = setup;
-        const variables = {};
+        const params = {};
+        const query = {};
         if (setup.live) {
-            // no variables
+            const listResult = await client.direct({
+                path: '',
+                method: 'GET',
+                params: {
+                    limit: setup.idmap['limit01'],
+                },
+            });
+            (0, node_assert_1.default)(listResult.ok && listResult.status >= 200 && listResult.status < 300, 'Live list discovery failed');
+            const listArr = unwrapListData(listResult.data);
+            if (null == listArr || listArr.length === 0) {
+                throw new Error('Live load blocked: discovery returned no entities');
+            }
+            const candidateId = listArr[0]?.id ?? listArr[0]?.id;
+            if (null == candidateId) {
+                throw new Error('Live load blocked: discovery returned no usable identity');
+            }
+            params.id = candidateId;
         }
         else {
-            // no variables
         }
-        const result = await client.graphql("query AccessKeyReleaseLoad { latestReleaseByAccessKey { ...AccessKeyReleaseFields } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }", variables);
+        const result = await client.direct({
+            path: '',
+            method: 'GET',
+            params,
+            query,
+        });
         if (setup.live) {
             // STRICT live mode: a non-2xx is a real failure - this project owns
             // the server it points at, so there is nothing to be lenient about.
@@ -62,8 +76,9 @@ const utility_1 = require("../../utility");
             (0, node_assert_1.default)(result.ok === true);
             (0, node_assert_1.default)(result.status === 200);
             (0, node_assert_1.default)(null != result.data);
+            (0, node_assert_1.default)(result.data.id === 'direct01');
             (0, node_assert_1.default)(calls.length === 1);
-            (0, node_assert_1.default)(calls[0].init.method === 'POST');
+            (0, node_assert_1.default)(calls[0].init.method === 'GET');
         }
     });
     (0, node_test_1.test)('direct-list-access_key_release', async (t) => {
@@ -71,20 +86,26 @@ const utility_1 = require("../../utility");
             t.skip('Covered by live operation scenarios');
             return;
         }
-        const setup = directSetup();
+        const setup = directSetup([{ id: 'direct01' }, { id: 'direct02' }]);
         if ((0, utility_1.maybeSkipControl)(t, 'direct', 'direct-list-access_key_release', setup.live))
             return;
         if ((0, utility_1.skipIfMissingIds)(t, setup, ["limit01"]))
             return;
         const { client, calls } = setup;
-        const variables = {};
+        const params = {};
+        const query = {};
         if (setup.live) {
-            variables["limit"] = setup.idmap['limit01'];
+            params.limit = setup.idmap['limit01'];
         }
         else {
-            variables["limit"] = 'direct01';
+            params.limit = 'direct01';
         }
-        const result = await client.graphql("query AccessKeyReleaseList($limit: Int) { recentReleasesByAccessKey(limit: $limit) { ...AccessKeyReleaseFields } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }", variables);
+        const result = await client.direct({
+            path: '',
+            method: 'GET',
+            params,
+            query,
+        });
         if (setup.live) {
             // STRICT live mode: a non-2xx is a real failure - this project owns
             // the server it points at, so there is nothing to be lenient about.
@@ -96,15 +117,18 @@ const utility_1 = require("../../utility");
             // could not pass against any real API, including this project's own.
             (0, node_assert_1.default)(result.ok === true, 'Live request failed: HTTP ' + result.status);
             (0, node_assert_1.default)(result.status >= 200 && result.status < 300);
-            (0, node_assert_1.default)(null != result.data);
+            (0, node_assert_1.default)(Array.isArray(unwrapListData(result.data)), 'Expected live list response');
         }
         else {
             (0, node_assert_1.default)(result.ok === true);
             (0, node_assert_1.default)(result.status === 200);
             (0, node_assert_1.default)(null != result.data);
+            const listArr = unwrapListData(result.data);
+            (0, node_assert_1.default)(Array.isArray(listArr));
+            (0, node_assert_1.default)(listArr.length === 2);
             (0, node_assert_1.default)(calls.length === 1);
-            (0, node_assert_1.default)(calls[0].init.method === 'POST');
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct01'));
+            (0, node_assert_1.default)(calls[0].init.method === 'GET');
+            (0, node_assert_1.default)(calls[0].url.includes('direct01'));
         }
     });
 });

@@ -111,14 +111,14 @@
 <a href="../sdks/ts.html">TypeScript</a></details>
 <details><summary>Tools</summary><a href="../tools/go-cli.html">Go CLI</a>
 <a href="../tools/go-mcp.html">Go MCP server</a></details>
-<details><summary>Features</summary><a href="../features/debug.html">Request/response capture ring buffer for debugging</a>
-<a href="../features/idempotency.html">Idempotency keys for safe retries of mutating operations</a>
-<a href="../features/metrics.html">Statistics capture: per-operation counters and latency</a>
-<a href="../features/paging.html">Pagination signals for list operations</a>
-<a href="../features/ratelimit.html">Client-side rate limiting via a token bucket</a>
-<a href="../features/retry.html">Automatic retry of transient failures with exponential backoff</a>
-<a href="../features/test.html">In-memory mock transport for testing without a live server</a>
-<a href="../features/timeout.html">Per-request timeout with transport abort</a></details></nav><main id="content"><div class="page-context"><span class="section-dot" aria-hidden="true"></span>API</div><h1 id="user">User</h1>
+<details><summary>Features</summary><a href="../features/debug.html">Debug capture</a>
+<a href="../features/idempotency.html">Idempotency</a>
+<a href="../features/metrics.html">Metrics</a>
+<a href="../features/paging.html">Paging</a>
+<a href="../features/ratelimit.html">Rate limiting</a>
+<a href="../features/retry.html">Retry</a>
+<a href="../features/test.html">Test transport</a>
+<a href="../features/timeout.html">Timeout</a></details></nav><main id="content"><div class="page-context"><span class="section-dot" aria-hidden="true"></span>API</div><h1 id="user">User</h1>
 <h2 id="operations">Operations</h2>
 <p>Every route this entity exposes. Each route links to its own reference on this page.</p>
 <table>
@@ -169,6 +169,66 @@
 </tr>
 </tbody>
 </table>
+<h2 id="examples">Examples</h2>
+<p>One example per SDK, generated from the API model. The argument names are the parameters and fields of this entity, and the values are placeholders. The examples are not compiled or executed.</p>
+<h3 id="golang">Golang</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/go.html#set-up-the-client">Golang setup</a>, then call the operations:</p>
+<pre><code class="language-go">users, err := client.User(nil).List(nil, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(users)
+user, err := client.User(nil).Load(nil, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(user)
+created, err := client.User(nil).Create(map[string]any{&quot;active&quot;: true, &quot;admin&quot;: true, &quot;app&quot;: true, &quot;avatarBackgroundColor&quot;: &quot;example&quot;, &quot;canAccessAnyPublicTeam&quot;: true, &quot;createdAt&quot;: &quot;example&quot;, &quot;createdIssueCount&quot;: 1, &quot;displayName&quot;: &quot;example&quot;, &quot;email&quot;: &quot;example&quot;, &quot;guest&quot;: true, &quot;hasGitHubCodeAccess&quot;: true, &quot;id&quot;: &quot;example&quot;, &quot;initials&quot;: &quot;example&quot;, &quot;isAssignable&quot;: true, &quot;isMe&quot;: true, &quot;isMentionable&quot;: true, &quot;name&quot;: &quot;example&quot;, &quot;owner&quot;: true, &quot;supportsAgentSessions&quot;: true, &quot;updatedAt&quot;: &quot;example&quot;, &quot;url&quot;: &quot;example&quot;}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(created)
+updated, err := client.User(nil).Update(map[string]any{&quot;id&quot;: &quot;example_id&quot;, &quot;active&quot;: true, &quot;admin&quot;: true}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(updated)
+</code></pre>
+<h3 id="lua">Lua</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/lua.html#set-up-the-client">Lua setup</a>, then call the operations:</p>
+<pre><code class="language-lua">local users, err = client:User():list()
+local user, err = client:User():load()
+local created, err = client:User():create({ active = true, admin = true, app = true, avatarBackgroundColor = &quot;example&quot;, canAccessAnyPublicTeam = true, createdAt = &quot;example&quot;, createdIssueCount = 1, displayName = &quot;example&quot;, email = &quot;example&quot;, guest = true, hasGitHubCodeAccess = true, id = &quot;example&quot;, initials = &quot;example&quot;, isAssignable = true, isMe = true, isMentionable = true, name = &quot;example&quot;, owner = true, supportsAgentSessions = true, updatedAt = &quot;example&quot;, url = &quot;example&quot; })
+local updated, err = client:User():update({ id = &quot;example_id&quot;, active = true, admin = true })
+</code></pre>
+<h3 id="php">PHP</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/php.html#set-up-the-client">PHP setup</a>, then call the operations:</p>
+<pre><code class="language-php">$users = $client-&gt;User()-&gt;list();
+$user = $client-&gt;User()-&gt;load();
+$created = $client-&gt;User()-&gt;create([&quot;active&quot; =&gt; true, &quot;admin&quot; =&gt; true, &quot;app&quot; =&gt; true, &quot;avatarBackgroundColor&quot; =&gt; &quot;example&quot;, &quot;canAccessAnyPublicTeam&quot; =&gt; true, &quot;createdAt&quot; =&gt; &quot;example&quot;, &quot;createdIssueCount&quot; =&gt; 1, &quot;displayName&quot; =&gt; &quot;example&quot;, &quot;email&quot; =&gt; &quot;example&quot;, &quot;guest&quot; =&gt; true, &quot;hasGitHubCodeAccess&quot; =&gt; true, &quot;id&quot; =&gt; &quot;example&quot;, &quot;initials&quot; =&gt; &quot;example&quot;, &quot;isAssignable&quot; =&gt; true, &quot;isMe&quot; =&gt; true, &quot;isMentionable&quot; =&gt; true, &quot;name&quot; =&gt; &quot;example&quot;, &quot;owner&quot; =&gt; true, &quot;supportsAgentSessions&quot; =&gt; true, &quot;updatedAt&quot; =&gt; &quot;example&quot;, &quot;url&quot; =&gt; &quot;example&quot;]);
+$updated = $client-&gt;User()-&gt;update([&quot;id&quot; =&gt; &quot;example_id&quot;, &quot;active&quot; =&gt; true, &quot;admin&quot; =&gt; true]);
+</code></pre>
+<h3 id="python">Python</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/py.html#set-up-the-client">Python setup</a>, then call the operations:</p>
+<pre><code class="language-py">users = client.User().list()
+user = client.User().load()
+created = client.User().create({ &quot;active&quot;: True, &quot;admin&quot;: True, &quot;app&quot;: True, &quot;avatarBackgroundColor&quot;: &quot;example&quot;, &quot;canAccessAnyPublicTeam&quot;: True, &quot;createdAt&quot;: &quot;example&quot;, &quot;createdIssueCount&quot;: 1, &quot;displayName&quot;: &quot;example&quot;, &quot;email&quot;: &quot;example&quot;, &quot;guest&quot;: True, &quot;hasGitHubCodeAccess&quot;: True, &quot;id&quot;: &quot;example&quot;, &quot;initials&quot;: &quot;example&quot;, &quot;isAssignable&quot;: True, &quot;isMe&quot;: True, &quot;isMentionable&quot;: True, &quot;name&quot;: &quot;example&quot;, &quot;owner&quot;: True, &quot;supportsAgentSessions&quot;: True, &quot;updatedAt&quot;: &quot;example&quot;, &quot;url&quot;: &quot;example&quot; })
+updated = client.User().update({&quot;id&quot;: &quot;example_id&quot;, &quot;active&quot;: True, &quot;admin&quot;: True})
+</code></pre>
+<h3 id="ruby">Ruby</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/rb.html#set-up-the-client">Ruby setup</a>, then call the operations:</p>
+<pre><code class="language-rb">users = client.User.list()
+user = client.User.load()
+created = client.User.create({ &quot;active&quot; =&gt; true, &quot;admin&quot; =&gt; true, &quot;app&quot; =&gt; true, &quot;avatarBackgroundColor&quot; =&gt; &quot;example&quot;, &quot;canAccessAnyPublicTeam&quot; =&gt; true, &quot;createdAt&quot; =&gt; &quot;example&quot;, &quot;createdIssueCount&quot; =&gt; 1, &quot;displayName&quot; =&gt; &quot;example&quot;, &quot;email&quot; =&gt; &quot;example&quot;, &quot;guest&quot; =&gt; true, &quot;hasGitHubCodeAccess&quot; =&gt; true, &quot;id&quot; =&gt; &quot;example&quot;, &quot;initials&quot; =&gt; &quot;example&quot;, &quot;isAssignable&quot; =&gt; true, &quot;isMe&quot; =&gt; true, &quot;isMentionable&quot; =&gt; true, &quot;name&quot; =&gt; &quot;example&quot;, &quot;owner&quot; =&gt; true, &quot;supportsAgentSessions&quot; =&gt; true, &quot;updatedAt&quot; =&gt; &quot;example&quot;, &quot;url&quot; =&gt; &quot;example&quot; })
+updated = client.User.update({ &quot;id&quot; =&gt; &quot;example_id&quot;, &quot;active&quot; =&gt; true, &quot;admin&quot; =&gt; true })
+</code></pre>
+<h3 id="typescript">TypeScript</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/ts.html#set-up-the-client">TypeScript setup</a>, then call the operations:</p>
+<pre><code class="language-ts">const users = await client.User().list()
+const user = await client.User().load()
+const created = await client.User().create({ active: true, admin: true, app: true, avatarBackgroundColor: &quot;example&quot;, canAccessAnyPublicTeam: true, createdAt: &quot;example&quot;, createdIssueCount: 1, displayName: &quot;example&quot;, email: &quot;example&quot;, guest: true, hasGitHubCodeAccess: true, id: &quot;example&quot;, initials: &quot;example&quot;, isAssignable: true, isMe: true, isMentionable: true, name: &quot;example&quot;, owner: true, supportsAgentSessions: true, updatedAt: &quot;example&quot;, url: &quot;example&quot; })
+const updated = await client.User().update({ id: &quot;example_id&quot;, active: true, admin: true })
+</code></pre>
 <h2 id="fields">Fields</h2>
 <table>
 <thead>

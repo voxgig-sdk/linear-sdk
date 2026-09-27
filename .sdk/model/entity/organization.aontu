@@ -1,0 +1,569 @@
+# Entity: organization
+
+main: kit: entity: organization: {
+
+  alias: field: {}
+
+  fields: {
+    agentAutomationEnabled: {
+      h: "Agent Automation Enabled"
+      n: "agentAutomationEnabled"
+      r: true
+      sh: "[INTERNAL] Whether the workspace has enabled agent automation."
+      t: "`$BOOLEAN`"
+    }
+    aiAddonEnabled: {
+      h: "Ai Addon Enabled"
+      n: "aiAddonEnabled"
+      r: true
+      sh: "[INTERNAL] Whether the workspace has enabled the AI add-on (which at this point only includes triage suggestions)."
+      t: "`$BOOLEAN`"
+    }
+    aiDiscussionSummariesEnabled: {
+      h: "Ai Discussion Summaries Enabled"
+      n: "aiDiscussionSummariesEnabled"
+      r: true
+      sh: "Whether the workspace has enabled AI discussion summaries for issues."
+      t: "`$BOOLEAN`"
+    }
+    aiProviderConfiguration: {
+      h: "Ai Provider Configuration"
+      n: "aiProviderConfiguration"
+      r: false
+      sh: "[INTERNAL] Configure per-modality AI host providers and model families."
+      t: "`$ANY`"
+    }
+    aiTelemetryEnabled: {
+      h: "Ai Telemetry Enabled"
+      n: "aiTelemetryEnabled"
+      r: true
+      sh: "[INTERNAL] Whether the workspace has opted in to AI telemetry."
+      t: "`$BOOLEAN`"
+    }
+    aiThreadSummariesEnabled: {
+      h: "Ai Thread Summaries Enabled"
+      n: "aiThreadSummariesEnabled"
+      r: true
+      sh: "Whether the workspace has enabled resolved thread AI summaries."
+      t: "`$BOOLEAN`"
+    }
+    allowedFileUploadContentTypes: {
+      h: "Allowed File Upload Content Types"
+      n: "allowedFileUploadContentTypes"
+      r: false
+      sh: "Allowed file upload content types"
+      t: "`$STRING`"
+    }
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    authSettings: {
+      h: "Auth Settings"
+      n: "authSettings"
+      r: true
+      sh: "Authentication settings for the workspace, including allowed auth providers, bypass rules, and organization visibility during signup."
+      t: "`$ANY`"
+    }
+    codeIntelligenceEnabled: {
+      h: "Code Intelligence Enabled"
+      n: "codeIntelligenceEnabled"
+      r: true
+      sh: "[INTERNAL] Whether code intelligence is enabled for the workspace."
+      t: "`$BOOLEAN`"
+    }
+    codeIntelligenceRepository: {
+      h: "Code Intelligence Repository"
+      n: "codeIntelligenceRepository"
+      r: false
+      sh: "[INTERNAL] GitHub repository in owner/repo format for code intelligence."
+      t: "`$STRING`"
+    }
+    codingAgentEnabled: {
+      h: "Coding Agent Enabled"
+      n: "codingAgentEnabled"
+      r: true
+      sh: "[INTERNAL] Whether the workspace has enabled Coding Sessions."
+      t: "`$BOOLEAN`"
+    }
+    codingAgentSettings: {
+      h: "Coding Agent Settings"
+      n: "codingAgentSettings"
+      r: true
+      sh: "[Internal] Settings for Coding Sessions features."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    createdIssueCount: {
+      h: "Created Issue Count"
+      n: "createdIssueCount"
+      r: true
+      sh: "Approximate total number of issues created in the workspace, including archived ones."
+      t: "`$INTEGER`"
+    }
+    customerCount: {
+      h: "Customer Count"
+      n: "customerCount"
+      r: true
+      sh: "The number of active (non-archived) customers tracked in the workspace."
+      t: "`$INTEGER`"
+    }
+    customersConfiguration: {
+      h: "Customers Configuration"
+      n: "customersConfiguration"
+      r: true
+      sh: "Configuration settings for the Customers feature, including revenue currency and other customer tracking preferences."
+      t: "`$ANY`"
+    }
+    customersEnabled: {
+      h: "Customers Enabled"
+      n: "customersEnabled"
+      r: true
+      sh: "Whether the Customers feature is enabled and accessible for the workspace based on the current plan."
+      t: "`$BOOLEAN`"
+    }
+    defaultFeedSummarySchedule: {
+      h: "Default Feed Summary Schedule"
+      n: "defaultFeedSummarySchedule"
+      r: false
+      sh: "Default schedule for how often feed summaries are generated."
+      t: "`$STRING`"
+    }
+    defaultHomeView: {
+      h: "Default Home View"
+      n: "defaultHomeView"
+      r: false
+      sh: "The default home view for members of the workspace who have not chosen their own default."
+      t: "`$STRING`"
+    }
+    defaultHomeViewTargetId: {
+      h: "Default Home View Target Id"
+      n: "defaultHomeViewTargetId"
+      r: false
+      sh: "The id of the specific initiative, project, view, dashboard, or page tab used as the default home view."
+      t: "`$STRING`"
+    }
+    deletionRequestedAt: {
+      h: "Deletion Requested At"
+      n: "deletionRequestedAt"
+      r: false
+      sh: "The time at which deletion of the workspace was requested."
+      t: "`$ANY`"
+    }
+    feedEnabled: {
+      h: "Feed Enabled"
+      n: "feedEnabled"
+      r: true
+      sh: "Whether the activity feed feature is enabled for the workspace."
+      t: "`$BOOLEAN`"
+    }
+    fiscalYearStartMonth: {
+      h: "Fiscal Year Start Month"
+      n: "fiscalYearStartMonth"
+      r: true
+      sh: "The zero-indexed month at which the fiscal year starts (0 = January, 11 = December)."
+      t: "`$NUMBER`"
+    }
+    generatedUpdatesEnabled: {
+      h: "Generated Updates Enabled"
+      n: "generatedUpdatesEnabled"
+      r: true
+      sh: "[INTERNAL] Whether the workspace has enabled generated updates."
+      t: "`$BOOLEAN`"
+    }
+    gitBranchFormat: {
+      h: "Git Branch Format"
+      n: "gitBranchFormat"
+      r: false
+      sh: "The template format for Git branch names created from issues."
+      t: "`$STRING`"
+    }
+    gitLinkbackDescriptionsEnabled: {
+      h: "Git Linkback Descriptions Enabled"
+      n: "gitLinkbackDescriptionsEnabled"
+      r: true
+      sh: "Whether issue descriptions should be included in the Git integration linkback messages posted to pull requests."
+      t: "`$BOOLEAN`"
+    }
+    gitLinkbackMessagesEnabled: {
+      h: "Git Linkback Messages Enabled"
+      n: "gitLinkbackMessagesEnabled"
+      r: true
+      sh: "Whether the Git integration linkback messages should be posted as comments on pull requests in private repositories."
+      t: "`$BOOLEAN`"
+    }
+    gitPublicLinkbackMessagesEnabled: {
+      h: "Git Public Linkback Messages Enabled"
+      n: "gitPublicLinkbackMessagesEnabled"
+      r: true
+      sh: "Whether the Git integration linkback messages should be posted as comments on pull requests in public repositories."
+      t: "`$BOOLEAN`"
+    }
+    hipaaComplianceEnabled: {
+      h: "Hipaa Compliance Enabled"
+      n: "hipaaComplianceEnabled"
+      r: true
+      sh: "Whether HIPAA compliance is enabled for the workspace."
+      t: "`$BOOLEAN`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    initiativeUpdateReminderFrequencyInWeeks: {
+      h: "Initiative Update Reminder Frequency In Weeks"
+      n: "initiativeUpdateReminderFrequencyInWeeks"
+      r: false
+      sh: "The frequency in weeks at which to prompt for initiative updates."
+      t: "`$NUMBER`"
+    }
+    initiativeUpdateRemindersDay: {
+      h: "Initiative Update Reminders Day"
+      n: "initiativeUpdateRemindersDay"
+      r: true
+      sh: "The day of the week on which initiative update reminders are sent."
+      t: "`$STRING`"
+    }
+    initiativeUpdateRemindersHour: {
+      h: "Initiative Update Reminders Hour"
+      n: "initiativeUpdateRemindersHour"
+      r: true
+      sh: "The hour of the day (0-23) at which initiative update reminders are sent."
+      t: "`$NUMBER`"
+    }
+    linearAgentEnabled: {
+      h: "Linear Agent Enabled"
+      n: "linearAgentEnabled"
+      r: true
+      sh: "[Internal] Whether the workspace has enabled Linear Agent."
+      t: "`$BOOLEAN`"
+    }
+    linearAgentSettings: {
+      h: "Linear Agent Settings"
+      n: "linearAgentSettings"
+      r: true
+      sh: "[Internal] Settings for Linear Agent features."
+      t: "`$ANY`"
+    }
+    logoUrl: {
+      h: "Logo Url"
+      n: "logoUrl"
+      r: false
+      sh: "The URL of the workspace's logo image."
+      t: "`$STRING`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "The workspace's name."
+      t: "`$STRING`"
+    }
+    periodUploadVolume: {
+      h: "Period Upload Volume"
+      n: "periodUploadVolume"
+      r: true
+      sh: "Rolling 30-day total file upload volume for the workspace, measured in megabytes."
+      t: "`$NUMBER`"
+    }
+    previousUrlKeys: {
+      h: "Previous Url Keys"
+      n: "previousUrlKeys"
+      r: true
+      sh: "Previously used URL keys for the workspace."
+      t: "`$STRING`"
+    }
+    projectUpdateReminderFrequencyInWeeks: {
+      h: "Project Update Reminder Frequency In Weeks"
+      n: "projectUpdateReminderFrequencyInWeeks"
+      r: false
+      sh: "The frequency in weeks at which to prompt for project updates."
+      t: "`$NUMBER`"
+    }
+    projectUpdateRemindersDay: {
+      h: "Project Update Reminders Day"
+      n: "projectUpdateRemindersDay"
+      r: true
+      sh: "The day of the week on which project update reminders are sent."
+      t: "`$STRING`"
+    }
+    projectUpdateRemindersHour: {
+      h: "Project Update Reminders Hour"
+      n: "projectUpdateRemindersHour"
+      r: true
+      sh: "The hour of the day (0-23) at which project update reminders are sent."
+      t: "`$NUMBER`"
+    }
+    pullRequestIssueMode: {
+      h: "Pull Request Issue Mode"
+      n: "pullRequestIssueMode"
+      r: true
+      sh: "How Linear suggests and links issues for pull requests that have none linked: 'off', 'suggest', or 'autoOnMerge'."
+      t: "`$STRING`"
+    }
+    pullRequestTourEnabled: {
+      h: "Pull Request Tour Enabled"
+      n: "pullRequestTourEnabled"
+      r: true
+      sh: "Whether the workspace generates AI Pull Request guides for new pull requests."
+      t: "`$BOOLEAN`"
+    }
+    releaseChannel: {
+      h: "Release Channel"
+      n: "releaseChannel"
+      r: true
+      sh: "The feature release channel the workspace belongs to, which controls access to pre-release features."
+      t: "`$STRING`"
+    }
+    releasesEnabled: {
+      h: "Releases Enabled"
+      n: "releasesEnabled"
+      r: true
+      sh: "Whether release management is enabled for the workspace."
+      t: "`$BOOLEAN`"
+    }
+    restrictAgentInvocationToMembers: {
+      h: "Restrict Agent Invocation To Members"
+      n: "restrictAgentInvocationToMembers"
+      r: false
+      sh: "[Internal] Whether agent invocation is restricted to full workspace members."
+      t: "`$BOOLEAN`"
+    }
+    roadmapEnabled: {
+      h: "Roadmap Enabled"
+      n: "roadmapEnabled"
+      r: true
+      sh: "Whether the roadmap feature is enabled for the workspace."
+      t: "`$BOOLEAN`"
+    }
+    samlEnabled: {
+      h: "Saml Enabled"
+      n: "samlEnabled"
+      r: true
+      sh: "Whether SAML-based single sign-on authentication is enabled for the workspace."
+      t: "`$BOOLEAN`"
+    }
+    samlSettings: {
+      h: "Saml Settings"
+      n: "samlSettings"
+      r: false
+      sh: "[INTERNAL] SAML settings."
+      t: "`$ANY`"
+    }
+    scimEnabled: {
+      h: "Scim Enabled"
+      n: "scimEnabled"
+      r: true
+      sh: "Whether SCIM provisioning is enabled for the workspace, allowing automated user and team management from an identity provider."
+      t: "`$BOOLEAN`"
+    }
+    scimSettings: {
+      h: "Scim Settings"
+      n: "scimSettings"
+      r: false
+      sh: "[INTERNAL] SCIM settings."
+      t: "`$ANY`"
+    }
+    securitySettings: {
+      h: "Security Settings"
+      n: "securitySettings"
+      r: true
+      sh: "Security settings for the workspace, including role-based restrictions for invitations, team creation, label management, and other sensitive operations."
+      t: "`$ANY`"
+    }
+    slackAutoCreateProjectChannel: {
+      h: "Slack Auto Create Project Channel"
+      n: "slackAutoCreateProjectChannel"
+      r: true
+      sh: "[Internal] Whether to automatically create a Slack channel when a new project is created."
+      t: "`$BOOLEAN`"
+    }
+    slackProjectChannelIntegration: {
+      h: "Slack Project Channel Integration"
+      n: "slackProjectChannelIntegration"
+      r: false
+      sh: "The Slack integration used for auto-creating project channels."
+      t: "`$OBJECT`"
+    }
+    slackProjectChannelPrefix: {
+      h: "Slack Project Channel Prefix"
+      n: "slackProjectChannelPrefix"
+      r: true
+      sh: "The prefix used for auto-created Slack project channels."
+      t: "`$STRING`"
+    }
+    slackProjectChannelsEnabled: {
+      h: "Slack Project Channels Enabled"
+      n: "slackProjectChannelsEnabled"
+      r: true
+      sh: "[Internal] Whether the Slack project channels feature is enabled for the workspace."
+      t: "`$BOOLEAN`"
+    }
+    subscription: {
+      h: "Subscription"
+      n: "subscription"
+      r: false
+      sh: "The workspace's subscription to a paid plan."
+      t: "`$OBJECT`"
+    }
+    themeSettings: {
+      h: "Theme Settings"
+      n: "themeSettings"
+      r: false
+      sh: "[ALPHA] Theme settings for the workspace."
+      t: "`$ANY`"
+    }
+    trialEndsAt: {
+      h: "Trial Ends At"
+      n: "trialEndsAt"
+      r: false
+      sh: "The time at which the current plan trial will end."
+      t: "`$ANY`"
+    }
+    trialStartsAt: {
+      h: "Trial Starts At"
+      n: "trialStartsAt"
+      r: false
+      sh: "The time at which the current plan trial started."
+      t: "`$ANY`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    urlKey: {
+      h: "Url Key"
+      n: "urlKey"
+      r: true
+      sh: "The workspace's unique URL key, used in URLs to identify the workspace."
+      t: "`$STRING`"
+    }
+    userCount: {
+      h: "User Count"
+      n: "userCount"
+      r: true
+      sh: "The number of active (non-deactivated) users in the workspace."
+      t: "`$INTEGER`"
+    }
+    workingDays: {
+      h: "Working Days"
+      n: "workingDays"
+      r: true
+      sh: "[Internal] The list of working days."
+      t: "`$NUMBER`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "organization"
+  op: {
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST organization"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "query OrganizationLoad { organization { ...OrganizationFields } } fragment OrganizationFields on Organization { agentAutomationEnabled aiAddonEnabled aiDiscussionSummariesEnabled aiProviderConfiguration aiTelemetryEnabled aiThreadSummariesEnabled allowedFileUploadContentTypes archivedAt authSettings codeIntelligenceEnabled codeIntelligenceRepository codingAgentEnabled codingAgentSettings createdAt createdIssueCount customerCount customersConfiguration customersEnabled defaultFeedSummarySchedule defaultHomeView defaultHomeViewTargetId deletionRequestedAt feedEnabled fiscalYearStartMonth generatedUpdatesEnabled gitBranchFormat gitLinkbackDescriptionsEnabled gitLinkbackMessagesEnabled gitPublicLinkbackMessagesEnabled hipaaComplianceEnabled id initiativeUpdateReminderFrequencyInWeeks initiativeUpdateRemindersDay initiativeUpdateRemindersHour linearAgentEnabled linearAgentSettings logoUrl name periodUploadVolume previousUrlKeys projectUpdateReminderFrequencyInWeeks projectUpdateRemindersDay projectUpdateRemindersHour pullRequestIssueMode pullRequestTourEnabled releaseChannel releasesEnabled restrictAgentInvocationToMembers roadmapEnabled samlEnabled samlSettings scimEnabled scimSettings securitySettings slackAutoCreateProjectChannel slackProjectChannelIntegration { id } slackProjectChannelPrefix slackProjectChannelsEnabled subscription { id } themeSettings trialEndsAt trialStartsAt updatedAt urlKey userCount workingDays }"
+            field: "organization"
+            optype: "query"
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organization"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organization`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST organizationDelete"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation OrganizationRemove($input: DeleteOrganizationInput!) { organizationDelete(input: $input) { success } }"
+            field: "organizationDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "DeleteOrganizationInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organizationDelete"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organizationDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST organizationUpdate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation OrganizationUpdate($input: OrganizationUpdateInput!) { organizationUpdate(input: $input) { organization { ...OrganizationFields } success } } fragment OrganizationFields on Organization { agentAutomationEnabled aiAddonEnabled aiDiscussionSummariesEnabled aiProviderConfiguration aiTelemetryEnabled aiThreadSummariesEnabled allowedFileUploadContentTypes archivedAt authSettings codeIntelligenceEnabled codeIntelligenceRepository codingAgentEnabled codingAgentSettings createdAt createdIssueCount customerCount customersConfiguration customersEnabled defaultFeedSummarySchedule defaultHomeView defaultHomeViewTargetId deletionRequestedAt feedEnabled fiscalYearStartMonth generatedUpdatesEnabled gitBranchFormat gitLinkbackDescriptionsEnabled gitLinkbackMessagesEnabled gitPublicLinkbackMessagesEnabled hipaaComplianceEnabled id initiativeUpdateReminderFrequencyInWeeks initiativeUpdateRemindersDay initiativeUpdateRemindersHour linearAgentEnabled linearAgentSettings logoUrl name periodUploadVolume previousUrlKeys projectUpdateReminderFrequencyInWeeks projectUpdateRemindersDay projectUpdateRemindersHour pullRequestIssueMode pullRequestTourEnabled releaseChannel releasesEnabled restrictAgentInvocationToMembers roadmapEnabled samlEnabled samlSettings scimEnabled scimSettings securitySettings slackAutoCreateProjectChannel slackProjectChannelIntegration { id } slackProjectChannelPrefix slackProjectChannelsEnabled subscription { id } themeSettings trialEndsAt trialStartsAt updatedAt urlKey userCount workingDays }"
+            field: "organizationUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "OrganizationUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organizationUpdate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organizationUpdate.organization`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

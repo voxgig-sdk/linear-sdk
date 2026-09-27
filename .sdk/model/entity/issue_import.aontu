@@ -1,0 +1,930 @@
+# Entity: issue_import
+
+main: kit: entity: issue_import: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creatorId: {
+      h: "Creator Id"
+      n: "creatorId"
+      r: false
+      sh: "Identifier of the user who started the import job."
+      t: "`$STRING`"
+    }
+    csvFileUrl: {
+      h: "Csv File Url"
+      n: "csvFileUrl"
+      r: false
+      sh: "File URL for the uploaded CSV for the import, if there is one."
+      t: "`$STRING`"
+    }
+    displayName: {
+      h: "Display Name"
+      n: "displayName"
+      r: true
+      sh: "The display name of the import service."
+      t: "`$STRING`"
+    }
+    error: {
+      h: "Error"
+      n: "error"
+      r: false
+      sh: "User readable error message, if one has occurred during the import."
+      t: "`$STRING`"
+    }
+    errorMetadata: {
+      h: "Error Metadata"
+      n: "errorMetadata"
+      r: false
+      sh: "Error code and metadata, if one has occurred during the import."
+      t: "`$ANY`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    mapping: {
+      h: "Mapping"
+      n: "mapping"
+      r: false
+      sh: "The data mapping configuration for the import job."
+      t: "`$ANY`"
+    }
+    progress: {
+      h: "Progress"
+      n: "progress"
+      r: false
+      sh: "Current step progress as a percentage (0-100)."
+      t: "`$NUMBER`"
+    }
+    service: {
+      h: "Service"
+      n: "service"
+      r: true
+      sh: "The external service from which data is being imported (e.g., jira, asana, github, shortcut, linear)."
+      t: "`$STRING`"
+    }
+    serviceMetadata: {
+      h: "Service Metadata"
+      n: "serviceMetadata"
+      r: false
+      sh: "Metadata related to import service."
+      t: "`$ANY`"
+    }
+    status: {
+      h: "Status"
+      n: "status"
+      r: true
+      sh: "The current status of the import job, indicating its position in the import lifecycle (e.g., not started, in progress, complete, error)."
+      t: "`$STRING`"
+    }
+    teamName: {
+      h: "Team Name"
+      n: "teamName"
+      r: false
+      sh: "The name of the new team to be created for the import, when the import is configured to create a new team rather than importing into an existing one."
+      t: "`$STRING`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "issue_import"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST issueImportCreateJira"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "include_closed_issue"
+                or: "include_closed_issue"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "instant_process"
+                or: "instant_process"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "jira_email"
+                or: "jira_email"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "jira_hostname"
+                or: "jira_hostname"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "jira_project"
+                or: "jira_project"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "jira_token"
+                or: "jira_token"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "jql"
+                or: "jql"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "team_id"
+                or: "team_id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "team_name"
+                or: "team_name"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueImportCreateCreateJira($id: String, $includeClosedIssues: Boolean, $instantProcess: Boolean, $jiraEmail: String!, $jiraHostname: String!, $jiraProject: String!, $jiraToken: String!, $jql: String, $teamId: String, $teamName: String) { issueImportCreateJira(id: $id, includeClosedIssues: $includeClosedIssues, instantProcess: $instantProcess, jiraEmail: $jiraEmail, jiraHostname: $jiraHostname, jiraProject: $jiraProject, jiraToken: $jiraToken, jql: $jql, teamId: $teamId, teamName: $teamName) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }"
+            field: "issueImportCreateJira"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "includeClosedIssues"
+                gqltype: "Boolean"
+                name: "includeClosedIssues"
+              }
+              {
+                from: "instantProcess"
+                gqltype: "Boolean"
+                name: "instantProcess"
+              }
+              {
+                from: "jiraEmail"
+                gqltype: "String!"
+                name: "jiraEmail"
+              }
+              {
+                from: "jiraHostname"
+                gqltype: "String!"
+                name: "jiraHostname"
+              }
+              {
+                from: "jiraProject"
+                gqltype: "String!"
+                name: "jiraProject"
+              }
+              {
+                from: "jiraToken"
+                gqltype: "String!"
+                name: "jiraToken"
+              }
+              {
+                from: "jql"
+                gqltype: "String"
+                name: "jql"
+              }
+              {
+                from: "teamId"
+                gqltype: "String"
+                name: "teamId"
+              }
+              {
+                from: "teamName"
+                gqltype: "String"
+                name: "teamName"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueImportCreateJira"
+          q: {
+            "$action": "create_jira"
+            exist: [
+              "jira_email"
+              "jira_hostname"
+              "jira_project"
+              "jira_token"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueImportCreateJira.issueImport`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueImportCreateAsana"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "asana_team_name"
+                or: "asana_team_name"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "asana_token"
+                or: "asana_token"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "include_closed_issue"
+                or: "include_closed_issue"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "instant_process"
+                or: "instant_process"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "team_id"
+                or: "team_id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "team_name"
+                or: "team_name"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueImportCreateCreateAsana($asanaTeamName: String!, $asanaToken: String!, $id: String, $includeClosedIssues: Boolean, $instantProcess: Boolean, $teamId: String, $teamName: String) { issueImportCreateAsana(asanaTeamName: $asanaTeamName, asanaToken: $asanaToken, id: $id, includeClosedIssues: $includeClosedIssues, instantProcess: $instantProcess, teamId: $teamId, teamName: $teamName) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }"
+            field: "issueImportCreateAsana"
+            optype: "mutation"
+            vars: [
+              {
+                from: "asanaTeamName"
+                gqltype: "String!"
+                name: "asanaTeamName"
+              }
+              {
+                from: "asanaToken"
+                gqltype: "String!"
+                name: "asanaToken"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "includeClosedIssues"
+                gqltype: "Boolean"
+                name: "includeClosedIssues"
+              }
+              {
+                from: "instantProcess"
+                gqltype: "Boolean"
+                name: "instantProcess"
+              }
+              {
+                from: "teamId"
+                gqltype: "String"
+                name: "teamId"
+              }
+              {
+                from: "teamName"
+                gqltype: "String"
+                name: "teamName"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueImportCreateAsana"
+          q: {
+            "$action": "create_asana"
+            exist: [
+              "asana_team_name"
+              "asana_token"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueImportCreateAsana.issueImport`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueImportCreateClubhouse"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "clubhouse_group_name"
+                or: "clubhouse_group_name"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "clubhouse_token"
+                or: "clubhouse_token"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "include_closed_issue"
+                or: "include_closed_issue"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "instant_process"
+                or: "instant_process"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "team_id"
+                or: "team_id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "team_name"
+                or: "team_name"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueImportCreateCreateClubhouse($clubhouseGroupName: String!, $clubhouseToken: String!, $id: String, $includeClosedIssues: Boolean, $instantProcess: Boolean, $teamId: String, $teamName: String) { issueImportCreateClubhouse(clubhouseGroupName: $clubhouseGroupName, clubhouseToken: $clubhouseToken, id: $id, includeClosedIssues: $includeClosedIssues, instantProcess: $instantProcess, teamId: $teamId, teamName: $teamName) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }"
+            field: "issueImportCreateClubhouse"
+            optype: "mutation"
+            vars: [
+              {
+                from: "clubhouseGroupName"
+                gqltype: "String!"
+                name: "clubhouseGroupName"
+              }
+              {
+                from: "clubhouseToken"
+                gqltype: "String!"
+                name: "clubhouseToken"
+              }
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "includeClosedIssues"
+                gqltype: "Boolean"
+                name: "includeClosedIssues"
+              }
+              {
+                from: "instantProcess"
+                gqltype: "Boolean"
+                name: "instantProcess"
+              }
+              {
+                from: "teamId"
+                gqltype: "String"
+                name: "teamId"
+              }
+              {
+                from: "teamName"
+                gqltype: "String"
+                name: "teamName"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueImportCreateClubhouse"
+          q: {
+            "$action": "create_clubhouse"
+            exist: [
+              "clubhouse_group_name"
+              "clubhouse_token"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueImportCreateClubhouse.issueImport`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueImportCreateCSVJira"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "csv_url"
+                or: "csv_url"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "jira_email"
+                or: "jira_email"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "jira_hostname"
+                or: "jira_hostname"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "jira_token"
+                or: "jira_token"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "team_id"
+                or: "team_id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "team_name"
+                or: "team_name"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueImportCreateCreateCsvJira($csvUrl: String!, $jiraEmail: String, $jiraHostname: String, $jiraToken: String, $teamId: String, $teamName: String) { issueImportCreateCSVJira(csvUrl: $csvUrl, jiraEmail: $jiraEmail, jiraHostname: $jiraHostname, jiraToken: $jiraToken, teamId: $teamId, teamName: $teamName) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }"
+            field: "issueImportCreateCSVJira"
+            optype: "mutation"
+            vars: [
+              {
+                from: "csvUrl"
+                gqltype: "String!"
+                name: "csvUrl"
+              }
+              {
+                from: "jiraEmail"
+                gqltype: "String"
+                name: "jiraEmail"
+              }
+              {
+                from: "jiraHostname"
+                gqltype: "String"
+                name: "jiraHostname"
+              }
+              {
+                from: "jiraToken"
+                gqltype: "String"
+                name: "jiraToken"
+              }
+              {
+                from: "teamId"
+                gqltype: "String"
+                name: "teamId"
+              }
+              {
+                from: "teamName"
+                gqltype: "String"
+                name: "teamName"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueImportCreateCSVJira"
+          q: {
+            "$action": "create_csv_jira"
+            exist: [
+              "csv_url"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueImportCreateCSVJira.issueImport`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueImportCreateGithub"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "github_label"
+                or: "github_label"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "github_repo_id"
+                or: "github_repo_id"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_closed_issue"
+                or: "include_closed_issue"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "instant_process"
+                or: "instant_process"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "team_id"
+                or: "team_id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "team_name"
+                or: "team_name"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueImportCreateCreateGithub($githubLabels: [String!], $githubRepoIds: [Int!], $includeClosedIssues: Boolean, $instantProcess: Boolean, $teamId: String, $teamName: String) { issueImportCreateGithub(githubLabels: $githubLabels, githubRepoIds: $githubRepoIds, includeClosedIssues: $includeClosedIssues, instantProcess: $instantProcess, teamId: $teamId, teamName: $teamName) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }"
+            field: "issueImportCreateGithub"
+            optype: "mutation"
+            vars: [
+              {
+                from: "githubLabels"
+                gqltype: "[String!]"
+                name: "githubLabels"
+              }
+              {
+                from: "githubRepoIds"
+                gqltype: "[Int!]"
+                name: "githubRepoIds"
+              }
+              {
+                from: "includeClosedIssues"
+                gqltype: "Boolean"
+                name: "includeClosedIssues"
+              }
+              {
+                from: "instantProcess"
+                gqltype: "Boolean"
+                name: "instantProcess"
+              }
+              {
+                from: "teamId"
+                gqltype: "String"
+                name: "teamId"
+              }
+              {
+                from: "teamName"
+                gqltype: "String"
+                name: "teamName"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueImportCreateGithub"
+          q: {
+            "$action": "create_github"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueImportCreateGithub.issueImport`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST issueImportDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "issue_import_id"
+                or: "issue_import_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueImportRemove($issueImportId: String!) { issueImportDelete(issueImportId: $issueImportId) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }"
+            field: "issueImportDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "issueImportId"
+                gqltype: "String!"
+                name: "issueImportId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueImportDelete"
+          q: {
+            exist: [
+              "issue_import_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueImportDelete.issueImport`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST issueImportProcess"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "issue_import_id"
+                or: "issue_import_id"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "mapping"
+                or: "mapping"
+                r: true
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueImportUpdateProcess($issueImportId: String!, $mapping: JSONObject!) { issueImportProcess(issueImportId: $issueImportId, mapping: $mapping) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }"
+            field: "issueImportProcess"
+            optype: "mutation"
+            vars: [
+              {
+                from: "issueImportId"
+                gqltype: "String!"
+                name: "issueImportId"
+              }
+              {
+                from: "mapping"
+                gqltype: "JSONObject!"
+                name: "mapping"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueImportProcess"
+          q: {
+            "$action": "process"
+            exist: [
+              "issue_import_id"
+              "mapping"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueImportProcess.issueImport`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueImportUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueImportUpdate($id: String!, $input: IssueImportUpdateInput!) { issueImportUpdate(id: $id, input: $input) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }"
+            field: "issueImportUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "IssueImportUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueImportUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueImportUpdate.issueImport`"
+          }
+        }
+        {
+          co: {
+            id: "POST issueImportCreateLinearV2"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "linear_source_organization_id"
+                or: "linear_source_organization_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation IssueImportUpdateCreateLinearV2($id: String, $linearSourceOrganizationId: String!) { issueImportCreateLinearV2(id: $id, linearSourceOrganizationId: $linearSourceOrganizationId) { issueImport { ...IssueImportFields } success } } fragment IssueImportFields on IssueImport { archivedAt createdAt creatorId csvFileUrl displayName error errorMetadata id mapping progress service serviceMetadata status teamName updatedAt }"
+            field: "issueImportCreateLinearV2"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String"
+                name: "id"
+              }
+              {
+                from: "linearSourceOrganizationId"
+                gqltype: "String!"
+                name: "linearSourceOrganizationId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "issueImportCreateLinearV2"
+          q: {
+            "$action": "create_linear_v2"
+            exist: [
+              "linear_source_organization_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.issueImportCreateLinearV2.issueImport`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

@@ -1,0 +1,31 @@
+# BasicReactionFlow
+
+main: kit: flow: BasicReactionFlow:
+{
+  entity: "reaction",
+  kind: "basic",
+  name: "BasicReactionFlow",
+  step: [
+    {
+      i: {
+        ref: "reaction_ref01"
+      }
+
+      o: "create"
+    }
+
+    {
+      i: {
+        ref: "reaction_ref01",
+        suffix: "_rm0"
+      }
+
+      m: {
+        id: "reaction01"
+      }
+
+      o: "remove"
+    }
+  ],
+  "key$": "BasicReactionFlow"
+}

@@ -17,10 +17,6 @@ import {
 } from '../../utility'
 
 
-// AFTER the imports on purpose: TypeScript hoists `import` above any
-// statement in the emitted CommonJS, so a loader placed above them would
-// run only after every imported module had already been evaluated - and
-// anything reading process.env at module scope would miss these values.
 loadEnvLocal(__dirname + '/../../../.env.local')
 
 
@@ -32,9 +28,6 @@ describe('InitiativeLeadTeamChangeImpactDirect', async () => {
 
   test('direct-exists', async () => {
     const sdk = new LinearSDK({
-      // Concrete base: a live construction must satisfy any server
-      // variables a templated base URL declares; overriding base with a
-      // literal (as the direct flow tests do) sidesteps the requirement.
       base: 'http://localhost:8080',
       system: { fetch: async () => ({}) }
     })
@@ -45,21 +38,20 @@ describe('InitiativeLeadTeamChangeImpactDirect', async () => {
 
   test('direct-load-initiative_lead_team_change_impact', async (t: any) => {
     if (liveScenariosActive()) { t.skip('Covered by live operation scenarios'); return }
-    const setup = directSetup()
+    const setup = directSetup({ id: 'direct01' })
     if (maybeSkipControl(t, 'direct', 'direct-load-initiative_lead_team_change_impact', setup.live)) return
-    if (skipIfMissingIds(t, setup, ["initiative_lead_team_change_impact01","leadTeamId01"])) return
     const { client, calls } = setup
 
-    const variables: any = {}
-    if (setup.live) {
-      variables["id"] = setup.idmap['initiative_lead_team_change_impact01']
-      variables["leadTeamId"] = setup.idmap['leadTeamId01']
-    } else {
-      variables["id"] = 'direct01'
-      variables["leadTeamId"] = 'direct02'
-    }
+    const params: any = {}
+    const query: any = {}
 
-    const result: any = await client.graphql("query InitiativeLeadTeamChangeImpactLoad($id: String!, $leadTeamId: String) { initiativeLeadTeamChangeImpact(id: $id, leadTeamId: $leadTeamId) { ...InitiativeLeadTeamChangeImpactFields } } fragment InitiativeLeadTeamChangeImpactFields on InitiativeLeadTeamChangeImpact { affectedDescendantCount visibilityMayChange }", variables)
+
+    const result: any = await client.direct({
+      path: '',
+      method: 'GET',
+      params,
+      query,
+    })
 
     if (setup.live) {
       // STRICT live mode: a non-2xx is a real failure - this project owns
@@ -78,10 +70,9 @@ describe('InitiativeLeadTeamChangeImpactDirect', async () => {
       assert(result.ok === true)
       assert(result.status === 200)
       assert(null != result.data)
+      assert(result.data.id === 'direct01')
       assert(calls.length === 1)
-      assert(calls[0].init.method === 'POST')
-      assert(calls[0].init.body.includes('direct01'))
-      assert(calls[0].init.body.includes('direct02'))
+      assert(calls[0].init.method === 'GET')
     }
   })
 

@@ -1,0 +1,50 @@
+# BasicGitAutomationStateFlow
+
+main: kit: flow: BasicGitAutomationStateFlow:
+{
+  entity: "git_automation_state",
+  kind: "basic",
+  name: "BasicGitAutomationStateFlow",
+  step: [
+    {
+      i: {
+        ref: "git_automation_state_ref01"
+      }
+
+      o: "create"
+    }
+
+    {
+      i: {
+        ref: "git_automation_state_ref01",
+        srcdatavar: "git_automation_state_ref01_data",
+        suffix: "_up0",
+        textfield: "event"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-git_automation_state_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "git_automation_state_ref01",
+        suffix: "_rm0"
+      }
+
+      m: {
+        id: "git_automation_state01"
+      }
+
+      o: "remove"
+    }
+  ],
+  "key$": "BasicGitAutomationStateFlow"
+}

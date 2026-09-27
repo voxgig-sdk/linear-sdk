@@ -1,0 +1,117 @@
+# Entity: application
+
+main: kit: entity: application: {
+
+  alias: field: {}
+
+  fields: {
+    clientId: {
+      h: "Client Id"
+      n: "clientId"
+      r: true
+      sh: "OAuth application's client ID."
+      t: "`$STRING`"
+    }
+    description: {
+      h: "Description"
+      n: "description"
+      r: false
+      sh: "Information about the application."
+      t: "`$STRING`"
+    }
+    developer: {
+      h: "Developer"
+      n: "developer"
+      r: true
+      sh: "Name of the developer."
+      t: "`$STRING`"
+    }
+    developerUrl: {
+      h: "Developer Url"
+      n: "developerUrl"
+      r: true
+      sh: "URL of the developer's website, homepage, or documentation."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "OAuth application's ID."
+      t: "`$STRING`"
+    }
+    imageUrl: {
+      h: "Image Url"
+      n: "imageUrl"
+      r: false
+      sh: "Image of the application."
+      t: "`$STRING`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "Application name."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "application"
+  op: {
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST applicationInfo"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "client_id"
+                or: "client_id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ApplicationLoad($clientId: String!) { applicationInfo(clientId: $clientId) { ...ApplicationFields } } fragment ApplicationFields on Application { clientId description developer developerUrl id imageUrl name }"
+            field: "applicationInfo"
+            optype: "query"
+            vars: [
+              {
+                from: "clientId"
+                gqltype: "String!"
+                name: "clientId"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "applicationInfo"
+          q: {
+            exist: [
+              "client_id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.applicationInfo`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

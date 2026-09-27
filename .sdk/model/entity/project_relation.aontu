@@ -1,0 +1,390 @@
+# Entity: project_relation
+
+main: kit: entity: project_relation: {
+
+  alias: field: {}
+
+  fields: {
+    anchorType: {
+      h: "Anchor Type"
+      n: "anchorType"
+      r: true
+      sh: "The type of anchor on the source project end of the relation, indicating whether it is anchored to the project itself or a specific milestone."
+      t: "`$STRING`"
+    }
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    project: {
+      h: "Project"
+      n: "project"
+      r: false
+      sh: "The source project in the dependency relation."
+      t: "`$OBJECT`"
+    }
+    projectMilestone: {
+      h: "Project Milestone"
+      n: "projectMilestone"
+      r: false
+      sh: "The specific milestone within the source project that the relation is anchored to."
+      t: "`$OBJECT`"
+    }
+    relatedAnchorType: {
+      h: "Related Anchor Type"
+      n: "relatedAnchorType"
+      r: true
+      sh: "The type of anchor on the target project end of the relation, indicating whether it is anchored to the project itself or a specific milestone."
+      t: "`$STRING`"
+    }
+    relatedProject: {
+      h: "Related Project"
+      n: "relatedProject"
+      r: false
+      sh: "The target project in the dependency relation."
+      t: "`$OBJECT`"
+    }
+    relatedProjectMilestone: {
+      h: "Related Project Milestone"
+      n: "relatedProjectMilestone"
+      r: false
+      sh: "The specific milestone within the target project that the relation is anchored to."
+      t: "`$OBJECT`"
+    }
+    type: {
+      h: "Type"
+      n: "type"
+      r: true
+      sh: "The type of dependency relationship from the project to the related project (e.g., blocks)."
+      t: "`$STRING`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    user: {
+      h: "User"
+      n: "user"
+      r: false
+      sh: "The user who last created or modified the relation."
+      t: "`$OBJECT`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "project_relation"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST projectRelationCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation ProjectRelationCreate($input: ProjectRelationCreateInput!) { projectRelationCreate(input: $input) { projectRelation { ...ProjectRelationFields } success } } fragment ProjectRelationFields on ProjectRelation { anchorType archivedAt createdAt id project { id } projectMilestone { id } relatedAnchorType relatedProject { id } relatedProjectMilestone { id } type updatedAt user { id } }"
+            field: "projectRelationCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "ProjectRelationCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectRelationCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectRelationCreate.projectRelation`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST projectRelations"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ProjectRelationList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { projectRelations(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...ProjectRelationFields } pageInfo { endCursor hasNextPage } } } fragment ProjectRelationFields on ProjectRelation { anchorType archivedAt createdAt id project { id } projectMilestone { id } relatedAnchorType relatedProject { id } relatedProjectMilestone { id } type updatedAt user { id } }"
+            field: "projectRelations"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectRelations"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectRelations.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST projectRelation"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ProjectRelationLoad($id: String!) { projectRelation(id: $id) { ...ProjectRelationFields } } fragment ProjectRelationFields on ProjectRelation { anchorType archivedAt createdAt id project { id } projectMilestone { id } relatedAnchorType relatedProject { id } relatedProjectMilestone { id } type updatedAt user { id } }"
+            field: "projectRelation"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectRelation"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectRelation`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST projectRelationDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectRelationRemove($id: String!) { projectRelationDelete(id: $id) { entityId lastSyncId success } }"
+            field: "projectRelationDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectRelationDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectRelationDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST projectRelationUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ProjectRelationUpdate($id: String!, $input: ProjectRelationUpdateInput!) { projectRelationUpdate(id: $id, input: $input) { projectRelation { ...ProjectRelationFields } success } } fragment ProjectRelationFields on ProjectRelation { anchorType archivedAt createdAt id project { id } projectMilestone { id } relatedAnchorType relatedProject { id } relatedProjectMilestone { id } type updatedAt user { id } }"
+            field: "projectRelationUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "ProjectRelationUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "projectRelationUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.projectRelationUpdate.projectRelation`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

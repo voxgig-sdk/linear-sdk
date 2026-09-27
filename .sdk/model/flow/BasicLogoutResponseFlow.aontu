@@ -1,0 +1,45 @@
+# BasicLogoutResponseFlow
+
+main: kit: flow: BasicLogoutResponseFlow:
+{
+  entity: "logout_response",
+  kind: "basic",
+  name: "BasicLogoutResponseFlow",
+  step: [
+    {
+      i: {
+        ref: "logout_response_ref01"
+      }
+
+      m: {
+        reason: "reason01",
+        session_id: "session01"
+      }
+
+      o: "create"
+    }
+
+    {
+      d: {
+        session_id: "session01"
+      }
+
+      i: {
+        ref: "logout_response_ref01",
+        srcdatavar: "logout_response_ref01_data",
+        suffix: "_up0"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-logout_response_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicLogoutResponseFlow"
+}

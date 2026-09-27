@@ -1,0 +1,89 @@
+# BasicInitiativeUpdateFlow
+
+main: kit: flow: BasicInitiativeUpdateFlow:
+{
+  entity: "initiative_update",
+  kind: "basic",
+  name: "BasicInitiativeUpdateFlow",
+  step: [
+    {
+      i: {
+        ref: "initiative_update_ref01"
+      }
+
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "create"
+    }
+
+    {
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "initiative_update_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "initiative_update_ref01",
+        srcdatavar: "initiative_update_ref01_data",
+        suffix: "_up0",
+        textfield: "body"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-initiative_update_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "initiative_update_ref01",
+        srcdatavar: "initiative_update_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "initiative_update01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-initiative_update_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicInitiativeUpdateFlow"
+}

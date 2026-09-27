@@ -1,0 +1,89 @@
+# BasicWorkflowStateFlow
+
+main: kit: flow: BasicWorkflowStateFlow:
+{
+  entity: "workflow_state",
+  kind: "basic",
+  name: "BasicWorkflowStateFlow",
+  step: [
+    {
+      i: {
+        ref: "workflow_state_ref01"
+      }
+
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "create"
+    }
+
+    {
+      m: {
+        after: "after01",
+        before: "before01",
+        first: "first01",
+        include_archived: "include_archived01",
+        last: "last01",
+        order_by: "order_by01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "workflow_state_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "workflow_state_ref01",
+        srcdatavar: "workflow_state_ref01_data",
+        suffix: "_up0",
+        textfield: "color"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-workflow_state_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "workflow_state_ref01",
+        srcdatavar: "workflow_state_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "workflow_state01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-workflow_state_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicWorkflowStateFlow"
+}

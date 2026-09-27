@@ -17,10 +17,6 @@ import {
 } from '../../utility'
 
 
-// AFTER the imports on purpose: TypeScript hoists `import` above any
-// statement in the emitted CommonJS, so a loader placed above them would
-// run only after every imported module had already been evaluated - and
-// anything reading process.env at module scope would miss these values.
 loadEnvLocal(__dirname + '/../../../.env.local')
 
 
@@ -32,9 +28,6 @@ describe('UserSettingDirect', async () => {
 
   test('direct-exists', async () => {
     const sdk = new LinearSDK({
-      // Concrete base: a live construction must satisfy any server
-      // variables a templated base URL declares; overriding base with a
-      // literal (as the direct flow tests do) sidesteps the requirement.
       base: 'http://localhost:8080',
       system: { fetch: async () => ({}) }
     })
@@ -45,18 +38,20 @@ describe('UserSettingDirect', async () => {
 
   test('direct-load-user_setting', async (t: any) => {
     if (liveScenariosActive()) { t.skip('Covered by live operation scenarios'); return }
-    const setup = directSetup()
+    const setup = directSetup({ id: 'direct01' })
     if (maybeSkipControl(t, 'direct', 'direct-load-user_setting', setup.live)) return
     const { client, calls } = setup
 
-    const variables: any = {}
-    if (setup.live) {
-      // no variables
-    } else {
-      // no variables
-    }
+    const params: any = {}
+    const query: any = {}
 
-    const result: any = await client.graphql("query UserSettingLoad { userSettings { ...UserSettingFields } } fragment UserSettingFields on UserSettings { archivedAt autoAssignToSelf calendarHash createdAt feedLastSeenTime feedSummarySchedule id pullRequestMergeStrategyPreference showFullUserNames subscribedToChangelog subscribedToDPA subscribedToInviteAccepted subscribedToPrivacyLegalUpdates updatedAt user { id } }", variables)
+
+    const result: any = await client.direct({
+      path: '',
+      method: 'GET',
+      params,
+      query,
+    })
 
     if (setup.live) {
       // STRICT live mode: a non-2xx is a real failure - this project owns
@@ -75,8 +70,9 @@ describe('UserSettingDirect', async () => {
       assert(result.ok === true)
       assert(result.status === 200)
       assert(null != result.data)
+      assert(result.data.id === 'direct01')
       assert(calls.length === 1)
-      assert(calls[0].init.method === 'POST')
+      assert(calls[0].init.method === 'GET')
     }
   })
 

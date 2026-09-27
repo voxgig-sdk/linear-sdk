@@ -114,14 +114,14 @@
 <a href="../sdks/ts.html">TypeScript</a></details>
 <details><summary>Tools</summary><a href="../tools/go-cli.html">Go CLI</a>
 <a href="../tools/go-mcp.html">Go MCP server</a></details>
-<details><summary>Features</summary><a href="../features/debug.html">Request/response capture ring buffer for debugging</a>
-<a href="../features/idempotency.html">Idempotency keys for safe retries of mutating operations</a>
-<a href="../features/metrics.html">Statistics capture: per-operation counters and latency</a>
-<a href="../features/paging.html">Pagination signals for list operations</a>
-<a href="../features/ratelimit.html">Client-side rate limiting via a token bucket</a>
-<a href="../features/retry.html">Automatic retry of transient failures with exponential backoff</a>
-<a href="../features/test.html">In-memory mock transport for testing without a live server</a>
-<a href="../features/timeout.html">Per-request timeout with transport abort</a></details></nav><main id="content"><div class="page-context"><span class="section-dot" aria-hidden="true"></span>API</div><h1 id="team">Team</h1>
+<details><summary>Features</summary><a href="../features/debug.html">Debug capture</a>
+<a href="../features/idempotency.html">Idempotency</a>
+<a href="../features/metrics.html">Metrics</a>
+<a href="../features/paging.html">Paging</a>
+<a href="../features/ratelimit.html">Rate limiting</a>
+<a href="../features/retry.html">Retry</a>
+<a href="../features/test.html">Test transport</a>
+<a href="../features/timeout.html">Timeout</a></details></nav><main id="content"><div class="page-context"><span class="section-dot" aria-hidden="true"></span>API</div><h1 id="team">Team</h1>
 <h2 id="operations">Operations</h2>
 <p>Every route this entity exposes. Each route links to its own reference on this page.</p>
 <table>
@@ -190,6 +190,76 @@
 </tr>
 </tbody>
 </table>
+<h2 id="examples">Examples</h2>
+<p>One example per SDK, generated from the API model. The argument names are the parameters and fields of this entity, and the values are placeholders. The examples are not compiled or executed.</p>
+<h3 id="golang">Golang</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/go.html#set-up-the-client">Golang setup</a>, then call the operations:</p>
+<pre><code class="language-go">teams, err := client.Team(nil).List(nil, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(teams)
+team, err := client.Team(nil).Load(map[string]any{&quot;id&quot;: &quot;example_id&quot;}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(team)
+created, err := client.Team(nil).Create(map[string]any{&quot;aiDiscussionSummariesEnabled&quot;: true, &quot;aiThreadSummariesEnabled&quot;: true, &quot;autoArchivePeriod&quot;: 1, &quot;createdAt&quot;: &quot;example&quot;, &quot;currentProgress&quot;: &quot;example&quot;, &quot;cycleCalenderUrl&quot;: &quot;example&quot;, &quot;cycleCooldownTime&quot;: 1, &quot;cycleDuration&quot;: 1, &quot;cycleIssueAutoAssignCompleted&quot;: true, &quot;cycleIssueAutoAssignStarted&quot;: true, &quot;cycleLockToActive&quot;: true, &quot;cycleStartDay&quot;: 1, &quot;cyclesEnabled&quot;: true, &quot;defaultIssueEstimate&quot;: 1, &quot;displayName&quot;: &quot;example&quot;, &quot;groupIssueHistory&quot;: true, &quot;id&quot;: &quot;example&quot;, &quot;inheritIssueEstimation&quot;: true, &quot;inheritProjectStatuses&quot;: true, &quot;inheritSlackAutoCreateProjectChannel&quot;: true, &quot;inheritWorkflowStatuses&quot;: true, &quot;initiativesEnabled&quot;: true, &quot;issueCount&quot;: 1, &quot;issueEstimationAllowZero&quot;: true, &quot;issueEstimationExtended&quot;: true, &quot;issueEstimationType&quot;: &quot;example&quot;, &quot;key&quot;: &quot;example&quot;, &quot;ledInitiativeCount&quot;: 1, &quot;name&quot;: &quot;example&quot;, &quot;progressHistory&quot;: &quot;example&quot;, &quot;requirePriorityToLeaveTriage&quot;: true, &quot;scimManaged&quot;: true, &quot;securitySettings&quot;: &quot;example&quot;, &quot;setIssueSortOrderOnStateChange&quot;: &quot;example&quot;, &quot;timezone&quot;: &quot;example&quot;, &quot;triageEnabled&quot;: true, &quot;upcomingCycleCount&quot;: 1, &quot;updatedAt&quot;: &quot;example&quot;, &quot;visibility&quot;: &quot;example&quot;}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(created)
+updated, err := client.Team(nil).Update(map[string]any{&quot;id&quot;: &quot;example_id&quot;, &quot;activeCycle&quot;: map[string]any{}, &quot;aiDiscussionSummariesEnabled&quot;: true}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(updated)
+removed, err := client.Team(nil).Remove(map[string]any{&quot;id&quot;: &quot;example_id&quot;}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(removed)
+</code></pre>
+<h3 id="lua">Lua</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/lua.html#set-up-the-client">Lua setup</a>, then call the operations:</p>
+<pre><code class="language-lua">local teams, err = client:Team():list()
+local team, err = client:Team():load({ id = &quot;example_id&quot; })
+local created, err = client:Team():create({ aiDiscussionSummariesEnabled = true, aiThreadSummariesEnabled = true, autoArchivePeriod = 1, createdAt = &quot;example&quot;, currentProgress = &quot;example&quot;, cycleCalenderUrl = &quot;example&quot;, cycleCooldownTime = 1, cycleDuration = 1, cycleIssueAutoAssignCompleted = true, cycleIssueAutoAssignStarted = true, cycleLockToActive = true, cycleStartDay = 1, cyclesEnabled = true, defaultIssueEstimate = 1, displayName = &quot;example&quot;, groupIssueHistory = true, id = &quot;example&quot;, inheritIssueEstimation = true, inheritProjectStatuses = true, inheritSlackAutoCreateProjectChannel = true, inheritWorkflowStatuses = true, initiativesEnabled = true, issueCount = 1, issueEstimationAllowZero = true, issueEstimationExtended = true, issueEstimationType = &quot;example&quot;, key = &quot;example&quot;, ledInitiativeCount = 1, name = &quot;example&quot;, progressHistory = &quot;example&quot;, requirePriorityToLeaveTriage = true, scimManaged = true, securitySettings = &quot;example&quot;, setIssueSortOrderOnStateChange = &quot;example&quot;, timezone = &quot;example&quot;, triageEnabled = true, upcomingCycleCount = 1, updatedAt = &quot;example&quot;, visibility = &quot;example&quot; })
+local updated, err = client:Team():update({ id = &quot;example_id&quot;, activeCycle = {}, aiDiscussionSummariesEnabled = true })
+local removed, err = client:Team():remove({ id = &quot;example_id&quot; })
+</code></pre>
+<h3 id="php">PHP</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/php.html#set-up-the-client">PHP setup</a>, then call the operations:</p>
+<pre><code class="language-php">$teams = $client-&gt;Team()-&gt;list();
+$team = $client-&gt;Team()-&gt;load([&quot;id&quot; =&gt; &quot;example_id&quot;]);
+$created = $client-&gt;Team()-&gt;create([&quot;aiDiscussionSummariesEnabled&quot; =&gt; true, &quot;aiThreadSummariesEnabled&quot; =&gt; true, &quot;autoArchivePeriod&quot; =&gt; 1, &quot;createdAt&quot; =&gt; &quot;example&quot;, &quot;currentProgress&quot; =&gt; &quot;example&quot;, &quot;cycleCalenderUrl&quot; =&gt; &quot;example&quot;, &quot;cycleCooldownTime&quot; =&gt; 1, &quot;cycleDuration&quot; =&gt; 1, &quot;cycleIssueAutoAssignCompleted&quot; =&gt; true, &quot;cycleIssueAutoAssignStarted&quot; =&gt; true, &quot;cycleLockToActive&quot; =&gt; true, &quot;cycleStartDay&quot; =&gt; 1, &quot;cyclesEnabled&quot; =&gt; true, &quot;defaultIssueEstimate&quot; =&gt; 1, &quot;displayName&quot; =&gt; &quot;example&quot;, &quot;groupIssueHistory&quot; =&gt; true, &quot;id&quot; =&gt; &quot;example&quot;, &quot;inheritIssueEstimation&quot; =&gt; true, &quot;inheritProjectStatuses&quot; =&gt; true, &quot;inheritSlackAutoCreateProjectChannel&quot; =&gt; true, &quot;inheritWorkflowStatuses&quot; =&gt; true, &quot;initiativesEnabled&quot; =&gt; true, &quot;issueCount&quot; =&gt; 1, &quot;issueEstimationAllowZero&quot; =&gt; true, &quot;issueEstimationExtended&quot; =&gt; true, &quot;issueEstimationType&quot; =&gt; &quot;example&quot;, &quot;key&quot; =&gt; &quot;example&quot;, &quot;ledInitiativeCount&quot; =&gt; 1, &quot;name&quot; =&gt; &quot;example&quot;, &quot;progressHistory&quot; =&gt; &quot;example&quot;, &quot;requirePriorityToLeaveTriage&quot; =&gt; true, &quot;scimManaged&quot; =&gt; true, &quot;securitySettings&quot; =&gt; &quot;example&quot;, &quot;setIssueSortOrderOnStateChange&quot; =&gt; &quot;example&quot;, &quot;timezone&quot; =&gt; &quot;example&quot;, &quot;triageEnabled&quot; =&gt; true, &quot;upcomingCycleCount&quot; =&gt; 1, &quot;updatedAt&quot; =&gt; &quot;example&quot;, &quot;visibility&quot; =&gt; &quot;example&quot;]);
+$updated = $client-&gt;Team()-&gt;update([&quot;id&quot; =&gt; &quot;example_id&quot;, &quot;activeCycle&quot; =&gt; [], &quot;aiDiscussionSummariesEnabled&quot; =&gt; true]);
+$client-&gt;Team()-&gt;remove([&quot;id&quot; =&gt; &quot;example_id&quot;]);
+</code></pre>
+<h3 id="python">Python</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/py.html#set-up-the-client">Python setup</a>, then call the operations:</p>
+<pre><code class="language-py">teams = client.Team().list()
+team = client.Team().load({&quot;id&quot;: &quot;example_id&quot;})
+created = client.Team().create({ &quot;aiDiscussionSummariesEnabled&quot;: True, &quot;aiThreadSummariesEnabled&quot;: True, &quot;autoArchivePeriod&quot;: 1, &quot;createdAt&quot;: &quot;example&quot;, &quot;currentProgress&quot;: &quot;example&quot;, &quot;cycleCalenderUrl&quot;: &quot;example&quot;, &quot;cycleCooldownTime&quot;: 1, &quot;cycleDuration&quot;: 1, &quot;cycleIssueAutoAssignCompleted&quot;: True, &quot;cycleIssueAutoAssignStarted&quot;: True, &quot;cycleLockToActive&quot;: True, &quot;cycleStartDay&quot;: 1, &quot;cyclesEnabled&quot;: True, &quot;defaultIssueEstimate&quot;: 1, &quot;displayName&quot;: &quot;example&quot;, &quot;groupIssueHistory&quot;: True, &quot;id&quot;: &quot;example&quot;, &quot;inheritIssueEstimation&quot;: True, &quot;inheritProjectStatuses&quot;: True, &quot;inheritSlackAutoCreateProjectChannel&quot;: True, &quot;inheritWorkflowStatuses&quot;: True, &quot;initiativesEnabled&quot;: True, &quot;issueCount&quot;: 1, &quot;issueEstimationAllowZero&quot;: True, &quot;issueEstimationExtended&quot;: True, &quot;issueEstimationType&quot;: &quot;example&quot;, &quot;key&quot;: &quot;example&quot;, &quot;ledInitiativeCount&quot;: 1, &quot;name&quot;: &quot;example&quot;, &quot;progressHistory&quot;: &quot;example&quot;, &quot;requirePriorityToLeaveTriage&quot;: True, &quot;scimManaged&quot;: True, &quot;securitySettings&quot;: &quot;example&quot;, &quot;setIssueSortOrderOnStateChange&quot;: &quot;example&quot;, &quot;timezone&quot;: &quot;example&quot;, &quot;triageEnabled&quot;: True, &quot;upcomingCycleCount&quot;: 1, &quot;updatedAt&quot;: &quot;example&quot;, &quot;visibility&quot;: &quot;example&quot; })
+updated = client.Team().update({&quot;id&quot;: &quot;example_id&quot;, &quot;activeCycle&quot;: {}, &quot;aiDiscussionSummariesEnabled&quot;: True})
+client.Team().remove({&quot;id&quot;: &quot;example_id&quot;})
+</code></pre>
+<h3 id="ruby">Ruby</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/rb.html#set-up-the-client">Ruby setup</a>, then call the operations:</p>
+<pre><code class="language-rb">teams = client.Team.list()
+team = client.Team.load({ &quot;id&quot; =&gt; &quot;example_id&quot; })
+created = client.Team.create({ &quot;aiDiscussionSummariesEnabled&quot; =&gt; true, &quot;aiThreadSummariesEnabled&quot; =&gt; true, &quot;autoArchivePeriod&quot; =&gt; 1, &quot;createdAt&quot; =&gt; &quot;example&quot;, &quot;currentProgress&quot; =&gt; &quot;example&quot;, &quot;cycleCalenderUrl&quot; =&gt; &quot;example&quot;, &quot;cycleCooldownTime&quot; =&gt; 1, &quot;cycleDuration&quot; =&gt; 1, &quot;cycleIssueAutoAssignCompleted&quot; =&gt; true, &quot;cycleIssueAutoAssignStarted&quot; =&gt; true, &quot;cycleLockToActive&quot; =&gt; true, &quot;cycleStartDay&quot; =&gt; 1, &quot;cyclesEnabled&quot; =&gt; true, &quot;defaultIssueEstimate&quot; =&gt; 1, &quot;displayName&quot; =&gt; &quot;example&quot;, &quot;groupIssueHistory&quot; =&gt; true, &quot;id&quot; =&gt; &quot;example&quot;, &quot;inheritIssueEstimation&quot; =&gt; true, &quot;inheritProjectStatuses&quot; =&gt; true, &quot;inheritSlackAutoCreateProjectChannel&quot; =&gt; true, &quot;inheritWorkflowStatuses&quot; =&gt; true, &quot;initiativesEnabled&quot; =&gt; true, &quot;issueCount&quot; =&gt; 1, &quot;issueEstimationAllowZero&quot; =&gt; true, &quot;issueEstimationExtended&quot; =&gt; true, &quot;issueEstimationType&quot; =&gt; &quot;example&quot;, &quot;key&quot; =&gt; &quot;example&quot;, &quot;ledInitiativeCount&quot; =&gt; 1, &quot;name&quot; =&gt; &quot;example&quot;, &quot;progressHistory&quot; =&gt; &quot;example&quot;, &quot;requirePriorityToLeaveTriage&quot; =&gt; true, &quot;scimManaged&quot; =&gt; true, &quot;securitySettings&quot; =&gt; &quot;example&quot;, &quot;setIssueSortOrderOnStateChange&quot; =&gt; &quot;example&quot;, &quot;timezone&quot; =&gt; &quot;example&quot;, &quot;triageEnabled&quot; =&gt; true, &quot;upcomingCycleCount&quot; =&gt; 1, &quot;updatedAt&quot; =&gt; &quot;example&quot;, &quot;visibility&quot; =&gt; &quot;example&quot; })
+updated = client.Team.update({ &quot;id&quot; =&gt; &quot;example_id&quot;, &quot;activeCycle&quot; =&gt; {}, &quot;aiDiscussionSummariesEnabled&quot; =&gt; true })
+client.Team.remove({ &quot;id&quot; =&gt; &quot;example_id&quot; })
+</code></pre>
+<h3 id="typescript">TypeScript</h3>
+<p>Construct <code>client</code> as shown in the <a href="../sdks/ts.html#set-up-the-client">TypeScript setup</a>, then call the operations:</p>
+<pre><code class="language-ts">const teams = await client.Team().list()
+const team = await client.Team().load({ id: &quot;example_id&quot; })
+const created = await client.Team().create({ aiDiscussionSummariesEnabled: true, aiThreadSummariesEnabled: true, autoArchivePeriod: 1, createdAt: &quot;example&quot;, currentProgress: &quot;example&quot;, cycleCalenderUrl: &quot;example&quot;, cycleCooldownTime: 1, cycleDuration: 1, cycleIssueAutoAssignCompleted: true, cycleIssueAutoAssignStarted: true, cycleLockToActive: true, cycleStartDay: 1, cyclesEnabled: true, defaultIssueEstimate: 1, displayName: &quot;example&quot;, groupIssueHistory: true, id: &quot;example&quot;, inheritIssueEstimation: true, inheritProjectStatuses: true, inheritSlackAutoCreateProjectChannel: true, inheritWorkflowStatuses: true, initiativesEnabled: true, issueCount: 1, issueEstimationAllowZero: true, issueEstimationExtended: true, issueEstimationType: &quot;example&quot;, key: &quot;example&quot;, ledInitiativeCount: 1, name: &quot;example&quot;, progressHistory: &quot;example&quot;, requirePriorityToLeaveTriage: true, scimManaged: true, securitySettings: &quot;example&quot;, setIssueSortOrderOnStateChange: &quot;example&quot;, timezone: &quot;example&quot;, triageEnabled: true, upcomingCycleCount: 1, updatedAt: &quot;example&quot;, visibility: &quot;example&quot; })
+const updated = await client.Team().update({ id: &quot;example_id&quot;, activeCycle: {}, aiDiscussionSummariesEnabled: true })
+await client.Team().remove({ id: &quot;example_id&quot; })
+</code></pre>
 <h2 id="fields">Fields</h2>
 <table>
 <thead>

@@ -1,0 +1,397 @@
+# Entity: organization_invite
+
+main: kit: entity: organization_invite: {
+
+  alias: field: {}
+
+  fields: {
+    acceptedAt: {
+      h: "Accepted At"
+      n: "acceptedAt"
+      r: false
+      sh: "The time at which the invite was accepted by the invitee."
+      t: "`$ANY`"
+    }
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    email: {
+      h: "Email"
+      n: "email"
+      r: true
+      sh: "The email address of the person being invited to the workspace."
+      t: "`$STRING`"
+    }
+    expiresAt: {
+      h: "Expires At"
+      n: "expiresAt"
+      r: false
+      sh: "The time at which the invite will expire and can no longer be accepted."
+      t: "`$ANY`"
+    }
+    external: {
+      h: "External"
+      n: "external"
+      r: true
+      sh: "Whether the invite was sent to an email address outside the workspace's verified domains."
+      t: "`$BOOLEAN`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    invitee: {
+      h: "Invitee"
+      n: "invitee"
+      r: false
+      sh: "The user who has accepted the invite."
+      t: "`$OBJECT`"
+    }
+    inviter: {
+      h: "Inviter"
+      n: "inviter"
+      r: false
+      sh: "The user who created the invitation."
+      t: "`$OBJECT`"
+    }
+    metadata: {
+      h: "Metadata"
+      n: "metadata"
+      r: false
+      sh: "Extra metadata associated with the invite."
+      t: "`$ANY`"
+    }
+    organization: {
+      h: "Organization"
+      n: "organization"
+      r: false
+      sh: "The workspace that the invite is associated with."
+      t: "`$OBJECT`"
+    }
+    role: {
+      h: "Role"
+      n: "role"
+      r: true
+      sh: "The workspace role (admin, member, guest, or owner) that the invitee will receive upon accepting the invite."
+      t: "`$STRING`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "organization_invite"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST organizationInviteCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation OrganizationInviteCreate($input: OrganizationInviteCreateInput!) { organizationInviteCreate(input: $input) { organizationInvite { ...OrganizationInviteFields } success } } fragment OrganizationInviteFields on OrganizationInvite { acceptedAt archivedAt createdAt email expiresAt external id invitee { id } inviter { id } metadata organization { id } role updatedAt }"
+            field: "organizationInviteCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "OrganizationInviteCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organizationInviteCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organizationInviteCreate.organizationInvite`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST organizationInvites"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query OrganizationInviteList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { organizationInvites(after: $after, before: $before, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...OrganizationInviteFields } pageInfo { endCursor hasNextPage } } } fragment OrganizationInviteFields on OrganizationInvite { acceptedAt archivedAt createdAt email expiresAt external id invitee { id } inviter { id } metadata organization { id } role updatedAt }"
+            field: "organizationInvites"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organizationInvites"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organizationInvites.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST organizationInvite"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query OrganizationInviteLoad($id: String!) { organizationInvite(id: $id) { ...OrganizationInviteFields } } fragment OrganizationInviteFields on OrganizationInvite { acceptedAt archivedAt createdAt email expiresAt external id invitee { id } inviter { id } metadata organization { id } role updatedAt }"
+            field: "organizationInvite"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organizationInvite"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organizationInvite`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST organizationInviteDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation OrganizationInviteRemove($id: String!) { organizationInviteDelete(id: $id) { entityId lastSyncId success } }"
+            field: "organizationInviteDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organizationInviteDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organizationInviteDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST organizationInviteUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation OrganizationInviteUpdate($id: String!, $input: OrganizationInviteUpdateInput!) { organizationInviteUpdate(id: $id, input: $input) { organizationInvite { ...OrganizationInviteFields } success } } fragment OrganizationInviteFields on OrganizationInvite { acceptedAt archivedAt createdAt email expiresAt external id invitee { id } inviter { id } metadata organization { id } role updatedAt }"
+            field: "organizationInviteUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "OrganizationInviteUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organizationInviteUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organizationInviteUpdate.organizationInvite`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

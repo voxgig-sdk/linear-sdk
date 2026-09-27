@@ -17,10 +17,6 @@ import {
 } from '../../utility'
 
 
-// AFTER the imports on purpose: TypeScript hoists `import` above any
-// statement in the emitted CommonJS, so a loader placed above them would
-// run only after every imported module had already been evaluated - and
-// anything reading process.env at module scope would miss these values.
 loadEnvLocal(__dirname + '/../../../.env.local')
 
 
@@ -32,9 +28,6 @@ describe('TeamDirect', async () => {
 
   test('direct-exists', async () => {
     const sdk = new LinearSDK({
-      // Concrete base: a live construction must satisfy any server
-      // variables a templated base URL declares; overriding base with a
-      // literal (as the direct flow tests do) sidesteps the requirement.
       base: 'http://localhost:8080',
       system: { fetch: async () => ({}) }
     })
@@ -45,19 +38,47 @@ describe('TeamDirect', async () => {
 
   test('direct-load-team', async (t: any) => {
     if (liveScenariosActive()) { t.skip('Covered by live operation scenarios'); return }
-    const setup = directSetup()
+    const setup = directSetup({ id: 'direct01' })
     if (maybeSkipControl(t, 'direct', 'direct-load-team', setup.live)) return
-    if (skipIfMissingIds(t, setup, ["team01"])) return
     const { client, calls } = setup
 
-    const variables: any = {}
+    const params: any = {}
+    const query: any = {}
     if (setup.live) {
-      variables["id"] = setup.idmap['team01']
+      const listResult: any = await client.direct({
+        path: '',
+        method: 'GET',
+        params: {
+        after: setup.idmap['after01'],
+        before: setup.idmap['before01'],
+        first: setup.idmap['first01'],
+        include_archived: setup.idmap['include_archived01'],
+        last: setup.idmap['last01'],
+        order_by: setup.idmap['order_by01'],
+        },
+      })
+      assert(listResult.ok && listResult.status >= 200 && listResult.status < 300,
+        'Live list discovery failed')
+      const listArr = unwrapListData(listResult.data)
+      if (null == listArr || listArr.length === 0) {
+        throw new Error('Live load blocked: discovery returned no entities')
+      }
+      const candidateId = listArr[0]?.id ?? listArr[0]?.id
+      if (null == candidateId) {
+        throw new Error('Live load blocked: discovery returned no usable identity')
+      }
+      params.id = candidateId
+
     } else {
-      variables["id"] = 'direct01'
+
     }
 
-    const result: any = await client.graphql("query TeamLoad($id: String!) { team(id: $id) { ...TeamFields } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }", variables)
+    const result: any = await client.direct({
+      path: '',
+      method: 'GET',
+      params,
+      query,
+    })
 
     if (setup.live) {
       // STRICT live mode: a non-2xx is a real failure - this project owns
@@ -76,39 +97,43 @@ describe('TeamDirect', async () => {
       assert(result.ok === true)
       assert(result.status === 200)
       assert(null != result.data)
+      assert(result.data.id === 'direct01')
       assert(calls.length === 1)
-      assert(calls[0].init.method === 'POST')
-      assert(calls[0].init.body.includes('direct01'))
+      assert(calls[0].init.method === 'GET')
     }
   })
 
   test('direct-list-team', async (t: any) => {
     if (liveScenariosActive()) { t.skip('Covered by live operation scenarios'); return }
-    const setup = directSetup()
+    const setup = directSetup([{ id: 'direct01' }, { id: 'direct02' }])
     if (maybeSkipControl(t, 'direct', 'direct-list-team', setup.live)) return
-    if (skipIfMissingIds(t, setup, ["after01","before01","filter01","first01","includeArchived01","last01","orderBy01"])) return
+    if (skipIfMissingIds(t, setup, ["after01","before01","first01","include_archived01","last01","order_by01"])) return
     const { client, calls } = setup
 
-    const variables: any = {}
+    const params: any = {}
+    const query: any = {}
     if (setup.live) {
-      variables["after"] = setup.idmap['after01']
-      variables["before"] = setup.idmap['before01']
-      variables["filter"] = setup.idmap['filter01']
-      variables["first"] = setup.idmap['first01']
-      variables["includeArchived"] = setup.idmap['includeArchived01']
-      variables["last"] = setup.idmap['last01']
-      variables["orderBy"] = setup.idmap['orderBy01']
+      params.after = setup.idmap['after01']
+      params.before = setup.idmap['before01']
+      params.first = setup.idmap['first01']
+      params.include_archived = setup.idmap['include_archived01']
+      params.last = setup.idmap['last01']
+      params.order_by = setup.idmap['order_by01']
     } else {
-      variables["after"] = 'direct01'
-      variables["before"] = 'direct02'
-      variables["filter"] = 'direct03'
-      variables["first"] = 'direct04'
-      variables["includeArchived"] = 'direct05'
-      variables["last"] = 'direct06'
-      variables["orderBy"] = 'direct07'
+      params.after = 'direct01'
+      params.before = 'direct02'
+      params.first = 'direct03'
+      params.include_archived = 'direct04'
+      params.last = 'direct05'
+      params.order_by = 'direct06'
     }
 
-    const result: any = await client.graphql("query TeamList($after: String, $before: String, $filter: TeamFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { administrableTeams(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...TeamFields } pageInfo { endCursor hasNextPage } } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }", variables)
+    const result: any = await client.direct({
+      path: '',
+      method: 'GET',
+      params,
+      query,
+    })
 
     if (setup.live) {
       // STRICT live mode: a non-2xx is a real failure - this project owns
@@ -122,20 +147,22 @@ describe('TeamDirect', async () => {
       assert(result.ok === true,
         'Live request failed: HTTP ' + result.status)
       assert(result.status >= 200 && result.status < 300)
-      assert(null != result.data)
+      assert(Array.isArray(unwrapListData(result.data)), 'Expected live list response')
     } else {
       assert(result.ok === true)
       assert(result.status === 200)
       assert(null != result.data)
+      const listArr = unwrapListData(result.data)
+      assert(Array.isArray(listArr))
+      assert(listArr!.length === 2)
       assert(calls.length === 1)
-      assert(calls[0].init.method === 'POST')
-      assert(calls[0].init.body.includes('direct01'))
-      assert(calls[0].init.body.includes('direct02'))
-      assert(calls[0].init.body.includes('direct03'))
-      assert(calls[0].init.body.includes('direct04'))
-      assert(calls[0].init.body.includes('direct05'))
-      assert(calls[0].init.body.includes('direct06'))
-      assert(calls[0].init.body.includes('direct07'))
+      assert(calls[0].init.method === 'GET')
+      assert(calls[0].url.includes('direct01'))
+      assert(calls[0].url.includes('direct02'))
+      assert(calls[0].url.includes('direct03'))
+      assert(calls[0].url.includes('direct04'))
+      assert(calls[0].url.includes('direct05'))
+      assert(calls[0].url.includes('direct06'))
     }
   })
 

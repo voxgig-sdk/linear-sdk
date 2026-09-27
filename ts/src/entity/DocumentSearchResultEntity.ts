@@ -19,7 +19,6 @@ import type {
   DocumentSearchResultListMatch,
 } from '../LinearTypes'
 
-// TODO: needs Entity superclass
 class DocumentSearchResultEntity extends LinearEntityBase<DocumentSearchResult> {
 
   constructor(client: LinearSDK, entopts: any) {

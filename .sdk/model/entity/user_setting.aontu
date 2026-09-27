@@ -1,0 +1,276 @@
+# Entity: user_setting
+
+main: kit: entity: user_setting: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    autoAssignToSelf: {
+      h: "Auto Assign To Self"
+      n: "autoAssignToSelf"
+      r: true
+      sh: "Whether to auto-assign newly created issues to the current user by default."
+      t: "`$BOOLEAN`"
+    }
+    calendarHash: {
+      h: "Calendar Hash"
+      n: "calendarHash"
+      r: false
+      sh: "A unique hash for the user, used to construct secure calendar subscription URLs."
+      t: "`$STRING`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    feedLastSeenTime: {
+      h: "Feed Last Seen Time"
+      n: "feedLastSeenTime"
+      r: false
+      sh: "The user's last seen time for the pulse feed."
+      t: "`$ANY`"
+    }
+    feedSummarySchedule: {
+      h: "Feed Summary Schedule"
+      n: "feedSummarySchedule"
+      r: false
+      sh: "The user's preferred schedule for receiving feed summary digests."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    pullRequestMergeStrategyPreference: {
+      h: "Pull Request Merge Strategy Preference"
+      n: "pullRequestMergeStrategyPreference"
+      r: false
+      sh: "[Internal] The user's preferred merge method for pull requests."
+      t: "`$STRING`"
+    }
+    showFullUserNames: {
+      h: "Show Full User Names"
+      n: "showFullUserNames"
+      r: true
+      sh: "Whether to show full user names instead of display names."
+      t: "`$BOOLEAN`"
+    }
+    subscribedToChangelog: {
+      h: "Subscribed To Changelog"
+      n: "subscribedToChangelog"
+      r: true
+      sh: "Whether this user is subscribed to receive changelog emails about Linear product updates."
+      t: "`$BOOLEAN`"
+    }
+    subscribedToDPA: {
+      h: "Subscribed To Dpa"
+      n: "subscribedToDPA"
+      r: true
+      sh: "Whether this user is subscribed to receive Data Processing Agreement (DPA) related emails."
+      t: "`$BOOLEAN`"
+    }
+    subscribedToInviteAccepted: {
+      h: "Subscribed To Invite Accepted"
+      n: "subscribedToInviteAccepted"
+      r: true
+      sh: "Whether this user is subscribed to receive email notifications when their workspace invitations are accepted."
+      t: "`$BOOLEAN`"
+    }
+    subscribedToPrivacyLegalUpdates: {
+      h: "Subscribed To Privacy Legal Updates"
+      n: "subscribedToPrivacyLegalUpdates"
+      r: true
+      sh: "Whether this user is subscribed to receive emails about privacy policy and legal updates."
+      t: "`$BOOLEAN`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    user: {
+      h: "User"
+      n: "user"
+      r: false
+      sh: "The user that these settings belong to."
+      t: "`$OBJECT`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "user_setting"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST notificationCategoryChannelSubscriptionUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "category"
+                or: "category"
+                r: true
+                t: "`$ANY`"
+              }
+              {
+                k: "param"
+                n: "channel"
+                or: "channel"
+                r: true
+                t: "`$ANY`"
+              }
+              {
+                k: "param"
+                n: "subscribe"
+                or: "subscribe"
+                r: true
+                t: "`$BOOLEAN`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation UserSettingCreateNotificationCategoryChannelSubscriptionUpdate($category: NotificationCategory!, $channel: NotificationChannel!, $subscribe: Boolean!) { notificationCategoryChannelSubscriptionUpdate(category: $category, channel: $channel, subscribe: $subscribe) { userSettings { ...UserSettingFields } success } } fragment UserSettingFields on UserSettings { archivedAt autoAssignToSelf calendarHash createdAt feedLastSeenTime feedSummarySchedule id pullRequestMergeStrategyPreference showFullUserNames subscribedToChangelog subscribedToDPA subscribedToInviteAccepted subscribedToPrivacyLegalUpdates updatedAt user { id } }"
+            field: "notificationCategoryChannelSubscriptionUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "category"
+                gqltype: "NotificationCategory!"
+                name: "category"
+              }
+              {
+                from: "channel"
+                gqltype: "NotificationChannel!"
+                name: "channel"
+              }
+              {
+                from: "subscribe"
+                gqltype: "Boolean!"
+                name: "subscribe"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "notificationCategoryChannelSubscriptionUpdate"
+          q: {
+            "$action": "notification_category_channel_subscription_update"
+            exist: [
+              "category"
+              "channel"
+              "subscribe"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.notificationCategoryChannelSubscriptionUpdate.userSettings`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST userSettings"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "query UserSettingLoad { userSettings { ...UserSettingFields } } fragment UserSettingFields on UserSettings { archivedAt autoAssignToSelf calendarHash createdAt feedLastSeenTime feedSummarySchedule id pullRequestMergeStrategyPreference showFullUserNames subscribedToChangelog subscribedToDPA subscribedToInviteAccepted subscribedToPrivacyLegalUpdates updatedAt user { id } }"
+            field: "userSettings"
+            optype: "query"
+          }
+          k: "graphql"
+          m: "POST"
+          o: "userSettings"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.userSettings`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST userSettingsUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation UserSettingUpdate($id: String!, $input: UserSettingsUpdateInput!) { userSettingsUpdate(id: $id, input: $input) { userSettings { ...UserSettingFields } success } } fragment UserSettingFields on UserSettings { archivedAt autoAssignToSelf calendarHash createdAt feedLastSeenTime feedSummarySchedule id pullRequestMergeStrategyPreference showFullUserNames subscribedToChangelog subscribedToDPA subscribedToInviteAccepted subscribedToPrivacyLegalUpdates updatedAt user { id } }"
+            field: "userSettingsUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "UserSettingsUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "userSettingsUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.userSettingsUpdate.userSettings`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

@@ -1,0 +1,50 @@
+# BasicGitAutomationTargetBranchFlow
+
+main: kit: flow: BasicGitAutomationTargetBranchFlow:
+{
+  entity: "git_automation_target_branch",
+  kind: "basic",
+  name: "BasicGitAutomationTargetBranchFlow",
+  step: [
+    {
+      i: {
+        ref: "git_automation_target_branch_ref01"
+      }
+
+      o: "create"
+    }
+
+    {
+      i: {
+        ref: "git_automation_target_branch_ref01",
+        srcdatavar: "git_automation_target_branch_ref01_data",
+        suffix: "_up0",
+        textfield: "branchPattern"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-git_automation_target_branch_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "git_automation_target_branch_ref01",
+        suffix: "_rm0"
+      }
+
+      m: {
+        id: "git_automation_target_branch01"
+      }
+
+      o: "remove"
+    }
+  ],
+  "key$": "BasicGitAutomationTargetBranchFlow"
+}

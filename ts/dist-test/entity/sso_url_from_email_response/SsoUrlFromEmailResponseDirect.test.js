@@ -8,10 +8,6 @@ const node_assert_1 = __importDefault(require("node:assert"));
 const live_runner_1 = require("../../live-runner");
 const __1 = require("../../..");
 const utility_1 = require("../../utility");
-// AFTER the imports on purpose: TypeScript hoists `import` above any
-// statement in the emitted CommonJS, so a loader placed above them would
-// run only after every imported module had already been evaluated - and
-// anything reading process.env at module scope would miss these values.
 (0, utility_1.loadEnvLocal)(__dirname + '/../../../.env.local');
 (0, node_test_1.describe)('SsoUrlFromEmailResponseDirect', async () => {
     // Per-test live pacing. Delay is read from sdk-test-control.json's
@@ -19,9 +15,6 @@ const utility_1 = require("../../utility");
     (0, node_test_1.afterEach)((0, utility_1.liveDelay)('LINEAR_TEST_LIVE'));
     (0, node_test_1.test)('direct-exists', async () => {
         const sdk = new __1.LinearSDK({
-            // Concrete base: a live construction must satisfy any server
-            // variables a templated base URL declares; overriding base with a
-            // literal (as the direct flow tests do) sidesteps the requirement.
             base: 'http://localhost:8080',
             system: { fetch: async () => ({}) }
         });
@@ -33,24 +26,18 @@ const utility_1 = require("../../utility");
             t.skip('Covered by live operation scenarios');
             return;
         }
-        const setup = directSetup();
+        const setup = directSetup({ id: 'direct01' });
         if ((0, utility_1.maybeSkipControl)(t, 'direct', 'direct-load-sso_url_from_email_response', setup.live))
             return;
-        if ((0, utility_1.skipIfMissingIds)(t, setup, ["email01", "isDesktop01", "type01"]))
-            return;
         const { client, calls } = setup;
-        const variables = {};
-        if (setup.live) {
-            variables["email"] = setup.idmap['email01'];
-            variables["isDesktop"] = setup.idmap['isDesktop01'];
-            variables["type"] = setup.idmap['type01'];
-        }
-        else {
-            variables["email"] = 'direct01';
-            variables["isDesktop"] = 'direct02';
-            variables["type"] = 'direct03';
-        }
-        const result = await client.graphql("query SsoUrlFromEmailResponseLoad($email: String!, $isDesktop: Boolean, $type: IdentityProviderType!) { ssoUrlFromEmail(email: $email, isDesktop: $isDesktop, type: $type) { ...SsoUrlFromEmailResponseFields } } fragment SsoUrlFromEmailResponseFields on SsoUrlFromEmailResponse { samlSsoUrl success }", variables);
+        const params = {};
+        const query = {};
+        const result = await client.direct({
+            path: '',
+            method: 'GET',
+            params,
+            query,
+        });
         if (setup.live) {
             // STRICT live mode: a non-2xx is a real failure - this project owns
             // the server it points at, so there is nothing to be lenient about.
@@ -68,11 +55,9 @@ const utility_1 = require("../../utility");
             (0, node_assert_1.default)(result.ok === true);
             (0, node_assert_1.default)(result.status === 200);
             (0, node_assert_1.default)(null != result.data);
+            (0, node_assert_1.default)(result.data.id === 'direct01');
             (0, node_assert_1.default)(calls.length === 1);
-            (0, node_assert_1.default)(calls[0].init.method === 'POST');
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct01'));
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct02'));
-            (0, node_assert_1.default)(calls[0].init.body.includes('direct03'));
+            (0, node_assert_1.default)(calls[0].init.method === 'GET');
         }
     });
 });

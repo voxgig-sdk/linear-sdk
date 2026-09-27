@@ -1,0 +1,207 @@
+# Entity: git_automation_state
+
+main: kit: entity: git_automation_state: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    event: {
+      h: "Event"
+      n: "event"
+      r: true
+      sh: "The Git event that triggers this automation rule (e.g., branch created, PR opened for review, or PR merged)."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    state: {
+      h: "State"
+      n: "state"
+      r: false
+      sh: "The workflow state that linked issues will be transitioned to when the Git event fires."
+      t: "`$OBJECT`"
+    }
+    targetBranch: {
+      h: "Target Branch"
+      n: "targetBranch"
+      r: false
+      sh: "The target branch that this automation rule applies to."
+      t: "`$OBJECT`"
+    }
+    team: {
+      h: "Team"
+      n: "team"
+      r: false
+      sh: "The team that this automation rule belongs to."
+      t: "`$OBJECT`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "git_automation_state"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST gitAutomationStateCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation GitAutomationStateCreate($input: GitAutomationStateCreateInput!) { gitAutomationStateCreate(input: $input) { gitAutomationState { ...GitAutomationStateFields } success } } fragment GitAutomationStateFields on GitAutomationState { archivedAt createdAt event id state { id } targetBranch { id } team { id } updatedAt }"
+            field: "gitAutomationStateCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "GitAutomationStateCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "gitAutomationStateCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.gitAutomationStateCreate.gitAutomationState`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST gitAutomationStateDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation GitAutomationStateRemove($id: String!) { gitAutomationStateDelete(id: $id) { entityId lastSyncId success } }"
+            field: "gitAutomationStateDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "gitAutomationStateDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.gitAutomationStateDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST gitAutomationStateUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation GitAutomationStateUpdate($id: String!, $input: GitAutomationStateUpdateInput!) { gitAutomationStateUpdate(id: $id, input: $input) { gitAutomationState { ...GitAutomationStateFields } success } } fragment GitAutomationStateFields on GitAutomationState { archivedAt createdAt event id state { id } targetBranch { id } team { id } updatedAt }"
+            field: "gitAutomationStateUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "GitAutomationStateUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "gitAutomationStateUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.gitAutomationStateUpdate.gitAutomationState`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

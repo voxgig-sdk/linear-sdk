@@ -17,10 +17,6 @@ import {
 } from '../../utility'
 
 
-// AFTER the imports on purpose: TypeScript hoists `import` above any
-// statement in the emitted CommonJS, so a loader placed above them would
-// run only after every imported module had already been evaluated - and
-// anything reading process.env at module scope would miss these values.
 loadEnvLocal(__dirname + '/../../../.env.local')
 
 
@@ -32,9 +28,6 @@ describe('ReleaseDirect', async () => {
 
   test('direct-exists', async () => {
     const sdk = new LinearSDK({
-      // Concrete base: a live construction must satisfy any server
-      // variables a templated base URL declares; overriding base with a
-      // literal (as the direct flow tests do) sidesteps the requirement.
       base: 'http://localhost:8080',
       system: { fetch: async () => ({}) }
     })
@@ -45,19 +38,43 @@ describe('ReleaseDirect', async () => {
 
   test('direct-load-release', async (t: any) => {
     if (liveScenariosActive()) { t.skip('Covered by live operation scenarios'); return }
-    const setup = directSetup()
+    const setup = directSetup({ id: 'direct01' })
     if (maybeSkipControl(t, 'direct', 'direct-load-release', setup.live)) return
-    if (skipIfMissingIds(t, setup, ["release01"])) return
     const { client, calls } = setup
 
-    const variables: any = {}
+    const params: any = {}
+    const query: any = {}
     if (setup.live) {
-      variables["id"] = setup.idmap['release01']
+      const listResult: any = await client.direct({
+        path: '',
+        method: 'GET',
+        params: {
+        first: setup.idmap['first01'],
+        term: setup.idmap['term01'],
+        },
+      })
+      assert(listResult.ok && listResult.status >= 200 && listResult.status < 300,
+        'Live list discovery failed')
+      const listArr = unwrapListData(listResult.data)
+      if (null == listArr || listArr.length === 0) {
+        throw new Error('Live load blocked: discovery returned no entities')
+      }
+      const candidateId = listArr[0]?.id ?? listArr[0]?.id
+      if (null == candidateId) {
+        throw new Error('Live load blocked: discovery returned no usable identity')
+      }
+      params.id = candidateId
+
     } else {
-      variables["id"] = 'direct01'
+
     }
 
-    const result: any = await client.graphql("query ReleaseLoad($id: String!) { release(id: $id) { ...ReleaseFields } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }", variables)
+    const result: any = await client.direct({
+      path: '',
+      method: 'GET',
+      params,
+      query,
+    })
 
     if (setup.live) {
       // STRICT live mode: a non-2xx is a real failure - this project owns
@@ -76,31 +93,35 @@ describe('ReleaseDirect', async () => {
       assert(result.ok === true)
       assert(result.status === 200)
       assert(null != result.data)
+      assert(result.data.id === 'direct01')
       assert(calls.length === 1)
-      assert(calls[0].init.method === 'POST')
-      assert(calls[0].init.body.includes('direct01'))
+      assert(calls[0].init.method === 'GET')
     }
   })
 
   test('direct-list-release', async (t: any) => {
     if (liveScenariosActive()) { t.skip('Covered by live operation scenarios'); return }
-    const setup = directSetup()
+    const setup = directSetup([{ id: 'direct01' }, { id: 'direct02' }])
     if (maybeSkipControl(t, 'direct', 'direct-list-release', setup.live)) return
-    if (skipIfMissingIds(t, setup, ["filter01","first01","term01"])) return
+    if (skipIfMissingIds(t, setup, ["first01","term01"])) return
     const { client, calls } = setup
 
-    const variables: any = {}
+    const params: any = {}
+    const query: any = {}
     if (setup.live) {
-      variables["filter"] = setup.idmap['filter01']
-      variables["first"] = setup.idmap['first01']
-      variables["term"] = setup.idmap['term01']
+      params.first = setup.idmap['first01']
+      params.term = setup.idmap['term01']
     } else {
-      variables["filter"] = 'direct01'
-      variables["first"] = 'direct02'
-      variables["term"] = 'direct03'
+      params.first = 'direct01'
+      params.term = 'direct02'
     }
 
-    const result: any = await client.graphql("query ReleaseList($filter: ReleaseFilter, $first: Int, $term: String) { releaseSearch(filter: $filter, first: $first, term: $term) { ...ReleaseFields } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }", variables)
+    const result: any = await client.direct({
+      path: '',
+      method: 'GET',
+      params,
+      query,
+    })
 
     if (setup.live) {
       // STRICT live mode: a non-2xx is a real failure - this project owns
@@ -114,16 +135,18 @@ describe('ReleaseDirect', async () => {
       assert(result.ok === true,
         'Live request failed: HTTP ' + result.status)
       assert(result.status >= 200 && result.status < 300)
-      assert(null != result.data)
+      assert(Array.isArray(unwrapListData(result.data)), 'Expected live list response')
     } else {
       assert(result.ok === true)
       assert(result.status === 200)
       assert(null != result.data)
+      const listArr = unwrapListData(result.data)
+      assert(Array.isArray(listArr))
+      assert(listArr!.length === 2)
       assert(calls.length === 1)
-      assert(calls[0].init.method === 'POST')
-      assert(calls[0].init.body.includes('direct01'))
-      assert(calls[0].init.body.includes('direct02'))
-      assert(calls[0].init.body.includes('direct03'))
+      assert(calls[0].init.method === 'GET')
+      assert(calls[0].url.includes('direct01'))
+      assert(calls[0].url.includes('direct02'))
     }
   })
 

@@ -1,0 +1,359 @@
+# Entity: document_search_result
+
+main: kit: entity: document_search_result: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    color: {
+      h: "Color"
+      n: "color"
+      r: false
+      sh: "The hex color of the document icon."
+      t: "`$STRING`"
+    }
+    content: {
+      h: "Content"
+      n: "content"
+      r: false
+      sh: "The document's content in markdown format."
+      t: "`$STRING`"
+    }
+    contentState: {
+      h: "Content State"
+      n: "contentState"
+      r: false
+      sh: "[Internal] The document's content as a base64-encoded Yjs state update."
+      t: "`$STRING`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creator: {
+      h: "Creator"
+      n: "creator"
+      r: false
+      sh: "The user who created the document."
+      t: "`$OBJECT`"
+    }
+    cycle: {
+      h: "Cycle"
+      n: "cycle"
+      r: false
+      sh: "[Internal] The cycle that the document is associated with."
+      t: "`$OBJECT`"
+    }
+    documentContentId: {
+      h: "Document Content Id"
+      n: "documentContentId"
+      r: false
+      sh: "The ID of the document content associated with the document."
+      t: "`$STRING`"
+    }
+    hiddenAt: {
+      h: "Hidden At"
+      n: "hiddenAt"
+      r: false
+      sh: "The time at which the document was hidden from the default view."
+      t: "`$ANY`"
+    }
+    icon: {
+      h: "Icon"
+      n: "icon"
+      r: false
+      sh: "The icon of the document, either a decorative icon type or an emoji string."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    initiative: {
+      h: "Initiative"
+      n: "initiative"
+      r: false
+      sh: "The initiative that the document is associated with."
+      t: "`$OBJECT`"
+    }
+    issue: {
+      h: "Issue"
+      n: "issue"
+      r: false
+      sh: "The issue that the document is associated with."
+      t: "`$OBJECT`"
+    }
+    lastAppliedTemplate: {
+      h: "Last Applied Template"
+      n: "lastAppliedTemplate"
+      r: false
+      sh: "The last template that was applied to this document."
+      t: "`$OBJECT`"
+    }
+    metadata: {
+      h: "Metadata"
+      n: "metadata"
+      r: true
+      sh: "Metadata related to search result."
+      t: "`$ANY`"
+    }
+    owner: {
+      h: "Owner"
+      n: "owner"
+      r: false
+      sh: "The owner of the document."
+      t: "`$OBJECT`"
+    }
+    project: {
+      h: "Project"
+      n: "project"
+      r: false
+      sh: "The project that the document is associated with."
+      t: "`$OBJECT`"
+    }
+    release: {
+      h: "Release"
+      n: "release"
+      r: false
+      sh: "The release that the document is associated with."
+      t: "`$OBJECT`"
+    }
+    slugId: {
+      h: "Slug Id"
+      n: "slugId"
+      r: true
+      sh: "The document's unique URL slug, used to construct human-readable URLs."
+      t: "`$STRING`"
+    }
+    sortOrder: {
+      h: "Sort Order"
+      n: "sortOrder"
+      r: true
+      sh: "The sort order of the document in its parent entity's resources list."
+      t: "`$NUMBER`"
+    }
+    summary: {
+      h: "Summary"
+      n: "summary"
+      r: false
+      sh: "[Internal] A one-sentence AI-generated summary of the document content."
+      t: "`$STRING`"
+    }
+    team: {
+      h: "Team"
+      n: "team"
+      r: false
+      sh: "[Internal] The team that the document is associated with."
+      t: "`$OBJECT`"
+    }
+    title: {
+      h: "Title"
+      n: "title"
+      r: true
+      sh: "The title of the document."
+      t: "`$STRING`"
+    }
+    trashed: {
+      h: "Trashed"
+      n: "trashed"
+      r: false
+      sh: "A flag that indicates whether the document is in the trash bin."
+      t: "`$BOOLEAN`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    updatedBy: {
+      h: "Updated By"
+      n: "updatedBy"
+      r: false
+      sh: "The user who last updated the document."
+      t: "`$OBJECT`"
+    }
+    url: {
+      h: "Url"
+      n: "url"
+      r: true
+      sh: "The canonical url for the document."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "document_search_result"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST searchDocuments"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "include_comment"
+                or: "include_comment"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+              {
+                k: "param"
+                n: "team_id"
+                or: "team_id"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "term"
+                or: "term"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query DocumentSearchResultList($after: String, $before: String, $first: Int, $includeArchived: Boolean, $includeComments: Boolean, $last: Int, $orderBy: PaginationOrderBy, $teamId: String, $term: String!) { searchDocuments(after: $after, before: $before, first: $first, includeArchived: $includeArchived, includeComments: $includeComments, last: $last, orderBy: $orderBy, teamId: $teamId, term: $term) { nodes { ...DocumentSearchResultFields } pageInfo { endCursor hasNextPage } } } fragment DocumentSearchResultFields on DocumentSearchResult { archivedAt color content contentState createdAt creator { id } cycle { id } documentContentId hiddenAt icon id initiative { id } issue { id } lastAppliedTemplate { id } metadata owner { id } project { id } release { id } slugId sortOrder summary team { id } title trashed updatedAt updatedBy { id } url }"
+            field: "searchDocuments"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "includeComments"
+                gqltype: "Boolean"
+                name: "includeComments"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+              {
+                from: "teamId"
+                gqltype: "String"
+                name: "teamId"
+              }
+              {
+                from: "term"
+                gqltype: "String!"
+                name: "term"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "searchDocuments"
+          q: {
+            exist: [
+              "term"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.searchDocuments.nodes`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

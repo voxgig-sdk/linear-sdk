@@ -41,12 +41,12 @@ int main(void) {
       cmap(1, "id", v_str("direct02")));
     LinearSDK* sdk = project_milestone_direct_setup(mockres);
     voxgig_value* params = v_map();
-    setp(params, "after", v_str("direct01"));
-    setp(params, "before", v_str("direct02"));
-    setp(params, "first", v_str("direct03"));
-    setp(params, "include_archived", v_str("direct04"));
-    setp(params, "last", v_str("direct05"));
-    setp(params, "order_by", v_str("direct06"));
+    setp(params, "undefined", v_str("direct01"));
+    setp(params, "undefined", v_str("direct02"));
+    setp(params, "undefined", v_str("direct03"));
+    setp(params, "undefined", v_str("direct04"));
+    setp(params, "undefined", v_str("direct05"));
+    setp(params, "undefined", v_str("direct06"));
     PNError* err = NULL;
     voxgig_value* result = sdk_direct(sdk, cmap(3,
       "path", v_str(""),

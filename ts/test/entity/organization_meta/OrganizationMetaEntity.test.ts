@@ -25,10 +25,6 @@ import {
 } from '../../utility'
 
 
-// AFTER the imports on purpose: TypeScript hoists `import` above any
-// statement in the emitted CommonJS, so a loader placed above them would
-// run only after every imported module had already been evaluated - and
-// anything reading process.env at module scope would miss these values.
 loadEnvLocal(__dirname + '/../../../.env.local')
 
 
@@ -55,7 +51,7 @@ describe('OrganizationMetaEntity', async () => {
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":[{"active":true,"name":"allowedAuthServices","req":true,"short":"Allowed authentication providers, empty array means all are allowed.","type":"`$STRING`","index$":0},{"active":true,"name":"region","req":true,"short":"The region the workspace is hosted in.","type":"`$STRING`","index$":1}],"name":"organization_meta","op":{"load":{"input":"data","name":"load","points":[{"active":true,"args":{"params":[{"active":true,"kind":"param","name":"url_key","orig":"url_key","reqd":true,"type":"`$STRING`","index$":0}]},"contract":{"id":"POST organizationMeta","json":"{\"field\":{\"args\":[{\"gqltype\":\"String!\",\"name\":\"urlKey\",\"reqd\":true,\"type\":\"String\"}],\"deprecated\":false,\"desc\":\"[INTERNAL] Get workspace metadata by URL key or workspace ID.\",\"gqltype\":\"OrganizationMeta\",\"list\":false,\"name\":\"organizationMeta\",\"reqd\":false,\"type\":\"OrganizationMeta\"},\"invocation\":{\"doc\":\"query OrganizationMetaLoad($urlKey: String!) { organizationMeta(urlKey: $urlKey) { ...OrganizationMetaFields } } fragment OrganizationMetaFields on OrganizationMeta { allowedAuthServices region }\",\"field\":\"organizationMeta\",\"optype\":\"query\",\"vars\":[{\"from\":\"urlKey\",\"gqltype\":\"String!\",\"name\":\"urlKey\"}]},\"protocol\":\"graphql\",\"types\":{\"String\":{\"desc\":\"The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.\",\"fields\":{},\"kind\":\"SCALAR\",\"name\":\"String\"}},\"typesScope\":\"inputs\"}","source":"graphql","version":1},"graphql":{"doc":"query OrganizationMetaLoad($urlKey: String!) { organizationMeta(urlKey: $urlKey) { ...OrganizationMetaFields } } fragment OrganizationMetaFields on OrganizationMeta { allowedAuthServices region }","field":"organizationMeta","optype":"query","vars":[{"from":"urlKey","gqltype":"String!","name":"urlKey"}]},"kind":"graphql","method":"POST","orig":"organizationMeta","segments":[],"select":{"exist":["url_key"]},"transform":{"req":"`reqdata`","res":"`body.data.organizationMeta`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[]},"key$":"organization_meta","name__orig":"organization_meta","Name":"OrganizationMeta","name_":"organization_meta","name-":"organization-meta","NAME":"ORGANIZATION_META","index$":54}, {"active":true,"entity":"organization_meta","key$":"BasicOrganizationMetaFlow","kind":"basic","name":"BasicOrganizationMetaFlow","param":{},"step":[{"active":true,"data":{},"input":{"ref":"organization_meta_ref01","srcdatavar":"organization_meta_ref01_data","suffix":"_dt0"},"match":{"url_key":"url_key01"},"op":"load","spec":[],"valid":[{"apply":"TextFieldMark","def":{"mark":"Mark01-organization_meta_ref01"}}],"index$":0}]}, 'OrganizationMeta')
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"allowedAuthServices":{"a":true,"h":"Allowed Auth Services","n":"allowedAuthServices","r":true,"sh":"Allowed authentication providers, empty array means all are allowed.","t":"`$STRING`","key$":"allowedAuthServices","index$":0},"region":{"a":true,"h":"Region","n":"region","r":true,"sh":"The region the workspace is hosted in.","t":"`$STRING`","key$":"region","index$":1}},"name":"organization_meta","op":{"load":{"input":"data","name":"load","points":[{"a":true,"co":{"id":"POST organizationMeta","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"url_key","or":"url_key","r":true,"t":"`$STRING`","index$":0}]},"gq":{"doc":"query OrganizationMetaLoad($urlKey: String!) { organizationMeta(urlKey: $urlKey) { ...OrganizationMetaFields } } fragment OrganizationMetaFields on OrganizationMeta { allowedAuthServices region }","field":"organizationMeta","optype":"query","vars":[{"from":"urlKey","gqltype":"String!","name":"urlKey"}]},"k":"graphql","m":"POST","o":"organizationMeta","q":{"exist":["url_key"]},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.organizationMeta`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[]},"key$":"organization_meta","name__orig":"organization_meta","Name":"OrganizationMeta","name_":"organization_meta","name-":"organization-meta","NAME":"ORGANIZATION_META","index$":54}, {"active":true,"entity":"organization_meta","key$":"BasicOrganizationMetaFlow","kind":"basic","name":"BasicOrganizationMetaFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"organization_meta_ref01","srcdatavar":"organization_meta_ref01_data","suffix":"_dt0"},"m":{"url_key":"url_key01"},"o":"load","s":[],"v":[{"apply":"TextFieldMark","def":{"mark":"Mark01-organization_meta_ref01"}}],"index$":0}]}, 'OrganizationMeta', {"POST organizationMeta":{"protocol":"graphql"}})
     }
     const client = setup.client
     const struct = setup.struct
@@ -98,7 +94,7 @@ function basicSetup(extra?: any) {
   const transform = struct.transform
 
   let idmap = transform(
-    ['organization_meta01','organization_meta02','organization_meta03'],
+    ['organization_meta01','organization_meta02','organization_meta03','url_key01'],
     {
       '`$PACK`': ['', {
         '`$KEY`': '`$COPY`',

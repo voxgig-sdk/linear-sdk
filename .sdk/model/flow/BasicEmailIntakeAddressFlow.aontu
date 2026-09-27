@@ -1,0 +1,72 @@
+# BasicEmailIntakeAddressFlow
+
+main: kit: flow: BasicEmailIntakeAddressFlow:
+{
+  entity: "email_intake_address",
+  kind: "basic",
+  name: "BasicEmailIntakeAddressFlow",
+  step: [
+    {
+      i: {
+        ref: "email_intake_address_ref01"
+      }
+
+      o: "create"
+    }
+
+    {
+      i: {
+        ref: "email_intake_address_ref01",
+        srcdatavar: "email_intake_address_ref01_data",
+        suffix: "_up0",
+        textfield: "address"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-email_intake_address_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "email_intake_address_ref01",
+        srcdatavar: "email_intake_address_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "email_intake_address01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-email_intake_address_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "email_intake_address_ref01",
+        suffix: "_rm0"
+      }
+
+      m: {
+        id: "email_intake_address01"
+      }
+
+      o: "remove"
+    }
+  ],
+  "key$": "BasicEmailIntakeAddressFlow"
+}

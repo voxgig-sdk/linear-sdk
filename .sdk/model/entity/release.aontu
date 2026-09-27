@@ -1,0 +1,711 @@
+# Entity: release
+
+main: kit: entity: release: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    autoArchivedAt: {
+      h: "Auto Archived At"
+      n: "autoArchivedAt"
+      r: false
+      sh: "The time at which the release was automatically archived by the auto pruning process."
+      t: "`$ANY`"
+    }
+    canceledAt: {
+      h: "Canceled At"
+      n: "canceledAt"
+      r: false
+      sh: "The time at which the release was canceled."
+      t: "`$ANY`"
+    }
+    commitSha: {
+      h: "Commit Sha"
+      n: "commitSha"
+      r: false
+      sh: "The Git commit SHA associated with this release."
+      t: "`$STRING`"
+    }
+    completedAt: {
+      h: "Completed At"
+      n: "completedAt"
+      r: false
+      sh: "The time at which the release was completed."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creator: {
+      h: "Creator"
+      n: "creator"
+      r: false
+      sh: "The user who created the release."
+      t: "`$OBJECT`"
+    }
+    currentProgress: {
+      h: "Current Progress"
+      n: "currentProgress"
+      r: true
+      sh: "The current progress summary for the release, including counts of issues by workflow state type (e.g., completed, in progress, unstarted)."
+      t: "`$ANY`"
+    }
+    description: {
+      h: "Description"
+      n: "description"
+      r: false
+      sh: "The description of the release in plain text or markdown."
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    issueCount: {
+      h: "Issue Count"
+      n: "issueCount"
+      r: true
+      sh: "Number of issues associated with the release."
+      t: "`$INTEGER`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "The name of the release."
+      t: "`$STRING`"
+    }
+    pipeline: {
+      h: "Pipeline"
+      n: "pipeline"
+      r: false
+      sh: "The release pipeline that this release belongs to."
+      t: "`$OBJECT`"
+    }
+    progressHistory: {
+      h: "Progress History"
+      n: "progressHistory"
+      r: true
+      sh: "The historical progress snapshots for the release, tracking how issue completion has evolved over time."
+      t: "`$ANY`"
+    }
+    releaseNote: {
+      h: "Release Note"
+      n: "releaseNote"
+      r: false
+      sh: "[Internal] The primary release note covering this release."
+      t: "`$OBJECT`"
+    }
+    slugId: {
+      h: "Slug Id"
+      n: "slugId"
+      r: true
+      sh: "The release's unique URL slug, used to construct human-readable URLs for the release."
+      t: "`$STRING`"
+    }
+    stage: {
+      h: "Stage"
+      n: "stage"
+      r: false
+      sh: "The current stage of the release within its pipeline (e.g., Planned, In Progress, Completed, Canceled)."
+      t: "`$OBJECT`"
+    }
+    startDate: {
+      h: "Start Date"
+      n: "startDate"
+      r: false
+      sh: "The estimated start date of the release."
+      t: "`$ANY`"
+    }
+    startedAt: {
+      h: "Started At"
+      n: "startedAt"
+      r: false
+      sh: "The time at which the release first entered a started stage."
+      t: "`$ANY`"
+    }
+    targetDate: {
+      h: "Target Date"
+      n: "targetDate"
+      r: false
+      sh: "The estimated completion date of the release."
+      t: "`$ANY`"
+    }
+    trashed: {
+      h: "Trashed"
+      n: "trashed"
+      r: false
+      sh: "A flag that indicates whether the release is in the trash bin."
+      t: "`$BOOLEAN`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    url: {
+      h: "Url"
+      n: "url"
+      r: true
+      sh: "The URL to the release page in the Linear app."
+      t: "`$STRING`"
+    }
+    version: {
+      h: "Version"
+      n: "version"
+      r: false
+      sh: "The version identifier for this release (e.g., 'v1.2.3' or a short commit hash)."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "release"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST releaseComplete"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation ReleaseCreateComplete($input: ReleaseCompleteInput!) { releaseComplete(input: $input) { release { ...ReleaseFields } success } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }"
+            field: "releaseComplete"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "ReleaseCompleteInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releaseComplete"
+          q: {
+            "$action": "complete"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releaseComplete.release`"
+          }
+        }
+        {
+          co: {
+            id: "POST releaseCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation ReleaseCreate($input: ReleaseCreateInput!) { releaseCreate(input: $input) { release { ...ReleaseFields } success } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }"
+            field: "releaseCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "ReleaseCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releaseCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releaseCreate.release`"
+          }
+        }
+        {
+          co: {
+            id: "POST releaseSync"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation ReleaseCreateSync($input: ReleaseSyncInput!) { releaseSync(input: $input) { release { ...ReleaseFields } success } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }"
+            field: "releaseSync"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "ReleaseSyncInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releaseSync"
+          q: {
+            "$action": "sync"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releaseSync.release`"
+          }
+        }
+        {
+          co: {
+            id: "POST releaseUpdateByPipeline"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation ReleaseCreateUpdateByPipeline($input: ReleaseUpdateByPipelineInput!) { releaseUpdateByPipeline(input: $input) { release { ...ReleaseFields } success } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }"
+            field: "releaseUpdateByPipeline"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "ReleaseUpdateByPipelineInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releaseUpdateByPipeline"
+          q: {
+            "$action": "update_by_pipeline"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releaseUpdateByPipeline.release`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "POST releaseSearch"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "term"
+                or: "term"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ReleaseList($filter: ReleaseFilter, $first: Int, $term: String) { releaseSearch(filter: $filter, first: $first, term: $term) { ...ReleaseFields } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }"
+            field: "releaseSearch"
+            optype: "query"
+            vars: [
+              {
+                from: ""
+                gqltype: "ReleaseFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "term"
+                gqltype: "String"
+                name: "term"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releaseSearch"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releaseSearch`"
+          }
+        }
+        {
+          co: {
+            id: "POST releases"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "after"
+                or: "after"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "before"
+                or: "before"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "param"
+                n: "first"
+                or: "first"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "include_archived"
+                or: "include_archived"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+              {
+                k: "param"
+                n: "last"
+                or: "last"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "param"
+                n: "order_by"
+                or: "order_by"
+                r: false
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ReleaseList($after: String, $before: String, $filter: ReleaseFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy, $sort: [ReleaseSortInput!]) { releases(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy, sort: $sort) { nodes { ...ReleaseFields } pageInfo { endCursor hasNextPage } } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }"
+            field: "releases"
+            optype: "query"
+            page: {
+              cursor: "pageInfo.endCursor"
+              more: "pageInfo.hasNextPage"
+              nodes: "nodes"
+              style: "relay"
+            }
+            vars: [
+              {
+                from: "after"
+                gqltype: "String"
+                name: "after"
+              }
+              {
+                from: "before"
+                gqltype: "String"
+                name: "before"
+              }
+              {
+                from: "filter"
+                gqltype: "ReleaseFilter"
+                name: "filter"
+              }
+              {
+                from: "first"
+                gqltype: "Int"
+                name: "first"
+              }
+              {
+                from: "includeArchived"
+                gqltype: "Boolean"
+                name: "includeArchived"
+              }
+              {
+                from: "last"
+                gqltype: "Int"
+                name: "last"
+              }
+              {
+                from: "orderBy"
+                gqltype: "PaginationOrderBy"
+                name: "orderBy"
+              }
+              {
+                from: "sort"
+                gqltype: "[ReleaseSortInput!]"
+                name: "sort"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releases"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releases.nodes`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST release"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ReleaseLoad($id: String!) { release(id: $id) { ...ReleaseFields } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }"
+            field: "release"
+            optype: "query"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "release"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.release`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST releaseDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ReleaseRemove($id: String!) { releaseDelete(id: $id) { entity { ...ReleaseFields } success } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }"
+            field: "releaseDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releaseDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releaseDelete.entity`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST releaseArchive"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ReleaseUpdateArchive($id: String!) { releaseArchive(id: $id) { entity { ...ReleaseFields } success } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }"
+            field: "releaseArchive"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releaseArchive"
+          q: {
+            "$action": "archive"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releaseArchive.entity`"
+          }
+        }
+        {
+          co: {
+            id: "POST releaseUnarchive"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ReleaseUpdateUnarchive($id: String!) { releaseUnarchive(id: $id) { entity { ...ReleaseFields } success } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }"
+            field: "releaseUnarchive"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releaseUnarchive"
+          q: {
+            "$action": "unarchive"
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releaseUnarchive.entity`"
+          }
+        }
+        {
+          co: {
+            id: "POST releaseUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ReleaseUpdate($id: String!, $input: ReleaseUpdateInput!) { releaseUpdate(id: $id, input: $input) { release { ...ReleaseFields } success } } fragment ReleaseFields on Release { archivedAt autoArchivedAt canceledAt commitSha completedAt createdAt creator { id } currentProgress description id issueCount name pipeline { id } progressHistory releaseNote { id } slugId stage { id } startDate startedAt targetDate trashed updatedAt url version }"
+            field: "releaseUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "ReleaseUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "releaseUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.releaseUpdate.release`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

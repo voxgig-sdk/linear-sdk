@@ -1,0 +1,280 @@
+# Entity: organization_domain
+
+main: kit: entity: organization_domain: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    authType: {
+      h: "Auth Type"
+      n: "authType"
+      r: true
+      sh: "The authentication type this domain is used for."
+      t: "`$STRING`"
+    }
+    claimed: {
+      h: "Claimed"
+      n: "claimed"
+      r: false
+      sh: "Whether the domain was claimed by the workspace through DNS TXT record verification."
+      t: "`$BOOLEAN`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    creator: {
+      h: "Creator"
+      n: "creator"
+      r: false
+      sh: "The user who added the domain."
+      t: "`$OBJECT`"
+    }
+    disableOrganizationCreation: {
+      h: "Disable Organization Creation"
+      n: "disableOrganizationCreation"
+      r: false
+      sh: "Whether users with email addresses from this domain are prevented from creating new workspaces."
+      t: "`$BOOLEAN`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    identityProvider: {
+      h: "Identity Provider"
+      n: "identityProvider"
+      r: false
+      sh: "The identity provider the domain belongs to."
+      t: "`$OBJECT`"
+    }
+    name: {
+      h: "Name"
+      n: "name"
+      r: true
+      sh: "The domain name (e.g., 'example.com')."
+      t: "`$STRING`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    verificationEmail: {
+      h: "Verification Email"
+      n: "verificationEmail"
+      r: false
+      sh: "The email address used to verify this domain."
+      t: "`$STRING`"
+    }
+    verified: {
+      h: "Verified"
+      n: "verified"
+      r: true
+      sh: "Whether the domain has been verified via email verification."
+      t: "`$BOOLEAN`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "organization_domain"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST organizationDomainCreate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "trigger_email_verification"
+                or: "trigger_email_verification"
+                r: false
+                t: "`$BOOLEAN`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation OrganizationDomainCreate($input: OrganizationDomainCreateInput!, $triggerEmailVerification: Boolean) { organizationDomainCreate(input: $input, triggerEmailVerification: $triggerEmailVerification) { organizationDomain { ...OrganizationDomainFields } success } } fragment OrganizationDomainFields on OrganizationDomain { archivedAt authType claimed createdAt creator { id } disableOrganizationCreation id identityProvider { id } name updatedAt verificationEmail verified }"
+            field: "organizationDomainCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "OrganizationDomainCreateInput!"
+                name: "input"
+              }
+              {
+                from: "triggerEmailVerification"
+                gqltype: "Boolean"
+                name: "triggerEmailVerification"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organizationDomainCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organizationDomainCreate.organizationDomain`"
+          }
+        }
+        {
+          co: {
+            id: "POST organizationDomainVerify"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation OrganizationDomainCreateVerify($input: OrganizationDomainVerificationInput!) { organizationDomainVerify(input: $input) { organizationDomain { ...OrganizationDomainFields } success } } fragment OrganizationDomainFields on OrganizationDomain { archivedAt authType claimed createdAt creator { id } disableOrganizationCreation id identityProvider { id } name updatedAt verificationEmail verified }"
+            field: "organizationDomainVerify"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "OrganizationDomainVerificationInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organizationDomainVerify"
+          q: {
+            "$action": "verify"
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organizationDomainVerify.organizationDomain`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST organizationDomainDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation OrganizationDomainRemove($id: String!) { organizationDomainDelete(id: $id) { entityId lastSyncId success } }"
+            field: "organizationDomainDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organizationDomainDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organizationDomainDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST organizationDomainUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation OrganizationDomainUpdate($id: String!, $input: OrganizationDomainUpdateInput!) { organizationDomainUpdate(id: $id, input: $input) { organizationDomain { ...OrganizationDomainFields } success } } fragment OrganizationDomainFields on OrganizationDomain { archivedAt authType claimed createdAt creator { id } disableOrganizationCreation id identityProvider { id } name updatedAt verificationEmail verified }"
+            field: "organizationDomainUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "OrganizationDomainUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "organizationDomainUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.organizationDomainUpdate.organizationDomain`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

@@ -1,0 +1,61 @@
+# BasicUserSettingFlow
+
+main: kit: flow: BasicUserSettingFlow:
+{
+  entity: "user_setting",
+  kind: "basic",
+  name: "BasicUserSettingFlow",
+  step: [
+    {
+      i: {
+        ref: "user_setting_ref01"
+      }
+
+      m: {
+        category: "category01",
+        channel: "channel01",
+        subscribe: "subscribe01"
+      }
+
+      o: "create"
+    }
+
+    {
+      i: {
+        ref: "user_setting_ref01",
+        srcdatavar: "user_setting_ref01_data",
+        suffix: "_up0",
+        textfield: "calendarHash"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-user_setting_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "user_setting_ref01",
+        srcdatavar: "user_setting_ref01_data",
+        suffix: "_dt0"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-user_setting_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicUserSettingFlow"
+}

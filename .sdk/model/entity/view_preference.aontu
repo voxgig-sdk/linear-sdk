@@ -1,0 +1,240 @@
+# Entity: view_preference
+
+main: kit: entity: view_preference: {
+
+  alias: field: {}
+
+  fields: {
+    archivedAt: {
+      h: "Archived At"
+      n: "archivedAt"
+      r: false
+      sh: "The time at which the entity was archived."
+      t: "`$ANY`"
+    }
+    createdAt: {
+      h: "Created At"
+      n: "createdAt"
+      r: true
+      sh: "The time at which the entity was created."
+      t: "`$ANY`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: true
+      sh: "The unique identifier of the entity."
+      t: "`$STRING`"
+    }
+    type: {
+      h: "Type"
+      n: "type"
+      r: true
+      sh: "The type of view preferences: \"organization\" for workspace-wide defaults or \"user\" for personal overrides."
+      t: "`$STRING`"
+    }
+    updatedAt: {
+      h: "Updated At"
+      n: "updatedAt"
+      r: true
+      sh: "The last time at which the entity was meaningfully updated."
+      t: "`$ANY`"
+    }
+    viewType: {
+      h: "View Type"
+      n: "viewType"
+      r: true
+      sh: "The type of view these preferences apply to, such as board, cycle, project, customView, myIssues, etc."
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "view_preference"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST viewPreferencesCreate"
+            source: "graphql"
+            version: 2
+          }
+          gq: {
+            doc: "mutation ViewPreferenceCreate($input: ViewPreferencesCreateInput!) { viewPreferencesCreate(input: $input) { viewPreferences { ...ViewPreferenceFields } success } } fragment ViewPreferenceFields on ViewPreferences { archivedAt createdAt id type updatedAt viewType }"
+            field: "viewPreferencesCreate"
+            optype: "mutation"
+            vars: [
+              {
+                from: ""
+                gqltype: "ViewPreferencesCreateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "viewPreferencesCreate"
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.viewPreferencesCreate.viewPreferences`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "POST userViewPreferences"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "view_type"
+                or: "view_type"
+                r: true
+                t: "`$ANY`"
+              }
+            ]
+          }
+          gq: {
+            doc: "query ViewPreferenceLoad($viewType: ViewType!) { userViewPreferences(viewType: $viewType) { ...ViewPreferenceFields } } fragment ViewPreferenceFields on ViewPreferences { archivedAt createdAt id type updatedAt viewType }"
+            field: "userViewPreferences"
+            optype: "query"
+            vars: [
+              {
+                from: "viewType"
+                gqltype: "ViewType!"
+                name: "viewType"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "userViewPreferences"
+          q: {
+            exist: [
+              "view_type"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.userViewPreferences`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          co: {
+            id: "POST viewPreferencesDelete"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ViewPreferenceRemove($id: String!) { viewPreferencesDelete(id: $id) { entityId lastSyncId success } }"
+            field: "viewPreferencesDelete"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "viewPreferencesDelete"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.viewPreferencesDelete`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          co: {
+            id: "POST viewPreferencesUpdate"
+            source: "graphql"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          gq: {
+            doc: "mutation ViewPreferenceUpdate($id: String!, $input: ViewPreferencesUpdateInput!) { viewPreferencesUpdate(id: $id, input: $input) { viewPreferences { ...ViewPreferenceFields } success } } fragment ViewPreferenceFields on ViewPreferences { archivedAt createdAt id type updatedAt viewType }"
+            field: "viewPreferencesUpdate"
+            optype: "mutation"
+            vars: [
+              {
+                from: "id"
+                gqltype: "String!"
+                name: "id"
+              }
+              {
+                from: ""
+                gqltype: "ViewPreferencesUpdateInput!"
+                name: "input"
+              }
+            ]
+          }
+          k: "graphql"
+          m: "POST"
+          o: "viewPreferencesUpdate"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          t: {
+            req: "`reqdata`"
+            res: "`body.data.viewPreferencesUpdate.viewPreferences`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

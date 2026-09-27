@@ -1,0 +1,76 @@
+# BasicViewPreferenceFlow
+
+main: kit: flow: BasicViewPreferenceFlow:
+{
+  entity: "view_preference",
+  kind: "basic",
+  name: "BasicViewPreferenceFlow",
+  step: [
+    {
+      i: {
+        ref: "view_preference_ref01"
+      }
+
+      m: {
+        view_type: "view_type01"
+      }
+
+      o: "create"
+    }
+
+    {
+      i: {
+        ref: "view_preference_ref01",
+        srcdatavar: "view_preference_ref01_data",
+        suffix: "_up0",
+        textfield: "type"
+      }
+
+      o: "update",
+      s: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-view_preference_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "view_preference_ref01",
+        srcdatavar: "view_preference_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        view_type: "view_type01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-view_preference_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "view_preference_ref01",
+        suffix: "_rm0"
+      }
+
+      m: {
+        id: "view_preference01"
+      }
+
+      o: "remove"
+    }
+  ],
+  "key$": "BasicViewPreferenceFlow"
+}

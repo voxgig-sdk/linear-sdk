@@ -19,7 +19,6 @@ import type {
   WebhookFailureEventListMatch,
 } from '../LinearTypes'
 
-// TODO: needs Entity superclass
 class WebhookFailureEventEntity extends LinearEntityBase<WebhookFailureEvent> {
 
   constructor(client: LinearSDK, entopts: any) {
