@@ -10,6 +10,18 @@ use PHPUnit\Framework\TestCase;
 
 class CustomerNeedDirectTest extends TestCase
 {
+    // main.kit.test.live.strict is true (the default is true): a live
+    // request that fails, or a live test missing an input it needs,
+    // fails the test.
+    // An account with no record for a test to read skips it either way.
+    private const LIVE_STRICT = true;
+
+    private static function liveOk(array $result): bool
+    {
+        $status = Helpers::to_int($result["status"] ?? 0);
+        return empty($result["err"]) && !empty($result["ok"]) && $status >= 200 && $status < 300;
+    }
+
     public function test_direct_list_customer_need(): void
     {
         $setup = customer_need_direct_setup([
@@ -23,45 +35,20 @@ class CustomerNeedDirectTest extends TestCase
         }
         if ($setup["live"]) {
             foreach (["after01", "before01", "first01", "include_archived01", "last01", "order_by01"] as $_liveKey) {
-                if (!isset($setup["idmap"][$_liveKey]) || $setup["idmap"][$_liveKey] === null) {
-                    $this->markTestSkipped("live test needs $_liveKey via *_ENTID env var (synthetic IDs only)");
-                    return;
+                if (null === ($setup["idmap"][$_liveKey] ?? null)) {
+                    Runner::live_miss(self::LIVE_STRICT, "Live test blocked: needs " . $_liveKey . " via LINEAR_TEST_CUSTOMER_NEED_ENTID");
                 }
             }
         }
         $client = $setup["client"];
 
         $params = [];
-        if ($setup["live"]) {
-            $params["after"] = $setup["idmap"]["after01"];
-        } else {
-            $params["after"] = "direct01";
-        }
-        if ($setup["live"]) {
-            $params["before"] = $setup["idmap"]["before01"];
-        } else {
-            $params["before"] = "direct01";
-        }
-        if ($setup["live"]) {
-            $params["first"] = $setup["idmap"]["first01"];
-        } else {
-            $params["first"] = "direct01";
-        }
-        if ($setup["live"]) {
-            $params["include_archived"] = $setup["idmap"]["include_archived01"];
-        } else {
-            $params["include_archived"] = "direct01";
-        }
-        if ($setup["live"]) {
-            $params["last"] = $setup["idmap"]["last01"];
-        } else {
-            $params["last"] = "direct01";
-        }
-        if ($setup["live"]) {
-            $params["order_by"] = $setup["idmap"]["order_by01"];
-        } else {
-            $params["order_by"] = "direct01";
-        }
+        $params["after"] = $setup["live"] ? ($setup["idmap"]["after01"] ?? null) : "direct01";
+        $params["before"] = $setup["live"] ? ($setup["idmap"]["before01"] ?? null) : "direct02";
+        $params["first"] = $setup["live"] ? ($setup["idmap"]["first01"] ?? null) : "direct03";
+        $params["include_archived"] = $setup["live"] ? ($setup["idmap"]["include_archived01"] ?? null) : "direct04";
+        $params["last"] = $setup["live"] ? ($setup["idmap"]["last01"] ?? null) : "direct05";
+        $params["order_by"] = $setup["live"] ? ($setup["idmap"]["order_by01"] ?? null) : "direct06";
 
         $result = $client->direct([
             "path" => "",
@@ -69,22 +56,13 @@ class CustomerNeedDirectTest extends TestCase
             "params" => $params,
         ]);
         if ($setup["live"]) {
-            // Live mode is lenient: synthetic IDs frequently 4xx and the
-            // list-response shape varies wildly across public APIs. Skip
-            // rather than fail when the call doesn't return a usable list.
-            if (!empty($result["err"])) {
-                $this->markTestSkipped("list call failed (likely synthetic IDs against live API): " . (string)$result["err"]);
-                return;
+            if (!self::liveOk($result)) {
+                Runner::live_miss(self::LIVE_STRICT, "Live list failed: " . Runner::live_describe($result));
             }
-            if (empty($result["ok"])) {
-                $this->markTestSkipped("list call not ok (likely synthetic IDs against live API)");
-                return;
+            if (null === Runner::live_list($result["data"] ?? null)) {
+                Runner::live_miss(self::LIVE_STRICT, "Live list returned no list: " . Runner::live_describe($result));
             }
-            $status = Helpers::to_int($result["status"]);
-            if ($status < 200 || $status >= 300) {
-                $this->markTestSkipped("expected 2xx status, got " . $status);
-                return;
-            }
+            $this->assertIsArray(Runner::live_list($result["data"]));
         } else {
             $this->assertArrayNotHasKey("err", $result);
             $this->assertTrue($result["ok"]);
@@ -105,29 +83,26 @@ class CustomerNeedDirectTest extends TestCase
         }
         $client = $setup["client"];
 
+        $params = [];
+        $query = [];
+        if ($setup["live"]) {
+        } else {
+        }
 
         $result = $client->direct([
             "path" => "",
             "method" => "GET",
-            "params" => [],
+            "params" => $params,
+            "query" => $query,
         ]);
         if ($setup["live"]) {
-            // Live mode is lenient: synthetic IDs frequently 4xx. Skip
-            // rather than fail when the load endpoint isn't reachable
-            // with the IDs we can construct from setup.idmap.
-            if (!empty($result["err"])) {
-                $this->markTestSkipped("load call failed (likely synthetic IDs against live API): " . (string)$result["err"]);
-                return;
+            if (!self::liveOk($result)) {
+                Runner::live_miss(self::LIVE_STRICT, "Live load failed: " . Runner::live_describe($result));
             }
-            if (empty($result["ok"])) {
-                $this->markTestSkipped("load call not ok (likely synthetic IDs against live API)");
-                return;
+            if (null === ($result["data"] ?? null)) {
+                Runner::live_miss(self::LIVE_STRICT, "Live load returned no data: " . Runner::live_describe($result));
             }
-            $status = Helpers::to_int($result["status"]);
-            if ($status < 200 || $status >= 300) {
-                $this->markTestSkipped("expected 2xx status, got " . $status);
-                return;
-            }
+            $this->assertNotNull($result["data"]);
         } else {
             $this->assertArrayNotHasKey("err", $result);
             $this->assertTrue($result["ok"]);
@@ -164,11 +139,12 @@ function customer_need_direct_setup($mockres)
             "apikey" => $env["LINEAR_APIKEY"],
         ]);
         $client = new LinearSDK($merged_opts);
+        $idmap = $env["LINEAR_TEST_CUSTOMER_NEED_ENTID"] ?? [];
         return [
             "client" => $client,
             "calls" => $calls,
             "live" => true,
-            "idmap" => [],
+            "idmap" => is_array($idmap) ? $idmap : [],
         ];
     }
 

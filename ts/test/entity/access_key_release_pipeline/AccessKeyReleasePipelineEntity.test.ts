@@ -9,7 +9,7 @@ import { createLiveTransport } from '../../live-runner'
 import { runLiveEntity } from '../../live-entity'
 
 
-import { LinearSDK, BaseFeature, stdutil } from '../../..'
+import { LinearSDK, BaseFeature, config, stdutil } from '../../..'
 
 import {
   envOverride,
@@ -41,6 +41,18 @@ describe('AccessKeyReleasePipelineEntity', async () => {
   })
 
 
+  test('validate', async (t) => {
+    if (null == (config as any).feature?.validate) {
+      t.skip('feature not present in this SDK: validate')
+      return
+    }
+    const client = LinearSDK.test(undefined, { feature: { validate: { active: true } } })
+    await assert.rejects(client.AccessKeyReleasePipeline().load({"id":1} as any),
+      (err: any) => 'validate_failed' === err.code)
+  })
+
+
+
   test('basic', async (t) => {
 
     const live = 'TRUE' === process.env.LINEAR_TEST_LIVE
@@ -51,7 +63,7 @@ describe('AccessKeyReleasePipelineEntity', async () => {
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"id":{"a":true,"h":"Id","n":"id","r":true,"sh":"The unique identifier of the release pipeline.","t":"`$STRING`","key$":"id","index$":0},"includePathPatterns":{"a":true,"h":"Include Path Patterns","n":"includePathPatterns","r":true,"sh":"Glob patterns used to filter commits by changed file path.","t":"`$STRING`","key$":"includePathPatterns","index$":1}},"id":{"field":"id","name":"id"},"name":"access_key_release_pipeline","op":{"load":{"input":"data","name":"load","points":[{"a":true,"co":{"id":"POST releasePipelineByAccessKey","source":"graphql","version":2},"g":{},"gq":{"doc":"query AccessKeyReleasePipelineLoad { releasePipelineByAccessKey { ...AccessKeyReleasePipelineFields } } fragment AccessKeyReleasePipelineFields on AccessKeyReleasePipeline { id includePathPatterns }","field":"releasePipelineByAccessKey","optype":"query","vars":[]},"k":"graphql","m":"POST","o":"releasePipelineByAccessKey","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.releasePipelineByAccessKey`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[]},"key$":"access_key_release_pipeline","name__orig":"access_key_release_pipeline","Name":"AccessKeyReleasePipeline","name_":"access_key_release_pipeline","name-":"access-key-release-pipeline","NAME":"ACCESS_KEY_RELEASE_PIPELINE","index$":1}, {"active":true,"entity":"access_key_release_pipeline","key$":"BasicAccessKeyReleasePipelineFlow","kind":"basic","name":"BasicAccessKeyReleasePipelineFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"access_key_release_pipeline_ref01","srcdatavar":"access_key_release_pipeline_ref01_data","suffix":"_dt0"},"m":{},"o":"load","s":[],"v":[{"apply":"TextFieldMark","def":{"mark":"Mark01-access_key_release_pipeline_ref01"}}],"index$":0}]}, 'AccessKeyReleasePipeline', {"POST releasePipelineByAccessKey":{"protocol":"graphql"}})
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"id":{"a":true,"h":"Id","n":"id","r":true,"sh":"The unique identifier of the release pipeline.","t":"`$STRING`","key$":"id","index$":0},"includePathPatterns":{"a":true,"h":"Include Path Patterns","n":"includePathPatterns","r":true,"sh":"Glob patterns used to filter commits by changed file path.","t":"`$STRING`","key$":"includePathPatterns","index$":1}},"id":{"field":"id","name":"id"},"name":"access_key_release_pipeline","op":{"load":{"input":"data","name":"load","points":[{"a":true,"co":{"id":"POST releasePipelineByAccessKey","source":"graphql","version":2},"g":{},"gq":{"doc":"query AccessKeyReleasePipelineLoad { releasePipelineByAccessKey { ...AccessKeyReleasePipelineFields } } fragment AccessKeyReleasePipelineFields on AccessKeyReleasePipeline { id includePathPatterns }","field":"releasePipelineByAccessKey","optype":"query","vars":[]},"k":"graphql","m":"POST","o":"releasePipelineByAccessKey","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.releasePipelineByAccessKey`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[]},"key$":"access_key_release_pipeline","name__orig":"access_key_release_pipeline","Name":"AccessKeyReleasePipeline","name_":"access_key_release_pipeline","name-":"access-key-release-pipeline","NAME":"ACCESS_KEY_RELEASE_PIPELINE","index$":1}, {"active":true,"entity":"access_key_release_pipeline","key$":"BasicAccessKeyReleasePipelineFlow","kind":"basic","name":"BasicAccessKeyReleasePipelineFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"access_key_release_pipeline_ref01","srcdatavar":"access_key_release_pipeline_ref01_data","suffix":"_dt0"},"m":{},"o":"load","s":[],"v":[{"apply":"TextFieldMark","def":{"mark":"Mark01-access_key_release_pipeline_ref01"}}],"index$":0}]}, 'AccessKeyReleasePipeline', {"POST releasePipelineByAccessKey":{"protocol":"graphql"}}, { strict: LIVE_STRICT, t })
     }
     const client = setup.client
     const struct = setup.struct
@@ -73,6 +85,12 @@ describe('AccessKeyReleasePipelineEntity', async () => {
 })
 
 
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
 
 function basicSetup(extra?: any) {
   // TODO: fix test def options

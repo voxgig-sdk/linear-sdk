@@ -1120,8 +1120,10 @@ Make a direct HTTP request to any API endpoint.
 | `fetchargs.headers` | `object` | Request headers (merged with defaults). |
 | `fetchargs.body` | `any` | Request body (objects are JSON-serialized). |
 | `fetchargs.ctrl` | `object` | Control options (e.g. `{ explain: true }`). |
+| `fetchargs.ctrl.signal` | `AbortSignal` | Aborts the request in flight: `ok` is then `false` and `err.code` is `request_aborted`. |
 
-**Returns:** `Promise<{ ok, status, headers, data } | Error>`
+**Returns:** `Promise<{ ok, status, headers, data }>`. On a failure
+`ok` is `false` and `err` holds the error.
 
 #### `prepare(fetchargs?: object)`
 
@@ -1135,6 +1137,15 @@ same parameters as `direct()`.
 Alias for `LinearSDK.test()`.
 
 **Returns:** `LinearSDK` instance in test mode.
+
+#### Cancelling a call
+
+Every entity operation takes an optional `ctrl` object after its match or
+data, and an `AbortSignal` in `ctrl.signal` cancels the request in flight.
+The operation then rejects with an error whose `code` is
+`request_aborted` and whose `cause` is the signal's reason. A request
+whose signal has already aborted is not sent. `stream()` takes the signal
+as `callopts.signal`, and ends when it aborts.
 
 
 ---
@@ -1184,20 +1195,11 @@ const result = await client.AccessKeyRelease().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
-
-```ts
-const result = await client.AccessKeyRelease().create({
-  createdAt: 'example_createdAt',
-  id: 'example_id',
-  name: 'example_name',
-  url: 'example_url',
-})
-```
+Create a new entity with the given data. Resolves to the created entity.
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.AccessKeyRelease().list()
@@ -1205,7 +1207,7 @@ const results = await client.AccessKeyRelease().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.AccessKeyRelease().load({ id: 'access_key_release_id' })
@@ -1256,7 +1258,7 @@ const access_key_release_pipeline = client.AccessKeyReleasePipeline()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.AccessKeyReleasePipeline().load({ id: 'access_key_release_pipeline_id' })
@@ -1342,7 +1344,7 @@ const result = await client.AgentActivity().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.AgentActivity().create({
@@ -1356,7 +1358,7 @@ const result = await client.AgentActivity().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.AgentActivity().list()
@@ -1364,7 +1366,7 @@ const results = await client.AgentActivity().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.AgentActivity().load({ id: 'agent_activity_id' })
@@ -1372,14 +1374,7 @@ const result = await client.AgentActivity().load({ id: 'agent_activity_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
-
-```ts
-const result = await client.AgentActivity().update({
-  id: 'agent_activity_id',
-  // Fields to update
-})
-```
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ### Common Methods
 
@@ -1470,7 +1465,7 @@ const result = await client.AgentSession().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.AgentSession().create({
@@ -1485,7 +1480,7 @@ const result = await client.AgentSession().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.AgentSession().list()
@@ -1493,7 +1488,7 @@ const results = await client.AgentSession().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.AgentSession().load({ id: 'agent_session_id' })
@@ -1501,7 +1496,7 @@ const result = await client.AgentSession().load({ id: 'agent_session_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.AgentSession().update({
@@ -1571,7 +1566,7 @@ const agent_skill = client.AgentSkill()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.AgentSkill().create({
@@ -1588,7 +1583,7 @@ const result = await client.AgentSkill().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.AgentSkill().list()
@@ -1596,7 +1591,7 @@ const results = await client.AgentSkill().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.AgentSkill().load({ id: 'agent_skill_id' })
@@ -1604,7 +1599,7 @@ const result = await client.AgentSkill().load({ id: 'agent_skill_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.AgentSkill().remove({ id: 'agent_skill_id' })
@@ -1612,7 +1607,7 @@ const result = await client.AgentSkill().remove({ id: 'agent_skill_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.AgentSkill().update({
@@ -1671,7 +1666,7 @@ const application = client.Application()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Application().load({ client_id: 'client_id' })
@@ -1767,7 +1762,7 @@ const result = await client.Attachment().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Attachment().create({
@@ -1783,7 +1778,7 @@ const result = await client.Attachment().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Attachment().list()
@@ -1791,7 +1786,7 @@ const results = await client.Attachment().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Attachment().load({ id: 'attachment_id' })
@@ -1799,7 +1794,7 @@ const result = await client.Attachment().load({ id: 'attachment_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Attachment().remove({ id: 'attachment_id' })
@@ -1807,7 +1802,7 @@ const result = await client.Attachment().remove({ id: 'attachment_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Attachment().update({
@@ -1871,7 +1866,7 @@ const audit_entry = client.AuditEntry()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.AuditEntry().list()
@@ -1922,7 +1917,7 @@ const audit_entry_type = client.AuditEntryType()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.AuditEntryType().list()
@@ -1999,18 +1994,11 @@ const result = await client.AuthResolverResponse().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
-
-```ts
-const result = await client.AuthResolverResponse().create({
-  email: 'example_email',
-  id: 'example_id',
-})
-```
+Create a new entity with the given data. Resolves to the created entity.
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.AuthResolverResponse().load({ id: 'auth_resolver_response_id' })
@@ -2018,7 +2006,7 @@ const result = await client.AuthResolverResponse().load({ id: 'auth_resolver_res
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.AuthResolverResponse().update({
@@ -2092,7 +2080,7 @@ const authentication_session_response = client.AuthenticationSessionResponse()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.AuthenticationSessionResponse().list()
@@ -2200,7 +2188,7 @@ const result = await client.Comment().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Comment().create({
@@ -2218,7 +2206,7 @@ const result = await client.Comment().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Comment().list()
@@ -2226,7 +2214,7 @@ const results = await client.Comment().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Comment().load({ id: 'comment_id' })
@@ -2234,7 +2222,7 @@ const result = await client.Comment().load({ id: 'comment_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Comment().remove({ id: 'comment_id' })
@@ -2242,7 +2230,7 @@ const result = await client.Comment().remove({ id: 'comment_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Comment().update({
@@ -2318,16 +2306,11 @@ const result = await client.CreateOrJoinOrganizationResponse().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
-
-```ts
-const result = await client.CreateOrJoinOrganizationResponse().create({
-})
-```
+Create a new entity with the given data. Resolves to the created entity.
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.CreateOrJoinOrganizationResponse().update({
@@ -2402,7 +2385,7 @@ const custom_view = client.CustomView()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.CustomView().create({
@@ -2419,7 +2402,7 @@ const result = await client.CustomView().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.CustomView().list()
@@ -2427,7 +2410,7 @@ const results = await client.CustomView().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.CustomView().load({ id: 'custom_view_id' })
@@ -2435,7 +2418,7 @@ const result = await client.CustomView().load({ id: 'custom_view_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.CustomView().remove({ id: 'custom_view_id' })
@@ -2443,7 +2426,7 @@ const result = await client.CustomView().remove({ id: 'custom_view_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.CustomView().update({
@@ -2536,7 +2519,7 @@ const result = await client.Customer().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Customer().create({
@@ -2554,7 +2537,7 @@ const result = await client.Customer().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Customer().list()
@@ -2562,7 +2545,7 @@ const results = await client.Customer().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Customer().load({ id: 'customer_id' })
@@ -2570,7 +2553,7 @@ const result = await client.Customer().load({ id: 'customer_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Customer().remove({ id: 'customer_id' })
@@ -2578,7 +2561,7 @@ const result = await client.Customer().remove({ id: 'customer_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Customer().update({
@@ -2669,7 +2652,7 @@ const result = await client.CustomerNeed().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.CustomerNeed().create({
@@ -2682,7 +2665,7 @@ const result = await client.CustomerNeed().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.CustomerNeed().list()
@@ -2690,7 +2673,7 @@ const results = await client.CustomerNeed().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.CustomerNeed().load({ id: 'customer_need_id' })
@@ -2698,7 +2681,7 @@ const result = await client.CustomerNeed().load({ id: 'customer_need_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.CustomerNeed().remove({ id: 'customer_need_id' })
@@ -2706,7 +2689,7 @@ const result = await client.CustomerNeed().remove({ id: 'customer_need_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.CustomerNeed().update({
@@ -2767,7 +2750,7 @@ const customer_status = client.CustomerStatus()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.CustomerStatus().create({
@@ -2783,7 +2766,7 @@ const result = await client.CustomerStatus().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.CustomerStatus().list()
@@ -2791,7 +2774,7 @@ const results = await client.CustomerStatus().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.CustomerStatus().load({ id: 'customer_status_id' })
@@ -2799,7 +2782,7 @@ const result = await client.CustomerStatus().load({ id: 'customer_status_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.CustomerStatus().remove({ id: 'customer_status_id' })
@@ -2807,7 +2790,7 @@ const result = await client.CustomerStatus().remove({ id: 'customer_status_id' }
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.CustomerStatus().update({
@@ -2868,7 +2851,7 @@ const customer_tier = client.CustomerTier()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.CustomerTier().create({
@@ -2884,7 +2867,7 @@ const result = await client.CustomerTier().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.CustomerTier().list()
@@ -2892,7 +2875,7 @@ const results = await client.CustomerTier().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.CustomerTier().load({ id: 'customer_tier_id' })
@@ -2900,7 +2883,7 @@ const result = await client.CustomerTier().load({ id: 'customer_tier_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.CustomerTier().remove({ id: 'customer_tier_id' })
@@ -2908,7 +2891,7 @@ const result = await client.CustomerTier().remove({ id: 'customer_tier_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.CustomerTier().update({
@@ -3008,7 +2991,7 @@ const result = await client.Cycle().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Cycle().create({
@@ -3036,7 +3019,7 @@ const result = await client.Cycle().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Cycle().list()
@@ -3044,7 +3027,7 @@ const results = await client.Cycle().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Cycle().load({ id: 'cycle_id' })
@@ -3052,7 +3035,7 @@ const result = await client.Cycle().load({ id: 'cycle_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Cycle().update({
@@ -3118,7 +3101,7 @@ const diff = client.Diff()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Diff().load({ id: 'diff_id' })
@@ -3213,7 +3196,7 @@ const result = await client.Document().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Document().create({
@@ -3229,7 +3212,7 @@ const result = await client.Document().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Document().list()
@@ -3237,7 +3220,7 @@ const results = await client.Document().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Document().load({ id: 'document_id' })
@@ -3245,7 +3228,7 @@ const result = await client.Document().load({ id: 'document_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Document().remove({ id: 'document_id' })
@@ -3253,7 +3236,7 @@ const result = await client.Document().remove({ id: 'document_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Document().update({
@@ -3332,7 +3315,7 @@ const document_search_result = client.DocumentSearchResult()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.DocumentSearchResult().list({ term: "example" })
@@ -3426,7 +3409,7 @@ const result = await client.EmailIntakeAddress().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.EmailIntakeAddress().create({
@@ -3448,7 +3431,7 @@ const result = await client.EmailIntakeAddress().create({
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.EmailIntakeAddress().load({ id: 'email_intake_address_id' })
@@ -3456,7 +3439,7 @@ const result = await client.EmailIntakeAddress().load({ id: 'email_intake_addres
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.EmailIntakeAddress().remove({ id: 'email_intake_address_id' })
@@ -3464,7 +3447,7 @@ const result = await client.EmailIntakeAddress().remove({ id: 'email_intake_addr
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.EmailIntakeAddress().update({
@@ -3538,7 +3521,7 @@ const result = await client.EmailUserAccountAuthChallengeResponse().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.EmailUserAccountAuthChallengeResponse().create({
@@ -3599,7 +3582,7 @@ const emoji = client.Emoji()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Emoji().create({
@@ -3614,7 +3597,7 @@ const result = await client.Emoji().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Emoji().list()
@@ -3622,7 +3605,7 @@ const results = await client.Emoji().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Emoji().load({ id: 'emoji_id' })
@@ -3630,7 +3613,7 @@ const result = await client.Emoji().load({ id: 'emoji_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Emoji().remove({ id: 'emoji_id' })
@@ -3689,7 +3672,7 @@ const entity_external_link = client.EntityExternalLink()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.EntityExternalLink().create({
@@ -3704,7 +3687,7 @@ const result = await client.EntityExternalLink().create({
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.EntityExternalLink().load({ id: 'entity_external_link_id' })
@@ -3712,7 +3695,7 @@ const result = await client.EntityExternalLink().load({ id: 'entity_external_lin
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.EntityExternalLink().remove({ id: 'entity_external_link_id' })
@@ -3720,7 +3703,7 @@ const result = await client.EntityExternalLink().remove({ id: 'entity_external_l
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.EntityExternalLink().update({
@@ -3782,7 +3765,7 @@ const external_user = client.ExternalUser()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.ExternalUser().list()
@@ -3790,7 +3773,7 @@ const results = await client.ExternalUser().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.ExternalUser().load({ id: 'external_user_id' })
@@ -3881,7 +3864,7 @@ const favorite = client.Favorite()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Favorite().create({
@@ -3896,7 +3879,7 @@ const result = await client.Favorite().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Favorite().list()
@@ -3904,7 +3887,7 @@ const results = await client.Favorite().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Favorite().load({ id: 'favorite_id' })
@@ -3912,7 +3895,7 @@ const result = await client.Favorite().load({ id: 'favorite_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Favorite().remove({ id: 'favorite_id' })
@@ -3920,7 +3903,7 @@ const result = await client.Favorite().remove({ id: 'favorite_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Favorite().update({
@@ -3980,7 +3963,7 @@ const git_automation_state = client.GitAutomationState()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.GitAutomationState().create({
@@ -3993,19 +3976,19 @@ const result = await client.GitAutomationState().create({
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
-const result = await client.GitAutomationState().remove({ id: 'id' })
+const result = await client.GitAutomationState().remove({ id: 'git_automation_state_id' })
 ```
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.GitAutomationState().update({
-  id: 'id',
+  id: 'git_automation_state_id',
   // Fields to update
 })
 ```
@@ -4060,7 +4043,7 @@ const git_automation_target_branch = client.GitAutomationTargetBranch()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.GitAutomationTargetBranch().create({
@@ -4074,19 +4057,19 @@ const result = await client.GitAutomationTargetBranch().create({
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
-const result = await client.GitAutomationTargetBranch().remove({ id: 'id' })
+const result = await client.GitAutomationTargetBranch().remove({ id: 'git_automation_target_branch_id' })
 ```
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.GitAutomationTargetBranch().update({
-  id: 'id',
+  id: 'git_automation_target_branch_id',
   // Fields to update
 })
 ```
@@ -4166,22 +4149,11 @@ const result = await client.GitHubIntegrationConnectDetail().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
-
-```ts
-const result = await client.GitHubIntegrationConnectDetail().create({
-})
-```
+Create a new entity with the given data. Resolves to the created entity.
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
-
-```ts
-const result = await client.GitHubIntegrationConnectDetail().update({
-  // Fields to update
-})
-```
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ### Common Methods
 
@@ -4290,7 +4262,7 @@ const result = await client.Initiative().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Initiative().create({
@@ -4313,7 +4285,7 @@ const result = await client.Initiative().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Initiative().list()
@@ -4321,7 +4293,7 @@ const results = await client.Initiative().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Initiative().load({ id: 'initiative_id' })
@@ -4329,7 +4301,7 @@ const result = await client.Initiative().load({ id: 'initiative_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Initiative().remove({ id: 'initiative_id' })
@@ -4337,7 +4309,7 @@ const result = await client.Initiative().remove({ id: 'initiative_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Initiative().update({
@@ -4424,7 +4396,7 @@ const result = await client.InitiativeLabel().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.InitiativeLabel().create({
@@ -4439,7 +4411,7 @@ const result = await client.InitiativeLabel().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.InitiativeLabel().list()
@@ -4447,7 +4419,7 @@ const results = await client.InitiativeLabel().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.InitiativeLabel().load({ id: 'initiative_label_id' })
@@ -4455,7 +4427,7 @@ const result = await client.InitiativeLabel().load({ id: 'initiative_label_id' }
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.InitiativeLabel().remove({ id: 'initiative_label_id' })
@@ -4463,7 +4435,7 @@ const result = await client.InitiativeLabel().remove({ id: 'initiative_label_id'
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.InitiativeLabel().update({
@@ -4518,7 +4490,7 @@ const initiative_lead_team_change_impact = client.InitiativeLeadTeamChangeImpact
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.InitiativeLeadTeamChangeImpact().load({ id: 'initiative_lead_team_change_impact_id' })
@@ -4575,7 +4547,7 @@ const initiative_relation = client.InitiativeRelation()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.InitiativeRelation().create({
@@ -4588,7 +4560,7 @@ const result = await client.InitiativeRelation().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.InitiativeRelation().list()
@@ -4596,7 +4568,7 @@ const results = await client.InitiativeRelation().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.InitiativeRelation().load({ id: 'initiative_relation_id' })
@@ -4604,7 +4576,7 @@ const result = await client.InitiativeRelation().load({ id: 'initiative_relation
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.InitiativeRelation().remove({ id: 'initiative_relation_id' })
@@ -4612,7 +4584,7 @@ const result = await client.InitiativeRelation().remove({ id: 'initiative_relati
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.InitiativeRelation().update({
@@ -4671,7 +4643,7 @@ const initiative_to_project = client.InitiativeToProject()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.InitiativeToProject().create({
@@ -4684,7 +4656,7 @@ const result = await client.InitiativeToProject().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.InitiativeToProject().list()
@@ -4692,7 +4664,7 @@ const results = await client.InitiativeToProject().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.InitiativeToProject().load({ id: 'initiative_to_project_id' })
@@ -4700,7 +4672,7 @@ const result = await client.InitiativeToProject().load({ id: 'initiative_to_proj
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.InitiativeToProject().remove({ id: 'initiative_to_project_id' })
@@ -4708,7 +4680,7 @@ const result = await client.InitiativeToProject().remove({ id: 'initiative_to_pr
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.InitiativeToProject().update({
@@ -4800,7 +4772,7 @@ const result = await client.InitiativeUpdate().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.InitiativeUpdate().create({
@@ -4821,7 +4793,7 @@ const result = await client.InitiativeUpdate().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.InitiativeUpdate().list()
@@ -4829,7 +4801,7 @@ const results = await client.InitiativeUpdate().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.InitiativeUpdate().load({ id: 'initiative_update_id' })
@@ -4837,7 +4809,7 @@ const result = await client.InitiativeUpdate().load({ id: 'initiative_update_id'
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.InitiativeUpdate().update({
@@ -4960,20 +4932,11 @@ const result = await client.Integration().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
-
-```ts
-const result = await client.Integration().create({
-  createdAt: 'example_createdAt',
-  id: 'example_id',
-  service: 'example_service',
-  updatedAt: 'example_updatedAt',
-})
-```
+Create a new entity with the given data. Resolves to the created entity.
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Integration().list()
@@ -4981,7 +4944,7 @@ const results = await client.Integration().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Integration().load({ id: 'integration_id' })
@@ -4989,7 +4952,7 @@ const result = await client.Integration().load({ id: 'integration_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Integration().remove({ id: 'integration_id' })
@@ -4997,7 +4960,7 @@ const result = await client.Integration().remove({ id: 'integration_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Integration().update({
@@ -5056,7 +5019,7 @@ const integration_template = client.IntegrationTemplate()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.IntegrationTemplate().create({
@@ -5068,7 +5031,7 @@ const result = await client.IntegrationTemplate().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.IntegrationTemplate().list()
@@ -5076,7 +5039,7 @@ const results = await client.IntegrationTemplate().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.IntegrationTemplate().load({ id: 'integration_template_id' })
@@ -5084,7 +5047,7 @@ const result = await client.IntegrationTemplate().load({ id: 'integration_templa
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.IntegrationTemplate().remove({ id: 'integration_template_id' })
@@ -5153,7 +5116,7 @@ const integrations_setting = client.IntegrationsSetting()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.IntegrationsSetting().create({
@@ -5165,7 +5128,7 @@ const result = await client.IntegrationsSetting().create({
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.IntegrationsSetting().load({ id: 'integrations_setting_id' })
@@ -5173,7 +5136,7 @@ const result = await client.IntegrationsSetting().load({ id: 'integrations_setti
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.IntegrationsSetting().update({
@@ -5319,7 +5282,7 @@ const result = await client.Issue().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Issue().create({
@@ -5345,7 +5308,7 @@ const result = await client.Issue().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Issue().list()
@@ -5353,7 +5316,7 @@ const results = await client.Issue().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Issue().load({ id: 'issue_id' })
@@ -5361,7 +5324,7 @@ const result = await client.Issue().load({ id: 'issue_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Issue().remove({ id: 'issue_id' })
@@ -5369,7 +5332,7 @@ const result = await client.Issue().remove({ id: 'issue_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Issue().update({
@@ -5462,21 +5425,11 @@ const result = await client.IssueImport().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
-
-```ts
-const result = await client.IssueImport().create({
-  createdAt: 'example_createdAt',
-  displayName: 'example_displayName',
-  service: 'example_service',
-  status: 'example_status',
-  updatedAt: 'example_updatedAt',
-})
-```
+Create a new entity with the given data. Resolves to the created entity.
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.IssueImport().remove({ issue_import_id: 'issue_import_id' })
@@ -5484,7 +5437,7 @@ const result = await client.IssueImport().remove({ issue_import_id: 'issue_impor
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.IssueImport().update({
@@ -5573,7 +5526,7 @@ const result = await client.IssueLabel().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.IssueLabel().create({
@@ -5588,7 +5541,7 @@ const result = await client.IssueLabel().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.IssueLabel().list()
@@ -5596,7 +5549,7 @@ const results = await client.IssueLabel().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.IssueLabel().load({ id: 'issue_label_id' })
@@ -5604,7 +5557,7 @@ const result = await client.IssueLabel().load({ id: 'issue_label_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.IssueLabel().remove({ id: 'issue_label_id' })
@@ -5612,7 +5565,7 @@ const result = await client.IssueLabel().remove({ id: 'issue_label_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.IssueLabel().update({
@@ -5666,7 +5619,7 @@ const issue_priority_value = client.IssuePriorityValue()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.IssuePriorityValue().list()
@@ -5722,7 +5675,7 @@ const issue_relation = client.IssueRelation()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.IssueRelation().create({
@@ -5735,7 +5688,7 @@ const result = await client.IssueRelation().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.IssueRelation().list()
@@ -5743,7 +5696,7 @@ const results = await client.IssueRelation().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.IssueRelation().load({ id: 'issue_relation_id' })
@@ -5751,7 +5704,7 @@ const result = await client.IssueRelation().load({ id: 'issue_relation_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.IssueRelation().remove({ id: 'issue_relation_id' })
@@ -5759,7 +5712,7 @@ const result = await client.IssueRelation().remove({ id: 'issue_relation_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.IssueRelation().update({
@@ -5876,7 +5829,7 @@ const issue_search_result = client.IssueSearchResult()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.IssueSearchResult().list({ term: "example" })
@@ -5931,7 +5884,7 @@ const issue_to_release = client.IssueToRelease()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.IssueToRelease().create({
@@ -5943,7 +5896,7 @@ const result = await client.IssueToRelease().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.IssueToRelease().list()
@@ -5951,7 +5904,7 @@ const results = await client.IssueToRelease().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.IssueToRelease().load({ id: 'issue_to_release_id' })
@@ -5959,7 +5912,7 @@ const result = await client.IssueToRelease().load({ id: 'issue_to_release_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.IssueToRelease().remove({ id: 'issue_to_release_id' })
@@ -6032,17 +5985,11 @@ const result = await client.LogoutResponse().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
-
-```ts
-const result = await client.LogoutResponse().create({
-  success: true,
-})
-```
+Create a new entity with the given data. Resolves to the created entity.
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.LogoutResponse().update({
@@ -6122,7 +6069,7 @@ const notification = client.Notification()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Notification().list()
@@ -6130,7 +6077,7 @@ const results = await client.Notification().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Notification().load({ id: 'notification_id' })
@@ -6195,7 +6142,7 @@ const notification_subscription = client.NotificationSubscription()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.NotificationSubscription().list()
@@ -6203,7 +6150,7 @@ const results = await client.NotificationSubscription().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.NotificationSubscription().load({ id: 'notification_subscription_id' })
@@ -6267,7 +6214,7 @@ const o_auth_application = client.OAuthApplication()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.OAuthApplication().create({
@@ -6288,7 +6235,7 @@ const result = await client.OAuthApplication().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.OAuthApplication().list()
@@ -6296,7 +6243,7 @@ const results = await client.OAuthApplication().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.OAuthApplication().load({ id: 'o_auth_application_id' })
@@ -6304,7 +6251,7 @@ const result = await client.OAuthApplication().load({ id: 'o_auth_application_id
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.OAuthApplication().update({
@@ -6422,7 +6369,7 @@ const organization = client.Organization()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Organization().load({ id: 'organization_id' })
@@ -6430,7 +6377,7 @@ const result = await client.Organization().load({ id: 'organization_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Organization().remove({ id: 'organization_id' })
@@ -6438,7 +6385,7 @@ const result = await client.Organization().remove({ id: 'organization_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Organization().update({
@@ -6522,7 +6469,7 @@ const result = await client.OrganizationDomain().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.OrganizationDomain().create({
@@ -6537,19 +6484,19 @@ const result = await client.OrganizationDomain().create({
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
-const result = await client.OrganizationDomain().remove({ id: 'id' })
+const result = await client.OrganizationDomain().remove({ id: 'organization_domain_id' })
 ```
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.OrganizationDomain().update({
-  id: 'id',
+  id: 'organization_domain_id',
   // Fields to update
 })
 ```
@@ -6610,7 +6557,7 @@ const organization_invite = client.OrganizationInvite()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.OrganizationInvite().create({
@@ -6625,7 +6572,7 @@ const result = await client.OrganizationInvite().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.OrganizationInvite().list()
@@ -6633,7 +6580,7 @@ const results = await client.OrganizationInvite().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.OrganizationInvite().load({ id: 'organization_invite_id' })
@@ -6641,7 +6588,7 @@ const result = await client.OrganizationInvite().load({ id: 'organization_invite
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.OrganizationInvite().remove({ id: 'organization_invite_id' })
@@ -6649,7 +6596,7 @@ const result = await client.OrganizationInvite().remove({ id: 'organization_invi
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.OrganizationInvite().update({
@@ -6703,7 +6650,7 @@ const organization_meta = client.OrganizationMeta()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.OrganizationMeta().load({ url_key: 'url_key' })
@@ -6774,7 +6721,7 @@ const result = await client.PasskeyLoginStartResponse().update({
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.PasskeyLoginStartResponse().update({
@@ -6910,7 +6857,7 @@ const result = await client.Project().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Project().create({
@@ -6944,7 +6891,7 @@ const result = await client.Project().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Project().list()
@@ -6952,7 +6899,7 @@ const results = await client.Project().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Project().load({ id: 'project_id' })
@@ -6960,7 +6907,7 @@ const result = await client.Project().load({ id: 'project_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Project().remove({ id: 'project_id' })
@@ -6968,7 +6915,7 @@ const result = await client.Project().remove({ id: 'project_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Project().update({
@@ -7057,7 +7004,7 @@ const result = await client.ProjectLabel().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.ProjectLabel().create({
@@ -7072,7 +7019,7 @@ const result = await client.ProjectLabel().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.ProjectLabel().list()
@@ -7080,7 +7027,7 @@ const results = await client.ProjectLabel().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.ProjectLabel().load({ id: 'project_label_id' })
@@ -7088,7 +7035,7 @@ const result = await client.ProjectLabel().load({ id: 'project_label_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.ProjectLabel().remove({ id: 'project_label_id' })
@@ -7096,7 +7043,7 @@ const result = await client.ProjectLabel().remove({ id: 'project_label_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.ProjectLabel().update({
@@ -7163,7 +7110,7 @@ const project_milestone = client.ProjectMilestone()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.ProjectMilestone().create({
@@ -7181,7 +7128,7 @@ const result = await client.ProjectMilestone().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.ProjectMilestone().list()
@@ -7189,7 +7136,7 @@ const results = await client.ProjectMilestone().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.ProjectMilestone().load({ id: 'project_milestone_id' })
@@ -7197,7 +7144,7 @@ const result = await client.ProjectMilestone().load({ id: 'project_milestone_id'
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.ProjectMilestone().remove({ id: 'project_milestone_id' })
@@ -7205,7 +7152,7 @@ const result = await client.ProjectMilestone().remove({ id: 'project_milestone_i
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.ProjectMilestone().update({
@@ -7280,7 +7227,7 @@ const result = await client.ProjectMilestoneMoveProjectTeam().update({
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.ProjectMilestoneMoveProjectTeam().update({
@@ -7344,7 +7291,7 @@ const project_relation = client.ProjectRelation()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.ProjectRelation().create({
@@ -7359,7 +7306,7 @@ const result = await client.ProjectRelation().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.ProjectRelation().list()
@@ -7367,7 +7314,7 @@ const results = await client.ProjectRelation().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.ProjectRelation().load({ id: 'project_relation_id' })
@@ -7375,7 +7322,7 @@ const result = await client.ProjectRelation().load({ id: 'project_relation_id' }
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.ProjectRelation().remove({ id: 'project_relation_id' })
@@ -7383,7 +7330,7 @@ const result = await client.ProjectRelation().remove({ id: 'project_relation_id'
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.ProjectRelation().update({
@@ -7494,7 +7441,7 @@ const project_search_result = client.ProjectSearchResult()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.ProjectSearchResult().list({ term: "example" })
@@ -7576,7 +7523,7 @@ const result = await client.ProjectStatus().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.ProjectStatus().create({
@@ -7593,7 +7540,7 @@ const result = await client.ProjectStatus().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.ProjectStatus().list()
@@ -7601,7 +7548,7 @@ const results = await client.ProjectStatus().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.ProjectStatus().load({ id: 'project_status_id' })
@@ -7609,7 +7556,7 @@ const result = await client.ProjectStatus().load({ id: 'project_status_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.ProjectStatus().update({
@@ -7702,7 +7649,7 @@ const result = await client.ProjectUpdate().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.ProjectUpdate().create({
@@ -7723,7 +7670,7 @@ const result = await client.ProjectUpdate().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.ProjectUpdate().list()
@@ -7731,7 +7678,7 @@ const results = await client.ProjectUpdate().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.ProjectUpdate().load({ id: 'project_update_id' })
@@ -7739,7 +7686,7 @@ const result = await client.ProjectUpdate().load({ id: 'project_update_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.ProjectUpdate().remove({ id: 'project_update_id' })
@@ -7747,7 +7694,7 @@ const result = await client.ProjectUpdate().remove({ id: 'project_update_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.ProjectUpdate().update({
@@ -7803,7 +7750,7 @@ const push_subscription = client.PushSubscription()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.PushSubscription().create({
@@ -7815,10 +7762,10 @@ const result = await client.PushSubscription().create({
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
-const result = await client.PushSubscription().remove({ id: 'id' })
+const result = await client.PushSubscription().remove({ id: 'push_subscription_id' })
 ```
 
 ### Common Methods
@@ -7876,7 +7823,7 @@ const reaction = client.Reaction()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Reaction().create({
@@ -7889,10 +7836,10 @@ const result = await client.Reaction().create({
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
-const result = await client.Reaction().remove({ id: 'id' })
+const result = await client.Reaction().remove({ id: 'reaction_id' })
 ```
 
 ### Common Methods
@@ -7986,7 +7933,7 @@ const result = await client.Release().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Release().create({
@@ -8004,7 +7951,7 @@ const result = await client.Release().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Release().list()
@@ -8012,7 +7959,7 @@ const results = await client.Release().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Release().load({ id: 'release_id' })
@@ -8020,7 +7967,7 @@ const result = await client.Release().load({ id: 'release_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Release().remove({ id: 'release_id' })
@@ -8028,7 +7975,7 @@ const result = await client.Release().remove({ id: 'release_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Release().update({
@@ -8093,7 +8040,7 @@ const release_note = client.ReleaseNote()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.ReleaseNote().create({
@@ -8108,7 +8055,7 @@ const result = await client.ReleaseNote().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.ReleaseNote().list()
@@ -8116,7 +8063,7 @@ const results = await client.ReleaseNote().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.ReleaseNote().load({ id: 'release_note_id' })
@@ -8124,7 +8071,7 @@ const result = await client.ReleaseNote().load({ id: 'release_note_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.ReleaseNote().remove({ id: 'release_note_id' })
@@ -8132,7 +8079,7 @@ const result = await client.ReleaseNote().remove({ id: 'release_note_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.ReleaseNote().update({
@@ -8221,7 +8168,7 @@ const result = await client.ReleasePipeline().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.ReleasePipeline().create({
@@ -8242,7 +8189,7 @@ const result = await client.ReleasePipeline().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.ReleasePipeline().list()
@@ -8250,7 +8197,7 @@ const results = await client.ReleasePipeline().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.ReleasePipeline().load({ id: 'release_pipeline_id' })
@@ -8258,7 +8205,7 @@ const result = await client.ReleasePipeline().load({ id: 'release_pipeline_id' }
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.ReleasePipeline().remove({ id: 'release_pipeline_id' })
@@ -8266,7 +8213,7 @@ const result = await client.ReleasePipeline().remove({ id: 'release_pipeline_id'
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.ReleasePipeline().update({
@@ -8349,7 +8296,7 @@ const result = await client.ReleaseStage().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.ReleaseStage().create({
@@ -8366,7 +8313,7 @@ const result = await client.ReleaseStage().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.ReleaseStage().list()
@@ -8374,7 +8321,7 @@ const results = await client.ReleaseStage().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.ReleaseStage().load({ id: 'release_stage_id' })
@@ -8382,7 +8329,7 @@ const result = await client.ReleaseStage().load({ id: 'release_stage_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.ReleaseStage().update({
@@ -8468,7 +8415,7 @@ const result = await client.Roadmap().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Roadmap().create({
@@ -8484,7 +8431,7 @@ const result = await client.Roadmap().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Roadmap().list()
@@ -8492,7 +8439,7 @@ const results = await client.Roadmap().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Roadmap().load({ id: 'roadmap_id' })
@@ -8500,7 +8447,7 @@ const result = await client.Roadmap().load({ id: 'roadmap_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Roadmap().remove({ id: 'roadmap_id' })
@@ -8508,7 +8455,7 @@ const result = await client.Roadmap().remove({ id: 'roadmap_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Roadmap().update({
@@ -8567,7 +8514,7 @@ const roadmap_to_project = client.RoadmapToProject()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.RoadmapToProject().create({
@@ -8580,7 +8527,7 @@ const result = await client.RoadmapToProject().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.RoadmapToProject().list()
@@ -8588,7 +8535,7 @@ const results = await client.RoadmapToProject().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.RoadmapToProject().load({ id: 'roadmap_to_project_id' })
@@ -8596,7 +8543,7 @@ const result = await client.RoadmapToProject().load({ id: 'roadmap_to_project_id
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.RoadmapToProject().remove({ id: 'roadmap_to_project_id' })
@@ -8604,7 +8551,7 @@ const result = await client.RoadmapToProject().remove({ id: 'roadmap_to_project_
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.RoadmapToProject().update({
@@ -8663,7 +8610,7 @@ const sla_configuration = client.SlaConfiguration()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.SlaConfiguration().list({ team_id: "example" })
@@ -8714,7 +8661,7 @@ const sso_url_from_email_response = client.SsoUrlFromEmailResponse()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.SsoUrlFromEmailResponse().load({ email: 'email', type: 'type' })
@@ -8848,7 +8795,7 @@ const result = await client.Team().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Team().create({
@@ -8896,7 +8843,7 @@ const result = await client.Team().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Team().list()
@@ -8904,7 +8851,7 @@ const results = await client.Team().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Team().load({ id: 'team_id' })
@@ -8912,7 +8859,7 @@ const result = await client.Team().load({ id: 'team_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Team().remove({ id: 'team_id' })
@@ -8920,7 +8867,7 @@ const result = await client.Team().remove({ id: 'team_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Team().update({
@@ -8980,7 +8927,7 @@ const team_membership = client.TeamMembership()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.TeamMembership().create({
@@ -8994,7 +8941,7 @@ const result = await client.TeamMembership().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.TeamMembership().list()
@@ -9002,7 +8949,7 @@ const results = await client.TeamMembership().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.TeamMembership().load({ id: 'team_membership_id' })
@@ -9010,7 +8957,7 @@ const result = await client.TeamMembership().load({ id: 'team_membership_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.TeamMembership().remove({ id: 'team_membership_id' })
@@ -9018,7 +8965,7 @@ const result = await client.TeamMembership().remove({ id: 'team_membership_id' }
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.TeamMembership().update({
@@ -9090,7 +9037,7 @@ const template = client.Template()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Template().create({
@@ -9107,7 +9054,7 @@ const result = await client.Template().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Template().list()
@@ -9115,7 +9062,7 @@ const results = await client.Template().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Template().load({ id: 'template_id' })
@@ -9123,7 +9070,7 @@ const result = await client.Template().load({ id: 'template_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Template().remove({ id: 'template_id' })
@@ -9131,7 +9078,7 @@ const result = await client.Template().remove({ id: 'template_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Template().update({
@@ -9212,7 +9159,7 @@ const result = await client.TimeSchedule().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.TimeSchedule().create({
@@ -9225,7 +9172,7 @@ const result = await client.TimeSchedule().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.TimeSchedule().list()
@@ -9233,7 +9180,7 @@ const results = await client.TimeSchedule().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.TimeSchedule().load({ id: 'time_schedule_id' })
@@ -9241,7 +9188,7 @@ const result = await client.TimeSchedule().load({ id: 'time_schedule_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.TimeSchedule().remove({ id: 'time_schedule_id' })
@@ -9249,7 +9196,7 @@ const result = await client.TimeSchedule().remove({ id: 'time_schedule_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.TimeSchedule().update({
@@ -9309,7 +9256,7 @@ const triage_responsibility = client.TriageResponsibility()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.TriageResponsibility().create({
@@ -9322,7 +9269,7 @@ const result = await client.TriageResponsibility().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.TriageResponsibility().list()
@@ -9330,7 +9277,7 @@ const results = await client.TriageResponsibility().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.TriageResponsibility().load({ id: 'triage_responsibility_id' })
@@ -9338,7 +9285,7 @@ const result = await client.TriageResponsibility().load({ id: 'triage_responsibi
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.TriageResponsibility().remove({ id: 'triage_responsibility_id' })
@@ -9346,7 +9293,7 @@ const result = await client.TriageResponsibility().remove({ id: 'triage_responsi
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.TriageResponsibility().update({
@@ -9425,18 +9372,7 @@ const result = await client.UploadFile().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
-
-```ts
-const result = await client.UploadFile().create({
-  content_type: 'example_content_type',
-  filename: 'example_filename',
-  size: 1,
-  assetUrl: 'example_assetUrl',
-  contentType: 'example_contentType',
-  uploadUrl: 'example_uploadUrl',
-})
-```
+Create a new entity with the given data. Resolves to the created entity.
 
 ### Common Methods
 
@@ -9488,7 +9424,7 @@ const usage_alert = client.UsageAlert()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.UsageAlert().list()
@@ -9496,7 +9432,7 @@ const results = await client.UsageAlert().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.UsageAlert().load({ id: 'usage_alert_id' })
@@ -9601,37 +9537,11 @@ const result = await client.User().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
-
-```ts
-const result = await client.User().create({
-  active: true,
-  admin: true,
-  app: true,
-  avatarBackgroundColor: 'example_avatarBackgroundColor',
-  canAccessAnyPublicTeam: true,
-  createdAt: 'example_createdAt',
-  createdIssueCount: 1,
-  displayName: 'example_displayName',
-  email: 'example_email',
-  guest: true,
-  hasGitHubCodeAccess: true,
-  id: 'example_id',
-  initials: 'example_initials',
-  isAssignable: true,
-  isMe: true,
-  isMentionable: true,
-  name: 'example_name',
-  owner: true,
-  supportsAgentSessions: true,
-  updatedAt: 'example_updatedAt',
-  url: 'example_url',
-})
-```
+Create a new entity with the given data. Resolves to the created entity.
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.User().list()
@@ -9639,7 +9549,7 @@ const results = await client.User().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.User().load({ id: 'user_id' })
@@ -9647,7 +9557,7 @@ const result = await client.User().load({ id: 'user_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.User().update({
@@ -9734,7 +9644,7 @@ const result = await client.UserSetting().create({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.UserSetting().create({
@@ -9755,7 +9665,7 @@ const result = await client.UserSetting().create({
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.UserSetting().load({ id: 'user_setting_id' })
@@ -9763,7 +9673,7 @@ const result = await client.UserSetting().load({ id: 'user_setting_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.UserSetting().update({
@@ -9821,7 +9731,7 @@ const view_preference = client.ViewPreference()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.ViewPreference().create({
@@ -9835,7 +9745,7 @@ const result = await client.ViewPreference().create({
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.ViewPreference().load({ view_type: 'view_type' })
@@ -9843,7 +9753,7 @@ const result = await client.ViewPreference().load({ view_type: 'view_type' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.ViewPreference().remove({ id: 'id' })
@@ -9851,7 +9761,7 @@ const result = await client.ViewPreference().remove({ id: 'id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.ViewPreference().update({
@@ -9916,7 +9826,7 @@ const webhook = client.Webhook()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.Webhook().create({
@@ -9931,7 +9841,7 @@ const result = await client.Webhook().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.Webhook().list()
@@ -9939,7 +9849,7 @@ const results = await client.Webhook().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.Webhook().load({ id: 'webhook_id' })
@@ -9947,7 +9857,7 @@ const result = await client.Webhook().load({ id: 'webhook_id' })
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.Webhook().remove({ id: 'webhook_id' })
@@ -9955,7 +9865,7 @@ const result = await client.Webhook().remove({ id: 'webhook_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.Webhook().update({
@@ -10014,10 +9924,10 @@ const webhook_failure_event = client.WebhookFailureEvent()
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
-const results = await client.WebhookFailureEvent().list()
+const results = await client.WebhookFailureEvent().list({ oauth_client_id: "example" })
 ```
 
 ### Common Methods
@@ -10094,7 +10004,7 @@ const result = await client.WorkflowState().update({
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.WorkflowState().create({
@@ -10110,7 +10020,7 @@ const result = await client.WorkflowState().create({
 
 #### `list(match: object, ctrl?: object)`
 
-List entities matching the given criteria. Returns an array.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
 const results = await client.WorkflowState().list()
@@ -10118,7 +10028,7 @@ const results = await client.WorkflowState().list()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.WorkflowState().load({ id: 'workflow_state_id' })
@@ -10126,7 +10036,7 @@ const result = await client.WorkflowState().load({ id: 'workflow_state_id' })
 
 #### `update(data: object, ctrl?: object)`
 
-Update an existing entity. The data must include the entity `id`.
+Update an existing entity. The data must include the entity `id`. Resolves to the updated entity.
 
 ```ts
 const result = await client.WorkflowState().update({
@@ -10173,6 +10083,7 @@ Return a copy of the entity options.
 | `paging` | 0.0.1 | Paging |
 | `ratelimit` | 0.0.1 | Rate limiting |
 | `retry` | 0.0.1 | Retry |
+| `station` | 0.0.1 | Station control surface binding for outbound integrations |
 | `test` | 0.0.1 | Test transport |
 | `timeout` | 0.0.1 | Timeout |
 
@@ -10188,6 +10099,7 @@ const client = new LinearSDK({
     paging: { active: true },
     ratelimit: { active: true },
     retry: { active: true },
+    station: { active: true },
     test: { active: true },
     timeout: { active: true },
   }
@@ -10206,7 +10118,7 @@ transport, and the order you list them in is the order they nest.
 
 #### Ordering
 
-`ratelimit`, `retry`, `timeout` wrap the transport. Each
+`ratelimit`, `retry`, `station`, `timeout` wrap the transport. Each
 wraps whatever is already installed, so **activation order is nesting order**:
 a feature activated later sits OUTSIDE one activated earlier, and sees the call
 first.
@@ -10408,6 +10320,34 @@ its default unless you name it.
   sees. See [Ordering](#ordering) above.
 - Inactive by default: leaving it out costs nothing at runtime.
 
+#### `station`
+
+Station control surface binding for outbound integrations.
+
+**Configuration**
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `capture` | `'meta'` |
+| `fromEnv` | `true` |
+| `instance` | `''` |
+| `profile` | `''` |
+| `register` | `true` |
+| `secret` | `''` |
+| `url` | `''` |
+
+**Usage**
+
+Set `feature.station.active` to true in the client options, and override any option above in the same entry. Every option keeps
+its default unless you name it.
+
+**Considerations**
+
+- Wraps the transport: its place in the activation order decides what it
+  sees. See [Ordering](#ordering) above.
+- Inactive by default: leaving it out costs nothing at runtime.
+
 #### `test`
 
 Test transport.
@@ -10453,6 +10393,7 @@ Timeout.
 | Option | Type |
 |---|---|
 | `clearTimer` | function |
+| `now` | function |
 | `setTimer` | function |
 
 These take no default: the feature behaves one way when you supply them and

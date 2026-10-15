@@ -33,6 +33,8 @@ require_relative 'transform_response'
 
 LinearUtility.registrar = ->(u) {
   u.clean = LinearUtilities::Clean
+  u.clean_add = LinearUtilities::CleanAdd
+  u.clean_explain = LinearUtilities::CleanExplain
   u.done = LinearUtilities::Done
   u.make_error = LinearUtilities::MakeError
   u.feature_add = LinearUtilities::FeatureAdd

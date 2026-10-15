@@ -16,6 +16,26 @@ import (
 	vs "github.com/voxgig-sdk/linear-sdk/go/utility/struct"
 )
 
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const userEntityLiveStrict = true
+
+
+type userFailHook struct {
+	sdk.BaseFeature
+	unexpected int
+}
+
+func (f *userFailHook) PreSpec(ctx *sdk.Context) {
+	panic("user hook failed")
+}
+
+func (f *userFailHook) PreUnexpected(ctx *sdk.Context) {
+	f.unexpected++
+}
+
 func TestUserEntity(t *testing.T) {
 	t.Run("instance", func(t *testing.T) {
 		testsdk := sdk.TestSDK(nil, nil)
@@ -43,8 +63,11 @@ func TestUserEntity(t *testing.T) {
 		// Fallback: streaming inactive -> yields the materialised list items.
 		base := sdk.TestSDK(seed, nil)
 		var seen []any
-		for item := range base.User(nil).Stream("list", nil, nil) {
-			seen = append(seen, item)
+		for si := range base.User(nil).Stream("list", nil, nil) {
+			if si.Err != nil {
+				t.Fatalf("stream failed: %v", si.Err)
+			}
+			seen = append(seen, si.Item)
 		}
 		if len(seen) != 3 {
 			t.Fatalf("expected 3 streamed items, got %d", len(seen))
@@ -60,11 +83,14 @@ func TestUserEntity(t *testing.T) {
 				"feature": map[string]any{"streaming": map[string]any{"active": true}},
 			})
 			var got []any
-			for item := range streamSdk.User(nil).Stream("list", nil, nil) {
-				if sub, ok := item.([]any); ok {
+			for si := range streamSdk.User(nil).Stream("list", nil, nil) {
+				if si.Err != nil {
+					t.Fatalf("stream failed: %v", si.Err)
+				}
+				if sub, ok := si.Item.([]any); ok {
 					got = append(got, sub...)
 				} else {
-					got = append(got, item)
+					got = append(got, si.Item)
 				}
 			}
 			if len(got) != 3 {
@@ -73,7 +99,91 @@ func TestUserEntity(t *testing.T) {
 		}
 	})
 
-	t.Run("basic", func(t *testing.T) {
+	t.Run("stream-error", func(t *testing.T) {
+		offline := map[string]any{"net": map[string]any{"offline": true}}
+		var streamerr error
+		for si := range sdk.TestSDK(offline, nil).User(nil).Stream("list", nil, nil) {
+			if si.Err != nil {
+				streamerr = si.Err
+			}
+		}
+		if nil == streamerr || !strings.Contains(streamerr.Error(), "offline") {
+			t.Fatalf("expected the transport failure as a stream value, got %v", streamerr)
+		}
+
+		quiet := map[string]any{"ctrl": map[string]any{"throw": false}}
+		for si := range sdk.TestSDK(offline, nil).User(nil).Stream("list", nil, quiet) {
+			if si.Err != nil {
+				t.Fatalf("throw false: expected no error value, got %v", si.Err)
+			}
+		}
+
+		if fhHasFeature("rbac") {
+			denied := sdk.TestSDK(nil, map[string]any{
+				"feature": map[string]any{"rbac": map[string]any{"active": true, "deny": true}},
+			})
+			var denyerr error
+			for si := range denied.User(nil).Stream("list", nil, nil) {
+				if si.Err != nil {
+					denyerr = si.Err
+				}
+			}
+			if sdkerr, ok := denyerr.(*core.LinearError); !ok || "rbac_denied" != sdkerr.Code {
+				t.Fatalf("expected the rbac denial as a stream value, got %v", denyerr)
+			}
+		}
+	})
+
+	t.Run("stream-ctrl", func(t *testing.T) {
+		explain := map[string]any{}
+		ctrl := map[string]any{"explain": explain}
+		for range sdk.TestSDK(nil, nil).User(nil).Stream("list", nil, map[string]any{"ctrl": ctrl}) {
+		}
+		if _, has := ctrl["stream"]; has || 1 != len(ctrl) {
+			t.Fatalf("the stream changed the caller's ctrl")
+		}
+		if 0 == len(explain) {
+			t.Fatalf("the caller's explain record was not filled")
+		}
+	})
+
+	t.Run("unexpected", func(t *testing.T) {
+		hook := &userFailHook{
+			BaseFeature: sdk.BaseFeature{Version: "0.0.1", Name: "failhook", Active: true}}
+		client := sdk.TestSDK(nil, map[string]any{"extend": []any{hook}})
+
+		_, err := client.User(nil).List(nil, nil)
+		if nil == err || !strings.Contains(err.Error(), "hook failed") {
+			t.Fatalf("expected the hook's failure, got %v", err)
+		}
+		if 0 == hook.unexpected {
+			t.Fatalf("PreUnexpected did not fire")
+		}
+
+		fired := hook.unexpected
+		if _, err := client.User(nil).List(nil, map[string]any{"throw": false}); nil != err {
+			t.Fatalf("throw false: expected no error, got %v", err)
+		}
+		if fired == hook.unexpected {
+			t.Fatalf("throw false: PreUnexpected did not fire")
+		}
+	})
+
+	t.Run("validate", func(t *testing.T) {
+		if !fhHasFeature("validate") {
+			t.Skip("feature not present in this SDK: validate")
+		}
+		client := sdk.TestSDK(nil, map[string]any{
+			"feature": map[string]any{"validate": map[string]any{"active": true}},
+		})
+		_, err := client.User(nil).List(map[string]any{"after": 1}, nil)
+		if sdkerr, ok := err.(*core.LinearError); !ok || "validate_failed" != sdkerr.Code {
+			t.Fatalf("expected validate_failed, got %v", err)
+		}
+	})
+
+	t.Run("basic", func(tt *testing.T) {
+		var t testing.TB = tt
 		setup := userBasicSetup(nil)
 		// Per-op sdk-test-control.json skip — basic test exercises a flow
 		// with multiple ops; skipping any op skips the whole flow.
@@ -81,7 +191,7 @@ func TestUserEntity(t *testing.T) {
 		if setup.live {
 			_mode = "live"
 		}
-		for _, _op := range []string{"create", "list", "update", "load"} {
+		for _, _op := range []string{"list", "update", "load"} {
 			if _shouldSkip, _reason := isControlSkipped("entityOp", "user." + _op, _mode); _shouldSkip {
 				if _reason == "" {
 					_reason = "skipped via sdk-test-control.json"
@@ -90,40 +200,31 @@ func TestUserEntity(t *testing.T) {
 				return
 			}
 		}
-		// The basic flow consumes synthetic IDs from the fixture. In live mode
-		// without an *_ENTID env override, those IDs hit the live API and 4xx.
-		if setup.syntheticOnly {
-			t.Skip("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_USER_ENTID JSON to run live")
-			return
+		if setup.live {
+			for _, _liveKey := range []string{"after01", "before01", "first01", "include_archived01", "include_disabled01", "last01", "order_by01"} {
+				if setup.syntheticOnly || setup.idmap[_liveKey] == nil {
+					liveMiss(t, userEntityLiveStrict, "Live entity test blocked: needs %s via LINEAR_TEST_USER_ENTID", _liveKey)
+				}
+			}
+		}
+		if setup.live {
+			liveMiss(t, userEntityLiveStrict, "Live entity test blocked: %s", "the flow updates a user record it did not create")
 		}
 		client := setup.client
+		_ = client
 
-		// CREATE
-		userRef01Ent := client.User(nil)
-		userRef01Data := core.ToMapAny(vs.GetProp(
-			vs.GetPath(setup.data, []any{"new", "user"}), "user_ref01"))
-		userRef01Data["after"] = setup.idmap["after01"]
-		userRef01Data["before"] = setup.idmap["before01"]
-		userRef01Data["first"] = setup.idmap["first01"]
-		userRef01Data["include_archived"] = setup.idmap["include_archived01"]
-		userRef01Data["include_disabled"] = setup.idmap["include_disabled01"]
-		userRef01Data["last"] = setup.idmap["last01"]
-		userRef01Data["order_by"] = setup.idmap["order_by01"]
-		userRef01Data["service"] = setup.idmap["service01"]
-
-		userRef01DataResult, err := userRef01Ent.Create(userRef01Data, nil)
-		if err != nil {
-			t.Fatalf("create failed: %v", err)
+		// Bootstrap entity data from existing test data (no create step in flow).
+		userRef01DataRaw := vs.Items(core.ToMapAny(vs.GetPath(setup.data, "existing.user")))
+		var userRef01Data map[string]any
+		if len(userRef01DataRaw) > 0 {
+			userRef01Data = core.ToMapAny(userRef01DataRaw[0][1])
 		}
-		userRef01Data = core.ToMapAny(entityData(userRef01DataResult))
-		if userRef01Data == nil {
-			t.Fatal("expected create result to be a map")
-		}
-		if userRef01Data["id"] == nil {
-			t.Fatal("expected created entity to have an id")
-		}
+		// Discard guards against Go's unused-var check when the flow's steps
+		// happen not to consume the bootstrap data (e.g. list-only flows).
+		_ = userRef01Data
 
 		// LIST
+		userRef01Ent := client.User(nil)
 		userRef01Match := map[string]any{
 			"after": setup.idmap["after01"],
 			"before": setup.idmap["before01"],
@@ -138,14 +239,9 @@ func TestUserEntity(t *testing.T) {
 		if err != nil {
 			t.Fatalf("list failed: %v", err)
 		}
-		userRef01List, userRef01ListOk := userRef01ListResult.([]any)
+		_, userRef01ListOk := userRef01ListResult.([]any)
 		if !userRef01ListOk {
 			t.Fatalf("expected list result to be an array, got %T", userRef01ListResult)
-		}
-
-		foundItem := vs.Select(entityListToData(userRef01List), map[string]any{"id": userRef01Data["id"]})
-		if vs.IsEmpty(foundItem) {
-			t.Fatal("expected to find created entity in list")
 		}
 
 		// UPDATE
@@ -216,7 +312,7 @@ func userBasicSetup(extra map[string]any) *entityTestSetup {
 
 	// Generate idmap via transform, matching TS pattern.
 	idmap, _ := vs.Transform(
-		[]any{"user01", "user02", "user03", "after01", "before01", "first01", "include_archived01", "include_disabled01", "last01", "order_by01", "service01"},
+		[]any{"user01", "user02", "user03", "after01", "before01", "first01", "include_archived01", "include_disabled01", "last01", "order_by01"},
 		map[string]any{
 			"`$PACK`": []any{"", map[string]any{
 				"`$KEY`": "`$COPY`",
@@ -225,9 +321,8 @@ func userBasicSetup(extra map[string]any) *entityTestSetup {
 		},
 	)
 
-	// Detect ENTID env override before envOverride consumes it. When live
-	// mode is on without a real override, the basic test runs against synthetic
-	// IDs from the fixture and 4xx's. Surface this so the test can skip.
+	// Whether *_ENTID supplied the idmap, read before envOverride consumes it:
+	// without it, the ids a live flow binds are the fixture's synthetic ones.
 	entidEnvRaw := os.Getenv("LINEAR_TEST_USER_ENTID")
 	idmapOverridden := entidEnvRaw != "" && strings.HasPrefix(strings.TrimSpace(entidEnvRaw), "{")
 

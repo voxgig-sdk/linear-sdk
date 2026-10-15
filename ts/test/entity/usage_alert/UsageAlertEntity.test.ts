@@ -9,7 +9,7 @@ import { createLiveTransport } from '../../live-runner'
 import { runLiveEntity } from '../../live-entity'
 
 
-import { LinearSDK, BaseFeature, stdutil } from '../../..'
+import { LinearSDK, BaseFeature, config, stdutil } from '../../..'
 
 import {
   envOverride,
@@ -41,6 +41,64 @@ describe('UsageAlertEntity', async () => {
   })
 
 
+  class FailHook extends BaseFeature {
+    name = 'failhook'
+    version = '0.0.1'
+    active = true
+    unexpected = 0
+    init() { }
+    PreSpec() { throw new Error('usage_alert hook failed') }
+    PreUnexpected() { this.unexpected++ }
+  }
+
+  test('stream-error', async () => {
+    const offline = { net: { offline: true } }
+    await assert.rejects(async () => {
+      for await (const _item of LinearSDK.test(offline).UsageAlert().stream('list')) { }
+    }, /offline/)
+
+    for await (const _item of LinearSDK.test(offline).UsageAlert()
+      .stream('list', undefined, { ctrl: { throw: false } })) { }
+
+    if (null != (config as any).feature?.rbac) {
+      const denied = LinearSDK.test(undefined, { feature: { rbac: { active: true, deny: true } } })
+      await assert.rejects(async () => {
+        for await (const _item of denied.UsageAlert().stream('list')) { }
+      }, (err: any) => 'rbac_denied' === err.code)
+    }
+  })
+
+  test('stream-ctrl', async () => {
+    const explain: any = {}
+    const ctrl: any = { explain }
+    for await (const _item of LinearSDK.test().UsageAlert().stream('list', undefined, { ctrl })) { }
+    assert.deepStrictEqual(Object.keys(ctrl), ['explain'])
+    assert(explain === ctrl.explain && 0 < Object.keys(explain).length)
+  })
+
+  test('unexpected', async () => {
+    const hook = new FailHook()
+    const client = new LinearSDK({ feature: { test: { active: true } }, extend: [hook] })
+    await assert.rejects(client.UsageAlert().list(), /hook failed/)
+    assert(0 < hook.unexpected)
+
+    const fired = hook.unexpected
+    assert.strictEqual(await client.UsageAlert().list(undefined, { throw: false }), undefined)
+    assert(fired < hook.unexpected)
+  })
+
+  test('validate', async (t) => {
+    if (null == (config as any).feature?.validate) {
+      t.skip('feature not present in this SDK: validate')
+      return
+    }
+    const client = LinearSDK.test(undefined, { feature: { validate: { active: true } } })
+    await assert.rejects(client.UsageAlert().list({"after":1} as any),
+      (err: any) => 'validate_failed' === err.code)
+  })
+
+
+
   test('basic', async (t) => {
 
     const live = 'TRUE' === process.env.LINEAR_TEST_LIVE
@@ -51,7 +109,7 @@ describe('UsageAlertEntity', async () => {
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"archivedAt":{"a":true,"h":"Archived At","n":"archivedAt","r":false,"sh":"The time at which the entity was archived.","t":"`$ANY`","key$":"archivedAt","index$":0},"createdAt":{"a":true,"h":"Created At","n":"createdAt","r":true,"sh":"The time at which the entity was created.","t":"`$ANY`","key$":"createdAt","index$":1},"id":{"a":true,"h":"Id","n":"id","r":true,"sh":"The unique identifier of the entity.","t":"`$STRING`","key$":"id","index$":2},"metadata":{"a":true,"h":"Metadata","n":"metadata","r":true,"sh":"Type-specific snapshot captured when the alert was triggered, keyed by the alert type — for example the credit balance and threshold for a lowBalance alert.","t":"`$ANY`","key$":"metadata","index$":3},"resolvedAt":{"a":true,"h":"Resolved At","n":"resolvedAt","r":false,"sh":"The time when the usage alert was resolved or archived.","t":"`$ANY`","key$":"resolvedAt","index$":4},"type":{"a":true,"h":"Type","n":"type","r":true,"sh":"The kind of usage alert that was triggered.","t":"`$STRING`","key$":"type","index$":5},"updatedAt":{"a":true,"h":"Updated At","n":"updatedAt","r":true,"sh":"The last time at which the entity was meaningfully updated.","t":"`$ANY`","key$":"updatedAt","index$":6}},"id":{"field":"id","name":"id"},"name":"usage_alert","op":{"list":{"input":"data","name":"list","points":[{"a":true,"co":{"id":"POST usageAlerts","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"after","or":"after","r":false,"t":"`$STRING`","index$":0},{"a":true,"k":"param","n":"before","or":"before","r":false,"t":"`$STRING`","index$":1},{"a":true,"k":"param","n":"first","or":"first","r":false,"t":"`$INTEGER`","index$":2},{"a":true,"k":"param","n":"include_archived","or":"include_archived","r":false,"t":"`$BOOLEAN`","index$":3},{"a":true,"k":"param","n":"last","or":"last","r":false,"t":"`$INTEGER`","index$":4},{"a":true,"k":"param","n":"order_by","or":"order_by","r":false,"t":"`$ANY`","index$":5}]},"gq":{"doc":"query UsageAlertList($after: String, $before: String, $filter: UsageAlertFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { usageAlerts(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...UsageAlertFields } pageInfo { endCursor hasNextPage } } } fragment UsageAlertFields on UsageAlert { archivedAt createdAt id metadata resolvedAt type updatedAt }","field":"usageAlerts","optype":"query","page":{"cursor":"pageInfo.endCursor","more":"pageInfo.hasNextPage","nodes":"nodes","style":"relay"},"vars":[{"from":"after","gqltype":"String","name":"after"},{"from":"before","gqltype":"String","name":"before"},{"from":"","gqltype":"UsageAlertFilter","name":"filter"},{"from":"first","gqltype":"Int","name":"first"},{"from":"includeArchived","gqltype":"Boolean","name":"includeArchived"},{"from":"last","gqltype":"Int","name":"last"},{"from":"orderBy","gqltype":"PaginationOrderBy","name":"orderBy"}]},"k":"graphql","m":"POST","o":"usageAlerts","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.usageAlerts.nodes`"},"index$":0}],"key$":"list"},"load":{"input":"data","name":"load","points":[{"a":true,"co":{"id":"POST usageAlert","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"id","or":"id","r":true,"t":"`$STRING`","index$":0}]},"gq":{"doc":"query UsageAlertLoad($id: String!) { usageAlert(id: $id) { ...UsageAlertFields } } fragment UsageAlertFields on UsageAlert { archivedAt createdAt id metadata resolvedAt type updatedAt }","field":"usageAlert","optype":"query","vars":[{"from":"id","gqltype":"String!","name":"id"}]},"k":"graphql","m":"POST","o":"usageAlert","q":{"exist":["id"]},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.usageAlert`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[]},"key$":"usage_alert","name__orig":"usage_alert","Name":"UsageAlert","name_":"usage_alert","name-":"usage-alert","NAME":"USAGE_ALERT","index$":80}, {"active":true,"entity":"usage_alert","key$":"BasicUsageAlertFlow","kind":"basic","name":"BasicUsageAlertFlow","param":{},"step":[{"a":true,"d":{},"i":{},"m":{"after":"after01","before":"before01","first":"first01","include_archived":"include_archived01","last":"last01","order_by":"order_by01"},"o":"list","s":[],"v":[{"apply":"ItemExists","def":{"ref":"usage_alert_ref01"}}],"index$":0},{"a":true,"d":{},"i":{"ref":"usage_alert_ref01","srcdatavar":"usage_alert_ref01_data","suffix":"_dt0"},"m":{"id":"usage_alert01"},"o":"load","s":[],"v":[{"apply":"TextFieldMark","def":{"mark":"Mark01-usage_alert_ref01"}}],"index$":1}]}, 'UsageAlert', {"POST usageAlerts":{"protocol":"graphql"},"POST usageAlert":{"protocol":"graphql"}})
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"archivedAt":{"a":true,"h":"Archived At","n":"archivedAt","r":false,"sh":"The time at which the entity was archived.","t":"`$ANY`","key$":"archivedAt","index$":0},"createdAt":{"a":true,"h":"Created At","n":"createdAt","r":true,"sh":"The time at which the entity was created.","t":"`$ANY`","key$":"createdAt","index$":1},"id":{"a":true,"h":"Id","n":"id","r":true,"sh":"The unique identifier of the entity.","t":"`$STRING`","key$":"id","index$":2},"metadata":{"a":true,"h":"Metadata","n":"metadata","r":true,"sh":"Type-specific snapshot captured when the alert was triggered, keyed by the alert type — for example the credit balance and threshold for a lowBalance alert.","t":"`$ANY`","key$":"metadata","index$":3},"resolvedAt":{"a":true,"h":"Resolved At","n":"resolvedAt","r":false,"sh":"The time when the usage alert was resolved or archived.","t":"`$ANY`","key$":"resolvedAt","index$":4},"type":{"a":true,"h":"Type","n":"type","r":true,"sh":"The kind of usage alert that was triggered.","t":"`$STRING`","key$":"type","index$":5},"updatedAt":{"a":true,"h":"Updated At","n":"updatedAt","r":true,"sh":"The last time at which the entity was meaningfully updated.","t":"`$ANY`","key$":"updatedAt","index$":6}},"id":{"field":"id","name":"id"},"name":"usage_alert","op":{"list":{"input":"data","name":"list","points":[{"a":true,"co":{"id":"POST usageAlerts","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"after","or":"after","r":false,"t":"`$STRING`","index$":0},{"a":true,"k":"param","n":"before","or":"before","r":false,"t":"`$STRING`","index$":1},{"a":true,"k":"param","n":"first","or":"first","r":false,"t":"`$INTEGER`","index$":2},{"a":true,"k":"param","n":"include_archived","or":"includeArchived","r":false,"t":"`$BOOLEAN`","index$":3},{"a":true,"k":"param","n":"last","or":"last","r":false,"t":"`$INTEGER`","index$":4},{"a":true,"k":"param","n":"order_by","or":"orderBy","r":false,"t":"`$ANY`","index$":5}]},"gq":{"doc":"query UsageAlertList($after: String, $before: String, $filter: UsageAlertFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { usageAlerts(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...UsageAlertFields } pageInfo { endCursor hasNextPage } } } fragment UsageAlertFields on UsageAlert { archivedAt createdAt id metadata resolvedAt type updatedAt }","field":"usageAlerts","optype":"query","page":{"cursor":"pageInfo.endCursor","more":"pageInfo.hasNextPage","nodes":"nodes","style":"relay"},"vars":[{"from":"after","gqltype":"String","name":"after"},{"from":"before","gqltype":"String","name":"before"},{"from":"","gqltype":"UsageAlertFilter","name":"filter"},{"from":"first","gqltype":"Int","name":"first"},{"from":"includeArchived","gqltype":"Boolean","name":"includeArchived"},{"from":"last","gqltype":"Int","name":"last"},{"from":"orderBy","gqltype":"PaginationOrderBy","name":"orderBy"}]},"k":"graphql","m":"POST","o":"usageAlerts","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.usageAlerts.nodes`"},"index$":0}],"key$":"list"},"load":{"input":"data","name":"load","points":[{"a":true,"co":{"id":"POST usageAlert","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"id","or":"id","r":true,"t":"`$STRING`","index$":0}]},"gq":{"doc":"query UsageAlertLoad($id: String!) { usageAlert(id: $id) { ...UsageAlertFields } } fragment UsageAlertFields on UsageAlert { archivedAt createdAt id metadata resolvedAt type updatedAt }","field":"usageAlert","optype":"query","vars":[{"from":"id","gqltype":"String!","name":"id"}]},"k":"graphql","m":"POST","o":"usageAlert","q":{"exist":["id"]},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.usageAlert`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[]},"key$":"usage_alert","name__orig":"usage_alert","Name":"UsageAlert","name_":"usage_alert","name-":"usage-alert","NAME":"USAGE_ALERT","index$":80}, {"active":true,"entity":"usage_alert","key$":"BasicUsageAlertFlow","kind":"basic","name":"BasicUsageAlertFlow","param":{},"step":[{"a":true,"d":{},"i":{},"m":{"after":"after01","before":"before01","first":"first01","include_archived":"include_archived01","last":"last01","order_by":"order_by01"},"o":"list","s":[],"v":[{"apply":"ItemExists","def":{"ref":"usage_alert_ref01"}}],"index$":0},{"a":true,"d":{},"i":{"ref":"usage_alert_ref01","srcdatavar":"usage_alert_ref01_data","suffix":"_dt0"},"m":{"id":"usage_alert01"},"o":"load","s":[],"v":[{"apply":"TextFieldMark","def":{"mark":"Mark01-usage_alert_ref01"}}],"index$":1}]}, 'UsageAlert', {"POST usageAlerts":{"protocol":"graphql"},"POST usageAlert":{"protocol":"graphql"}}, { strict: LIVE_STRICT, t })
     }
     const client = setup.client
     const struct = setup.struct
@@ -85,6 +143,12 @@ describe('UsageAlertEntity', async () => {
 })
 
 
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
 
 function basicSetup(extra?: any) {
   // TODO: fix test def options

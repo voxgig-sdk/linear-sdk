@@ -9,7 +9,7 @@ import { createLiveTransport } from '../../live-runner'
 import { runLiveEntity } from '../../live-entity'
 
 
-import { LinearSDK, BaseFeature, stdutil } from '../../..'
+import { LinearSDK, BaseFeature, config, stdutil } from '../../..'
 
 import {
   envOverride,
@@ -41,6 +41,18 @@ describe('PushSubscriptionEntity', async () => {
   })
 
 
+  test('validate', async (t) => {
+    if (null == (config as any).feature?.validate) {
+      t.skip('feature not present in this SDK: validate')
+      return
+    }
+    const client = LinearSDK.test(undefined, { feature: { validate: { active: true } } })
+    await assert.rejects(client.PushSubscription().create({"createdAt":"x","id":1,"updatedAt":"x"} as any),
+      (err: any) => 'validate_failed' === err.code)
+  })
+
+
+
   test('basic', async (t) => {
 
     const live = 'TRUE' === process.env.LINEAR_TEST_LIVE
@@ -51,7 +63,7 @@ describe('PushSubscriptionEntity', async () => {
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"archivedAt":{"a":true,"h":"Archived At","n":"archivedAt","r":false,"sh":"The time at which the entity was archived.","t":"`$ANY`","key$":"archivedAt","index$":0},"createdAt":{"a":true,"h":"Created At","n":"createdAt","r":true,"sh":"The time at which the entity was created.","t":"`$ANY`","key$":"createdAt","index$":1},"id":{"a":true,"h":"Id","n":"id","r":true,"sh":"The unique identifier of the entity.","t":"`$STRING`","key$":"id","index$":2},"updatedAt":{"a":true,"h":"Updated At","n":"updatedAt","r":true,"sh":"The last time at which the entity was meaningfully updated.","t":"`$ANY`","key$":"updatedAt","index$":3}},"id":{"field":"id","name":"id"},"name":"push_subscription","op":{"create":{"input":"data","name":"create","points":[{"a":true,"co":{"id":"POST pushSubscriptionCreate","source":"graphql","version":2},"g":{},"gq":{"doc":"mutation PushSubscriptionCreate($input: PushSubscriptionCreateInput!) { pushSubscriptionCreate(input: $input) { entity { ...PushSubscriptionFields } success } } fragment PushSubscriptionFields on PushSubscription { archivedAt createdAt id updatedAt }","field":"pushSubscriptionCreate","optype":"mutation","vars":[{"from":"","gqltype":"PushSubscriptionCreateInput!","name":"input"}]},"k":"graphql","m":"POST","o":"pushSubscriptionCreate","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.pushSubscriptionCreate.entity`"},"index$":0}],"key$":"create"},"remove":{"input":"data","name":"remove","points":[{"a":true,"co":{"id":"POST pushSubscriptionDelete","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"id","or":"id","r":true,"t":"`$STRING`","index$":0}]},"gq":{"doc":"mutation PushSubscriptionRemove($id: String!) { pushSubscriptionDelete(id: $id) { entity { ...PushSubscriptionFields } success } } fragment PushSubscriptionFields on PushSubscription { archivedAt createdAt id updatedAt }","field":"pushSubscriptionDelete","optype":"mutation","vars":[{"from":"id","gqltype":"String!","name":"id"}]},"k":"graphql","m":"POST","o":"pushSubscriptionDelete","q":{"exist":["id"]},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.pushSubscriptionDelete.entity`"},"index$":0}],"key$":"remove"}},"relations":{"ancestors":[]},"key$":"push_subscription","name__orig":"push_subscription","Name":"PushSubscription","name_":"push_subscription","name-":"push-subscription","NAME":"PUSH_SUBSCRIPTION","index$":64}, {"active":true,"entity":"push_subscription","key$":"BasicPushSubscriptionFlow","kind":"basic","name":"BasicPushSubscriptionFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"push_subscription_ref01"},"m":{},"o":"create","s":[],"v":[],"index$":0},{"a":true,"d":{},"i":{"ref":"push_subscription_ref01","suffix":"_rm0"},"m":{"id":"push_subscription01"},"o":"remove","s":[],"v":[],"index$":1}]}, 'PushSubscription', {"POST pushSubscriptionCreate":{"protocol":"graphql"},"POST pushSubscriptionDelete":{"protocol":"graphql"}})
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"archivedAt":{"a":true,"h":"Archived At","n":"archivedAt","r":false,"sh":"The time at which the entity was archived.","t":"`$ANY`","key$":"archivedAt","index$":0},"createdAt":{"a":true,"h":"Created At","n":"createdAt","r":true,"sh":"The time at which the entity was created.","t":"`$ANY`","key$":"createdAt","index$":1},"id":{"a":true,"h":"Id","n":"id","r":true,"sh":"The unique identifier of the entity.","t":"`$STRING`","key$":"id","index$":2},"updatedAt":{"a":true,"h":"Updated At","n":"updatedAt","r":true,"sh":"The last time at which the entity was meaningfully updated.","t":"`$ANY`","key$":"updatedAt","index$":3}},"id":{"field":"id","name":"id"},"name":"push_subscription","op":{"create":{"input":"data","name":"create","points":[{"a":true,"co":{"id":"POST pushSubscriptionCreate","source":"graphql","version":2},"g":{},"gq":{"doc":"mutation PushSubscriptionCreate($input: PushSubscriptionCreateInput!) { pushSubscriptionCreate(input: $input) { entity { ...PushSubscriptionFields } success } } fragment PushSubscriptionFields on PushSubscription { archivedAt createdAt id updatedAt }","field":"pushSubscriptionCreate","optype":"mutation","vars":[{"from":"","gqltype":"PushSubscriptionCreateInput!","name":"input"}]},"k":"graphql","m":"POST","o":"pushSubscriptionCreate","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.pushSubscriptionCreate.entity`"},"index$":0}],"key$":"create"},"remove":{"input":"data","name":"remove","points":[{"a":true,"co":{"id":"POST pushSubscriptionDelete","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"id","or":"id","r":true,"t":"`$STRING`","index$":0}]},"gq":{"doc":"mutation PushSubscriptionRemove($id: String!) { pushSubscriptionDelete(id: $id) { entity { ...PushSubscriptionFields } success } } fragment PushSubscriptionFields on PushSubscription { archivedAt createdAt id updatedAt }","field":"pushSubscriptionDelete","optype":"mutation","vars":[{"from":"id","gqltype":"String!","name":"id"}]},"k":"graphql","m":"POST","o":"pushSubscriptionDelete","q":{"exist":["id"]},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.pushSubscriptionDelete.entity`"},"index$":0}],"key$":"remove"}},"relations":{"ancestors":[]},"key$":"push_subscription","name__orig":"push_subscription","Name":"PushSubscription","name_":"push_subscription","name-":"push-subscription","NAME":"PUSH_SUBSCRIPTION","index$":64}, {"active":true,"entity":"push_subscription","key$":"BasicPushSubscriptionFlow","kind":"basic","name":"BasicPushSubscriptionFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"push_subscription_ref01"},"m":{},"o":"create","s":[],"v":[],"index$":0},{"a":true,"d":{},"i":{"ref":"push_subscription_ref01","suffix":"_rm0"},"m":{"id":"push_subscription01"},"o":"remove","s":[],"v":[],"index$":1}]}, 'PushSubscription', {"POST pushSubscriptionCreate":{"protocol":"graphql"},"POST pushSubscriptionDelete":{"protocol":"graphql"}}, { strict: LIVE_STRICT, t })
     }
     const client = setup.client
     const struct = setup.struct
@@ -77,6 +89,12 @@ describe('PushSubscriptionEntity', async () => {
 })
 
 
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
 
 function basicSetup(extra?: any) {
   // TODO: fix test def options

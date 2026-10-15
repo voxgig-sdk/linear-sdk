@@ -8,6 +8,13 @@ local runner = require("test.runner")
 
 local _test_dir = debug.getinfo(1, "S").source:match("^@(.+/)")  or "./"
 
+-- main.kit.test.live.strict is true (the default is true): a live
+-- request that fails, or a live test missing an input it needs,
+-- fails the test.
+-- An account with no record for a test to read skips it either way.
+local LIVE_STRICT = true
+
+
 describe("IssueImportEntity", function()
   it("should create instance", function()
     local testsdk = sdk.test(nil, nil)
@@ -15,46 +22,50 @@ describe("IssueImportEntity", function()
     assert.is_not_nil(ent)
   end)
 
+  it("should refuse an invalid request", function()
+    local config = require("config_shared")()
+    if type(config.feature) ~= "table" or config.feature.validate == nil then
+      pending("feature not present in this SDK: validate")
+      return
+    end
+    local client = sdk.test(nil, { feature = { validate = { active = true } } })
+    local _, err = client:IssueImport(nil):update({ ["id"] = 1 }, nil)
+    assert.are.equal("validate_failed", type(err) == "table" and err.code or nil)
+  end)
+
   it("should run basic flow", function()
     local setup = issue_import_basic_setup(nil)
     -- Per-op sdk-test-control.json skip.
     local _live = setup.live or false
-    for _, _op in ipairs({"create", "update", "remove"}) do
+    for _, _op in ipairs({"update", "remove"}) do
       local _should_skip, _reason = runner.is_control_skipped("entityOp", "issue_import." .. _op, _live and "live" or "unit")
       if _should_skip then
         pending(_reason or "skipped via sdk-test-control.json")
         return
       end
     end
-    -- The basic flow consumes synthetic IDs from the fixture. In live mode
-    -- without an *_ENTID env override, those IDs hit the live API and 4xx.
-    if setup.synthetic_only then
-      pending("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_ISSUE_IMPORT_ENTID JSON to run live")
-      return
+    if setup.live then
+      for _, _live_key in ipairs({"linear_source_organization01"}) do
+        if setup.synthetic_only or setup.idmap[_live_key] == nil then
+          runner.live_miss(pending, LIVE_STRICT, "Live entity test blocked: needs " .. _live_key .. " via LINEAR_TEST_ISSUE_IMPORT_ENTID")
+        end
+      end
+    end
+    if setup.live then
+      runner.live_miss(pending, LIVE_STRICT, "Live entity test blocked: " .. "the flow updates a issue_import record it did not create")
     end
     local client = setup.client
 
-    -- CREATE
-    local issue_import_ref01_ent = client:IssueImport(nil)
-    local issue_import_ref01_data = helpers.to_map(vs.getprop(
-      vs.getpath(setup.data, "new.issue_import"), "issue_import_ref01"))
-    issue_import_ref01_data["github_label"] = setup.idmap["github_label01"]
-    issue_import_ref01_data["github_repo_id"] = setup.idmap["github_repo01"]
-    issue_import_ref01_data["include_closed_issue"] = setup.idmap["include_closed_issue01"]
-    issue_import_ref01_data["instant_process"] = setup.idmap["instant_process01"]
-    issue_import_ref01_data["issue_import_id"] = setup.idmap["issue_import01"]
-    issue_import_ref01_data["linear_source_organization_id"] = setup.idmap["linear_source_organization01"]
-    issue_import_ref01_data["mapping"] = setup.idmap["mapping01"]
-    issue_import_ref01_data["team_id"] = setup.idmap["team01"]
-    issue_import_ref01_data["team_name"] = setup.idmap["team_name01"]
-
-    local issue_import_ref01_data_result, err = issue_import_ref01_ent:create(issue_import_ref01_data, nil)
-    assert.is_nil(err)
-    issue_import_ref01_data = helpers.to_map(type(issue_import_ref01_data_result) == 'table' and issue_import_ref01_data_result.data_get and issue_import_ref01_data_result:data_get() or issue_import_ref01_data_result)
-    assert.is_not_nil(issue_import_ref01_data)
-    assert.is_not_nil(issue_import_ref01_data["id"])
+    -- Bootstrap entity data from existing test data.
+    local issue_import_ref01_data_raw = vs.items(helpers.to_map(
+      vs.getpath(setup.data, "existing.issue_import")))
+    local issue_import_ref01_data = nil
+    if #issue_import_ref01_data_raw > 0 then
+      issue_import_ref01_data = helpers.to_map(issue_import_ref01_data_raw[1][2])
+    end
 
     -- UPDATE
+    local issue_import_ref01_ent = client:IssueImport(nil)
     local issue_import_ref01_data_up0_up = {
       id = issue_import_ref01_data["id"],
       ["linear_source_organization_id"] = setup.idmap["linear_source_organization_id"],
@@ -70,13 +81,6 @@ describe("IssueImportEntity", function()
     assert.is_not_nil(issue_import_ref01_resdata_up0)
     assert.are.equal(issue_import_ref01_resdata_up0["id"], issue_import_ref01_data_up0_up["id"])
     assert.are.equal(issue_import_ref01_resdata_up0[issue_import_ref01_markdef_up0_name], issue_import_ref01_markdef_up0_value)
-
-    -- REMOVE
-    local issue_import_ref01_match_rm0 = {
-      id = issue_import_ref01_data["id"],
-    }
-    local _, err = issue_import_ref01_ent:remove(issue_import_ref01_match_rm0, nil)
-    assert.is_nil(err)
 
   end)
 end)
@@ -101,7 +105,7 @@ function issue_import_basic_setup(extra)
 
   -- Generate idmap via transform.
   local idmap = vs.transform(
-    { "issue_import01", "issue_import02", "issue_import03", "github_label01", "github_repo01", "include_closed_issue01", "instant_process01", "linear_source_organization01", "mapping01", "team01", "team_name01" },
+    { "issue_import01", "issue_import02", "issue_import03", "linear_source_organization01" },
     {
       ["`$PACK`"] = { "", {
         ["`$KEY`"] = "`$COPY`",
@@ -110,9 +114,8 @@ function issue_import_basic_setup(extra)
     }
   )
 
-  -- Detect ENTID env override before envOverride consumes it. When live
-  -- mode is on without a real override, the basic test runs against synthetic
-  -- IDs from the fixture and 4xx's. Surface this so the test can skip.
+  -- Whether *_ENTID supplied the idmap, read before env_override consumes
+  -- it: without it, the ids a live flow binds are the fixture's synthetic ones.
   local entid_env_raw = os.getenv("LINEAR_TEST_ISSUE_IMPORT_ENTID")
   local idmap_overridden = entid_env_raw ~= nil and entid_env_raw:match("^%s*{") ~= nil
 

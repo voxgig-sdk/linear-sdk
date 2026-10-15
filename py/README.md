@@ -15,7 +15,7 @@ keeps the cognitive load low.
 
 ## Install
 This package is not yet published to PyPI. Install it from the GitHub
-release tag (`py/vX.Y.Z`, see [Releases](https://github.com/voxgig-sdk/linear-sdk/releases)) or
+release tag (`py/vX.Y.Z`, see [Tags](https://github.com/voxgig-sdk/linear-sdk/tags)) or
 from a source checkout:
 
 ```bash
@@ -41,14 +41,14 @@ client = LinearSDK({
 
 ### 2. List accesskeyrelease records
 
-`list()` returns a `list` of records (each a `dict`) and raises on
-error — iterate it directly.
+`list()` returns a `list` of entities, one per record, and raises on
+error; an entity's `data_get()` reads its record (a `dict`).
 
 ```python
 try:
     accesskeyreleases = client.AccessKeyRelease().list()
     for accesskeyrelease in accesskeyreleases:
-        print(accesskeyrelease)
+        print(accesskeyrelease.data_get())
 except Exception as err:
     print(f"list failed: {err}")
 ```
@@ -60,19 +60,83 @@ except Exception as err:
 ```python
 try:
     accesskeyrelease = client.AccessKeyRelease().load({"id": "example_id"})
-    print(accesskeyrelease)
+    print(accesskeyrelease.data_get())
 except Exception as err:
     print(f"load failed: {err}")
 ```
 
-### 4. Create, update, and remove
 
-```python
-# Create — returns the ENTITY (call data_get() for the record)
-created = client.AccessKeyRelease().create({"createdAt": "example_createdAt", "id": "example_id", "name": "example_name", "url": "example_url"})
+## Use with Station
 
+This SDK ships as a [voxgig/station](https://github.com/voxgig/station)
+plugin: bind it to a local `Station` and outbound configuration,
+credentials, and observability move to one place. The feature is
+present but **off by default** — nothing changes until you bind.
+
+### Declarative: `station.json` + `station.sdk()`
+
+Declare an instance in `station.json` at the repo root (committable —
+names and stores, never values):
+
+```json
+{ "station": 1,
+  "profiles": { "default": {
+    "sdk": { "linear": {
+      "package": "voxgig-sdk-linear-sdk" } } } } }
 ```
 
+Then get the client where you need it:
+
+1. `station = Station.open()` — reads and validates `station.json`;
+   constructs nothing.
+2. `client = station.sdk('linear')` — built on first ask and cached,
+   so the same name returns the same client.
+
+Loading this package is the whole bootstrap: it registers its own
+factory (constructor plus embedded config) with the station library at
+module init, so `station.sdk()` needs no SDK import in application
+code. That is what the `package` key above is for — it names the module
+for station to load, since nothing else in this example would execute
+it. An application that imports this SDK for its types anyway can drop
+the key: that import is itself the bootstrap.
+
+A second instance of the same API is one more key — `"linear$test"`
+beside `"linear"` — and `station.sdk('linear$test')` returns it.
+SDK features are configured in the same file too: fleet-wide, per api,
+or per instance. `station.check()` resolves and constructs every
+active instance without sending a request — run it in CI.
+
+### The secret name derives from the instance
+
+The credential comes from [sekreto](https://github.com/voxgig/sekreto)
+under a name derived from the **instance** name — the instance token
+lowercased, plus `.apikey`. The untagged instance `linear` derives
+`linear.apikey` — by default the `LINEAR_APIKEY` environment
+variable this README already documents, unchanged. A tagged instance
+derives its own: `linear$test` → `linear_test.apikey` →
+`LINEAR_TEST_APIKEY` — each instance is a separate credentialed use
+of the API, and its env var is derivable from the name you chose. To
+pin a name instead, set `secret` on the instance block, or at the
+api level for several instances sharing one key. Point a profile at a
+vault later and application code does not change; sekreto's own
+documentation covers the stores. The key stays out of `options()` and
+`prepare()` output; `station.tap(...)` shows live traffic.
+
+### Imperative: `connect()` — the retrofit path
+
+Bind by passing the SDK class to the station:
+
+1. `station = Station.open()` — profile, env, and proxy all defaulted.
+2. `client = station.connect(LinearSDK)` — replaces direct
+   construction; `connect(LinearSDK, { as: 'test' })` binds
+   a second, tagged instance.
+
+With no `station.json` at all this runs solo with everything
+defaulted — the two-line form is how an existing application starts.
+
+Station failures surface through this SDK's own error path
+(`err.code`, `station_*`); the codes are catalogued in
+[station error codes](https://github.com/voxgig/sdkgen/blob/main/docs/reference/station-errors.md).
 
 ## Error handling
 
@@ -81,7 +145,7 @@ Entity operations raise on failure, so wrap them in `try` / `except`:
 ```python
 try:
     agentactivitys = client.AgentActivity().list()
-    print(agentactivitys)
+    print([item.data_get() for item in agentactivitys])
 except Exception as err:
     print(f"list failed: {err}")
 ```
@@ -147,10 +211,9 @@ Create a mock client for unit testing — no server required:
 ```python
 client = LinearSDK.test()
 
-# Entity ops return the ENTITY and raises on error;
-# call data_get() for the record.
+# Entity ops return the entity, and list one per record; they raise on error.
 agentactivity = client.AgentActivity().list()
-# agentactivity contains the mock response record
+# data_get() on an entity reads its mock response record
 ```
 
 ### Use a custom fetch function
@@ -322,11 +385,11 @@ All entities share the same interface.
 
 | Method | Signature | Description |
 | --- | --- | --- |
-| `load` | `(reqmatch, ctrl) -> any` | Load a single entity by match criteria. Raises on error. |
-| `list` | `(reqmatch, ctrl) -> list` | List entities matching the criteria. Raises on error. |
-| `create` | `(reqdata, ctrl) -> any` | Create a new entity. Raises on error. |
-| `update` | `(reqdata, ctrl) -> any` | Update an existing entity. Raises on error. |
-| `remove` | `(reqmatch, ctrl) -> any` | Remove an entity. Raises on error. |
+| `load` | `(reqmatch, ctrl) -> any` | Load a single entity by match criteria, and return it. Raises on error. |
+| `list` | `(reqmatch, ctrl) -> list` | List entities matching the criteria, one per record. Raises on error. |
+| `create` | `(reqdata, ctrl) -> any` | Create a new entity, and return it. Raises on error. |
+| `update` | `(reqdata, ctrl) -> any` | Update an existing entity, and return it. Raises on error. |
+| `remove` | `(reqmatch, ctrl) -> any` | Remove an entity, and return it marked as deleted. Raises on error. |
 | `data_get` | `() -> dict` | Get entity data. |
 | `data_set` | `(data)` | Set entity data. |
 | `match_get` | `() -> dict` | Get entity match criteria. |
@@ -336,9 +399,9 @@ All entities share the same interface.
 
 ### Result shape
 
-Entity operations return the ENTITY (call data_get() for the record) (a `dict` for single-entity
-ops, a `list` for `list`) and raise on error. Wrap calls in
-`try`/`except` to handle failures.
+Entity operations return the entity, and `list` a `list` of entities, one
+per record; an entity's `data_get()` reads its record (a `dict`). They raise
+on error, so wrap calls in `try`/`except` to handle failures.
 
 The `direct()` escape hatch never raises — it returns a result `dict`
 you branch on via `result["ok"]`:
@@ -2599,17 +2662,6 @@ access_key_release = client.AccessKeyRelease().load({"id": "access_key_release_i
 access_key_releases = client.AccessKeyRelease().list()
 ```
 
-#### Example: Create
-
-```python
-access_key_release = client.AccessKeyRelease().create({
-    "createdAt": "example_createdAt",  # Any
-    "id": "example_id",  # str
-    "name": "example_name",  # str
-    "url": "example_url",  # str
-})
-```
-
 
 ### AccessKeyReleasePipeline
 
@@ -3002,15 +3054,6 @@ Create an instance: `auth_resolver_response = client.AuthResolverResponse()`
 auth_resolver_response = client.AuthResolverResponse().load({"id": "auth_resolver_response_id"})
 ```
 
-#### Example: Create
-
-```python
-auth_resolver_response = client.AuthResolverResponse().create({
-    "email": "example_email",  # str
-    "id": "example_id",  # str
-})
-```
-
 
 ### AuthenticationSessionResponse
 
@@ -3157,13 +3200,6 @@ Create an instance: `create_or_join_organization_response = client.CreateOrJoinO
 | --- | --- | --- |
 | `organization` | `dict` | The workspace that was created or joined. |
 | `user` | `dict` | The user who created or joined the workspace. |
-
-#### Example: Create
-
-```python
-create_or_join_organization_response = client.CreateOrJoinOrganizationResponse().create({
-})
-```
 
 
 ### CustomView
@@ -4128,13 +4164,6 @@ Create an instance: `git_hub_integration_connect_detail = client.GitHubIntegrati
 | --- | --- | --- |
 | `lostRepositoryNames` | `str` | Full names ('owner/repo') of repositories whose existing GitHub Issues sync mappings would become inaccessible if the new GitHub App installation replaces the existing one. |
 
-#### Example: Create
-
-```python
-git_hub_integration_connect_detail = client.GitHubIntegrationConnectDetail().create({
-})
-```
-
 
 ### Initiative
 
@@ -4522,17 +4551,6 @@ integration = client.Integration().load({"id": "integration_id"})
 integrations = client.Integration().list()
 ```
 
-#### Example: Create
-
-```python
-integration = client.Integration().create({
-    "createdAt": "example_createdAt",  # Any
-    "id": "example_id",  # str
-    "service": "example_service",  # str
-    "updatedAt": "example_updatedAt",  # Any
-})
-```
-
 
 ### IntegrationTemplate
 
@@ -4787,18 +4805,6 @@ Create an instance: `issue_import = client.IssueImport()`
 | `status` | `str` | The current status of the import job, indicating its position in the import lifecycle (e.g., not started, in progress, complete, error). |
 | `teamName` | `str` | The name of the new team to be created for the import, when the import is configured to create a new team rather than importing into an existing one. |
 | `updatedAt` | `Any` | The last time at which the entity was meaningfully updated. |
-
-#### Example: Create
-
-```python
-issue_import = client.IssueImport().create({
-    "createdAt": "example_createdAt",  # Any
-    "displayName": "example_displayName",  # str
-    "service": "example_service",  # str
-    "status": "example_status",  # str
-    "updatedAt": "example_updatedAt",  # Any
-})
-```
 
 
 ### IssueLabel
@@ -5086,14 +5092,6 @@ Create an instance: `logout_response = client.LogoutResponse()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `success` | `bool` | Whether the operation was successful. |
-
-#### Example: Create
-
-```python
-logout_response = client.LogoutResponse().create({
-    "success": True,  # bool
-})
-```
 
 
 ### Notification
@@ -6899,19 +6897,6 @@ Create an instance: `upload_file = client.UploadFile()`
 | `size` | `int` | The size of the uploaded file. |
 | `uploadUrl` | `str` | The pre-signed URL to which the file should be uploaded via a PUT request. |
 
-#### Example: Create
-
-```python
-upload_file = client.UploadFile().create({
-    "content_type": "example_content_type",  # str
-    "filename": "example_filename",  # str
-    "size": 1,  # int
-    "assetUrl": "example_assetUrl",  # str
-    "contentType": "example_contentType",  # str
-    "uploadUrl": "example_uploadUrl",  # str
-})
-```
-
 
 ### UsageAlert
 
@@ -7012,34 +6997,6 @@ user = client.User().load({"id": "user_id"})
 
 ```python
 users = client.User().list()
-```
-
-#### Example: Create
-
-```python
-user = client.User().create({
-    "active": True,  # bool
-    "admin": True,  # bool
-    "app": True,  # bool
-    "avatarBackgroundColor": "example_avatarBackgroundColor",  # str
-    "canAccessAnyPublicTeam": True,  # bool
-    "createdAt": "example_createdAt",  # Any
-    "createdIssueCount": 1,  # int
-    "displayName": "example_displayName",  # str
-    "email": "example_email",  # str
-    "guest": True,  # bool
-    "hasGitHubCodeAccess": True,  # bool
-    "id": "example_id",  # str
-    "initials": "example_initials",  # str
-    "isAssignable": True,  # bool
-    "isMe": True,  # bool
-    "isMentionable": True,  # bool
-    "name": "example_name",  # str
-    "owner": True,  # bool
-    "supportsAgentSessions": True,  # bool
-    "updatedAt": "example_updatedAt",  # Any
-    "url": "example_url",  # str
-})
 ```
 
 
@@ -7227,7 +7184,7 @@ Create an instance: `webhook_failure_event = client.WebhookFailureEvent()`
 #### Example: List
 
 ```python
-webhook_failure_events = client.WebhookFailureEvent().list()
+webhook_failure_events = client.WebhookFailureEvent().list({"oauth_client_id": "example"})
 ```
 
 
@@ -7288,7 +7245,7 @@ workflow_state = client.WorkflowState().create({
 
 ## Features
 
-This SDK ships 8 optional features. Each is **inactive until you
+This SDK ships 9 optional features. Each is **inactive until you
 switch it on**, so an SDK you have not configured behaves exactly as if none of
 them existed — no retries, no cache, no logging, no measurable overhead.
 
@@ -7303,10 +7260,11 @@ above:
 | [`paging`](#paging) | Paging |
 | [`ratelimit`](#ratelimit) | Rate limiting |
 | [`retry`](#retry) | Retry |
+| [`station`](#station) | Station control surface binding for outbound integrations |
 | [`test`](#test) | Test transport |
 | [`timeout`](#timeout) | Timeout |
 
-> **Order matters for `ratelimit`, `retry`, `timeout`.** These wrap the
+> **Order matters for `ratelimit`, `retry`, `station`, `timeout`.** These wrap the
 > transport, so each one wraps whatever is already installed: the order you
 > activate them in IS the nesting order. Activating them as an ordered list
 > rather than a map is what fixes that order.
@@ -7397,6 +7355,27 @@ Set `feature.retry.active` to enable it, then override any of the options above.
 transport features decides what it sees. A feature activated later wraps one
 activated earlier.
 
+### station
+
+Station control surface binding for outbound integrations.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `capture` | `'meta'` |
+| `fromEnv` | `true` |
+| `instance` | `''` |
+| `profile` | `''` |
+| `register` | `true` |
+| `secret` | `''` |
+| `url` | `''` |
+
+Set `feature.station.active` to enable it, then override any of the options above.
+
+`station` wraps the transport, so its position among the other
+transport features decides what it sees. A feature activated later wraps one
+activated earlier.
+
 ### test
 
 Test transport.
@@ -7467,6 +7446,7 @@ The SDK ships with built-in features:
 - **PagingFeature**: Paging
 - **RatelimitFeature**: Rate limiting
 - **RetryFeature**: Retry
+- **StationFeature**: Station control surface binding for outbound integrations
 - **TestFeature**: Test transport
 - **TimeoutFeature**: Timeout
 

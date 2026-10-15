@@ -238,7 +238,7 @@ main: kit: entity: notification: {
               {
                 k: "param"
                 n: "unread_only"
-                or: "unread_only"
+                or: "unreadOnly"
                 r: false
                 t: "`$BOOLEAN`"
               }
@@ -312,7 +312,7 @@ main: kit: entity: notification: {
               {
                 k: "param"
                 n: "include_archived"
-                or: "include_archived"
+                or: "includeArchived"
                 r: false
                 t: "`$BOOLEAN`"
               }
@@ -326,7 +326,7 @@ main: kit: entity: notification: {
               {
                 k: "param"
                 n: "order_by"
-                or: "order_by"
+                or: "orderBy"
                 r: false
                 t: "`$ANY`"
               }

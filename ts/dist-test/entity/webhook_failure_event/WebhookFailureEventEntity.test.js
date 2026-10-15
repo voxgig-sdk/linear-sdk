@@ -54,6 +54,53 @@ const utility_1 = require("../../utility");
         const ent = testsdk.WebhookFailureEvent();
         (0, node_assert_1.default)(null != ent);
     });
+    class FailHook extends __1.BaseFeature {
+        name = 'failhook';
+        version = '0.0.1';
+        active = true;
+        unexpected = 0;
+        init() { }
+        PreSpec() { throw new Error('webhook_failure_event hook failed'); }
+        PreUnexpected() { this.unexpected++; }
+    }
+    (0, node_test_1.test)('stream-error', async () => {
+        const offline = { net: { offline: true } };
+        await node_assert_1.default.rejects(async () => {
+            for await (const _item of __1.LinearSDK.test(offline).WebhookFailureEvent().stream('list')) { }
+        }, /offline/);
+        for await (const _item of __1.LinearSDK.test(offline).WebhookFailureEvent()
+            .stream('list', undefined, { ctrl: { throw: false } })) { }
+        if (null != __1.config.feature?.rbac) {
+            const denied = __1.LinearSDK.test(undefined, { feature: { rbac: { active: true, deny: true } } });
+            await node_assert_1.default.rejects(async () => {
+                for await (const _item of denied.WebhookFailureEvent().stream('list')) { }
+            }, (err) => 'rbac_denied' === err.code);
+        }
+    });
+    (0, node_test_1.test)('stream-ctrl', async () => {
+        const explain = {};
+        const ctrl = { explain };
+        for await (const _item of __1.LinearSDK.test().WebhookFailureEvent().stream('list', undefined, { ctrl })) { }
+        node_assert_1.default.deepStrictEqual(Object.keys(ctrl), ['explain']);
+        (0, node_assert_1.default)(explain === ctrl.explain && 0 < Object.keys(explain).length);
+    });
+    (0, node_test_1.test)('unexpected', async () => {
+        const hook = new FailHook();
+        const client = new __1.LinearSDK({ feature: { test: { active: true } }, extend: [hook] });
+        await node_assert_1.default.rejects(client.WebhookFailureEvent().list(), /hook failed/);
+        (0, node_assert_1.default)(0 < hook.unexpected);
+        const fired = hook.unexpected;
+        node_assert_1.default.strictEqual(await client.WebhookFailureEvent().list(undefined, { throw: false }), undefined);
+        (0, node_assert_1.default)(fired < hook.unexpected);
+    });
+    (0, node_test_1.test)('validate', async (t) => {
+        if (null == __1.config.feature?.validate) {
+            t.skip('feature not present in this SDK: validate');
+            return;
+        }
+        const client = __1.LinearSDK.test(undefined, { feature: { validate: { active: true } } });
+        await node_assert_1.default.rejects(client.WebhookFailureEvent().list({ "oauth_client_id": 1 }), (err) => 'validate_failed' === err.code);
+    });
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.LINEAR_TEST_LIVE;
         for (const op of ['list']) {
@@ -62,7 +109,7 @@ const utility_1 = require("../../utility");
         }
         const setup = basicSetup();
         if (setup.live) {
-            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "createdAt": { "a": true, "h": "Created At", "n": "createdAt", "r": true, "sh": "The time at which the entity was created.", "t": "`$ANY`", "key$": "createdAt", "index$": 0 }, "executionId": { "a": true, "h": "Execution Id", "n": "executionId", "r": true, "sh": "A stable identifier for the webhook delivery attempt.", "t": "`$STRING`", "key$": "executionId", "index$": 1 }, "httpStatus": { "a": true, "h": "Http Status", "n": "httpStatus", "r": false, "sh": "The HTTP status code returned by the webhook recipient.", "t": "`$NUMBER`", "key$": "httpStatus", "index$": 2 }, "id": { "a": true, "h": "Id", "n": "id", "r": true, "sh": "The unique identifier of the entity.", "t": "`$STRING`", "key$": "id", "index$": 3 }, "responseOrError": { "a": true, "h": "Response Or Error", "n": "responseOrError", "r": false, "sh": "The HTTP response body returned by the recipient, or the error message if the request failed before receiving a response.", "t": "`$STRING`", "key$": "responseOrError", "index$": 4 }, "url": { "a": true, "h": "Url", "n": "url", "r": true, "sh": "The URL that the webhook was trying to push to.", "t": "`$STRING`", "key$": "url", "index$": 5 }, "webhook": { "a": true, "h": "Webhook", "n": "webhook", "r": false, "sh": "The webhook that this failure event is associated with.", "t": "`$OBJECT`", "key$": "webhook", "index$": 6 } }, "id": { "field": "id", "name": "id" }, "name": "webhook_failure_event", "op": { "list": { "input": "data", "name": "list", "points": [{ "a": true, "co": { "id": "POST failuresForOauthWebhooks", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "oauth_client_id", "or": "oauth_client_id", "r": true, "t": "`$STRING`", "index$": 0 }] }, "gq": { "doc": "query WebhookFailureEventList($oauthClientId: String!) { failuresForOauthWebhooks(oauthClientId: $oauthClientId) { ...WebhookFailureEventFields } } fragment WebhookFailureEventFields on WebhookFailureEvent { createdAt executionId httpStatus id responseOrError url webhook { id } }", "field": "failuresForOauthWebhooks", "optype": "query", "vars": [{ "from": "oauthClientId", "gqltype": "String!", "name": "oauthClientId" }] }, "k": "graphql", "m": "POST", "o": "failuresForOauthWebhooks", "q": { "exist": ["oauth_client_id"] }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.failuresForOauthWebhooks`" }, "index$": 0 }, { "a": true, "co": { "id": "POST auditLogWebhookFailureEvents", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "webhook_id", "or": "webhook_id", "r": true, "t": "`$STRING`", "index$": 0 }] }, "gq": { "doc": "query WebhookFailureEventList($webhookId: String!) { auditLogWebhookFailureEvents(webhookId: $webhookId) { ...WebhookFailureEventFields } } fragment WebhookFailureEventFields on WebhookFailureEvent { createdAt executionId httpStatus id responseOrError url webhook { id } }", "field": "auditLogWebhookFailureEvents", "optype": "query", "vars": [{ "from": "webhookId", "gqltype": "String!", "name": "webhookId" }] }, "k": "graphql", "m": "POST", "o": "auditLogWebhookFailureEvents", "q": { "exist": ["webhook_id"] }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.auditLogWebhookFailureEvents`" }, "index$": 1 }], "key$": "list" } }, "relations": { "ancestors": [] }, "key$": "webhook_failure_event", "name__orig": "webhook_failure_event", "Name": "WebhookFailureEvent", "name_": "webhook_failure_event", "name-": "webhook-failure-event", "NAME": "WEBHOOK_FAILURE_EVENT", "index$": 85 }, { "active": true, "entity": "webhook_failure_event", "key$": "BasicWebhookFailureEventFlow", "kind": "basic", "name": "BasicWebhookFailureEventFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": {}, "m": { "webhook_id": "webhook01" }, "o": "list", "s": [], "v": [{ "apply": "ItemExists", "def": { "ref": "webhook_failure_event_ref01" } }], "index$": 0 }] }, 'WebhookFailureEvent', { "POST failuresForOauthWebhooks": { "protocol": "graphql" }, "POST auditLogWebhookFailureEvents": { "protocol": "graphql" } });
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "createdAt": { "a": true, "h": "Created At", "n": "createdAt", "r": true, "sh": "The time at which the entity was created.", "t": "`$ANY`", "key$": "createdAt", "index$": 0 }, "executionId": { "a": true, "h": "Execution Id", "n": "executionId", "r": true, "sh": "A stable identifier for the webhook delivery attempt.", "t": "`$STRING`", "key$": "executionId", "index$": 1 }, "httpStatus": { "a": true, "h": "Http Status", "n": "httpStatus", "r": false, "sh": "The HTTP status code returned by the webhook recipient.", "t": "`$NUMBER`", "key$": "httpStatus", "index$": 2 }, "id": { "a": true, "h": "Id", "n": "id", "r": true, "sh": "The unique identifier of the entity.", "t": "`$STRING`", "key$": "id", "index$": 3 }, "responseOrError": { "a": true, "h": "Response Or Error", "n": "responseOrError", "r": false, "sh": "The HTTP response body returned by the recipient, or the error message if the request failed before receiving a response.", "t": "`$STRING`", "key$": "responseOrError", "index$": 4 }, "url": { "a": true, "h": "Url", "n": "url", "r": true, "sh": "The URL that the webhook was trying to push to.", "t": "`$STRING`", "key$": "url", "index$": 5 }, "webhook": { "a": true, "h": "Webhook", "n": "webhook", "r": false, "sh": "The webhook that this failure event is associated with.", "t": "`$OBJECT`", "key$": "webhook", "index$": 6 } }, "id": { "field": "id", "name": "id" }, "name": "webhook_failure_event", "op": { "list": { "input": "data", "name": "list", "points": [{ "a": true, "co": { "id": "POST failuresForOauthWebhooks", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "oauth_client_id", "or": "oauthClientId", "r": true, "t": "`$STRING`", "index$": 0 }] }, "gq": { "doc": "query WebhookFailureEventList($oauthClientId: String!) { failuresForOauthWebhooks(oauthClientId: $oauthClientId) { ...WebhookFailureEventFields } } fragment WebhookFailureEventFields on WebhookFailureEvent { createdAt executionId httpStatus id responseOrError url webhook { id } }", "field": "failuresForOauthWebhooks", "optype": "query", "vars": [{ "from": "oauthClientId", "gqltype": "String!", "name": "oauthClientId" }] }, "k": "graphql", "m": "POST", "o": "failuresForOauthWebhooks", "q": { "exist": ["oauth_client_id"] }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.failuresForOauthWebhooks`" }, "index$": 0 }, { "a": true, "co": { "id": "POST auditLogWebhookFailureEvents", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "webhook_id", "or": "webhookId", "r": true, "t": "`$STRING`", "index$": 0 }] }, "gq": { "doc": "query WebhookFailureEventList($webhookId: String!) { auditLogWebhookFailureEvents(webhookId: $webhookId) { ...WebhookFailureEventFields } } fragment WebhookFailureEventFields on WebhookFailureEvent { createdAt executionId httpStatus id responseOrError url webhook { id } }", "field": "auditLogWebhookFailureEvents", "optype": "query", "vars": [{ "from": "webhookId", "gqltype": "String!", "name": "webhookId" }] }, "k": "graphql", "m": "POST", "o": "auditLogWebhookFailureEvents", "q": { "exist": ["webhook_id"] }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.auditLogWebhookFailureEvents`" }, "index$": 1 }], "key$": "list" } }, "relations": { "ancestors": [] }, "key$": "webhook_failure_event", "name__orig": "webhook_failure_event", "Name": "WebhookFailureEvent", "name_": "webhook_failure_event", "name-": "webhook-failure-event", "NAME": "WEBHOOK_FAILURE_EVENT", "index$": 85 }, { "active": true, "entity": "webhook_failure_event", "key$": "BasicWebhookFailureEventFlow", "kind": "basic", "name": "BasicWebhookFailureEventFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": {}, "m": { "webhook_id": "webhook01" }, "o": "list", "s": [], "v": [{ "apply": "ItemExists", "def": { "ref": "webhook_failure_event_ref01" } }], "index$": 0 }] }, 'WebhookFailureEvent', { "POST failuresForOauthWebhooks": { "protocol": "graphql" }, "POST auditLogWebhookFailureEvents": { "protocol": "graphql" } }, { strict: LIVE_STRICT, t });
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -76,6 +123,11 @@ const utility_1 = require("../../utility");
         const webhook_failure_event_ref01_list = (await webhook_failure_event_ref01_ent.list(webhook_failure_event_ref01_match)).map((e) => e.data());
     });
 });
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true;
 function basicSetup(extra) {
     // TODO: fix test def options
     const options = {}; // null

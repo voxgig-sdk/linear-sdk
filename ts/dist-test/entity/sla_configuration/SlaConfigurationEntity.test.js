@@ -54,6 +54,53 @@ const utility_1 = require("../../utility");
         const ent = testsdk.SlaConfiguration();
         (0, node_assert_1.default)(null != ent);
     });
+    class FailHook extends __1.BaseFeature {
+        name = 'failhook';
+        version = '0.0.1';
+        active = true;
+        unexpected = 0;
+        init() { }
+        PreSpec() { throw new Error('sla_configuration hook failed'); }
+        PreUnexpected() { this.unexpected++; }
+    }
+    (0, node_test_1.test)('stream-error', async () => {
+        const offline = { net: { offline: true } };
+        await node_assert_1.default.rejects(async () => {
+            for await (const _item of __1.LinearSDK.test(offline).SlaConfiguration().stream('list')) { }
+        }, /offline/);
+        for await (const _item of __1.LinearSDK.test(offline).SlaConfiguration()
+            .stream('list', undefined, { ctrl: { throw: false } })) { }
+        if (null != __1.config.feature?.rbac) {
+            const denied = __1.LinearSDK.test(undefined, { feature: { rbac: { active: true, deny: true } } });
+            await node_assert_1.default.rejects(async () => {
+                for await (const _item of denied.SlaConfiguration().stream('list')) { }
+            }, (err) => 'rbac_denied' === err.code);
+        }
+    });
+    (0, node_test_1.test)('stream-ctrl', async () => {
+        const explain = {};
+        const ctrl = { explain };
+        for await (const _item of __1.LinearSDK.test().SlaConfiguration().stream('list', undefined, { ctrl })) { }
+        node_assert_1.default.deepStrictEqual(Object.keys(ctrl), ['explain']);
+        (0, node_assert_1.default)(explain === ctrl.explain && 0 < Object.keys(explain).length);
+    });
+    (0, node_test_1.test)('unexpected', async () => {
+        const hook = new FailHook();
+        const client = new __1.LinearSDK({ feature: { test: { active: true } }, extend: [hook] });
+        await node_assert_1.default.rejects(client.SlaConfiguration().list(), /hook failed/);
+        (0, node_assert_1.default)(0 < hook.unexpected);
+        const fired = hook.unexpected;
+        node_assert_1.default.strictEqual(await client.SlaConfiguration().list(undefined, { throw: false }), undefined);
+        (0, node_assert_1.default)(fired < hook.unexpected);
+    });
+    (0, node_test_1.test)('validate', async (t) => {
+        if (null == __1.config.feature?.validate) {
+            t.skip('feature not present in this SDK: validate');
+            return;
+        }
+        const client = __1.LinearSDK.test(undefined, { feature: { validate: { active: true } } });
+        await node_assert_1.default.rejects(client.SlaConfiguration().list({ "team_id": 1 }), (err) => 'validate_failed' === err.code);
+    });
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.LINEAR_TEST_LIVE;
         for (const op of ['list']) {
@@ -62,7 +109,7 @@ const utility_1 = require("../../utility");
         }
         const setup = basicSetup();
         if (setup.live) {
-            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "conditions": { "a": true, "h": "Conditions", "n": "conditions", "r": true, "sh": "The workflow conditions that determine when this SLA rule applies.", "t": "`$ANY`", "key$": "conditions", "index$": 0 }, "id": { "a": true, "h": "Id", "n": "id", "r": true, "sh": "The identifier of the SLA rule.", "t": "`$STRING`", "key$": "id", "index$": 1 }, "name": { "a": true, "h": "Name", "n": "name", "r": true, "sh": "The name of the SLA rule.", "t": "`$STRING`", "key$": "name", "index$": 2 }, "removesSla": { "a": true, "h": "Removes Sla", "n": "removesSla", "r": true, "sh": "Whether the rule removes an SLA instead of setting one.", "t": "`$BOOLEAN`", "key$": "removesSla", "index$": 3 }, "sla": { "a": true, "h": "Sla", "n": "sla", "r": false, "sh": "The SLA value configured by the rule, expressed in milliseconds or business days depending on the day-count type.", "t": "`$NUMBER`", "key$": "sla", "index$": 4 }, "slaType": { "a": true, "h": "Sla Type", "n": "slaType", "r": false, "sh": "The SLA type used when the rule sets an SLA.", "t": "`$STRING`", "key$": "slaType", "index$": 5 }, "startMode": { "a": true, "h": "Start Mode", "n": "startMode", "r": false, "sh": "When SLA timing begins.", "t": "`$STRING`", "key$": "startMode", "index$": 6 } }, "id": { "field": "id", "name": "id" }, "name": "sla_configuration", "op": { "list": { "input": "data", "name": "list", "points": [{ "a": true, "co": { "id": "POST slaConfigurations", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "team_id", "or": "team_id", "r": true, "t": "`$STRING`", "index$": 0 }] }, "gq": { "doc": "query SlaConfigurationList($teamId: String!) { slaConfigurations(teamId: $teamId) { ...SlaConfigurationFields } } fragment SlaConfigurationFields on SlaConfiguration { conditions id name removesSla sla slaType startMode }", "field": "slaConfigurations", "optype": "query", "vars": [{ "from": "teamId", "gqltype": "String!", "name": "teamId" }] }, "k": "graphql", "m": "POST", "o": "slaConfigurations", "q": { "exist": ["team_id"] }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.slaConfigurations`" }, "index$": 0 }], "key$": "list" } }, "relations": { "ancestors": [] }, "key$": "sla_configuration", "name__orig": "sla_configuration", "Name": "SlaConfiguration", "name_": "sla_configuration", "name-": "sla-configuration", "NAME": "SLA_CONFIGURATION", "index$": 72 }, { "active": true, "entity": "sla_configuration", "key$": "BasicSlaConfigurationFlow", "kind": "basic", "name": "BasicSlaConfigurationFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": {}, "m": { "team_id": "team01" }, "o": "list", "s": [], "v": [{ "apply": "ItemExists", "def": { "ref": "sla_configuration_ref01" } }], "index$": 0 }] }, 'SlaConfiguration', { "POST slaConfigurations": { "protocol": "graphql" } });
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "conditions": { "a": true, "h": "Conditions", "n": "conditions", "r": true, "sh": "The workflow conditions that determine when this SLA rule applies.", "t": "`$ANY`", "key$": "conditions", "index$": 0 }, "id": { "a": true, "h": "Id", "n": "id", "r": true, "sh": "The identifier of the SLA rule.", "t": "`$STRING`", "key$": "id", "index$": 1 }, "name": { "a": true, "h": "Name", "n": "name", "r": true, "sh": "The name of the SLA rule.", "t": "`$STRING`", "key$": "name", "index$": 2 }, "removesSla": { "a": true, "h": "Removes Sla", "n": "removesSla", "r": true, "sh": "Whether the rule removes an SLA instead of setting one.", "t": "`$BOOLEAN`", "key$": "removesSla", "index$": 3 }, "sla": { "a": true, "h": "Sla", "n": "sla", "r": false, "sh": "The SLA value configured by the rule, expressed in milliseconds or business days depending on the day-count type.", "t": "`$NUMBER`", "key$": "sla", "index$": 4 }, "slaType": { "a": true, "h": "Sla Type", "n": "slaType", "r": false, "sh": "The SLA type used when the rule sets an SLA.", "t": "`$STRING`", "key$": "slaType", "index$": 5 }, "startMode": { "a": true, "h": "Start Mode", "n": "startMode", "r": false, "sh": "When SLA timing begins.", "t": "`$STRING`", "key$": "startMode", "index$": 6 } }, "id": { "field": "id", "name": "id" }, "name": "sla_configuration", "op": { "list": { "input": "data", "name": "list", "points": [{ "a": true, "co": { "id": "POST slaConfigurations", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "team_id", "or": "teamId", "r": true, "t": "`$STRING`", "index$": 0 }] }, "gq": { "doc": "query SlaConfigurationList($teamId: String!) { slaConfigurations(teamId: $teamId) { ...SlaConfigurationFields } } fragment SlaConfigurationFields on SlaConfiguration { conditions id name removesSla sla slaType startMode }", "field": "slaConfigurations", "optype": "query", "vars": [{ "from": "teamId", "gqltype": "String!", "name": "teamId" }] }, "k": "graphql", "m": "POST", "o": "slaConfigurations", "q": { "exist": ["team_id"] }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.slaConfigurations`" }, "index$": 0 }], "key$": "list" } }, "relations": { "ancestors": [] }, "key$": "sla_configuration", "name__orig": "sla_configuration", "Name": "SlaConfiguration", "name_": "sla_configuration", "name-": "sla-configuration", "NAME": "SLA_CONFIGURATION", "index$": 72 }, { "active": true, "entity": "sla_configuration", "key$": "BasicSlaConfigurationFlow", "kind": "basic", "name": "BasicSlaConfigurationFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": {}, "m": { "team_id": "team01" }, "o": "list", "s": [], "v": [{ "apply": "ItemExists", "def": { "ref": "sla_configuration_ref01" } }], "index$": 0 }] }, 'SlaConfiguration', { "POST slaConfigurations": { "protocol": "graphql" } }, { strict: LIVE_STRICT, t });
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -76,6 +123,11 @@ const utility_1 = require("../../utility");
         const sla_configuration_ref01_list = (await sla_configuration_ref01_ent.list(sla_configuration_ref01_match)).map((e) => e.data());
     });
 });
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true;
 function basicSetup(extra) {
     // TODO: fix test def options
     const options = {}; // null

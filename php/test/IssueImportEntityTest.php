@@ -11,6 +11,12 @@ use Voxgig\Struct\Struct as Vs;
 
 class IssueImportEntityTest extends TestCase
 {
+    // main.kit.test.live.strict is true (the default is true): a live
+    // request that fails, or a live test missing an input it needs,
+    // fails the test.
+    // An account with no record for a test to read skips it either way.
+    private const LIVE_STRICT = true;
+
     public function test_create_instance(): void
     {
         $testsdk = LinearSDK::test(null, null);
@@ -18,46 +24,56 @@ class IssueImportEntityTest extends TestCase
         $this->assertNotNull($ent);
     }
 
+    public function test_validate(): void
+    {
+        $cfg = LinearConfig::shared_config();
+        if (!isset($cfg["feature"]["validate"])) {
+            $this->markTestSkipped('feature not present in this SDK: validate');
+        }
+        $client = LinearSDK::test(null, ["feature" => ["validate" => ["active" => true]]]);
+        $err = null;
+        try {
+            $client->IssueImport(null)->update(["id" => 1], null);
+        } catch (\Throwable $e) {
+            $err = $e;
+        }
+        $this->assertSame('validate_failed', $err->sdk_code ?? null);
+    }
+
     public function test_basic_flow(): void
     {
         $setup = issue_import_basic_setup(null);
         // Per-op sdk-test-control.json skip.
         $_live = !empty($setup["live"]);
-        foreach (["create", "update", "remove"] as $_op) {
+        foreach (["update", "remove"] as $_op) {
             [$_shouldSkip, $_reason] = Runner::is_control_skipped("entityOp", "issue_import." . $_op, $_live ? "live" : "unit");
             if ($_shouldSkip) {
                 $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
                 return;
             }
         }
-        // The basic flow consumes synthetic IDs from the fixture. In live mode
-        // without an *_ENTID env override, those IDs hit the live API and 4xx.
-        if (!empty($setup["synthetic_only"])) {
-            $this->markTestSkipped("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_ISSUE_IMPORT_ENTID JSON to run live");
-            return;
+        if (!empty($setup["live"])) {
+            foreach (["linear_source_organization01"] as $_liveKey) {
+                if (!empty($setup["synthetic_only"]) || null === ($setup["idmap"][$_liveKey] ?? null)) {
+                    Runner::live_miss(self::LIVE_STRICT, "Live entity test blocked: needs " . $_liveKey . " via LINEAR_TEST_ISSUE_IMPORT_ENTID");
+                }
+            }
+        }
+        if (!empty($setup["live"])) {
+            Runner::live_miss(self::LIVE_STRICT, "Live entity test blocked: " . "the flow updates a issue_import record it did not create");
         }
         $client = $setup["client"];
 
-        // CREATE
-        $issue_import_ref01_ent = $client->IssueImport(null);
-        $issue_import_ref01_data = Helpers::to_map(Vs::getprop(
-            Vs::getpath($setup["data"], "new.issue_import"), "issue_import_ref01"));
-        $issue_import_ref01_data["github_label"] = $setup["idmap"]["github_label01"];
-        $issue_import_ref01_data["github_repo_id"] = $setup["idmap"]["github_repo01"];
-        $issue_import_ref01_data["include_closed_issue"] = $setup["idmap"]["include_closed_issue01"];
-        $issue_import_ref01_data["instant_process"] = $setup["idmap"]["instant_process01"];
-        $issue_import_ref01_data["issue_import_id"] = $setup["idmap"]["issue_import01"];
-        $issue_import_ref01_data["linear_source_organization_id"] = $setup["idmap"]["linear_source_organization01"];
-        $issue_import_ref01_data["mapping"] = $setup["idmap"]["mapping01"];
-        $issue_import_ref01_data["team_id"] = $setup["idmap"]["team01"];
-        $issue_import_ref01_data["team_name"] = $setup["idmap"]["team_name01"];
-
-        $issue_import_ref01_data_result = $issue_import_ref01_ent->create($issue_import_ref01_data, null);
-        $issue_import_ref01_data = Helpers::to_map(is_object($issue_import_ref01_data_result) && method_exists($issue_import_ref01_data_result, 'data_get') ? $issue_import_ref01_data_result->data_get() : $issue_import_ref01_data_result);
-        $this->assertNotNull($issue_import_ref01_data);
-        $this->assertNotNull($issue_import_ref01_data["id"]);
+        // Bootstrap entity data from existing test data.
+        $issue_import_ref01_data_raw = Vs::items(Helpers::to_map(
+            Vs::getpath($setup["data"], "existing.issue_import")));
+        $issue_import_ref01_data = null;
+        if (count($issue_import_ref01_data_raw) > 0) {
+            $issue_import_ref01_data = Helpers::to_map($issue_import_ref01_data_raw[0][1]);
+        }
 
         // UPDATE
+        $issue_import_ref01_ent = $client->IssueImport(null);
         $issue_import_ref01_data_up0_up = [
             "id" => $issue_import_ref01_data["id"],
             "linear_source_organization_id" => $setup["idmap"]["linear_source_organization_id"],
@@ -72,12 +88,6 @@ class IssueImportEntityTest extends TestCase
         $this->assertNotNull($issue_import_ref01_resdata_up0);
         $this->assertEquals($issue_import_ref01_resdata_up0["id"], $issue_import_ref01_data_up0_up["id"]);
         $this->assertEquals($issue_import_ref01_resdata_up0[$issue_import_ref01_markdef_up0_name], $issue_import_ref01_markdef_up0_value);
-
-        // REMOVE
-        $issue_import_ref01_match_rm0 = [
-            "id" => $issue_import_ref01_data["id"],
-        ];
-        $issue_import_ref01_ent->remove($issue_import_ref01_match_rm0, null);
 
     }
 }
@@ -97,13 +107,12 @@ function issue_import_basic_setup($extra)
 
     // Generate idmap.
     $idmap = [];
-    foreach (["issue_import01", "issue_import02", "issue_import03", "github_label01", "github_repo01", "include_closed_issue01", "instant_process01", "linear_source_organization01", "mapping01", "team01", "team_name01"] as $k) {
+    foreach (["issue_import01", "issue_import02", "issue_import03", "linear_source_organization01"] as $k) {
         $idmap[$k] = strtoupper($k);
     }
 
-    // Detect ENTID env override before envOverride consumes it. When live
-    // mode is on without a real override, the basic test runs against synthetic
-    // IDs from the fixture and 4xx's. Surface this so the test can skip.
+    // Whether *_ENTID supplied the idmap, read before env_override consumes
+    // it: without it, the ids a live flow binds are the fixture's synthetic ones.
     $entid_env_raw = getenv("LINEAR_TEST_ISSUE_IMPORT_ENTID");
     $idmap_overridden = $entid_env_raw !== false && str_starts_with(trim($entid_env_raw), "{");
 

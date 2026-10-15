@@ -10,6 +10,12 @@ import (
 	"github.com/voxgig-sdk/linear-sdk/go/core"
 )
 
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const audit_entryDirectLiveStrict = true
+
 func TestAuditEntryDirect(t *testing.T) {
 	t.Run("direct-list-audit_entry", func(t *testing.T) {
 		setup := audit_entryDirectSetup([]any{
@@ -30,7 +36,7 @@ func TestAuditEntryDirect(t *testing.T) {
 		if setup.live {
 			for _, _liveKey := range []string{"after01", "before01", "first01", "include_archived01", "last01", "order_by01"} {
 				if v := setup.idmap[_liveKey]; v == nil {
-					t.Skipf("live test needs %s via *_ENTID env var (synthetic IDs only)", _liveKey)
+					liveMiss(t, audit_entryDirectLiveStrict, "Live test blocked: needs %s via LINEAR_TEST_AUDIT_ENTRY_ENTID", _liveKey)
 					return
 				}
 			}
@@ -75,19 +81,14 @@ func TestAuditEntryDirect(t *testing.T) {
 			"params": params,
 		})
 		if setup.live {
-			// Live-mode leniency is a model decision
-			// (main.kit.test.live.strict): synthetic IDs 4xx constantly
-			// against an arbitrary public API, so the default SKIPS here.
-			// A project that owns its test server sets strict and FAILS.
 			if err != nil {
-				t.Fatalf("list call failed (likely synthetic IDs against live API): %v", err)
+				liveMiss(t, audit_entryDirectLiveStrict, "Live list failed: %v", err)
 			}
-			if result["ok"] != true {
-				t.Fatalf("list call not ok (likely synthetic IDs against live API): %v", result)
+			if status := core.ToInt(result["status"]); result["ok"] != true || status < 200 || status >= 300 {
+				liveMiss(t, audit_entryDirectLiveStrict, "Live list failed: %s", liveDescribe(result))
 			}
-			status := core.ToInt(result["status"])
-			if status < 200 || status >= 300 {
-				t.Fatalf("expected 2xx status, got %v", result["status"])
+			if _, ok := liveList(result["data"]); !ok {
+				liveMiss(t, audit_entryDirectLiveStrict, "Live list returned no list: %s", liveDescribe(result))
 			}
 		} else {
 			if err != nil {

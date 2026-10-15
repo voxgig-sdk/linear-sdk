@@ -525,39 +525,32 @@ Entity* access_key_release = linear_access_key_release(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
-```c
-Entity* access_key_release = linear_access_key_release(client, NULL);
-voxgig_value* result = access_key_release->vt->create(access_key_release, cmap(4,
-    "createdAt", v_str("example_createdAt"),  // voxgig_value*
-    "id", v_str("example_id"),  // char*
-    "name", v_str("example_name"),  // char*
-    "url", v_str("example_url"))  // char*
-, NULL, &err);
-```
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
-
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* access_key_release = linear_access_key_release(client, NULL);
-voxgig_value* results = access_key_release->vt->list(access_key_release, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = access_key_release->vt->list(access_key_release, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* access_key_release = linear_access_key_release(client, NULL);
-voxgig_value* result = access_key_release->vt->load(access_key_release, cmap(1, "id", v_str("access_key_release_id")), NULL, &err);
+Entity* result = access_key_release->vt->load(access_key_release, cmap(1, "id", v_str("access_key_release_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -596,13 +589,16 @@ Entity* access_key_release_pipeline = linear_access_key_release_pipeline(client,
 
 ### Operations
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* access_key_release_pipeline = linear_access_key_release_pipeline(client, NULL);
-voxgig_value* result = access_key_release_pipeline->vt->load(access_key_release_pipeline, cmap(1, "id", v_str("access_key_release_pipeline_id")), NULL, &err);
+Entity* result = access_key_release_pipeline->vt->load(access_key_release_pipeline, cmap(1, "id", v_str("access_key_release_pipeline_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -654,13 +650,13 @@ Entity* agent_activity = linear_agent_activity(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* agent_activity = linear_agent_activity(client, NULL);
-voxgig_value* result = agent_activity->vt->create(agent_activity, cmap(5,
+Entity* result = agent_activity->vt->create(agent_activity, cmap(5,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "ephemeral", v_bool(true),  // bool
     "id", v_str("example_id"),  // char*
@@ -669,35 +665,33 @@ voxgig_value* result = agent_activity->vt->create(agent_activity, cmap(5,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* agent_activity = linear_agent_activity(client, NULL);
-voxgig_value* results = agent_activity->vt->list(agent_activity, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = agent_activity->vt->list(agent_activity, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
-
-```c
-Entity* agent_activity = linear_agent_activity(client, NULL);
-voxgig_value* result = agent_activity->vt->load(agent_activity, cmap(1, "id", v_str("agent_activity_id")), NULL, &err);
-```
-
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
-
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* agent_activity = linear_agent_activity(client, NULL);
-voxgig_value* result = agent_activity->vt->update(agent_activity, cmap(1, "id", v_str("agent_activity_id")), NULL, &err);
+Entity* result = agent_activity->vt->load(agent_activity, cmap(1, "id", v_str("agent_activity_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
+
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ### Common Methods
 
@@ -756,13 +750,13 @@ Entity* agent_session = linear_agent_session(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* agent_session = linear_agent_session(client, NULL);
-voxgig_value* result = agent_session->vt->create(agent_session, cmap(6,
+Entity* result = agent_session->vt->create(agent_session, cmap(6,
     "context", v_str("example_context"),  // voxgig_value*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -772,34 +766,37 @@ voxgig_value* result = agent_session->vt->create(agent_session, cmap(6,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* agent_session = linear_agent_session(client, NULL);
-voxgig_value* results = agent_session->vt->list(agent_session, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = agent_session->vt->list(agent_session, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* agent_session = linear_agent_session(client, NULL);
-voxgig_value* result = agent_session->vt->load(agent_session, cmap(1, "id", v_str("agent_session_id")), NULL, &err);
+Entity* result = agent_session->vt->load(agent_session, cmap(1, "id", v_str("agent_session_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* agent_session = linear_agent_session(client, NULL);
-voxgig_value* result = agent_session->vt->update(agent_session, cmap(1, "id", v_str("agent_session_id")), NULL, &err);
+Entity* result = agent_session->vt->update(agent_session, cmap(1, "id", v_str("agent_session_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -854,13 +851,13 @@ Entity* agent_skill = linear_agent_skill(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* agent_skill = linear_agent_skill(client, NULL);
-voxgig_value* result = agent_skill->vt->create(agent_skill, cmap(8,
+Entity* result = agent_skill->vt->create(agent_skill, cmap(8,
     "body", v_str("example_body"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -872,43 +869,49 @@ voxgig_value* result = agent_skill->vt->create(agent_skill, cmap(8,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* agent_skill = linear_agent_skill(client, NULL);
-voxgig_value* results = agent_skill->vt->list(agent_skill, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = agent_skill->vt->list(agent_skill, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* agent_skill = linear_agent_skill(client, NULL);
-voxgig_value* result = agent_skill->vt->load(agent_skill, cmap(1, "id", v_str("agent_skill_id")), NULL, &err);
+Entity* result = agent_skill->vt->load(agent_skill, cmap(1, "id", v_str("agent_skill_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* agent_skill = linear_agent_skill(client, NULL);
-voxgig_value* result = agent_skill->vt->remove(agent_skill, cmap(1, "id", v_str("agent_skill_id")), NULL, &err);
+Entity* result = agent_skill->vt->remove(agent_skill, cmap(1, "id", v_str("agent_skill_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* agent_skill = linear_agent_skill(client, NULL);
-voxgig_value* result = agent_skill->vt->update(agent_skill, cmap(1, "id", v_str("agent_skill_id")), NULL, &err);
+Entity* result = agent_skill->vt->update(agent_skill, cmap(1, "id", v_str("agent_skill_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -952,13 +955,16 @@ Entity* application = linear_application(client, NULL);
 
 ### Operations
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* application = linear_application(client, NULL);
-voxgig_value* result = application->vt->load(application, cmap(1, "client_id", v_str("client_id")), NULL, &err);
+Entity* result = application->vt->load(application, cmap(1, "client_id", v_str("client_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -1011,13 +1017,13 @@ Entity* attachment = linear_attachment(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* attachment = linear_attachment(client, NULL);
-voxgig_value* result = attachment->vt->create(attachment, cmap(7,
+Entity* result = attachment->vt->create(attachment, cmap(7,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "groupBySource", v_bool(true),  // bool
     "id", v_str("example_id"),  // char*
@@ -1028,43 +1034,49 @@ voxgig_value* result = attachment->vt->create(attachment, cmap(7,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* attachment = linear_attachment(client, NULL);
-voxgig_value* results = attachment->vt->list(attachment, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = attachment->vt->list(attachment, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* attachment = linear_attachment(client, NULL);
-voxgig_value* result = attachment->vt->load(attachment, cmap(1, "id", v_str("attachment_id")), NULL, &err);
+Entity* result = attachment->vt->load(attachment, cmap(1, "id", v_str("attachment_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* attachment = linear_attachment(client, NULL);
-voxgig_value* result = attachment->vt->remove(attachment, cmap(1, "id", v_str("attachment_id")), NULL, &err);
+Entity* result = attachment->vt->remove(attachment, cmap(1, "id", v_str("attachment_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* attachment = linear_attachment(client, NULL);
-voxgig_value* result = attachment->vt->update(attachment, cmap(1, "id", v_str("attachment_id")), NULL, &err);
+Entity* result = attachment->vt->update(attachment, cmap(1, "id", v_str("attachment_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -1113,15 +1125,15 @@ Entity* audit_entry = linear_audit_entry(client, NULL);
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* audit_entry = linear_audit_entry(client, NULL);
-voxgig_value* results = audit_entry->vt->list(audit_entry, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = audit_entry->vt->list(audit_entry, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
@@ -1161,15 +1173,15 @@ Entity* audit_entry_type = linear_audit_entry_type(client, NULL);
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* audit_entry_type = linear_audit_entry_type(client, NULL);
-voxgig_value* results = audit_entry_type->vt->list(audit_entry_type, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = audit_entry_type->vt->list(audit_entry_type, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
@@ -1212,34 +1224,29 @@ Entity* auth_resolver_response = linear_auth_resolver_response(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
+
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* auth_resolver_response = linear_auth_resolver_response(client, NULL);
-voxgig_value* result = auth_resolver_response->vt->create(auth_resolver_response, cmap(2,
-    "email", v_str("example_email"),  // char*
-    "id", v_str("example_id"))  // char*
-, NULL, &err);
+Entity* result = auth_resolver_response->vt->load(auth_resolver_response, cmap(1, "id", v_str("auth_resolver_response_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
-
-```c
-Entity* auth_resolver_response = linear_auth_resolver_response(client, NULL);
-voxgig_value* result = auth_resolver_response->vt->load(auth_resolver_response, cmap(1, "id", v_str("auth_resolver_response_id")), NULL, &err);
-```
-
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
-
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* auth_resolver_response = linear_auth_resolver_response(client, NULL);
-voxgig_value* result = auth_resolver_response->vt->update(auth_resolver_response, cmap(3, "id", v_str("auth_resolver_response_id"), "auth_id", v_str("auth_id"), "response", v_str("response")), NULL, &err);
+Entity* result = auth_resolver_response->vt->update(auth_resolver_response, cmap(3, "id", v_str("auth_resolver_response_id"), "auth_id", v_str("auth_id"), "response", v_str("response")), NULL, &err);
 ```
 
 ### Common Methods
@@ -1296,15 +1303,15 @@ Entity* authentication_session_response = linear_authentication_session_response
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* authentication_session_response = linear_authentication_session_response(client, NULL);
-voxgig_value* results = authentication_session_response->vt->list(authentication_session_response, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = authentication_session_response->vt->list(authentication_session_response, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
@@ -1380,13 +1387,13 @@ Entity* comment = linear_comment(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* comment = linear_comment(client, NULL);
-voxgig_value* result = comment->vt->create(comment, cmap(9,
+Entity* result = comment->vt->create(comment, cmap(9,
     "body", v_str("example_body"),  // char*
     "bodyData", v_str("example_bodyData"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
@@ -1399,43 +1406,49 @@ voxgig_value* result = comment->vt->create(comment, cmap(9,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* comment = linear_comment(client, NULL);
-voxgig_value* results = comment->vt->list(comment, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = comment->vt->list(comment, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* comment = linear_comment(client, NULL);
-voxgig_value* result = comment->vt->load(comment, cmap(1, "id", v_str("comment_id")), NULL, &err);
+Entity* result = comment->vt->load(comment, cmap(1, "id", v_str("comment_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* comment = linear_comment(client, NULL);
-voxgig_value* result = comment->vt->remove(comment, cmap(1, "id", v_str("comment_id")), NULL, &err);
+Entity* result = comment->vt->remove(comment, cmap(1, "id", v_str("comment_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* comment = linear_comment(client, NULL);
-voxgig_value* result = comment->vt->update(comment, cmap(1, "id", v_str("comment_id")), NULL, &err);
+Entity* result = comment->vt->update(comment, cmap(1, "id", v_str("comment_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -1474,22 +1487,17 @@ Entity* create_or_join_organization_response = linear_create_or_join_organizatio
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
-```c
-Entity* create_or_join_organization_response = linear_create_or_join_organization_response(client, NULL);
-voxgig_value* result = create_or_join_organization_response->vt->create(create_or_join_organization_response, NULL, NULL, &err);
-```
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
-
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* create_or_join_organization_response = linear_create_or_join_organization_response(client, NULL);
-voxgig_value* result = create_or_join_organization_response->vt->update(create_or_join_organization_response, cmap(1, "organization_id", v_str("organization_id")), NULL, &err);
+Entity* result = create_or_join_organization_response->vt->update(create_or_join_organization_response, cmap(1, "organization_id", v_str("organization_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -1549,13 +1557,13 @@ Entity* custom_view = linear_custom_view(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* custom_view = linear_custom_view(client, NULL);
-voxgig_value* result = custom_view->vt->create(custom_view, cmap(8,
+Entity* result = custom_view->vt->create(custom_view, cmap(8,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "filterData", v_str("example_filterData"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -1567,43 +1575,49 @@ voxgig_value* result = custom_view->vt->create(custom_view, cmap(8,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* custom_view = linear_custom_view(client, NULL);
-voxgig_value* results = custom_view->vt->list(custom_view, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = custom_view->vt->list(custom_view, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* custom_view = linear_custom_view(client, NULL);
-voxgig_value* result = custom_view->vt->load(custom_view, cmap(1, "id", v_str("custom_view_id")), NULL, &err);
+Entity* result = custom_view->vt->load(custom_view, cmap(1, "id", v_str("custom_view_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* custom_view = linear_custom_view(client, NULL);
-voxgig_value* result = custom_view->vt->remove(custom_view, cmap(1, "id", v_str("custom_view_id")), NULL, &err);
+Entity* result = custom_view->vt->remove(custom_view, cmap(1, "id", v_str("custom_view_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* custom_view = linear_custom_view(client, NULL);
-voxgig_value* result = custom_view->vt->update(custom_view, cmap(1, "id", v_str("custom_view_id")), NULL, &err);
+Entity* result = custom_view->vt->update(custom_view, cmap(1, "id", v_str("custom_view_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -1659,13 +1673,13 @@ Entity* customer = linear_customer(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer = linear_customer(client, NULL);
-voxgig_value* result = customer->vt->create(customer, cmap(9,
+Entity* result = customer->vt->create(customer, cmap(9,
     "approximateNeedCount", v_num(1),  // double
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "domains", v_str("example_domains"),  // char*
@@ -1678,43 +1692,49 @@ voxgig_value* result = customer->vt->create(customer, cmap(9,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer = linear_customer(client, NULL);
-voxgig_value* results = customer->vt->list(customer, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = customer->vt->list(customer, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer = linear_customer(client, NULL);
-voxgig_value* result = customer->vt->load(customer, cmap(1, "id", v_str("customer_id")), NULL, &err);
+Entity* result = customer->vt->load(customer, cmap(1, "id", v_str("customer_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer = linear_customer(client, NULL);
-voxgig_value* result = customer->vt->remove(customer, cmap(1, "id", v_str("customer_id")), NULL, &err);
+Entity* result = customer->vt->remove(customer, cmap(1, "id", v_str("customer_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer = linear_customer(client, NULL);
-voxgig_value* result = customer->vt->update(customer, cmap(1, "id", v_str("customer_id")), NULL, &err);
+Entity* result = customer->vt->update(customer, cmap(1, "id", v_str("customer_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -1768,13 +1788,13 @@ Entity* customer_need = linear_customer_need(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_need = linear_customer_need(client, NULL);
-voxgig_value* result = customer_need->vt->create(customer_need, cmap(4,
+Entity* result = customer_need->vt->create(customer_need, cmap(4,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "priority", v_num(1),  // double
@@ -1782,43 +1802,49 @@ voxgig_value* result = customer_need->vt->create(customer_need, cmap(4,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_need = linear_customer_need(client, NULL);
-voxgig_value* results = customer_need->vt->list(customer_need, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = customer_need->vt->list(customer_need, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_need = linear_customer_need(client, NULL);
-voxgig_value* result = customer_need->vt->load(customer_need, cmap(1, "id", v_str("customer_need_id")), NULL, &err);
+Entity* result = customer_need->vt->load(customer_need, cmap(1, "id", v_str("customer_need_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_need = linear_customer_need(client, NULL);
-voxgig_value* result = customer_need->vt->remove(customer_need, cmap(1, "id", v_str("customer_need_id")), NULL, &err);
+Entity* result = customer_need->vt->remove(customer_need, cmap(1, "id", v_str("customer_need_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_need = linear_customer_need(client, NULL);
-voxgig_value* result = customer_need->vt->update(customer_need, cmap(1, "id", v_str("customer_need_id")), NULL, &err);
+Entity* result = customer_need->vt->update(customer_need, cmap(1, "id", v_str("customer_need_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -1864,13 +1890,13 @@ Entity* customer_status = linear_customer_status(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_status = linear_customer_status(client, NULL);
-voxgig_value* result = customer_status->vt->create(customer_status, cmap(7,
+Entity* result = customer_status->vt->create(customer_status, cmap(7,
     "color", v_str("example_color"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "displayName", v_str("example_displayName"),  // char*
@@ -1881,43 +1907,49 @@ voxgig_value* result = customer_status->vt->create(customer_status, cmap(7,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_status = linear_customer_status(client, NULL);
-voxgig_value* results = customer_status->vt->list(customer_status, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = customer_status->vt->list(customer_status, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_status = linear_customer_status(client, NULL);
-voxgig_value* result = customer_status->vt->load(customer_status, cmap(1, "id", v_str("customer_status_id")), NULL, &err);
+Entity* result = customer_status->vt->load(customer_status, cmap(1, "id", v_str("customer_status_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_status = linear_customer_status(client, NULL);
-voxgig_value* result = customer_status->vt->remove(customer_status, cmap(1, "id", v_str("customer_status_id")), NULL, &err);
+Entity* result = customer_status->vt->remove(customer_status, cmap(1, "id", v_str("customer_status_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_status = linear_customer_status(client, NULL);
-voxgig_value* result = customer_status->vt->update(customer_status, cmap(1, "id", v_str("customer_status_id")), NULL, &err);
+Entity* result = customer_status->vt->update(customer_status, cmap(1, "id", v_str("customer_status_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -1963,13 +1995,13 @@ Entity* customer_tier = linear_customer_tier(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_tier = linear_customer_tier(client, NULL);
-voxgig_value* result = customer_tier->vt->create(customer_tier, cmap(7,
+Entity* result = customer_tier->vt->create(customer_tier, cmap(7,
     "color", v_str("example_color"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "displayName", v_str("example_displayName"),  // char*
@@ -1980,43 +2012,49 @@ voxgig_value* result = customer_tier->vt->create(customer_tier, cmap(7,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_tier = linear_customer_tier(client, NULL);
-voxgig_value* results = customer_tier->vt->list(customer_tier, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = customer_tier->vt->list(customer_tier, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_tier = linear_customer_tier(client, NULL);
-voxgig_value* result = customer_tier->vt->load(customer_tier, cmap(1, "id", v_str("customer_tier_id")), NULL, &err);
+Entity* result = customer_tier->vt->load(customer_tier, cmap(1, "id", v_str("customer_tier_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_tier = linear_customer_tier(client, NULL);
-voxgig_value* result = customer_tier->vt->remove(customer_tier, cmap(1, "id", v_str("customer_tier_id")), NULL, &err);
+Entity* result = customer_tier->vt->remove(customer_tier, cmap(1, "id", v_str("customer_tier_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* customer_tier = linear_customer_tier(client, NULL);
-voxgig_value* result = customer_tier->vt->update(customer_tier, cmap(1, "id", v_str("customer_tier_id")), NULL, &err);
+Entity* result = customer_tier->vt->update(customer_tier, cmap(1, "id", v_str("customer_tier_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -2079,13 +2117,13 @@ Entity* cycle = linear_cycle(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* cycle = linear_cycle(client, NULL);
-voxgig_value* result = cycle->vt->create(cycle, cmap(19,
+Entity* result = cycle->vt->create(cycle, cmap(19,
     "completedIssueCountHistory", v_num(1),  // double
     "completedScopeHistory", v_num(1),  // double
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
@@ -2108,34 +2146,37 @@ voxgig_value* result = cycle->vt->create(cycle, cmap(19,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* cycle = linear_cycle(client, NULL);
-voxgig_value* results = cycle->vt->list(cycle, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = cycle->vt->list(cycle, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* cycle = linear_cycle(client, NULL);
-voxgig_value* result = cycle->vt->load(cycle, cmap(1, "id", v_str("cycle_id")), NULL, &err);
+Entity* result = cycle->vt->load(cycle, cmap(1, "id", v_str("cycle_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* cycle = linear_cycle(client, NULL);
-voxgig_value* result = cycle->vt->update(cycle, cmap(1, "id", v_str("cycle_id")), NULL, &err);
+Entity* result = cycle->vt->update(cycle, cmap(1, "id", v_str("cycle_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -2186,13 +2227,16 @@ Entity* diff = linear_diff(client, NULL);
 
 ### Operations
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* diff = linear_diff(client, NULL);
-voxgig_value* result = diff->vt->load(diff, cmap(1, "id", v_str("diff_id")), NULL, &err);
+Entity* result = diff->vt->load(diff, cmap(1, "id", v_str("diff_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -2255,13 +2299,13 @@ Entity* document = linear_document(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* document = linear_document(client, NULL);
-voxgig_value* result = document->vt->create(document, cmap(7,
+Entity* result = document->vt->create(document, cmap(7,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "slugId", v_str("example_slugId"),  // char*
@@ -2272,43 +2316,49 @@ voxgig_value* result = document->vt->create(document, cmap(7,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* document = linear_document(client, NULL);
-voxgig_value* results = document->vt->list(document, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = document->vt->list(document, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* document = linear_document(client, NULL);
-voxgig_value* result = document->vt->load(document, cmap(1, "id", v_str("document_id")), NULL, &err);
+Entity* result = document->vt->load(document, cmap(1, "id", v_str("document_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* document = linear_document(client, NULL);
-voxgig_value* result = document->vt->remove(document, cmap(1, "id", v_str("document_id")), NULL, &err);
+Entity* result = document->vt->remove(document, cmap(1, "id", v_str("document_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* document = linear_document(client, NULL);
-voxgig_value* result = document->vt->update(document, cmap(1, "id", v_str("document_id")), NULL, &err);
+Entity* result = document->vt->update(document, cmap(1, "id", v_str("document_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -2372,15 +2422,15 @@ Entity* document_search_result = linear_document_search_result(client, NULL);
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* document_search_result = linear_document_search_result(client, NULL);
-voxgig_value* results = document_search_result->vt->list(document_search_result, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = document_search_result->vt->list(document_search_result, cmap(1, "term", v_str("example")), NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
@@ -2443,13 +2493,13 @@ Entity* email_intake_address = linear_email_intake_address(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* email_intake_address = linear_email_intake_address(client, NULL);
-voxgig_value* result = email_intake_address->vt->create(email_intake_address, cmap(13,
+Entity* result = email_intake_address->vt->create(email_intake_address, cmap(13,
     "address", v_str("example_address"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "customerRequestsEnabled", v_bool(true),  // bool
@@ -2466,31 +2516,37 @@ voxgig_value* result = email_intake_address->vt->create(email_intake_address, cm
 , NULL, &err);
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* email_intake_address = linear_email_intake_address(client, NULL);
-voxgig_value* result = email_intake_address->vt->load(email_intake_address, cmap(1, "id", v_str("email_intake_address_id")), NULL, &err);
+Entity* result = email_intake_address->vt->load(email_intake_address, cmap(1, "id", v_str("email_intake_address_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* email_intake_address = linear_email_intake_address(client, NULL);
-voxgig_value* result = email_intake_address->vt->remove(email_intake_address, cmap(1, "id", v_str("email_intake_address_id")), NULL, &err);
+Entity* result = email_intake_address->vt->remove(email_intake_address, cmap(1, "id", v_str("email_intake_address_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* email_intake_address = linear_email_intake_address(client, NULL);
-voxgig_value* result = email_intake_address->vt->update(email_intake_address, cmap(1, "id", v_str("email_intake_address_id")), NULL, &err);
+Entity* result = email_intake_address->vt->update(email_intake_address, cmap(1, "id", v_str("email_intake_address_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -2529,13 +2585,13 @@ Entity* email_user_account_auth_challenge_response = linear_email_user_account_a
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* email_user_account_auth_challenge_response = linear_email_user_account_auth_challenge_response(client, NULL);
-voxgig_value* result = email_user_account_auth_challenge_response->vt->create(email_user_account_auth_challenge_response, cmap(2,
+Entity* result = email_user_account_auth_challenge_response->vt->create(email_user_account_auth_challenge_response, cmap(2,
     "authType", v_str("example_authType"),  // char*
     "success", v_bool(true))  // bool
 , NULL, &err);
@@ -2584,13 +2640,13 @@ Entity* emoji = linear_emoji(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* emoji = linear_emoji(client, NULL);
-voxgig_value* result = emoji->vt->create(emoji, cmap(6,
+Entity* result = emoji->vt->create(emoji, cmap(6,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "name", v_str("example_name"),  // char*
@@ -2600,34 +2656,40 @@ voxgig_value* result = emoji->vt->create(emoji, cmap(6,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* emoji = linear_emoji(client, NULL);
-voxgig_value* results = emoji->vt->list(emoji, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = emoji->vt->list(emoji, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* emoji = linear_emoji(client, NULL);
-voxgig_value* result = emoji->vt->load(emoji, cmap(1, "id", v_str("emoji_id")), NULL, &err);
+Entity* result = emoji->vt->load(emoji, cmap(1, "id", v_str("emoji_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* emoji = linear_emoji(client, NULL);
-voxgig_value* result = emoji->vt->remove(emoji, cmap(1, "id", v_str("emoji_id")), NULL, &err);
+Entity* result = emoji->vt->remove(emoji, cmap(1, "id", v_str("emoji_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -2674,13 +2736,13 @@ Entity* entity_external_link = linear_entity_external_link(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* entity_external_link = linear_entity_external_link(client, NULL);
-voxgig_value* result = entity_external_link->vt->create(entity_external_link, cmap(6,
+Entity* result = entity_external_link->vt->create(entity_external_link, cmap(6,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "label", v_str("example_label"),  // char*
@@ -2690,31 +2752,37 @@ voxgig_value* result = entity_external_link->vt->create(entity_external_link, cm
 , NULL, &err);
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* entity_external_link = linear_entity_external_link(client, NULL);
-voxgig_value* result = entity_external_link->vt->load(entity_external_link, cmap(1, "id", v_str("entity_external_link_id")), NULL, &err);
+Entity* result = entity_external_link->vt->load(entity_external_link, cmap(1, "id", v_str("entity_external_link_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* entity_external_link = linear_entity_external_link(client, NULL);
-voxgig_value* result = entity_external_link->vt->remove(entity_external_link, cmap(1, "id", v_str("entity_external_link_id")), NULL, &err);
+Entity* result = entity_external_link->vt->remove(entity_external_link, cmap(1, "id", v_str("entity_external_link_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* entity_external_link = linear_entity_external_link(client, NULL);
-voxgig_value* result = entity_external_link->vt->update(entity_external_link, cmap(1, "id", v_str("entity_external_link_id")), NULL, &err);
+Entity* result = entity_external_link->vt->update(entity_external_link, cmap(1, "id", v_str("entity_external_link_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -2761,25 +2829,28 @@ Entity* external_user = linear_external_user(client, NULL);
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* external_user = linear_external_user(client, NULL);
-voxgig_value* results = external_user->vt->list(external_user, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = external_user->vt->list(external_user, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* external_user = linear_external_user(client, NULL);
-voxgig_value* result = external_user->vt->load(external_user, cmap(1, "id", v_str("external_user_id")), NULL, &err);
+Entity* result = external_user->vt->load(external_user, cmap(1, "id", v_str("external_user_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -2858,13 +2929,13 @@ Entity* favorite = linear_favorite(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* favorite = linear_favorite(client, NULL);
-voxgig_value* result = favorite->vt->create(favorite, cmap(6,
+Entity* result = favorite->vt->create(favorite, cmap(6,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "sortOrder", v_num(1),  // double
@@ -2874,43 +2945,49 @@ voxgig_value* result = favorite->vt->create(favorite, cmap(6,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* favorite = linear_favorite(client, NULL);
-voxgig_value* results = favorite->vt->list(favorite, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = favorite->vt->list(favorite, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* favorite = linear_favorite(client, NULL);
-voxgig_value* result = favorite->vt->load(favorite, cmap(1, "id", v_str("favorite_id")), NULL, &err);
+Entity* result = favorite->vt->load(favorite, cmap(1, "id", v_str("favorite_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* favorite = linear_favorite(client, NULL);
-voxgig_value* result = favorite->vt->remove(favorite, cmap(1, "id", v_str("favorite_id")), NULL, &err);
+Entity* result = favorite->vt->remove(favorite, cmap(1, "id", v_str("favorite_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* favorite = linear_favorite(client, NULL);
-voxgig_value* result = favorite->vt->update(favorite, cmap(1, "id", v_str("favorite_id")), NULL, &err);
+Entity* result = favorite->vt->update(favorite, cmap(1, "id", v_str("favorite_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -2955,13 +3032,13 @@ Entity* git_automation_state = linear_git_automation_state(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* git_automation_state = linear_git_automation_state(client, NULL);
-voxgig_value* result = git_automation_state->vt->create(git_automation_state, cmap(4,
+Entity* result = git_automation_state->vt->create(git_automation_state, cmap(4,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "event", v_str("example_event"),  // char*
     "id", v_str("example_id"),  // char*
@@ -2969,22 +3046,25 @@ voxgig_value* result = git_automation_state->vt->create(git_automation_state, cm
 , NULL, &err);
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* git_automation_state = linear_git_automation_state(client, NULL);
-voxgig_value* result = git_automation_state->vt->remove(git_automation_state, cmap(1, "id", v_str("id")), NULL, &err);
+Entity* result = git_automation_state->vt->remove(git_automation_state, cmap(1, "id", v_str("git_automation_state_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* git_automation_state = linear_git_automation_state(client, NULL);
-voxgig_value* result = git_automation_state->vt->update(git_automation_state, cmap(1, "id", v_str("id")), NULL, &err);
+Entity* result = git_automation_state->vt->update(git_automation_state, cmap(1, "id", v_str("git_automation_state_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -3028,13 +3108,13 @@ Entity* git_automation_target_branch = linear_git_automation_target_branch(clien
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* git_automation_target_branch = linear_git_automation_target_branch(client, NULL);
-voxgig_value* result = git_automation_target_branch->vt->create(git_automation_target_branch, cmap(5,
+Entity* result = git_automation_target_branch->vt->create(git_automation_target_branch, cmap(5,
     "branchPattern", v_str("example_branchPattern"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -3043,22 +3123,25 @@ voxgig_value* result = git_automation_target_branch->vt->create(git_automation_t
 , NULL, &err);
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* git_automation_target_branch = linear_git_automation_target_branch(client, NULL);
-voxgig_value* result = git_automation_target_branch->vt->remove(git_automation_target_branch, cmap(1, "id", v_str("id")), NULL, &err);
+Entity* result = git_automation_target_branch->vt->remove(git_automation_target_branch, cmap(1, "id", v_str("git_automation_target_branch_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* git_automation_target_branch = linear_git_automation_target_branch(client, NULL);
-voxgig_value* result = git_automation_target_branch->vt->update(git_automation_target_branch, cmap(1, "id", v_str("id")), NULL, &err);
+Entity* result = git_automation_target_branch->vt->update(git_automation_target_branch, cmap(1, "id", v_str("git_automation_target_branch_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -3096,23 +3179,13 @@ Entity* git_hub_integration_connect_detail = linear_git_hub_integration_connect_
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
-```c
-Entity* git_hub_integration_connect_detail = linear_git_hub_integration_connect_detail(client, NULL);
-voxgig_value* result = git_hub_integration_connect_detail->vt->create(git_hub_integration_connect_detail, NULL, NULL, &err);
-```
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
-
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
-
-```c
-Entity* git_hub_integration_connect_detail = linear_git_hub_integration_connect_detail(client, NULL);
-voxgig_value* result = git_hub_integration_connect_detail->vt->update(git_hub_integration_connect_detail, NULL, NULL, &err);
-```
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ### Common Methods
 
@@ -3188,13 +3261,13 @@ Entity* initiative = linear_initiative(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative = linear_initiative(client, NULL);
-voxgig_value* result = initiative->vt->create(initiative, cmap(14,
+Entity* result = initiative->vt->create(initiative, cmap(14,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "frequencyResolution", v_str("example_frequencyResolution"),  // char*
     "id", v_str("example_id"),  // char*
@@ -3212,43 +3285,49 @@ voxgig_value* result = initiative->vt->create(initiative, cmap(14,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative = linear_initiative(client, NULL);
-voxgig_value* results = initiative->vt->list(initiative, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = initiative->vt->list(initiative, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative = linear_initiative(client, NULL);
-voxgig_value* result = initiative->vt->load(initiative, cmap(1, "id", v_str("initiative_id")), NULL, &err);
+Entity* result = initiative->vt->load(initiative, cmap(1, "id", v_str("initiative_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative = linear_initiative(client, NULL);
-voxgig_value* result = initiative->vt->remove(initiative, cmap(1, "id", v_str("initiative_id")), NULL, &err);
+Entity* result = initiative->vt->remove(initiative, cmap(1, "id", v_str("initiative_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative = linear_initiative(client, NULL);
-voxgig_value* result = initiative->vt->update(initiative, cmap(1, "id", v_str("initiative_id")), NULL, &err);
+Entity* result = initiative->vt->update(initiative, cmap(1, "id", v_str("initiative_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -3299,13 +3378,13 @@ Entity* initiative_label = linear_initiative_label(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_label = linear_initiative_label(client, NULL);
-voxgig_value* result = initiative_label->vt->create(initiative_label, cmap(6,
+Entity* result = initiative_label->vt->create(initiative_label, cmap(6,
     "color", v_str("example_color"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -3315,43 +3394,49 @@ voxgig_value* result = initiative_label->vt->create(initiative_label, cmap(6,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_label = linear_initiative_label(client, NULL);
-voxgig_value* results = initiative_label->vt->list(initiative_label, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = initiative_label->vt->list(initiative_label, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_label = linear_initiative_label(client, NULL);
-voxgig_value* result = initiative_label->vt->load(initiative_label, cmap(1, "id", v_str("initiative_label_id")), NULL, &err);
+Entity* result = initiative_label->vt->load(initiative_label, cmap(1, "id", v_str("initiative_label_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_label = linear_initiative_label(client, NULL);
-voxgig_value* result = initiative_label->vt->remove(initiative_label, cmap(1, "id", v_str("initiative_label_id")), NULL, &err);
+Entity* result = initiative_label->vt->remove(initiative_label, cmap(1, "id", v_str("initiative_label_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_label = linear_initiative_label(client, NULL);
-voxgig_value* result = initiative_label->vt->update(initiative_label, cmap(1, "id", v_str("initiative_label_id")), NULL, &err);
+Entity* result = initiative_label->vt->update(initiative_label, cmap(1, "id", v_str("initiative_label_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -3391,13 +3476,16 @@ Entity* initiative_lead_team_change_impact = linear_initiative_lead_team_change_
 
 ### Operations
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_lead_team_change_impact = linear_initiative_lead_team_change_impact(client, NULL);
-voxgig_value* result = initiative_lead_team_change_impact->vt->load(initiative_lead_team_change_impact, cmap(1, "id", v_str("initiative_lead_team_change_impact_id")), NULL, &err);
+Entity* result = initiative_lead_team_change_impact->vt->load(initiative_lead_team_change_impact, cmap(1, "id", v_str("initiative_lead_team_change_impact_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -3442,13 +3530,13 @@ Entity* initiative_relation = linear_initiative_relation(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_relation = linear_initiative_relation(client, NULL);
-voxgig_value* result = initiative_relation->vt->create(initiative_relation, cmap(4,
+Entity* result = initiative_relation->vt->create(initiative_relation, cmap(4,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "sortOrder", v_num(1),  // double
@@ -3456,43 +3544,49 @@ voxgig_value* result = initiative_relation->vt->create(initiative_relation, cmap
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_relation = linear_initiative_relation(client, NULL);
-voxgig_value* results = initiative_relation->vt->list(initiative_relation, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = initiative_relation->vt->list(initiative_relation, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_relation = linear_initiative_relation(client, NULL);
-voxgig_value* result = initiative_relation->vt->load(initiative_relation, cmap(1, "id", v_str("initiative_relation_id")), NULL, &err);
+Entity* result = initiative_relation->vt->load(initiative_relation, cmap(1, "id", v_str("initiative_relation_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_relation = linear_initiative_relation(client, NULL);
-voxgig_value* result = initiative_relation->vt->remove(initiative_relation, cmap(1, "id", v_str("initiative_relation_id")), NULL, &err);
+Entity* result = initiative_relation->vt->remove(initiative_relation, cmap(1, "id", v_str("initiative_relation_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_relation = linear_initiative_relation(client, NULL);
-voxgig_value* result = initiative_relation->vt->update(initiative_relation, cmap(1, "id", v_str("initiative_relation_id")), NULL, &err);
+Entity* result = initiative_relation->vt->update(initiative_relation, cmap(1, "id", v_str("initiative_relation_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -3536,13 +3630,13 @@ Entity* initiative_to_project = linear_initiative_to_project(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_to_project = linear_initiative_to_project(client, NULL);
-voxgig_value* result = initiative_to_project->vt->create(initiative_to_project, cmap(4,
+Entity* result = initiative_to_project->vt->create(initiative_to_project, cmap(4,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "sortOrder", v_str("example_sortOrder"),  // char*
@@ -3550,43 +3644,49 @@ voxgig_value* result = initiative_to_project->vt->create(initiative_to_project, 
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_to_project = linear_initiative_to_project(client, NULL);
-voxgig_value* results = initiative_to_project->vt->list(initiative_to_project, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = initiative_to_project->vt->list(initiative_to_project, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_to_project = linear_initiative_to_project(client, NULL);
-voxgig_value* result = initiative_to_project->vt->load(initiative_to_project, cmap(1, "id", v_str("initiative_to_project_id")), NULL, &err);
+Entity* result = initiative_to_project->vt->load(initiative_to_project, cmap(1, "id", v_str("initiative_to_project_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_to_project = linear_initiative_to_project(client, NULL);
-voxgig_value* result = initiative_to_project->vt->remove(initiative_to_project, cmap(1, "id", v_str("initiative_to_project_id")), NULL, &err);
+Entity* result = initiative_to_project->vt->remove(initiative_to_project, cmap(1, "id", v_str("initiative_to_project_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_to_project = linear_initiative_to_project(client, NULL);
-voxgig_value* result = initiative_to_project->vt->update(initiative_to_project, cmap(1, "id", v_str("initiative_to_project_id")), NULL, &err);
+Entity* result = initiative_to_project->vt->update(initiative_to_project, cmap(1, "id", v_str("initiative_to_project_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -3642,13 +3742,13 @@ Entity* initiative_update = linear_initiative_update(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_update = linear_initiative_update(client, NULL);
-voxgig_value* result = initiative_update->vt->create(initiative_update, cmap(12,
+Entity* result = initiative_update->vt->create(initiative_update, cmap(12,
     "body", v_str("example_body"),  // char*
     "bodyData", v_str("example_bodyData"),  // char*
     "commentCount", v_num(1),  // int64_t
@@ -3664,34 +3764,37 @@ voxgig_value* result = initiative_update->vt->create(initiative_update, cmap(12,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_update = linear_initiative_update(client, NULL);
-voxgig_value* results = initiative_update->vt->list(initiative_update, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = initiative_update->vt->list(initiative_update, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_update = linear_initiative_update(client, NULL);
-voxgig_value* result = initiative_update->vt->load(initiative_update, cmap(1, "id", v_str("initiative_update_id")), NULL, &err);
+Entity* result = initiative_update->vt->load(initiative_update, cmap(1, "id", v_str("initiative_update_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* initiative_update = linear_initiative_update(client, NULL);
-voxgig_value* result = initiative_update->vt->update(initiative_update, cmap(1, "id", v_str("initiative_update_id")), NULL, &err);
+Entity* result = initiative_update->vt->update(initiative_update, cmap(1, "id", v_str("initiative_update_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -3736,57 +3839,53 @@ Entity* integration = linear_integration(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
-```c
-Entity* integration = linear_integration(client, NULL);
-voxgig_value* result = integration->vt->create(integration, cmap(4,
-    "createdAt", v_str("example_createdAt"),  // voxgig_value*
-    "id", v_str("example_id"),  // char*
-    "service", v_str("example_service"),  // char*
-    "updatedAt", v_str("example_updatedAt"))  // voxgig_value*
-, NULL, &err);
-```
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
-
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* integration = linear_integration(client, NULL);
-voxgig_value* results = integration->vt->list(integration, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = integration->vt->list(integration, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* integration = linear_integration(client, NULL);
-voxgig_value* result = integration->vt->load(integration, cmap(1, "id", v_str("integration_id")), NULL, &err);
+Entity* result = integration->vt->load(integration, cmap(1, "id", v_str("integration_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* integration = linear_integration(client, NULL);
-voxgig_value* result = integration->vt->remove(integration, cmap(1, "id", v_str("integration_id")), NULL, &err);
+Entity* result = integration->vt->remove(integration, cmap(1, "id", v_str("integration_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* integration = linear_integration(client, NULL);
-voxgig_value* result = integration->vt->update(integration, cmap(1, "id", v_str("integration_id")), NULL, &err);
+Entity* result = integration->vt->update(integration, cmap(1, "id", v_str("integration_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -3830,47 +3929,53 @@ Entity* integration_template = linear_integration_template(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* integration_template = linear_integration_template(client, NULL);
-voxgig_value* result = integration_template->vt->create(integration_template, cmap(3,
+Entity* result = integration_template->vt->create(integration_template, cmap(3,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "updatedAt", v_str("example_updatedAt"))  // voxgig_value*
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* integration_template = linear_integration_template(client, NULL);
-voxgig_value* results = integration_template->vt->list(integration_template, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = integration_template->vt->list(integration_template, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* integration_template = linear_integration_template(client, NULL);
-voxgig_value* result = integration_template->vt->load(integration_template, cmap(1, "id", v_str("integration_template_id")), NULL, &err);
+Entity* result = integration_template->vt->load(integration_template, cmap(1, "id", v_str("integration_template_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* integration_template = linear_integration_template(client, NULL);
-voxgig_value* result = integration_template->vt->remove(integration_template, cmap(1, "id", v_str("integration_template_id")), NULL, &err);
+Entity* result = integration_template->vt->remove(integration_template, cmap(1, "id", v_str("integration_template_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -3927,35 +4032,38 @@ Entity* integrations_setting = linear_integrations_setting(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* integrations_setting = linear_integrations_setting(client, NULL);
-voxgig_value* result = integrations_setting->vt->create(integrations_setting, cmap(3,
+Entity* result = integrations_setting->vt->create(integrations_setting, cmap(3,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "updatedAt", v_str("example_updatedAt"))  // voxgig_value*
 , NULL, &err);
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* integrations_setting = linear_integrations_setting(client, NULL);
-voxgig_value* result = integrations_setting->vt->load(integrations_setting, cmap(1, "id", v_str("integrations_setting_id")), NULL, &err);
+Entity* result = integrations_setting->vt->load(integrations_setting, cmap(1, "id", v_str("integrations_setting_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* integrations_setting = linear_integrations_setting(client, NULL);
-voxgig_value* result = integrations_setting->vt->update(integrations_setting, cmap(1, "id", v_str("integrations_setting_id")), NULL, &err);
+Entity* result = integrations_setting->vt->update(integrations_setting, cmap(1, "id", v_str("integrations_setting_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -4056,13 +4164,13 @@ Entity* issue = linear_issue(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue = linear_issue(client, NULL);
-voxgig_value* result = issue->vt->create(issue, cmap(17,
+Entity* result = issue->vt->create(issue, cmap(17,
     "branchName", v_str("example_branchName"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "customerTicketCount", v_num(1),  // int64_t
@@ -4083,43 +4191,49 @@ voxgig_value* result = issue->vt->create(issue, cmap(17,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue = linear_issue(client, NULL);
-voxgig_value* results = issue->vt->list(issue, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = issue->vt->list(issue, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue = linear_issue(client, NULL);
-voxgig_value* result = issue->vt->load(issue, cmap(1, "id", v_str("issue_id")), NULL, &err);
+Entity* result = issue->vt->load(issue, cmap(1, "id", v_str("issue_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue = linear_issue(client, NULL);
-voxgig_value* result = issue->vt->remove(issue, cmap(1, "id", v_str("issue_id")), NULL, &err);
+Entity* result = issue->vt->remove(issue, cmap(1, "id", v_str("issue_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue = linear_issue(client, NULL);
-voxgig_value* result = issue->vt->update(issue, cmap(1, "id", v_str("issue_id")), NULL, &err);
+Entity* result = issue->vt->update(issue, cmap(1, "id", v_str("issue_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -4171,37 +4285,29 @@ Entity* issue_import = linear_issue_import(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
+
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_import = linear_issue_import(client, NULL);
-voxgig_value* result = issue_import->vt->create(issue_import, cmap(5,
-    "createdAt", v_str("example_createdAt"),  // voxgig_value*
-    "displayName", v_str("example_displayName"),  // char*
-    "service", v_str("example_service"),  // char*
-    "status", v_str("example_status"),  // char*
-    "updatedAt", v_str("example_updatedAt"))  // voxgig_value*
-, NULL, &err);
+Entity* result = issue_import->vt->remove(issue_import, cmap(1, "issue_import_id", v_str("issue_import_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
-
-```c
-Entity* issue_import = linear_issue_import(client, NULL);
-voxgig_value* result = issue_import->vt->remove(issue_import, cmap(1, "issue_import_id", v_str("issue_import_id")), NULL, &err);
-```
-
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
-
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_import = linear_issue_import(client, NULL);
-voxgig_value* result = issue_import->vt->update(issue_import, cmap(1, "id", v_str("id")), NULL, &err);
+Entity* result = issue_import->vt->update(issue_import, cmap(1, "id", v_str("id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -4254,13 +4360,13 @@ Entity* issue_label = linear_issue_label(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_label = linear_issue_label(client, NULL);
-voxgig_value* result = issue_label->vt->create(issue_label, cmap(6,
+Entity* result = issue_label->vt->create(issue_label, cmap(6,
     "color", v_str("example_color"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -4270,43 +4376,49 @@ voxgig_value* result = issue_label->vt->create(issue_label, cmap(6,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_label = linear_issue_label(client, NULL);
-voxgig_value* results = issue_label->vt->list(issue_label, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = issue_label->vt->list(issue_label, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_label = linear_issue_label(client, NULL);
-voxgig_value* result = issue_label->vt->load(issue_label, cmap(1, "id", v_str("issue_label_id")), NULL, &err);
+Entity* result = issue_label->vt->load(issue_label, cmap(1, "id", v_str("issue_label_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_label = linear_issue_label(client, NULL);
-voxgig_value* result = issue_label->vt->remove(issue_label, cmap(1, "id", v_str("issue_label_id")), NULL, &err);
+Entity* result = issue_label->vt->remove(issue_label, cmap(1, "id", v_str("issue_label_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_label = linear_issue_label(client, NULL);
-voxgig_value* result = issue_label->vt->update(issue_label, cmap(1, "id", v_str("issue_label_id")), NULL, &err);
+Entity* result = issue_label->vt->update(issue_label, cmap(1, "id", v_str("issue_label_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -4345,15 +4457,15 @@ Entity* issue_priority_value = linear_issue_priority_value(client, NULL);
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_priority_value = linear_issue_priority_value(client, NULL);
-voxgig_value* results = issue_priority_value->vt->list(issue_priority_value, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = issue_priority_value->vt->list(issue_priority_value, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
@@ -4398,13 +4510,13 @@ Entity* issue_relation = linear_issue_relation(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_relation = linear_issue_relation(client, NULL);
-voxgig_value* result = issue_relation->vt->create(issue_relation, cmap(4,
+Entity* result = issue_relation->vt->create(issue_relation, cmap(4,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "type", v_str("example_type"),  // char*
@@ -4412,43 +4524,49 @@ voxgig_value* result = issue_relation->vt->create(issue_relation, cmap(4,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_relation = linear_issue_relation(client, NULL);
-voxgig_value* results = issue_relation->vt->list(issue_relation, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = issue_relation->vt->list(issue_relation, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_relation = linear_issue_relation(client, NULL);
-voxgig_value* result = issue_relation->vt->load(issue_relation, cmap(1, "id", v_str("issue_relation_id")), NULL, &err);
+Entity* result = issue_relation->vt->load(issue_relation, cmap(1, "id", v_str("issue_relation_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_relation = linear_issue_relation(client, NULL);
-voxgig_value* result = issue_relation->vt->remove(issue_relation, cmap(1, "id", v_str("issue_relation_id")), NULL, &err);
+Entity* result = issue_relation->vt->remove(issue_relation, cmap(1, "id", v_str("issue_relation_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_relation = linear_issue_relation(client, NULL);
-voxgig_value* result = issue_relation->vt->update(issue_relation, cmap(1, "id", v_str("issue_relation_id")), NULL, &err);
+Entity* result = issue_relation->vt->update(issue_relation, cmap(1, "id", v_str("issue_relation_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -4550,15 +4668,15 @@ Entity* issue_search_result = linear_issue_search_result(client, NULL);
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_search_result = linear_issue_search_result(client, NULL);
-voxgig_value* results = issue_search_result->vt->list(issue_search_result, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = issue_search_result->vt->list(issue_search_result, cmap(1, "term", v_str("example")), NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
@@ -4602,47 +4720,53 @@ Entity* issue_to_release = linear_issue_to_release(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_to_release = linear_issue_to_release(client, NULL);
-voxgig_value* result = issue_to_release->vt->create(issue_to_release, cmap(3,
+Entity* result = issue_to_release->vt->create(issue_to_release, cmap(3,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "updatedAt", v_str("example_updatedAt"))  // voxgig_value*
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_to_release = linear_issue_to_release(client, NULL);
-voxgig_value* results = issue_to_release->vt->list(issue_to_release, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = issue_to_release->vt->list(issue_to_release, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_to_release = linear_issue_to_release(client, NULL);
-voxgig_value* result = issue_to_release->vt->load(issue_to_release, cmap(1, "id", v_str("issue_to_release_id")), NULL, &err);
+Entity* result = issue_to_release->vt->load(issue_to_release, cmap(1, "id", v_str("issue_to_release_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* issue_to_release = linear_issue_to_release(client, NULL);
-voxgig_value* result = issue_to_release->vt->remove(issue_to_release, cmap(1, "id", v_str("issue_to_release_id")), NULL, &err);
+Entity* result = issue_to_release->vt->remove(issue_to_release, cmap(1, "id", v_str("issue_to_release_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -4680,24 +4804,17 @@ Entity* logout_response = linear_logout_response(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
-```c
-Entity* logout_response = linear_logout_response(client, NULL);
-voxgig_value* result = logout_response->vt->create(logout_response, cmap(1,
-    "success", v_bool(true))  // bool
-, NULL, &err);
-```
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
-
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* logout_response = linear_logout_response(client, NULL);
-voxgig_value* result = logout_response->vt->update(logout_response, cmap(1, "session_id", v_str("session_id")), NULL, &err);
+Entity* result = logout_response->vt->update(logout_response, cmap(1, "session_id", v_str("session_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -4762,25 +4879,28 @@ Entity* notification = linear_notification(client, NULL);
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* notification = linear_notification(client, NULL);
-voxgig_value* results = notification->vt->list(notification, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = notification->vt->list(notification, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* notification = linear_notification(client, NULL);
-voxgig_value* result = notification->vt->load(notification, cmap(1, "id", v_str("notification_id")), NULL, &err);
+Entity* result = notification->vt->load(notification, cmap(1, "id", v_str("notification_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -4833,25 +4953,28 @@ Entity* notification_subscription = linear_notification_subscription(client, NUL
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* notification_subscription = linear_notification_subscription(client, NULL);
-voxgig_value* results = notification_subscription->vt->list(notification_subscription, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = notification_subscription->vt->list(notification_subscription, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* notification_subscription = linear_notification_subscription(client, NULL);
-voxgig_value* result = notification_subscription->vt->load(notification_subscription, cmap(1, "id", v_str("notification_subscription_id")), NULL, &err);
+Entity* result = notification_subscription->vt->load(notification_subscription, cmap(1, "id", v_str("notification_subscription_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -4903,13 +5026,13 @@ Entity* o_auth_application = linear_o_auth_application(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* o_auth_application = linear_o_auth_application(client, NULL);
-voxgig_value* result = o_auth_application->vt->create(o_auth_application, cmap(12,
+Entity* result = o_auth_application->vt->create(o_auth_application, cmap(12,
     "clientId", v_str("example_clientId"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "developer", v_str("example_developer"),  // char*
@@ -4925,34 +5048,37 @@ voxgig_value* result = o_auth_application->vt->create(o_auth_application, cmap(1
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* o_auth_application = linear_o_auth_application(client, NULL);
-voxgig_value* results = o_auth_application->vt->list(o_auth_application, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = o_auth_application->vt->list(o_auth_application, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* o_auth_application = linear_o_auth_application(client, NULL);
-voxgig_value* result = o_auth_application->vt->load(o_auth_application, cmap(1, "id", v_str("o_auth_application_id")), NULL, &err);
+Entity* result = o_auth_application->vt->load(o_auth_application, cmap(1, "id", v_str("o_auth_application_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* o_auth_application = linear_o_auth_application(client, NULL);
-voxgig_value* result = o_auth_application->vt->update(o_auth_application, cmap(1, "id", v_str("o_auth_application_id")), NULL, &err);
+Entity* result = o_auth_application->vt->update(o_auth_application, cmap(1, "id", v_str("o_auth_application_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -5055,31 +5181,37 @@ Entity* organization = linear_organization(client, NULL);
 
 ### Operations
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* organization = linear_organization(client, NULL);
-voxgig_value* result = organization->vt->load(organization, cmap(1, "id", v_str("organization_id")), NULL, &err);
+Entity* result = organization->vt->load(organization, cmap(1, "id", v_str("organization_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* organization = linear_organization(client, NULL);
-voxgig_value* result = organization->vt->remove(organization, cmap(1, "id", v_str("organization_id")), NULL, &err);
+Entity* result = organization->vt->remove(organization, cmap(1, "id", v_str("organization_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* organization = linear_organization(client, NULL);
-voxgig_value* result = organization->vt->update(organization, cmap(1, "id", v_str("organization_id")), NULL, &err);
+Entity* result = organization->vt->update(organization, cmap(1, "id", v_str("organization_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -5128,13 +5260,13 @@ Entity* organization_domain = linear_organization_domain(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* organization_domain = linear_organization_domain(client, NULL);
-voxgig_value* result = organization_domain->vt->create(organization_domain, cmap(6,
+Entity* result = organization_domain->vt->create(organization_domain, cmap(6,
     "authType", v_str("example_authType"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -5144,22 +5276,25 @@ voxgig_value* result = organization_domain->vt->create(organization_domain, cmap
 , NULL, &err);
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* organization_domain = linear_organization_domain(client, NULL);
-voxgig_value* result = organization_domain->vt->remove(organization_domain, cmap(1, "id", v_str("id")), NULL, &err);
+Entity* result = organization_domain->vt->remove(organization_domain, cmap(1, "id", v_str("organization_domain_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* organization_domain = linear_organization_domain(client, NULL);
-voxgig_value* result = organization_domain->vt->update(organization_domain, cmap(1, "id", v_str("id")), NULL, &err);
+Entity* result = organization_domain->vt->update(organization_domain, cmap(1, "id", v_str("organization_domain_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -5209,13 +5344,13 @@ Entity* organization_invite = linear_organization_invite(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* organization_invite = linear_organization_invite(client, NULL);
-voxgig_value* result = organization_invite->vt->create(organization_invite, cmap(6,
+Entity* result = organization_invite->vt->create(organization_invite, cmap(6,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "email", v_str("example_email"),  // char*
     "external", v_bool(true),  // bool
@@ -5225,43 +5360,49 @@ voxgig_value* result = organization_invite->vt->create(organization_invite, cmap
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* organization_invite = linear_organization_invite(client, NULL);
-voxgig_value* results = organization_invite->vt->list(organization_invite, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = organization_invite->vt->list(organization_invite, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* organization_invite = linear_organization_invite(client, NULL);
-voxgig_value* result = organization_invite->vt->load(organization_invite, cmap(1, "id", v_str("organization_invite_id")), NULL, &err);
+Entity* result = organization_invite->vt->load(organization_invite, cmap(1, "id", v_str("organization_invite_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* organization_invite = linear_organization_invite(client, NULL);
-voxgig_value* result = organization_invite->vt->remove(organization_invite, cmap(1, "id", v_str("organization_invite_id")), NULL, &err);
+Entity* result = organization_invite->vt->remove(organization_invite, cmap(1, "id", v_str("organization_invite_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* organization_invite = linear_organization_invite(client, NULL);
-voxgig_value* result = organization_invite->vt->update(organization_invite, cmap(1, "id", v_str("organization_invite_id")), NULL, &err);
+Entity* result = organization_invite->vt->update(organization_invite, cmap(1, "id", v_str("organization_invite_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -5300,13 +5441,16 @@ Entity* organization_meta = linear_organization_meta(client, NULL);
 
 ### Operations
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* organization_meta = linear_organization_meta(client, NULL);
-voxgig_value* result = organization_meta->vt->load(organization_meta, cmap(1, "url_key", v_str("url_key")), NULL, &err);
+Entity* result = organization_meta->vt->load(organization_meta, cmap(1, "url_key", v_str("url_key")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -5345,13 +5489,13 @@ Entity* passkey_login_start_response = linear_passkey_login_start_response(clien
 
 ### Operations
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* passkey_login_start_response = linear_passkey_login_start_response(client, NULL);
-voxgig_value* result = passkey_login_start_response->vt->update(passkey_login_start_response, cmap(1, "auth_id", v_str("auth_id")), NULL, &err);
+Entity* result = passkey_login_start_response->vt->update(passkey_login_start_response, cmap(1, "auth_id", v_str("auth_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -5446,13 +5590,13 @@ Entity* project = linear_project(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project = linear_project(client, NULL);
-voxgig_value* result = project->vt->create(project, cmap(25,
+Entity* result = project->vt->create(project, cmap(25,
     "color", v_str("example_color"),  // char*
     "completedIssueCountHistory", v_num(1),  // double
     "completedScopeHistory", v_num(1),  // double
@@ -5481,43 +5625,49 @@ voxgig_value* result = project->vt->create(project, cmap(25,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project = linear_project(client, NULL);
-voxgig_value* results = project->vt->list(project, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = project->vt->list(project, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project = linear_project(client, NULL);
-voxgig_value* result = project->vt->load(project, cmap(1, "id", v_str("project_id")), NULL, &err);
+Entity* result = project->vt->load(project, cmap(1, "id", v_str("project_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project = linear_project(client, NULL);
-voxgig_value* result = project->vt->remove(project, cmap(1, "id", v_str("project_id")), NULL, &err);
+Entity* result = project->vt->remove(project, cmap(1, "id", v_str("project_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project = linear_project(client, NULL);
-voxgig_value* result = project->vt->update(project, cmap(1, "id", v_str("project_id")), NULL, &err);
+Entity* result = project->vt->update(project, cmap(1, "id", v_str("project_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -5570,13 +5720,13 @@ Entity* project_label = linear_project_label(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_label = linear_project_label(client, NULL);
-voxgig_value* result = project_label->vt->create(project_label, cmap(6,
+Entity* result = project_label->vt->create(project_label, cmap(6,
     "color", v_str("example_color"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -5586,43 +5736,49 @@ voxgig_value* result = project_label->vt->create(project_label, cmap(6,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_label = linear_project_label(client, NULL);
-voxgig_value* results = project_label->vt->list(project_label, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = project_label->vt->list(project_label, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_label = linear_project_label(client, NULL);
-voxgig_value* result = project_label->vt->load(project_label, cmap(1, "id", v_str("project_label_id")), NULL, &err);
+Entity* result = project_label->vt->load(project_label, cmap(1, "id", v_str("project_label_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_label = linear_project_label(client, NULL);
-voxgig_value* result = project_label->vt->remove(project_label, cmap(1, "id", v_str("project_label_id")), NULL, &err);
+Entity* result = project_label->vt->remove(project_label, cmap(1, "id", v_str("project_label_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_label = linear_project_label(client, NULL);
-voxgig_value* result = project_label->vt->update(project_label, cmap(1, "id", v_str("project_label_id")), NULL, &err);
+Entity* result = project_label->vt->update(project_label, cmap(1, "id", v_str("project_label_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -5674,13 +5830,13 @@ Entity* project_milestone = linear_project_milestone(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_milestone = linear_project_milestone(client, NULL);
-voxgig_value* result = project_milestone->vt->create(project_milestone, cmap(9,
+Entity* result = project_milestone->vt->create(project_milestone, cmap(9,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "currentProgress", v_str("example_currentProgress"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -5693,43 +5849,49 @@ voxgig_value* result = project_milestone->vt->create(project_milestone, cmap(9,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_milestone = linear_project_milestone(client, NULL);
-voxgig_value* results = project_milestone->vt->list(project_milestone, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = project_milestone->vt->list(project_milestone, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_milestone = linear_project_milestone(client, NULL);
-voxgig_value* result = project_milestone->vt->load(project_milestone, cmap(1, "id", v_str("project_milestone_id")), NULL, &err);
+Entity* result = project_milestone->vt->load(project_milestone, cmap(1, "id", v_str("project_milestone_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_milestone = linear_project_milestone(client, NULL);
-voxgig_value* result = project_milestone->vt->remove(project_milestone, cmap(1, "id", v_str("project_milestone_id")), NULL, &err);
+Entity* result = project_milestone->vt->remove(project_milestone, cmap(1, "id", v_str("project_milestone_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_milestone = linear_project_milestone(client, NULL);
-voxgig_value* result = project_milestone->vt->update(project_milestone, cmap(1, "id", v_str("project_milestone_id")), NULL, &err);
+Entity* result = project_milestone->vt->update(project_milestone, cmap(1, "id", v_str("project_milestone_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -5769,13 +5931,13 @@ Entity* project_milestone_move_project_team = linear_project_milestone_move_proj
 
 ### Operations
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_milestone_move_project_team = linear_project_milestone_move_project_team(client, NULL);
-voxgig_value* result = project_milestone_move_project_team->vt->update(project_milestone_move_project_team, cmap(1, "id", v_str("id")), NULL, &err);
+Entity* result = project_milestone_move_project_team->vt->update(project_milestone_move_project_team, cmap(1, "id", v_str("id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -5824,13 +5986,13 @@ Entity* project_relation = linear_project_relation(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_relation = linear_project_relation(client, NULL);
-voxgig_value* result = project_relation->vt->create(project_relation, cmap(6,
+Entity* result = project_relation->vt->create(project_relation, cmap(6,
     "anchorType", v_str("example_anchorType"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -5840,43 +6002,49 @@ voxgig_value* result = project_relation->vt->create(project_relation, cmap(6,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_relation = linear_project_relation(client, NULL);
-voxgig_value* results = project_relation->vt->list(project_relation, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = project_relation->vt->list(project_relation, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_relation = linear_project_relation(client, NULL);
-voxgig_value* result = project_relation->vt->load(project_relation, cmap(1, "id", v_str("project_relation_id")), NULL, &err);
+Entity* result = project_relation->vt->load(project_relation, cmap(1, "id", v_str("project_relation_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_relation = linear_project_relation(client, NULL);
-voxgig_value* result = project_relation->vt->remove(project_relation, cmap(1, "id", v_str("project_relation_id")), NULL, &err);
+Entity* result = project_relation->vt->remove(project_relation, cmap(1, "id", v_str("project_relation_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_relation = linear_project_relation(client, NULL);
-voxgig_value* result = project_relation->vt->update(project_relation, cmap(1, "id", v_str("project_relation_id")), NULL, &err);
+Entity* result = project_relation->vt->update(project_relation, cmap(1, "id", v_str("project_relation_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -5972,15 +6140,15 @@ Entity* project_search_result = linear_project_search_result(client, NULL);
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_search_result = linear_project_search_result(client, NULL);
-voxgig_value* results = project_search_result->vt->list(project_search_result, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = project_search_result->vt->list(project_search_result, cmap(1, "term", v_str("example")), NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
@@ -6030,13 +6198,13 @@ Entity* project_status = linear_project_status(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_status = linear_project_status(client, NULL);
-voxgig_value* result = project_status->vt->create(project_status, cmap(8,
+Entity* result = project_status->vt->create(project_status, cmap(8,
     "color", v_str("example_color"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -6048,34 +6216,37 @@ voxgig_value* result = project_status->vt->create(project_status, cmap(8,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_status = linear_project_status(client, NULL);
-voxgig_value* results = project_status->vt->list(project_status, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = project_status->vt->list(project_status, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_status = linear_project_status(client, NULL);
-voxgig_value* result = project_status->vt->load(project_status, cmap(1, "id", v_str("project_status_id")), NULL, &err);
+Entity* result = project_status->vt->load(project_status, cmap(1, "id", v_str("project_status_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_status = linear_project_status(client, NULL);
-voxgig_value* result = project_status->vt->update(project_status, cmap(1, "id", v_str("project_status_id")), NULL, &err);
+Entity* result = project_status->vt->update(project_status, cmap(1, "id", v_str("project_status_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -6132,13 +6303,13 @@ Entity* project_update = linear_project_update(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_update = linear_project_update(client, NULL);
-voxgig_value* result = project_update->vt->create(project_update, cmap(12,
+Entity* result = project_update->vt->create(project_update, cmap(12,
     "body", v_str("example_body"),  // char*
     "bodyData", v_str("example_bodyData"),  // char*
     "commentCount", v_num(1),  // int64_t
@@ -6154,43 +6325,49 @@ voxgig_value* result = project_update->vt->create(project_update, cmap(12,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_update = linear_project_update(client, NULL);
-voxgig_value* results = project_update->vt->list(project_update, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = project_update->vt->list(project_update, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_update = linear_project_update(client, NULL);
-voxgig_value* result = project_update->vt->load(project_update, cmap(1, "id", v_str("project_update_id")), NULL, &err);
+Entity* result = project_update->vt->load(project_update, cmap(1, "id", v_str("project_update_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_update = linear_project_update(client, NULL);
-voxgig_value* result = project_update->vt->remove(project_update, cmap(1, "id", v_str("project_update_id")), NULL, &err);
+Entity* result = project_update->vt->remove(project_update, cmap(1, "id", v_str("project_update_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* project_update = linear_project_update(client, NULL);
-voxgig_value* result = project_update->vt->update(project_update, cmap(1, "id", v_str("project_update_id")), NULL, &err);
+Entity* result = project_update->vt->update(project_update, cmap(1, "id", v_str("project_update_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -6231,26 +6408,29 @@ Entity* push_subscription = linear_push_subscription(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* push_subscription = linear_push_subscription(client, NULL);
-voxgig_value* result = push_subscription->vt->create(push_subscription, cmap(3,
+Entity* result = push_subscription->vt->create(push_subscription, cmap(3,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "updatedAt", v_str("example_updatedAt"))  // voxgig_value*
 , NULL, &err);
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* push_subscription = linear_push_subscription(client, NULL);
-voxgig_value* result = push_subscription->vt->remove(push_subscription, cmap(1, "id", v_str("id")), NULL, &err);
+Entity* result = push_subscription->vt->remove(push_subscription, cmap(1, "id", v_str("push_subscription_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -6299,13 +6479,13 @@ Entity* reaction = linear_reaction(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* reaction = linear_reaction(client, NULL);
-voxgig_value* result = reaction->vt->create(reaction, cmap(4,
+Entity* result = reaction->vt->create(reaction, cmap(4,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "emoji", v_str("example_emoji"),  // char*
     "id", v_str("example_id"),  // char*
@@ -6313,13 +6493,16 @@ voxgig_value* result = reaction->vt->create(reaction, cmap(4,
 , NULL, &err);
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* reaction = linear_reaction(client, NULL);
-voxgig_value* result = reaction->vt->remove(reaction, cmap(1, "id", v_str("id")), NULL, &err);
+Entity* result = reaction->vt->remove(reaction, cmap(1, "id", v_str("reaction_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -6380,13 +6563,13 @@ Entity* release = linear_release(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release = linear_release(client, NULL);
-voxgig_value* result = release->vt->create(release, cmap(9,
+Entity* result = release->vt->create(release, cmap(9,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "currentProgress", v_str("example_currentProgress"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -6399,43 +6582,49 @@ voxgig_value* result = release->vt->create(release, cmap(9,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release = linear_release(client, NULL);
-voxgig_value* results = release->vt->list(release, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = release->vt->list(release, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release = linear_release(client, NULL);
-voxgig_value* result = release->vt->load(release, cmap(1, "id", v_str("release_id")), NULL, &err);
+Entity* result = release->vt->load(release, cmap(1, "id", v_str("release_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release = linear_release(client, NULL);
-voxgig_value* result = release->vt->remove(release, cmap(1, "id", v_str("release_id")), NULL, &err);
+Entity* result = release->vt->remove(release, cmap(1, "id", v_str("release_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release = linear_release(client, NULL);
-voxgig_value* result = release->vt->update(release, cmap(1, "id", v_str("release_id")), NULL, &err);
+Entity* result = release->vt->update(release, cmap(1, "id", v_str("release_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -6485,13 +6674,13 @@ Entity* release_note = linear_release_note(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_note = linear_release_note(client, NULL);
-voxgig_value* result = release_note->vt->create(release_note, cmap(6,
+Entity* result = release_note->vt->create(release_note, cmap(6,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "releaseCount", v_num(1),  // int64_t
@@ -6501,43 +6690,49 @@ voxgig_value* result = release_note->vt->create(release_note, cmap(6,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_note = linear_release_note(client, NULL);
-voxgig_value* results = release_note->vt->list(release_note, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = release_note->vt->list(release_note, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_note = linear_release_note(client, NULL);
-voxgig_value* result = release_note->vt->load(release_note, cmap(1, "id", v_str("release_note_id")), NULL, &err);
+Entity* result = release_note->vt->load(release_note, cmap(1, "id", v_str("release_note_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_note = linear_release_note(client, NULL);
-voxgig_value* result = release_note->vt->remove(release_note, cmap(1, "id", v_str("release_note_id")), NULL, &err);
+Entity* result = release_note->vt->remove(release_note, cmap(1, "id", v_str("release_note_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_note = linear_release_note(client, NULL);
-voxgig_value* result = release_note->vt->update(release_note, cmap(1, "id", v_str("release_note_id")), NULL, &err);
+Entity* result = release_note->vt->update(release_note, cmap(1, "id", v_str("release_note_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -6590,13 +6785,13 @@ Entity* release_pipeline = linear_release_pipeline(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_pipeline = linear_release_pipeline(client, NULL);
-voxgig_value* result = release_pipeline->vt->create(release_pipeline, cmap(12,
+Entity* result = release_pipeline->vt->create(release_pipeline, cmap(12,
     "approximateReleaseCount", v_num(1),  // int64_t
     "autoGenerateReleaseNotesOnCompletion", v_bool(true),  // bool
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
@@ -6612,43 +6807,49 @@ voxgig_value* result = release_pipeline->vt->create(release_pipeline, cmap(12,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_pipeline = linear_release_pipeline(client, NULL);
-voxgig_value* results = release_pipeline->vt->list(release_pipeline, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = release_pipeline->vt->list(release_pipeline, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_pipeline = linear_release_pipeline(client, NULL);
-voxgig_value* result = release_pipeline->vt->load(release_pipeline, cmap(1, "id", v_str("release_pipeline_id")), NULL, &err);
+Entity* result = release_pipeline->vt->load(release_pipeline, cmap(1, "id", v_str("release_pipeline_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_pipeline = linear_release_pipeline(client, NULL);
-voxgig_value* result = release_pipeline->vt->remove(release_pipeline, cmap(1, "id", v_str("release_pipeline_id")), NULL, &err);
+Entity* result = release_pipeline->vt->remove(release_pipeline, cmap(1, "id", v_str("release_pipeline_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_pipeline = linear_release_pipeline(client, NULL);
-voxgig_value* result = release_pipeline->vt->update(release_pipeline, cmap(1, "id", v_str("release_pipeline_id")), NULL, &err);
+Entity* result = release_pipeline->vt->update(release_pipeline, cmap(1, "id", v_str("release_pipeline_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -6695,13 +6896,13 @@ Entity* release_stage = linear_release_stage(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_stage = linear_release_stage(client, NULL);
-voxgig_value* result = release_stage->vt->create(release_stage, cmap(8,
+Entity* result = release_stage->vt->create(release_stage, cmap(8,
     "color", v_str("example_color"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "frozen", v_bool(true),  // bool
@@ -6713,34 +6914,37 @@ voxgig_value* result = release_stage->vt->create(release_stage, cmap(8,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_stage = linear_release_stage(client, NULL);
-voxgig_value* results = release_stage->vt->list(release_stage, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = release_stage->vt->list(release_stage, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_stage = linear_release_stage(client, NULL);
-voxgig_value* result = release_stage->vt->load(release_stage, cmap(1, "id", v_str("release_stage_id")), NULL, &err);
+Entity* result = release_stage->vt->load(release_stage, cmap(1, "id", v_str("release_stage_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* release_stage = linear_release_stage(client, NULL);
-voxgig_value* result = release_stage->vt->update(release_stage, cmap(1, "id", v_str("release_stage_id")), NULL, &err);
+Entity* result = release_stage->vt->update(release_stage, cmap(1, "id", v_str("release_stage_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -6790,13 +6994,13 @@ Entity* roadmap = linear_roadmap(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* roadmap = linear_roadmap(client, NULL);
-voxgig_value* result = roadmap->vt->create(roadmap, cmap(7,
+Entity* result = roadmap->vt->create(roadmap, cmap(7,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "name", v_str("example_name"),  // char*
@@ -6807,43 +7011,49 @@ voxgig_value* result = roadmap->vt->create(roadmap, cmap(7,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* roadmap = linear_roadmap(client, NULL);
-voxgig_value* results = roadmap->vt->list(roadmap, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = roadmap->vt->list(roadmap, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* roadmap = linear_roadmap(client, NULL);
-voxgig_value* result = roadmap->vt->load(roadmap, cmap(1, "id", v_str("roadmap_id")), NULL, &err);
+Entity* result = roadmap->vt->load(roadmap, cmap(1, "id", v_str("roadmap_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* roadmap = linear_roadmap(client, NULL);
-voxgig_value* result = roadmap->vt->remove(roadmap, cmap(1, "id", v_str("roadmap_id")), NULL, &err);
+Entity* result = roadmap->vt->remove(roadmap, cmap(1, "id", v_str("roadmap_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* roadmap = linear_roadmap(client, NULL);
-voxgig_value* result = roadmap->vt->update(roadmap, cmap(1, "id", v_str("roadmap_id")), NULL, &err);
+Entity* result = roadmap->vt->update(roadmap, cmap(1, "id", v_str("roadmap_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -6887,13 +7097,13 @@ Entity* roadmap_to_project = linear_roadmap_to_project(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* roadmap_to_project = linear_roadmap_to_project(client, NULL);
-voxgig_value* result = roadmap_to_project->vt->create(roadmap_to_project, cmap(4,
+Entity* result = roadmap_to_project->vt->create(roadmap_to_project, cmap(4,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "sortOrder", v_str("example_sortOrder"),  // char*
@@ -6901,43 +7111,49 @@ voxgig_value* result = roadmap_to_project->vt->create(roadmap_to_project, cmap(4
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* roadmap_to_project = linear_roadmap_to_project(client, NULL);
-voxgig_value* results = roadmap_to_project->vt->list(roadmap_to_project, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = roadmap_to_project->vt->list(roadmap_to_project, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* roadmap_to_project = linear_roadmap_to_project(client, NULL);
-voxgig_value* result = roadmap_to_project->vt->load(roadmap_to_project, cmap(1, "id", v_str("roadmap_to_project_id")), NULL, &err);
+Entity* result = roadmap_to_project->vt->load(roadmap_to_project, cmap(1, "id", v_str("roadmap_to_project_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* roadmap_to_project = linear_roadmap_to_project(client, NULL);
-voxgig_value* result = roadmap_to_project->vt->remove(roadmap_to_project, cmap(1, "id", v_str("roadmap_to_project_id")), NULL, &err);
+Entity* result = roadmap_to_project->vt->remove(roadmap_to_project, cmap(1, "id", v_str("roadmap_to_project_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* roadmap_to_project = linear_roadmap_to_project(client, NULL);
-voxgig_value* result = roadmap_to_project->vt->update(roadmap_to_project, cmap(1, "id", v_str("roadmap_to_project_id")), NULL, &err);
+Entity* result = roadmap_to_project->vt->update(roadmap_to_project, cmap(1, "id", v_str("roadmap_to_project_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -6981,15 +7197,15 @@ Entity* sla_configuration = linear_sla_configuration(client, NULL);
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* sla_configuration = linear_sla_configuration(client, NULL);
-voxgig_value* results = sla_configuration->vt->list(sla_configuration, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = sla_configuration->vt->list(sla_configuration, cmap(1, "team_id", v_str("example")), NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
@@ -7029,13 +7245,16 @@ Entity* sso_url_from_email_response = linear_sso_url_from_email_response(client,
 
 ### Operations
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* sso_url_from_email_response = linear_sso_url_from_email_response(client, NULL);
-voxgig_value* result = sso_url_from_email_response->vt->load(sso_url_from_email_response, cmap(2, "email", v_str("email"), "type", v_str("type")), NULL, &err);
+Entity* result = sso_url_from_email_response->vt->load(sso_url_from_email_response, cmap(2, "email", v_str("email"), "type", v_str("type")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -7136,13 +7355,13 @@ Entity* team = linear_team(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* team = linear_team(client, NULL);
-voxgig_value* result = team->vt->create(team, cmap(39,
+Entity* result = team->vt->create(team, cmap(39,
     "aiDiscussionSummariesEnabled", v_bool(true),  // bool
     "aiThreadSummariesEnabled", v_bool(true),  // bool
     "autoArchivePeriod", v_num(1),  // double
@@ -7185,43 +7404,49 @@ voxgig_value* result = team->vt->create(team, cmap(39,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* team = linear_team(client, NULL);
-voxgig_value* results = team->vt->list(team, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = team->vt->list(team, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* team = linear_team(client, NULL);
-voxgig_value* result = team->vt->load(team, cmap(1, "id", v_str("team_id")), NULL, &err);
+Entity* result = team->vt->load(team, cmap(1, "id", v_str("team_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* team = linear_team(client, NULL);
-voxgig_value* result = team->vt->remove(team, cmap(1, "id", v_str("team_id")), NULL, &err);
+Entity* result = team->vt->remove(team, cmap(1, "id", v_str("team_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* team = linear_team(client, NULL);
-voxgig_value* result = team->vt->update(team, cmap(1, "id", v_str("team_id")), NULL, &err);
+Entity* result = team->vt->update(team, cmap(1, "id", v_str("team_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -7266,13 +7491,13 @@ Entity* team_membership = linear_team_membership(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* team_membership = linear_team_membership(client, NULL);
-voxgig_value* result = team_membership->vt->create(team_membership, cmap(5,
+Entity* result = team_membership->vt->create(team_membership, cmap(5,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "owner", v_bool(true),  // bool
@@ -7281,43 +7506,49 @@ voxgig_value* result = team_membership->vt->create(team_membership, cmap(5,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* team_membership = linear_team_membership(client, NULL);
-voxgig_value* results = team_membership->vt->list(team_membership, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = team_membership->vt->list(team_membership, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* team_membership = linear_team_membership(client, NULL);
-voxgig_value* result = team_membership->vt->load(team_membership, cmap(1, "id", v_str("team_membership_id")), NULL, &err);
+Entity* result = team_membership->vt->load(team_membership, cmap(1, "id", v_str("team_membership_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* team_membership = linear_team_membership(client, NULL);
-voxgig_value* result = team_membership->vt->remove(team_membership, cmap(1, "id", v_str("team_membership_id")), NULL, &err);
+Entity* result = team_membership->vt->remove(team_membership, cmap(1, "id", v_str("team_membership_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* team_membership = linear_team_membership(client, NULL);
-voxgig_value* result = team_membership->vt->update(team_membership, cmap(1, "id", v_str("team_membership_id")), NULL, &err);
+Entity* result = team_membership->vt->update(team_membership, cmap(1, "id", v_str("team_membership_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -7374,13 +7605,13 @@ Entity* template = linear_template(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* template = linear_template(client, NULL);
-voxgig_value* result = template->vt->create(template, cmap(8,
+Entity* result = template->vt->create(template, cmap(8,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "hasFormFields", v_bool(true),  // bool
     "id", v_str("example_id"),  // char*
@@ -7392,43 +7623,49 @@ voxgig_value* result = template->vt->create(template, cmap(8,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* template = linear_template(client, NULL);
-voxgig_value* results = template->vt->list(template, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = template->vt->list(template, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* template = linear_template(client, NULL);
-voxgig_value* result = template->vt->load(template, cmap(1, "id", v_str("template_id")), NULL, &err);
+Entity* result = template->vt->load(template, cmap(1, "id", v_str("template_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* template = linear_template(client, NULL);
-voxgig_value* result = template->vt->remove(template, cmap(1, "id", v_str("template_id")), NULL, &err);
+Entity* result = template->vt->remove(template, cmap(1, "id", v_str("template_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* template = linear_template(client, NULL);
-voxgig_value* result = template->vt->update(template, cmap(1, "id", v_str("template_id")), NULL, &err);
+Entity* result = template->vt->update(template, cmap(1, "id", v_str("template_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -7474,13 +7711,13 @@ Entity* time_schedule = linear_time_schedule(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* time_schedule = linear_time_schedule(client, NULL);
-voxgig_value* result = time_schedule->vt->create(time_schedule, cmap(4,
+Entity* result = time_schedule->vt->create(time_schedule, cmap(4,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "name", v_str("example_name"),  // char*
@@ -7488,43 +7725,49 @@ voxgig_value* result = time_schedule->vt->create(time_schedule, cmap(4,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* time_schedule = linear_time_schedule(client, NULL);
-voxgig_value* results = time_schedule->vt->list(time_schedule, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = time_schedule->vt->list(time_schedule, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* time_schedule = linear_time_schedule(client, NULL);
-voxgig_value* result = time_schedule->vt->load(time_schedule, cmap(1, "id", v_str("time_schedule_id")), NULL, &err);
+Entity* result = time_schedule->vt->load(time_schedule, cmap(1, "id", v_str("time_schedule_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* time_schedule = linear_time_schedule(client, NULL);
-voxgig_value* result = time_schedule->vt->remove(time_schedule, cmap(1, "id", v_str("time_schedule_id")), NULL, &err);
+Entity* result = time_schedule->vt->remove(time_schedule, cmap(1, "id", v_str("time_schedule_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* time_schedule = linear_time_schedule(client, NULL);
-voxgig_value* result = time_schedule->vt->update(time_schedule, cmap(1, "id", v_str("time_schedule_id")), NULL, &err);
+Entity* result = time_schedule->vt->update(time_schedule, cmap(1, "id", v_str("time_schedule_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -7569,13 +7812,13 @@ Entity* triage_responsibility = linear_triage_responsibility(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* triage_responsibility = linear_triage_responsibility(client, NULL);
-voxgig_value* result = triage_responsibility->vt->create(triage_responsibility, cmap(4,
+Entity* result = triage_responsibility->vt->create(triage_responsibility, cmap(4,
     "action", v_str("example_action"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -7583,43 +7826,49 @@ voxgig_value* result = triage_responsibility->vt->create(triage_responsibility, 
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* triage_responsibility = linear_triage_responsibility(client, NULL);
-voxgig_value* results = triage_responsibility->vt->list(triage_responsibility, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = triage_responsibility->vt->list(triage_responsibility, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* triage_responsibility = linear_triage_responsibility(client, NULL);
-voxgig_value* result = triage_responsibility->vt->load(triage_responsibility, cmap(1, "id", v_str("triage_responsibility_id")), NULL, &err);
+Entity* result = triage_responsibility->vt->load(triage_responsibility, cmap(1, "id", v_str("triage_responsibility_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* triage_responsibility = linear_triage_responsibility(client, NULL);
-voxgig_value* result = triage_responsibility->vt->remove(triage_responsibility, cmap(1, "id", v_str("triage_responsibility_id")), NULL, &err);
+Entity* result = triage_responsibility->vt->remove(triage_responsibility, cmap(1, "id", v_str("triage_responsibility_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* triage_responsibility = linear_triage_responsibility(client, NULL);
-voxgig_value* result = triage_responsibility->vt->update(triage_responsibility, cmap(1, "id", v_str("triage_responsibility_id")), NULL, &err);
+Entity* result = triage_responsibility->vt->update(triage_responsibility, cmap(1, "id", v_str("triage_responsibility_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -7662,21 +7911,9 @@ Entity* upload_file = linear_upload_file(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
-
-```c
-Entity* upload_file = linear_upload_file(client, NULL);
-voxgig_value* result = upload_file->vt->create(upload_file, cmap(6,
-    "content_type", v_str("example_content_type"),  // char*
-    "filename", v_str("example_filename"),  // char*
-    "size", v_num(1),  // int64_t
-    "assetUrl", v_str("example_assetUrl"),  // char*
-    "contentType", v_str("example_contentType"),  // char*
-    "uploadUrl", v_str("example_uploadUrl"))  // char*
-, NULL, &err);
-```
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ### Common Methods
 
@@ -7719,25 +7956,28 @@ Entity* usage_alert = linear_usage_alert(client, NULL);
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* usage_alert = linear_usage_alert(client, NULL);
-voxgig_value* results = usage_alert->vt->list(usage_alert, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = usage_alert->vt->list(usage_alert, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* usage_alert = linear_usage_alert(client, NULL);
-voxgig_value* result = usage_alert->vt->load(usage_alert, cmap(1, "id", v_str("usage_alert_id")), NULL, &err);
+Entity* result = usage_alert->vt->load(usage_alert, cmap(1, "id", v_str("usage_alert_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
 ### Common Methods
@@ -7809,65 +8049,41 @@ Entity* user = linear_user(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
-```c
-Entity* user = linear_user(client, NULL);
-voxgig_value* result = user->vt->create(user, cmap(21,
-    "active", v_bool(true),  // bool
-    "admin", v_bool(true),  // bool
-    "app", v_bool(true),  // bool
-    "avatarBackgroundColor", v_str("example_avatarBackgroundColor"),  // char*
-    "canAccessAnyPublicTeam", v_bool(true),  // bool
-    "createdAt", v_str("example_createdAt"),  // voxgig_value*
-    "createdIssueCount", v_num(1),  // int64_t
-    "displayName", v_str("example_displayName"),  // char*
-    "email", v_str("example_email"),  // char*
-    "guest", v_bool(true),  // bool
-    "hasGitHubCodeAccess", v_bool(true),  // bool
-    "id", v_str("example_id"),  // char*
-    "initials", v_str("example_initials"),  // char*
-    "isAssignable", v_bool(true),  // bool
-    "isMe", v_bool(true),  // bool
-    "isMentionable", v_bool(true),  // bool
-    "name", v_str("example_name"),  // char*
-    "owner", v_bool(true),  // bool
-    "supportsAgentSessions", v_bool(true),  // bool
-    "updatedAt", v_str("example_updatedAt"),  // voxgig_value*
-    "url", v_str("example_url"))  // char*
-, NULL, &err);
-```
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
-
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* user = linear_user(client, NULL);
-voxgig_value* results = user->vt->list(user, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = user->vt->list(user, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* user = linear_user(client, NULL);
-voxgig_value* result = user->vt->load(user, cmap(1, "id", v_str("user_id")), NULL, &err);
+Entity* result = user->vt->load(user, cmap(1, "id", v_str("user_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* user = linear_user(client, NULL);
-voxgig_value* result = user->vt->update(user, cmap(1, "id", v_str("user_id")), NULL, &err);
+Entity* result = user->vt->update(user, cmap(1, "id", v_str("user_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -7919,13 +8135,13 @@ Entity* user_setting = linear_user_setting(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* user_setting = linear_user_setting(client, NULL);
-voxgig_value* result = user_setting->vt->create(user_setting, cmap(12,
+Entity* result = user_setting->vt->create(user_setting, cmap(12,
     "category", v_str("example_category"),  // voxgig_value*
     "channel", v_str("example_channel"),  // voxgig_value*
     "subscribe", v_bool(true),  // bool
@@ -7941,22 +8157,25 @@ voxgig_value* result = user_setting->vt->create(user_setting, cmap(12,
 , NULL, &err);
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* user_setting = linear_user_setting(client, NULL);
-voxgig_value* result = user_setting->vt->load(user_setting, cmap(1, "id", v_str("user_setting_id")), NULL, &err);
+Entity* result = user_setting->vt->load(user_setting, cmap(1, "id", v_str("user_setting_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* user_setting = linear_user_setting(client, NULL);
-voxgig_value* result = user_setting->vt->update(user_setting, cmap(1, "id", v_str("user_setting_id")), NULL, &err);
+Entity* result = user_setting->vt->update(user_setting, cmap(1, "id", v_str("user_setting_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -7999,13 +8218,13 @@ Entity* view_preference = linear_view_preference(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* view_preference = linear_view_preference(client, NULL);
-voxgig_value* result = view_preference->vt->create(view_preference, cmap(5,
+Entity* result = view_preference->vt->create(view_preference, cmap(5,
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
     "type", v_str("example_type"),  // char*
@@ -8014,31 +8233,37 @@ voxgig_value* result = view_preference->vt->create(view_preference, cmap(5,
 , NULL, &err);
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* view_preference = linear_view_preference(client, NULL);
-voxgig_value* result = view_preference->vt->load(view_preference, cmap(1, "view_type", v_str("view_type")), NULL, &err);
+Entity* result = view_preference->vt->load(view_preference, cmap(1, "view_type", v_str("view_type")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* view_preference = linear_view_preference(client, NULL);
-voxgig_value* result = view_preference->vt->remove(view_preference, cmap(1, "id", v_str("id")), NULL, &err);
+Entity* result = view_preference->vt->remove(view_preference, cmap(1, "id", v_str("id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* view_preference = linear_view_preference(client, NULL);
-voxgig_value* result = view_preference->vt->update(view_preference, cmap(1, "id", v_str("id")), NULL, &err);
+Entity* result = view_preference->vt->update(view_preference, cmap(1, "id", v_str("id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -8088,13 +8313,13 @@ Entity* webhook = linear_webhook(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* webhook = linear_webhook(client, NULL);
-voxgig_value* result = webhook->vt->create(webhook, cmap(6,
+Entity* result = webhook->vt->create(webhook, cmap(6,
     "allPublicTeams", v_bool(true),  // bool
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "enabled", v_bool(true),  // bool
@@ -8104,43 +8329,49 @@ voxgig_value* result = webhook->vt->create(webhook, cmap(6,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* webhook = linear_webhook(client, NULL);
-voxgig_value* results = webhook->vt->list(webhook, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = webhook->vt->list(webhook, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* webhook = linear_webhook(client, NULL);
-voxgig_value* result = webhook->vt->load(webhook, cmap(1, "id", v_str("webhook_id")), NULL, &err);
+Entity* result = webhook->vt->load(webhook, cmap(1, "id", v_str("webhook_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Remove the entity matching the given criteria. Sets `*err` on failure.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* webhook = linear_webhook(client, NULL);
-voxgig_value* result = webhook->vt->remove(webhook, cmap(1, "id", v_str("webhook_id")), NULL, &err);
+Entity* result = webhook->vt->remove(webhook, cmap(1, "id", v_str("webhook_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* webhook = linear_webhook(client, NULL);
-voxgig_value* result = webhook->vt->update(webhook, cmap(1, "id", v_str("webhook_id")), NULL, &err);
+Entity* result = webhook->vt->update(webhook, cmap(1, "id", v_str("webhook_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -8184,15 +8415,15 @@ Entity* webhook_failure_event = linear_webhook_failure_event(client, NULL);
 
 ### Operations
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* webhook_failure_event = linear_webhook_failure_event(client, NULL);
-voxgig_value* results = webhook_failure_event->vt->list(webhook_failure_event, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = webhook_failure_event->vt->list(webhook_failure_event, cmap(1, "oauth_client_id", v_str("example")), NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
@@ -8241,13 +8472,13 @@ Entity* workflow_state = linear_workflow_state(client, NULL);
 
 ### Operations
 
-#### `vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Create a new entity with the given data. Returns the created entity data and sets `*err` on failure.
+Create a new entity with the given data. Returns the created entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* workflow_state = linear_workflow_state(client, NULL);
-voxgig_value* result = workflow_state->vt->create(workflow_state, cmap(7,
+Entity* result = workflow_state->vt->create(workflow_state, cmap(7,
     "color", v_str("example_color"),  // char*
     "createdAt", v_str("example_createdAt"),  // voxgig_value*
     "id", v_str("example_id"),  // char*
@@ -8258,34 +8489,37 @@ voxgig_value* result = workflow_state->vt->create(workflow_state, cmap(7,
 , NULL, &err);
 ```
 
-#### `vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity** vt->list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a List.
+List entities matching the given criteria. The match is optional — pass `NULL` to list all records. Returns a `NULL`-terminated array of entities, one per record, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* workflow_state = linear_workflow_state(client, NULL);
-voxgig_value* results = workflow_state->vt->list(workflow_state, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(results); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(results, v_int(i), NULL)));
+Entity** results = workflow_state->vt->list(workflow_state, NULL, NULL, &err);
+for (size_t i = 0; results && results[i]; i++) {
+    printf("%s\n", voxgig_to_json(results[i]->vt->data(results[i], NULL)));
 }
 ```
 
-#### `vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->load(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err)`
 
-Load a single entity matching the given criteria. Returns the entity data and sets `*err` on failure.
+Load a single entity matching the given criteria. Returns the entity, whose record `vt->data` reads, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* workflow_state = linear_workflow_state(client, NULL);
-voxgig_value* result = workflow_state->vt->load(workflow_state, cmap(1, "id", v_str("workflow_state_id")), NULL, &err);
+Entity* result = workflow_state->vt->load(workflow_state, cmap(1, "id", v_str("workflow_state_id")), NULL, &err);
+if (result) {
+    printf("%s\n", voxgig_to_json(result->vt->data(result, NULL)));
+}
 ```
 
-#### `vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
+#### `Entity* vt->update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err)`
 
-Update an existing entity. The data must include the entity id. Returns the updated entity data.
+Update an existing entity. The data must include the entity id. Returns the updated entity, or `NULL` with `*err` set on failure.
 
 ```c
 Entity* workflow_state = linear_workflow_state(client, NULL);
-voxgig_value* result = workflow_state->vt->update(workflow_state, cmap(1, "id", v_str("workflow_state_id")), NULL, &err);
+Entity* result = workflow_state->vt->update(workflow_state, cmap(1, "id", v_str("workflow_state_id")), NULL, &err);
 ```
 
 ### Common Methods
@@ -8319,6 +8553,7 @@ Return the entity name.
 | `paging` | 0.0.1 | Paging |
 | `ratelimit` | 0.0.1 | Rate limiting |
 | `retry` | 0.0.1 | Retry |
+| `station` | 0.0.1 | Station control surface binding for outbound integrations |
 | `test` | 0.0.1 | Test transport |
 | `timeout` | 0.0.1 | Timeout |
 
@@ -8327,13 +8562,14 @@ Features are activated via the `feature` option:
 
 ```c
 LinearSDK* client = linear_sdk_new(cmap(1,
-    "feature", cmap(8,
+    "feature", cmap(9,
         "debug", cmap(1, "active", v_bool(true)),
         "idempotency", cmap(1, "active", v_bool(true)),
         "metrics", cmap(1, "active", v_bool(true)),
         "paging", cmap(1, "active", v_bool(true)),
         "ratelimit", cmap(1, "active", v_bool(true)),
         "retry", cmap(1, "active", v_bool(true)),
+        "station", cmap(1, "active", v_bool(true)),
         "test", cmap(1, "active", v_bool(true)),
         "timeout", cmap(1, "active", v_bool(true)))
 ));
@@ -8351,7 +8587,7 @@ transport, and the order you list them in is the order they nest.
 
 #### Ordering
 
-`ratelimit`, `retry`, `timeout` wrap the transport. Each
+`ratelimit`, `retry`, `station`, `timeout` wrap the transport. Each
 wraps whatever is already installed, so **activation order is nesting order**:
 a feature activated later sits OUTSIDE one activated earlier, and sees the call
 first.
@@ -8553,6 +8789,34 @@ its default unless you name it.
   sees. See [Ordering](#ordering) above.
 - Inactive by default: leaving it out costs nothing at runtime.
 
+#### `station`
+
+Station control surface binding for outbound integrations.
+
+**Configuration**
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `capture` | `'meta'` |
+| `fromEnv` | `true` |
+| `instance` | `''` |
+| `profile` | `''` |
+| `register` | `true` |
+| `secret` | `''` |
+| `url` | `''` |
+
+**Usage**
+
+Set `feature.station.active` to true in the client options, and override any option above in the same entry. Every option keeps
+its default unless you name it.
+
+**Considerations**
+
+- Wraps the transport: its place in the activation order decides what it
+  sees. See [Ordering](#ordering) above.
+- Inactive by default: leaving it out costs nothing at runtime.
+
 #### `test`
 
 Test transport.
@@ -8598,6 +8862,7 @@ Timeout.
 | Option | Type |
 |---|---|
 | `clearTimer` | function |
+| `now` | function |
 | `setTimer` | function |
 
 These take no default: the feature behaves one way when you supply them and

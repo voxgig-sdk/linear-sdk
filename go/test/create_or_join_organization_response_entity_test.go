@@ -15,6 +15,13 @@ import (
 	vs "github.com/voxgig-sdk/linear-sdk/go/utility/struct"
 )
 
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const create_or_join_organization_responseEntityLiveStrict = true
+
+
 func TestCreateOrJoinOrganizationResponseEntity(t *testing.T) {
 	t.Run("instance", func(t *testing.T) {
 		testsdk := sdk.TestSDK(nil, nil)
@@ -24,7 +31,21 @@ func TestCreateOrJoinOrganizationResponseEntity(t *testing.T) {
 		}
 	})
 
-	t.Run("basic", func(t *testing.T) {
+	t.Run("validate", func(t *testing.T) {
+		if !fhHasFeature("validate") {
+			t.Skip("feature not present in this SDK: validate")
+		}
+		client := sdk.TestSDK(nil, map[string]any{
+			"feature": map[string]any{"validate": map[string]any{"active": true}},
+		})
+		_, err := client.CreateOrJoinOrganizationResponse(nil).Update(map[string]any{"organization_id": 1}, nil)
+		if sdkerr, ok := err.(*core.LinearError); !ok || "validate_failed" != sdkerr.Code {
+			t.Fatalf("expected validate_failed, got %v", err)
+		}
+	})
+
+	t.Run("basic", func(tt *testing.T) {
+		var t testing.TB = tt
 		setup := create_or_join_organization_responseBasicSetup(nil)
 		// Per-op sdk-test-control.json skip — basic test exercises a flow
 		// with multiple ops; skipping any op skips the whole flow.
@@ -32,7 +53,7 @@ func TestCreateOrJoinOrganizationResponseEntity(t *testing.T) {
 		if setup.live {
 			_mode = "live"
 		}
-		for _, _op := range []string{"create", "update"} {
+		for _, _op := range []string{"update"} {
 			if _shouldSkip, _reason := isControlSkipped("entityOp", "create_or_join_organization_response." + _op, _mode); _shouldSkip {
 				if _reason == "" {
 					_reason = "skipped via sdk-test-control.json"
@@ -41,30 +62,28 @@ func TestCreateOrJoinOrganizationResponseEntity(t *testing.T) {
 				return
 			}
 		}
-		// The basic flow consumes synthetic IDs from the fixture. In live mode
-		// without an *_ENTID env override, those IDs hit the live API and 4xx.
-		if setup.syntheticOnly {
-			t.Skip("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_CREATE_OR_JOIN_ORGANIZATION_RESPONSE_ENTID JSON to run live")
-			return
+		if setup.live {
+			for _, _liveKey := range []string{"organization01"} {
+				if setup.syntheticOnly || setup.idmap[_liveKey] == nil {
+					liveMiss(t, create_or_join_organization_responseEntityLiveStrict, "Live entity test blocked: needs %s via LINEAR_TEST_CREATE_OR_JOIN_ORGANIZATION_RESPONSE_ENTID", _liveKey)
+				}
+			}
 		}
 		client := setup.client
+		_ = client
 
-		// CREATE
-		createOrJoinOrganizationResponseRef01Ent := client.CreateOrJoinOrganizationResponse(nil)
-		createOrJoinOrganizationResponseRef01Data := core.ToMapAny(vs.GetProp(
-			vs.GetPath(setup.data, []any{"new", "create_or_join_organization_response"}), "create_or_join_organization_response_ref01"))
-		createOrJoinOrganizationResponseRef01Data["organization_id"] = setup.idmap["organization01"]
-
-		createOrJoinOrganizationResponseRef01DataResult, err := createOrJoinOrganizationResponseRef01Ent.Create(createOrJoinOrganizationResponseRef01Data, nil)
-		if err != nil {
-			t.Fatalf("create failed: %v", err)
+		// Bootstrap entity data from existing test data (no create step in flow).
+		createOrJoinOrganizationResponseRef01DataRaw := vs.Items(core.ToMapAny(vs.GetPath(setup.data, "existing.create_or_join_organization_response")))
+		var createOrJoinOrganizationResponseRef01Data map[string]any
+		if len(createOrJoinOrganizationResponseRef01DataRaw) > 0 {
+			createOrJoinOrganizationResponseRef01Data = core.ToMapAny(createOrJoinOrganizationResponseRef01DataRaw[0][1])
 		}
-		createOrJoinOrganizationResponseRef01Data = core.ToMapAny(entityData(createOrJoinOrganizationResponseRef01DataResult))
-		if createOrJoinOrganizationResponseRef01Data == nil {
-			t.Fatal("expected create result to be a map")
-		}
+		// Discard guards against Go's unused-var check when the flow's steps
+		// happen not to consume the bootstrap data (e.g. list-only flows).
+		_ = createOrJoinOrganizationResponseRef01Data
 
 		// UPDATE
+		createOrJoinOrganizationResponseRef01Ent := client.CreateOrJoinOrganizationResponse(nil)
 		createOrJoinOrganizationResponseRef01DataUp0Up := map[string]any{
 			"organization_id": setup.idmap["organization_id"],
 		}
@@ -115,9 +134,8 @@ func create_or_join_organization_responseBasicSetup(extra map[string]any) *entit
 		},
 	)
 
-	// Detect ENTID env override before envOverride consumes it. When live
-	// mode is on without a real override, the basic test runs against synthetic
-	// IDs from the fixture and 4xx's. Surface this so the test can skip.
+	// Whether *_ENTID supplied the idmap, read before envOverride consumes it:
+	// without it, the ids a live flow binds are the fixture's synthetic ones.
 	entidEnvRaw := os.Getenv("LINEAR_TEST_CREATE_OR_JOIN_ORGANIZATION_RESPONSE_ENTID")
 	idmapOverridden := entidEnvRaw != "" && strings.HasPrefix(strings.TrimSpace(entidEnvRaw), "{")
 

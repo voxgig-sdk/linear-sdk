@@ -15,6 +15,26 @@ import (
 	vs "github.com/voxgig-sdk/linear-sdk/go/utility/struct"
 )
 
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const access_key_releaseEntityLiveStrict = true
+
+
+type access_key_releaseFailHook struct {
+	sdk.BaseFeature
+	unexpected int
+}
+
+func (f *access_key_releaseFailHook) PreSpec(ctx *sdk.Context) {
+	panic("access_key_release hook failed")
+}
+
+func (f *access_key_releaseFailHook) PreUnexpected(ctx *sdk.Context) {
+	f.unexpected++
+}
+
 func TestAccessKeyReleaseEntity(t *testing.T) {
 	t.Run("instance", func(t *testing.T) {
 		testsdk := sdk.TestSDK(nil, nil)
@@ -42,8 +62,11 @@ func TestAccessKeyReleaseEntity(t *testing.T) {
 		// Fallback: streaming inactive -> yields the materialised list items.
 		base := sdk.TestSDK(seed, nil)
 		var seen []any
-		for item := range base.AccessKeyRelease(nil).Stream("list", nil, nil) {
-			seen = append(seen, item)
+		for si := range base.AccessKeyRelease(nil).Stream("list", nil, nil) {
+			if si.Err != nil {
+				t.Fatalf("stream failed: %v", si.Err)
+			}
+			seen = append(seen, si.Item)
 		}
 		if len(seen) != 3 {
 			t.Fatalf("expected 3 streamed items, got %d", len(seen))
@@ -59,11 +82,14 @@ func TestAccessKeyReleaseEntity(t *testing.T) {
 				"feature": map[string]any{"streaming": map[string]any{"active": true}},
 			})
 			var got []any
-			for item := range streamSdk.AccessKeyRelease(nil).Stream("list", nil, nil) {
-				if sub, ok := item.([]any); ok {
+			for si := range streamSdk.AccessKeyRelease(nil).Stream("list", nil, nil) {
+				if si.Err != nil {
+					t.Fatalf("stream failed: %v", si.Err)
+				}
+				if sub, ok := si.Item.([]any); ok {
 					got = append(got, sub...)
 				} else {
-					got = append(got, item)
+					got = append(got, si.Item)
 				}
 			}
 			if len(got) != 3 {
@@ -72,7 +98,91 @@ func TestAccessKeyReleaseEntity(t *testing.T) {
 		}
 	})
 
-	t.Run("basic", func(t *testing.T) {
+	t.Run("stream-error", func(t *testing.T) {
+		offline := map[string]any{"net": map[string]any{"offline": true}}
+		var streamerr error
+		for si := range sdk.TestSDK(offline, nil).AccessKeyRelease(nil).Stream("list", nil, nil) {
+			if si.Err != nil {
+				streamerr = si.Err
+			}
+		}
+		if nil == streamerr || !strings.Contains(streamerr.Error(), "offline") {
+			t.Fatalf("expected the transport failure as a stream value, got %v", streamerr)
+		}
+
+		quiet := map[string]any{"ctrl": map[string]any{"throw": false}}
+		for si := range sdk.TestSDK(offline, nil).AccessKeyRelease(nil).Stream("list", nil, quiet) {
+			if si.Err != nil {
+				t.Fatalf("throw false: expected no error value, got %v", si.Err)
+			}
+		}
+
+		if fhHasFeature("rbac") {
+			denied := sdk.TestSDK(nil, map[string]any{
+				"feature": map[string]any{"rbac": map[string]any{"active": true, "deny": true}},
+			})
+			var denyerr error
+			for si := range denied.AccessKeyRelease(nil).Stream("list", nil, nil) {
+				if si.Err != nil {
+					denyerr = si.Err
+				}
+			}
+			if sdkerr, ok := denyerr.(*core.LinearError); !ok || "rbac_denied" != sdkerr.Code {
+				t.Fatalf("expected the rbac denial as a stream value, got %v", denyerr)
+			}
+		}
+	})
+
+	t.Run("stream-ctrl", func(t *testing.T) {
+		explain := map[string]any{}
+		ctrl := map[string]any{"explain": explain}
+		for range sdk.TestSDK(nil, nil).AccessKeyRelease(nil).Stream("list", nil, map[string]any{"ctrl": ctrl}) {
+		}
+		if _, has := ctrl["stream"]; has || 1 != len(ctrl) {
+			t.Fatalf("the stream changed the caller's ctrl")
+		}
+		if 0 == len(explain) {
+			t.Fatalf("the caller's explain record was not filled")
+		}
+	})
+
+	t.Run("unexpected", func(t *testing.T) {
+		hook := &access_key_releaseFailHook{
+			BaseFeature: sdk.BaseFeature{Version: "0.0.1", Name: "failhook", Active: true}}
+		client := sdk.TestSDK(nil, map[string]any{"extend": []any{hook}})
+
+		_, err := client.AccessKeyRelease(nil).List(nil, nil)
+		if nil == err || !strings.Contains(err.Error(), "hook failed") {
+			t.Fatalf("expected the hook's failure, got %v", err)
+		}
+		if 0 == hook.unexpected {
+			t.Fatalf("PreUnexpected did not fire")
+		}
+
+		fired := hook.unexpected
+		if _, err := client.AccessKeyRelease(nil).List(nil, map[string]any{"throw": false}); nil != err {
+			t.Fatalf("throw false: expected no error, got %v", err)
+		}
+		if fired == hook.unexpected {
+			t.Fatalf("throw false: PreUnexpected did not fire")
+		}
+	})
+
+	t.Run("validate", func(t *testing.T) {
+		if !fhHasFeature("validate") {
+			t.Skip("feature not present in this SDK: validate")
+		}
+		client := sdk.TestSDK(nil, map[string]any{
+			"feature": map[string]any{"validate": map[string]any{"active": true}},
+		})
+		_, err := client.AccessKeyRelease(nil).List(map[string]any{"limit": "x"}, nil)
+		if sdkerr, ok := err.(*core.LinearError); !ok || "validate_failed" != sdkerr.Code {
+			t.Fatalf("expected validate_failed, got %v", err)
+		}
+	})
+
+	t.Run("basic", func(tt *testing.T) {
+		var t testing.TB = tt
 		setup := access_key_releaseBasicSetup(nil)
 		// Per-op sdk-test-control.json skip — basic test exercises a flow
 		// with multiple ops; skipping any op skips the whole flow.
@@ -80,7 +190,7 @@ func TestAccessKeyReleaseEntity(t *testing.T) {
 		if setup.live {
 			_mode = "live"
 		}
-		for _, _op := range []string{"create", "list", "load"} {
+		for _, _op := range []string{"list", "load"} {
 			if _shouldSkip, _reason := isControlSkipped("entityOp", "access_key_release." + _op, _mode); _shouldSkip {
 				if _reason == "" {
 					_reason = "skipped via sdk-test-control.json"
@@ -89,33 +199,33 @@ func TestAccessKeyReleaseEntity(t *testing.T) {
 				return
 			}
 		}
-		// The basic flow consumes synthetic IDs from the fixture. In live mode
-		// without an *_ENTID env override, those IDs hit the live API and 4xx.
-		if setup.syntheticOnly {
-			t.Skip("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_ACCESS_KEY_RELEASE_ENTID JSON to run live")
-			return
+		if setup.live {
+			for _, _liveKey := range []string{"limit01"} {
+				if setup.syntheticOnly || setup.idmap[_liveKey] == nil {
+					liveMiss(t, access_key_releaseEntityLiveStrict, "Live entity test blocked: needs %s via LINEAR_TEST_ACCESS_KEY_RELEASE_ENTID", _liveKey)
+				}
+			}
 		}
 		client := setup.client
+		_ = client
+		if setup.live {
+			liveExisting(t, access_key_releaseEntityLiveStrict, setup.data, "access_key_release", func() (any, error) {
+				return client.AccessKeyRelease(nil).List(map[string]any{"limit": setup.idmap["limit01"]}, nil)
+			})
+		}
 
-		// CREATE
-		accessKeyReleaseRef01Ent := client.AccessKeyRelease(nil)
-		accessKeyReleaseRef01Data := core.ToMapAny(vs.GetProp(
-			vs.GetPath(setup.data, []any{"new", "access_key_release"}), "access_key_release_ref01"))
-		accessKeyReleaseRef01Data["limit"] = setup.idmap["limit01"]
-
-		accessKeyReleaseRef01DataResult, err := accessKeyReleaseRef01Ent.Create(accessKeyReleaseRef01Data, nil)
-		if err != nil {
-			t.Fatalf("create failed: %v", err)
+		// Bootstrap entity data from existing test data (no create step in flow).
+		accessKeyReleaseRef01DataRaw := vs.Items(core.ToMapAny(vs.GetPath(setup.data, "existing.access_key_release")))
+		var accessKeyReleaseRef01Data map[string]any
+		if len(accessKeyReleaseRef01DataRaw) > 0 {
+			accessKeyReleaseRef01Data = core.ToMapAny(accessKeyReleaseRef01DataRaw[0][1])
 		}
-		accessKeyReleaseRef01Data = core.ToMapAny(entityData(accessKeyReleaseRef01DataResult))
-		if accessKeyReleaseRef01Data == nil {
-			t.Fatal("expected create result to be a map")
-		}
-		if accessKeyReleaseRef01Data["id"] == nil {
-			t.Fatal("expected created entity to have an id")
-		}
+		// Discard guards against Go's unused-var check when the flow's steps
+		// happen not to consume the bootstrap data (e.g. list-only flows).
+		_ = accessKeyReleaseRef01Data
 
 		// LIST
+		accessKeyReleaseRef01Ent := client.AccessKeyRelease(nil)
 		accessKeyReleaseRef01Match := map[string]any{
 			"limit": setup.idmap["limit01"],
 		}
@@ -124,14 +234,9 @@ func TestAccessKeyReleaseEntity(t *testing.T) {
 		if err != nil {
 			t.Fatalf("list failed: %v", err)
 		}
-		accessKeyReleaseRef01List, accessKeyReleaseRef01ListOk := accessKeyReleaseRef01ListResult.([]any)
+		_, accessKeyReleaseRef01ListOk := accessKeyReleaseRef01ListResult.([]any)
 		if !accessKeyReleaseRef01ListOk {
 			t.Fatalf("expected list result to be an array, got %T", accessKeyReleaseRef01ListResult)
-		}
-
-		foundItem := vs.Select(entityListToData(accessKeyReleaseRef01List), map[string]any{"id": accessKeyReleaseRef01Data["id"]})
-		if vs.IsEmpty(foundItem) {
-			t.Fatal("expected to find created entity in list")
 		}
 
 		// LOAD
@@ -187,9 +292,8 @@ func access_key_releaseBasicSetup(extra map[string]any) *entityTestSetup {
 		},
 	)
 
-	// Detect ENTID env override before envOverride consumes it. When live
-	// mode is on without a real override, the basic test runs against synthetic
-	// IDs from the fixture and 4xx's. Surface this so the test can skip.
+	// Whether *_ENTID supplied the idmap, read before envOverride consumes it:
+	// without it, the ids a live flow binds are the fixture's synthetic ones.
 	entidEnvRaw := os.Getenv("LINEAR_TEST_ACCESS_KEY_RELEASE_ENTID")
 	idmapOverridden := entidEnvRaw != "" && strings.HasPrefix(strings.TrimSpace(entidEnvRaw), "{")
 

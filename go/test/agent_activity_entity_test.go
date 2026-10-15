@@ -2,7 +2,6 @@ package sdktest
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -15,6 +14,26 @@ import (
 
 	vs "github.com/voxgig-sdk/linear-sdk/go/utility/struct"
 )
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const agent_activityEntityLiveStrict = true
+
+
+type agent_activityFailHook struct {
+	sdk.BaseFeature
+	unexpected int
+}
+
+func (f *agent_activityFailHook) PreSpec(ctx *sdk.Context) {
+	panic("agent_activity hook failed")
+}
+
+func (f *agent_activityFailHook) PreUnexpected(ctx *sdk.Context) {
+	f.unexpected++
+}
 
 func TestAgentActivityEntity(t *testing.T) {
 	t.Run("instance", func(t *testing.T) {
@@ -43,8 +62,11 @@ func TestAgentActivityEntity(t *testing.T) {
 		// Fallback: streaming inactive -> yields the materialised list items.
 		base := sdk.TestSDK(seed, nil)
 		var seen []any
-		for item := range base.AgentActivity(nil).Stream("list", nil, nil) {
-			seen = append(seen, item)
+		for si := range base.AgentActivity(nil).Stream("list", nil, nil) {
+			if si.Err != nil {
+				t.Fatalf("stream failed: %v", si.Err)
+			}
+			seen = append(seen, si.Item)
 		}
 		if len(seen) != 3 {
 			t.Fatalf("expected 3 streamed items, got %d", len(seen))
@@ -60,11 +82,14 @@ func TestAgentActivityEntity(t *testing.T) {
 				"feature": map[string]any{"streaming": map[string]any{"active": true}},
 			})
 			var got []any
-			for item := range streamSdk.AgentActivity(nil).Stream("list", nil, nil) {
-				if sub, ok := item.([]any); ok {
+			for si := range streamSdk.AgentActivity(nil).Stream("list", nil, nil) {
+				if si.Err != nil {
+					t.Fatalf("stream failed: %v", si.Err)
+				}
+				if sub, ok := si.Item.([]any); ok {
 					got = append(got, sub...)
 				} else {
-					got = append(got, item)
+					got = append(got, si.Item)
 				}
 			}
 			if len(got) != 3 {
@@ -73,7 +98,91 @@ func TestAgentActivityEntity(t *testing.T) {
 		}
 	})
 
-	t.Run("basic", func(t *testing.T) {
+	t.Run("stream-error", func(t *testing.T) {
+		offline := map[string]any{"net": map[string]any{"offline": true}}
+		var streamerr error
+		for si := range sdk.TestSDK(offline, nil).AgentActivity(nil).Stream("list", nil, nil) {
+			if si.Err != nil {
+				streamerr = si.Err
+			}
+		}
+		if nil == streamerr || !strings.Contains(streamerr.Error(), "offline") {
+			t.Fatalf("expected the transport failure as a stream value, got %v", streamerr)
+		}
+
+		quiet := map[string]any{"ctrl": map[string]any{"throw": false}}
+		for si := range sdk.TestSDK(offline, nil).AgentActivity(nil).Stream("list", nil, quiet) {
+			if si.Err != nil {
+				t.Fatalf("throw false: expected no error value, got %v", si.Err)
+			}
+		}
+
+		if fhHasFeature("rbac") {
+			denied := sdk.TestSDK(nil, map[string]any{
+				"feature": map[string]any{"rbac": map[string]any{"active": true, "deny": true}},
+			})
+			var denyerr error
+			for si := range denied.AgentActivity(nil).Stream("list", nil, nil) {
+				if si.Err != nil {
+					denyerr = si.Err
+				}
+			}
+			if sdkerr, ok := denyerr.(*core.LinearError); !ok || "rbac_denied" != sdkerr.Code {
+				t.Fatalf("expected the rbac denial as a stream value, got %v", denyerr)
+			}
+		}
+	})
+
+	t.Run("stream-ctrl", func(t *testing.T) {
+		explain := map[string]any{}
+		ctrl := map[string]any{"explain": explain}
+		for range sdk.TestSDK(nil, nil).AgentActivity(nil).Stream("list", nil, map[string]any{"ctrl": ctrl}) {
+		}
+		if _, has := ctrl["stream"]; has || 1 != len(ctrl) {
+			t.Fatalf("the stream changed the caller's ctrl")
+		}
+		if 0 == len(explain) {
+			t.Fatalf("the caller's explain record was not filled")
+		}
+	})
+
+	t.Run("unexpected", func(t *testing.T) {
+		hook := &agent_activityFailHook{
+			BaseFeature: sdk.BaseFeature{Version: "0.0.1", Name: "failhook", Active: true}}
+		client := sdk.TestSDK(nil, map[string]any{"extend": []any{hook}})
+
+		_, err := client.AgentActivity(nil).List(nil, nil)
+		if nil == err || !strings.Contains(err.Error(), "hook failed") {
+			t.Fatalf("expected the hook's failure, got %v", err)
+		}
+		if 0 == hook.unexpected {
+			t.Fatalf("PreUnexpected did not fire")
+		}
+
+		fired := hook.unexpected
+		if _, err := client.AgentActivity(nil).List(nil, map[string]any{"throw": false}); nil != err {
+			t.Fatalf("throw false: expected no error, got %v", err)
+		}
+		if fired == hook.unexpected {
+			t.Fatalf("throw false: PreUnexpected did not fire")
+		}
+	})
+
+	t.Run("validate", func(t *testing.T) {
+		if !fhHasFeature("validate") {
+			t.Skip("feature not present in this SDK: validate")
+		}
+		client := sdk.TestSDK(nil, map[string]any{
+			"feature": map[string]any{"validate": map[string]any{"active": true}},
+		})
+		_, err := client.AgentActivity(nil).List(map[string]any{"after": 1}, nil)
+		if sdkerr, ok := err.(*core.LinearError); !ok || "validate_failed" != sdkerr.Code {
+			t.Fatalf("expected validate_failed, got %v", err)
+		}
+	})
+
+	t.Run("basic", func(tt *testing.T) {
+		var t testing.TB = tt
 		setup := agent_activityBasicSetup(nil)
 		// Per-op sdk-test-control.json skip — basic test exercises a flow
 		// with multiple ops; skipping any op skips the whole flow.
@@ -81,7 +190,7 @@ func TestAgentActivityEntity(t *testing.T) {
 		if setup.live {
 			_mode = "live"
 		}
-		for _, _op := range []string{"create", "list", "update", "load"} {
+		for _, _op := range []string{"create", "list", "load"} {
 			if _shouldSkip, _reason := isControlSkipped("entityOp", "agent_activity." + _op, _mode); _shouldSkip {
 				if _reason == "" {
 					_reason = "skipped via sdk-test-control.json"
@@ -90,13 +199,15 @@ func TestAgentActivityEntity(t *testing.T) {
 				return
 			}
 		}
-		// The basic flow consumes synthetic IDs from the fixture. In live mode
-		// without an *_ENTID env override, those IDs hit the live API and 4xx.
-		if setup.syntheticOnly {
-			t.Skip("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_AGENT_ACTIVITY_ENTID JSON to run live")
-			return
+		if setup.live {
+			for _, _liveKey := range []string{"after01", "before01", "first01", "include_archived01", "last01", "order_by01"} {
+				if setup.syntheticOnly || setup.idmap[_liveKey] == nil {
+					liveMiss(t, agent_activityEntityLiveStrict, "Live entity test blocked: needs %s via LINEAR_TEST_AGENT_ACTIVITY_ENTID", _liveKey)
+				}
+			}
 		}
 		client := setup.client
+		_ = client
 
 		// CREATE
 		agentActivityRef01Ent := client.AgentActivity(nil)
@@ -143,30 +254,6 @@ func TestAgentActivityEntity(t *testing.T) {
 		foundItem := vs.Select(entityListToData(agentActivityRef01List), map[string]any{"id": agentActivityRef01Data["id"]})
 		if vs.IsEmpty(foundItem) {
 			t.Fatal("expected to find created entity in list")
-		}
-
-		// UPDATE
-		agentActivityRef01DataUp0Up := map[string]any{
-			"id": agentActivityRef01Data["id"],
-		}
-
-		agentActivityRef01MarkdefUp0Name := "executionSkippedReason"
-		agentActivityRef01MarkdefUp0Value := fmt.Sprintf("Mark01-agent_activity_ref01_%d", setup.now)
-		agentActivityRef01DataUp0Up[agentActivityRef01MarkdefUp0Name] = agentActivityRef01MarkdefUp0Value
-
-		agentActivityRef01ResdataUp0Result, err := agentActivityRef01Ent.Update(agentActivityRef01DataUp0Up, nil)
-		if err != nil {
-			t.Fatalf("update failed: %v", err)
-		}
-		agentActivityRef01ResdataUp0 := core.ToMapAny(entityData(agentActivityRef01ResdataUp0Result))
-		if agentActivityRef01ResdataUp0 == nil {
-			t.Fatal("expected update result to be a map")
-		}
-		if agentActivityRef01ResdataUp0["id"] != agentActivityRef01DataUp0Up["id"] {
-			t.Fatal("expected update result id to match")
-		}
-		if agentActivityRef01ResdataUp0[agentActivityRef01MarkdefUp0Name] != agentActivityRef01MarkdefUp0Value {
-			t.Fatalf("expected %s to be updated, got %v", agentActivityRef01MarkdefUp0Name, agentActivityRef01ResdataUp0[agentActivityRef01MarkdefUp0Name])
 		}
 
 		// LOAD
@@ -222,9 +309,8 @@ func agent_activityBasicSetup(extra map[string]any) *entityTestSetup {
 		},
 	)
 
-	// Detect ENTID env override before envOverride consumes it. When live
-	// mode is on without a real override, the basic test runs against synthetic
-	// IDs from the fixture and 4xx's. Surface this so the test can skip.
+	// Whether *_ENTID supplied the idmap, read before envOverride consumes it:
+	// without it, the ids a live flow binds are the fixture's synthetic ones.
 	entidEnvRaw := os.Getenv("LINEAR_TEST_AGENT_ACTIVITY_ENTID")
 	idmapOverridden := entidEnvRaw != "" && strings.HasPrefix(strings.TrimSpace(entidEnvRaw), "{")
 

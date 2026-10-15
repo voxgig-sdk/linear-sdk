@@ -37,6 +37,8 @@ require_once __DIR__ . '/TransformResponse.php';
 
 LinearUtility::setRegistrar(function (LinearUtility $u): void {
     $u->clean = [LinearClean::class, 'call'];
+    $u->clean_add = [LinearClean::class, 'add'];
+    $u->clean_explain = [LinearDone::class, 'clean_explain'];
     $u->done = [LinearDone::class, 'call'];
     $u->make_error = [LinearMakeError::class, 'call'];
     $u->feature_add = [LinearFeatureAdd::class, 'call'];

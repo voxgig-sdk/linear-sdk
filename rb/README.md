@@ -12,9 +12,18 @@ The SDK exposes the API as capitalised, semantic **Entities** — for example `c
 
 ## Install
 This package is not yet published to RubyGems. Install it from the
-GitHub release tag (`rb/vX.Y.Z`):
+GitHub release tag (`rb/vX.Y.Z`, see [Tags](https://github.com/voxgig-sdk/linear-sdk/tags)), or
+from a clone:
 
-- Releases: [https://github.com/voxgig-sdk/linear-sdk/releases](https://github.com/voxgig-sdk/linear-sdk/releases)
+```bash
+git clone https://github.com/voxgig-sdk/linear-sdk
+```
+
+Then add it to your `Gemfile` by path, and run `bundle install`:
+
+```ruby
+gem "voxgig-sdk-linear-sdk", path: "./linear-sdk/rb"
+```
 
 
 ## Tutorial: your first API call
@@ -36,10 +45,11 @@ client = LinearSDK.new({
 
 ```ruby
 begin
-  # list returns an Array of AccessKeyRelease records — iterate directly.
+  # list returns an Array of AccessKeyRelease entities, one per record; data_get reads the record.
   accesskeyreleases = client.AccessKeyRelease.list
   accesskeyreleases.each do |item|
-    puts "#{item["id"]} #{item["archivedAt"]}"
+    record = item.data_get
+    puts "#{record["id"]} #{record["archivedAt"]}"
   end
 rescue => err
   warn "list failed: #{err}"
@@ -52,20 +62,84 @@ end
 begin
   # load returns the ENTITY — call data_get for the AccessKeyRelease record (raises on error).
   accesskeyrelease = client.AccessKeyRelease.load({ "id" => "example_id" })
-  puts accesskeyrelease
+  puts accesskeyrelease.data_get
 rescue => err
   warn "load failed: #{err}"
 end
 ```
 
-### 4. Create, update, and remove
 
-```ruby
-# create returns the ENTITY — call data_get for the created AccessKeyRelease record.
-created = client.AccessKeyRelease.create({ "createdAt" => "example_createdAt", "id" => "example_id", "name" => "example_name", "url" => "example_url" })
+## Use with Station
 
+This SDK ships as a [voxgig/station](https://github.com/voxgig/station)
+plugin: bind it to a local `Station` and outbound configuration,
+credentials, and observability move to one place. The feature is
+present but **off by default** — nothing changes until you bind.
+
+### Declarative: `station.json` + `station.sdk()`
+
+Declare an instance in `station.json` at the repo root (committable —
+names and stores, never values):
+
+```json
+{ "station": 1,
+  "profiles": { "default": {
+    "sdk": { "linear": {
+      "package": "voxgig-sdk-linear-sdk" } } } } }
 ```
 
+Then get the client where you need it:
+
+1. `station = Station.open()` — reads and validates `station.json`;
+   constructs nothing.
+2. `client = station.sdk('linear')` — built on first ask and cached,
+   so the same name returns the same client.
+
+Loading this package is the whole bootstrap: it registers its own
+factory (constructor plus embedded config) with the station library at
+module init, so `station.sdk()` needs no SDK import in application
+code. That is what the `package` key above is for — it names the module
+for station to load, since nothing else in this example would execute
+it. An application that imports this SDK for its types anyway can drop
+the key: that import is itself the bootstrap.
+
+A second instance of the same API is one more key — `"linear$test"`
+beside `"linear"` — and `station.sdk('linear$test')` returns it.
+SDK features are configured in the same file too: fleet-wide, per api,
+or per instance. `station.check()` resolves and constructs every
+active instance without sending a request — run it in CI.
+
+### The secret name derives from the instance
+
+The credential comes from [sekreto](https://github.com/voxgig/sekreto)
+under a name derived from the **instance** name — the instance token
+lowercased, plus `.apikey`. The untagged instance `linear` derives
+`linear.apikey` — by default the `LINEAR_APIKEY` environment
+variable this README already documents, unchanged. A tagged instance
+derives its own: `linear$test` → `linear_test.apikey` →
+`LINEAR_TEST_APIKEY` — each instance is a separate credentialed use
+of the API, and its env var is derivable from the name you chose. To
+pin a name instead, set `secret` on the instance block, or at the
+api level for several instances sharing one key. Point a profile at a
+vault later and application code does not change; sekreto's own
+documentation covers the stores. The key stays out of `options()` and
+`prepare()` output; `station.tap(...)` shows live traffic.
+
+### Imperative: `connect()` — the retrofit path
+
+Bind by passing the SDK class to the station:
+
+1. `station = Station.open()` — profile, env, and proxy all defaulted.
+2. `client = station.connect(LinearSDK)` — replaces direct
+   construction; `connect(LinearSDK, { as: 'test' })` binds
+   a second, tagged instance.
+
+With no `station.json` at all this runs solo with everything
+defaulted — the two-line form is how an existing application starts.
+
+Station failures surface through this SDK's own error path
+(`err.code`, `station_*`); the codes are catalogued in
+[station error codes](https://github.com/voxgig/sdkgen/blob/main/docs/reference/station-errors.md).
 
 ## Error handling
 
@@ -141,13 +215,13 @@ data via the `entity` option so offline calls resolve without a live server:
 
 ```ruby
 client = LinearSDK.test({
-  "entity" => { "agentactivity" => { "test01" => { "id" => "test01" } } },
+  "entity" => { "agent_activity" => { "test01" => { "id" => "test01" } } },
 })
 
-# Entity ops return the ENTITY (raises on error);
-# call data_get for the mock record.
-agentactivity = client.AgentActivity.list()
-puts agentactivity
+# list returns an Array of AgentActivity entities, one per mock record (raises on
+# error); data_get reads each record.
+agentactivitys = client.AgentActivity.list()
+agentactivitys.each { |item| puts item.data_get }
 ```
 
 ### Use a custom fetch function
@@ -319,11 +393,11 @@ All entities share the same interface.
 
 | Method | Signature | Description |
 | --- | --- | --- |
-| `load` | `(reqmatch, ctrl) -> any` | Load a single entity by match criteria. Raises on error. |
-| `list` | `(reqmatch = nil, ctrl) -> Array` | List entities matching the criteria (call with no argument to list all). Raises on error. |
-| `create` | `(reqdata, ctrl) -> any` | Create a new entity. Raises on error. |
-| `update` | `(reqdata, ctrl) -> any` | Update an existing entity. Raises on error. |
-| `remove` | `(reqmatch, ctrl) -> any` | Remove an entity. Raises on error. |
+| `load` | `(reqmatch, ctrl) -> any` | Load a single entity by match criteria, and return it. Raises on error. |
+| `list` | `(reqmatch = nil, ctrl) -> Array` | List entities matching the criteria (call with no argument to list all), one per record. Raises on error. |
+| `create` | `(reqdata, ctrl) -> any` | Create a new entity, and return it. Raises on error. |
+| `update` | `(reqdata, ctrl) -> any` | Update an existing entity, and return it. Raises on error. |
+| `remove` | `(reqmatch, ctrl) -> any` | Remove an entity, and return it marked as deleted. Raises on error. |
 | `data_get` | `() -> Hash` | Get entity data. |
 | `data_set` | `(data)` | Set entity data. |
 | `match_get` | `() -> Hash` | Get entity match criteria. |
@@ -333,9 +407,10 @@ All entities share the same interface.
 
 ### Result shape
 
-Entity operations return the result data directly. On failure they
-raise a `LinearError` (a `StandardError` subclass), so wrap
-calls in `begin`/`rescue` where you need to handle errors.
+Entity operations return the entity, and `list` an `Array` of entities, one
+per record; an entity's `data_get` reads its record. On failure they raise a
+`LinearError` (a `StandardError` subclass), so wrap calls in
+`begin`/`rescue` where you need to handle errors.
 
 The `direct` escape hatch is the exception: it never raises and instead
 returns a result `Hash` with these keys:
@@ -2593,19 +2668,9 @@ access_key_release = client.AccessKeyRelease.load({ "id" => "access_key_release_
 #### Example: List
 
 ```ruby
-# list returns an Array of AccessKeyRelease records (raises on error).
+# list returns an Array of AccessKeyRelease entities, one per record (raises on error).
 access_key_releases = client.AccessKeyRelease.list
-```
-
-#### Example: Create
-
-```ruby
-access_key_release = client.AccessKeyRelease.create({
-  "createdAt" => "example_createdAt", # Object
-  "id" => "example_id", # String
-  "name" => "example_name", # String
-  "url" => "example_url", # String
-})
+access_key_releases.each { |item| puts item.data_get }
 ```
 
 
@@ -2677,8 +2742,9 @@ agent_activity = client.AgentActivity.load({ "id" => "agent_activity_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of AgentActivity records (raises on error).
+# list returns an Array of AgentActivity entities, one per record (raises on error).
 agent_activitys = client.AgentActivity.list
+agent_activitys.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -2745,8 +2811,9 @@ agent_session = client.AgentSession.load({ "id" => "agent_session_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of AgentSession records (raises on error).
+# list returns an Array of AgentSession entities, one per record (raises on error).
 agent_sessions = client.AgentSession.list
+agent_sessions.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -2810,8 +2877,9 @@ agent_skill = client.AgentSkill.load({ "id" => "agent_skill_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of AgentSkill records (raises on error).
+# list returns an Array of AgentSkill entities, one per record (raises on error).
 agent_skills = client.AgentSkill.list
+agent_skills.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -2905,8 +2973,9 @@ attachment = client.Attachment.load({ "id" => "attachment_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Attachment records (raises on error).
+# list returns an Array of Attachment entities, one per record (raises on error).
 attachments = client.Attachment.list
+attachments.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -2954,8 +3023,9 @@ Create an instance: `audit_entry = client.AuditEntry`
 #### Example: List
 
 ```ruby
-# list returns an Array of AuditEntry records (raises on error).
+# list returns an Array of AuditEntry entities, one per record (raises on error).
 audit_entrys = client.AuditEntry.list
+audit_entrys.each { |item| puts item.data_get }
 ```
 
 
@@ -2979,8 +3049,9 @@ Create an instance: `audit_entry_type = client.AuditEntryType`
 #### Example: List
 
 ```ruby
-# list returns an Array of AuditEntryType records (raises on error).
+# list returns an Array of AuditEntryType entities, one per record (raises on error).
 audit_entry_types = client.AuditEntryType.list
+audit_entry_types.each { |item| puts item.data_get }
 ```
 
 
@@ -3011,15 +3082,6 @@ Create an instance: `auth_resolver_response = client.AuthResolverResponse`
 ```ruby
 # load returns the ENTITY — call data_get for the AuthResolverResponse record (raises on error).
 auth_resolver_response = client.AuthResolverResponse.load({ "id" => "auth_resolver_response_id" })
-```
-
-#### Example: Create
-
-```ruby
-auth_resolver_response = client.AuthResolverResponse.create({
-  "email" => "example_email", # String
-  "id" => "example_id", # String
-})
 ```
 
 
@@ -3061,8 +3123,9 @@ Create an instance: `authentication_session_response = client.AuthenticationSess
 #### Example: List
 
 ```ruby
-# list returns an Array of AuthenticationSessionResponse records (raises on error).
+# list returns an Array of AuthenticationSessionResponse entities, one per record (raises on error).
 authentication_session_responses = client.AuthenticationSessionResponse.list
+authentication_session_responses.each { |item| puts item.data_get }
 ```
 
 
@@ -3133,8 +3196,9 @@ comment = client.Comment.load({ "id" => "comment_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Comment records (raises on error).
+# list returns an Array of Comment entities, one per record (raises on error).
 comments = client.Comment.list
+comments.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -3171,13 +3235,6 @@ Create an instance: `create_or_join_organization_response = client.CreateOrJoinO
 | --- | --- | --- |
 | `organization` | `Hash` | The workspace that was created or joined. |
 | `user` | `Hash` | The user who created or joined the workspace. |
-
-#### Example: Create
-
-```ruby
-create_or_join_organization_response = client.CreateOrJoinOrganizationResponse.create({
-})
-```
 
 
 ### CustomView
@@ -3232,8 +3289,9 @@ custom_view = client.CustomView.load({ "id" => "custom_view_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of CustomView records (raises on error).
+# list returns an Array of CustomView entities, one per record (raises on error).
 custom_views = client.CustomView.list
+custom_views.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -3300,8 +3358,9 @@ customer = client.Customer.load({ "id" => "customer_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Customer records (raises on error).
+# list returns an Array of Customer entities, one per record (raises on error).
 customers = client.Customer.list
+customers.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -3367,8 +3426,9 @@ customer_need = client.CustomerNeed.load({ "id" => "customer_need_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of CustomerNeed records (raises on error).
+# list returns an Array of CustomerNeed entities, one per record (raises on error).
 customer_needs = client.CustomerNeed.list
+customer_needs.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -3421,8 +3481,9 @@ customer_status = client.CustomerStatus.load({ "id" => "customer_status_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of CustomerStatus records (raises on error).
+# list returns an Array of CustomerStatus entities, one per record (raises on error).
 customer_statuss = client.CustomerStatus.list
+customer_statuss.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -3478,8 +3539,9 @@ customer_tier = client.CustomerTier.load({ "id" => "customer_tier_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of CustomerTier records (raises on error).
+# list returns an Array of CustomerTier entities, one per record (raises on error).
 customer_tiers = client.CustomerTier.list
+customer_tiers.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -3551,8 +3613,9 @@ cycle = client.Cycle.load({ "id" => "cycle_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Cycle records (raises on error).
+# list returns an Array of Cycle entities, one per record (raises on error).
 cycles = client.Cycle.list
+cycles.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -3674,8 +3737,9 @@ document = client.Document.load({ "id" => "document_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Document records (raises on error).
+# list returns an Array of Document entities, one per record (raises on error).
 documents = client.Document.list
+documents.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -3738,8 +3802,9 @@ Create an instance: `document_search_result = client.DocumentSearchResult`
 #### Example: List
 
 ```ruby
-# list returns an Array of DocumentSearchResult records (raises on error).
-document_search_results = client.DocumentSearchResult.list
+# list returns an Array of DocumentSearchResult entities, one per record (raises on error).
+document_search_results = client.DocumentSearchResult.list({ "term" => "example" })
+document_search_results.each { |item| puts item.data_get }
 ```
 
 
@@ -3878,8 +3943,9 @@ emoji = client.Emoji.load({ "id" => "emoji_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Emoji records (raises on error).
+# list returns an Array of Emoji entities, one per record (raises on error).
 emojis = client.Emoji.list
+emojis.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -3981,8 +4047,9 @@ external_user = client.ExternalUser.load({ "id" => "external_user_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of ExternalUser records (raises on error).
+# list returns an Array of ExternalUser entities, one per record (raises on error).
 external_users = client.ExternalUser.list
+external_users.each { |item| puts item.data_get }
 ```
 
 
@@ -4057,8 +4124,9 @@ favorite = client.Favorite.load({ "id" => "favorite_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Favorite records (raises on error).
+# list returns an Array of Favorite entities, one per record (raises on error).
 favorites = client.Favorite.list
+favorites.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -4166,13 +4234,6 @@ Create an instance: `git_hub_integration_connect_detail = client.GitHubIntegrati
 | --- | --- | --- |
 | `lostRepositoryNames` | `String` | Full names ('owner/repo') of repositories whose existing GitHub Issues sync mappings would become inaccessible if the new GitHub App installation replaces the existing one. |
 
-#### Example: Create
-
-```ruby
-git_hub_integration_connect_detail = client.GitHubIntegrationConnectDetail.create({
-})
-```
-
 
 ### Initiative
 
@@ -4243,8 +4304,9 @@ initiative = client.Initiative.load({ "id" => "initiative_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Initiative records (raises on error).
+# list returns an Array of Initiative entities, one per record (raises on error).
 initiatives = client.Initiative.list
+initiatives.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -4312,8 +4374,9 @@ initiative_label = client.InitiativeLabel.load({ "id" => "initiative_label_id" }
 #### Example: List
 
 ```ruby
-# list returns an Array of InitiativeLabel records (raises on error).
+# list returns an Array of InitiativeLabel entities, one per record (raises on error).
 initiative_labels = client.InitiativeLabel.list
+initiative_labels.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -4393,8 +4456,9 @@ initiative_relation = client.InitiativeRelation.load({ "id" => "initiative_relat
 #### Example: List
 
 ```ruby
-# list returns an Array of InitiativeRelation records (raises on error).
+# list returns an Array of InitiativeRelation entities, one per record (raises on error).
 initiative_relations = client.InitiativeRelation.list
+initiative_relations.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -4445,8 +4509,9 @@ initiative_to_project = client.InitiativeToProject.load({ "id" => "initiative_to
 #### Example: List
 
 ```ruby
-# list returns an Array of InitiativeToProject records (raises on error).
+# list returns an Array of InitiativeToProject entities, one per record (raises on error).
 initiative_to_projects = client.InitiativeToProject.list
+initiative_to_projects.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -4508,8 +4573,9 @@ initiative_update = client.InitiativeUpdate.load({ "id" => "initiative_update_id
 #### Example: List
 
 ```ruby
-# list returns an Array of InitiativeUpdate records (raises on error).
+# list returns an Array of InitiativeUpdate entities, one per record (raises on error).
 initiative_updates = client.InitiativeUpdate.list
+initiative_updates.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -4569,19 +4635,9 @@ integration = client.Integration.load({ "id" => "integration_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Integration records (raises on error).
+# list returns an Array of Integration entities, one per record (raises on error).
 integrations = client.Integration.list
-```
-
-#### Example: Create
-
-```ruby
-integration = client.Integration.create({
-  "createdAt" => "example_createdAt", # Object
-  "id" => "example_id", # String
-  "service" => "example_service", # String
-  "updatedAt" => "example_updatedAt", # Object
-})
+integrations.each { |item| puts item.data_get }
 ```
 
 
@@ -4620,8 +4676,9 @@ integration_template = client.IntegrationTemplate.load({ "id" => "integration_te
 #### Example: List
 
 ```ruby
-# list returns an Array of IntegrationTemplate records (raises on error).
+# list returns an Array of IntegrationTemplate entities, one per record (raises on error).
 integration_templates = client.IntegrationTemplate.list
+integration_templates.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -4783,8 +4840,9 @@ issue = client.Issue.load({ "id" => "issue_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Issue records (raises on error).
+# list returns an Array of Issue entities, one per record (raises on error).
 issues = client.Issue.list
+issues.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -4844,18 +4902,6 @@ Create an instance: `issue_import = client.IssueImport`
 | `teamName` | `String` | The name of the new team to be created for the import, when the import is configured to create a new team rather than importing into an existing one. |
 | `updatedAt` | `Object` | The last time at which the entity was meaningfully updated. |
 
-#### Example: Create
-
-```ruby
-issue_import = client.IssueImport.create({
-  "createdAt" => "example_createdAt", # Object
-  "displayName" => "example_displayName", # String
-  "service" => "example_service", # String
-  "status" => "example_status", # String
-  "updatedAt" => "example_updatedAt", # Object
-})
-```
-
 
 ### IssueLabel
 
@@ -4902,8 +4948,9 @@ issue_label = client.IssueLabel.load({ "id" => "issue_label_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of IssueLabel records (raises on error).
+# list returns an Array of IssueLabel entities, one per record (raises on error).
 issue_labels = client.IssueLabel.list
+issue_labels.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -4940,8 +4987,9 @@ Create an instance: `issue_priority_value = client.IssuePriorityValue`
 #### Example: List
 
 ```ruby
-# list returns an Array of IssuePriorityValue records (raises on error).
+# list returns an Array of IssuePriorityValue entities, one per record (raises on error).
 issue_priority_values = client.IssuePriorityValue.list
+issue_priority_values.each { |item| puts item.data_get }
 ```
 
 
@@ -4981,8 +5029,9 @@ issue_relation = client.IssueRelation.load({ "id" => "issue_relation_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of IssueRelation records (raises on error).
+# list returns an Array of IssueRelation entities, one per record (raises on error).
 issue_relations = client.IssueRelation.list
+issue_relations.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -5080,8 +5129,9 @@ Create an instance: `issue_search_result = client.IssueSearchResult`
 #### Example: List
 
 ```ruby
-# list returns an Array of IssueSearchResult records (raises on error).
-issue_search_results = client.IssueSearchResult.list
+# list returns an Array of IssueSearchResult entities, one per record (raises on error).
+issue_search_results = client.IssueSearchResult.list({ "term" => "example" })
+issue_search_results.each { |item| puts item.data_get }
 ```
 
 
@@ -5119,8 +5169,9 @@ issue_to_release = client.IssueToRelease.load({ "id" => "issue_to_release_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of IssueToRelease records (raises on error).
+# list returns an Array of IssueToRelease entities, one per record (raises on error).
 issue_to_releases = client.IssueToRelease.list
+issue_to_releases.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -5150,14 +5201,6 @@ Create an instance: `logout_response = client.LogoutResponse`
 | Field | Type | Description |
 | --- | --- | --- |
 | `success` | `Boolean` | Whether the operation was successful. |
-
-#### Example: Create
-
-```ruby
-logout_response = client.LogoutResponse.create({
-  "success" => true, # Boolean
-})
-```
 
 
 ### Notification
@@ -5214,8 +5257,9 @@ notification = client.Notification.load({ "id" => "notification_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Notification records (raises on error).
+# list returns an Array of Notification entities, one per record (raises on error).
 notifications = client.Notification.list
+notifications.each { |item| puts item.data_get }
 ```
 
 
@@ -5261,8 +5305,9 @@ notification_subscription = client.NotificationSubscription.load({ "id" => "noti
 #### Example: List
 
 ```ruby
-# list returns an Array of NotificationSubscription records (raises on error).
+# list returns an Array of NotificationSubscription entities, one per record (raises on error).
 notification_subscriptions = client.NotificationSubscription.list
+notification_subscriptions.each { |item| puts item.data_get }
 ```
 
 
@@ -5309,8 +5354,9 @@ o_auth_application = client.OAuthApplication.load({ "id" => "o_auth_application_
 #### Example: List
 
 ```ruby
-# list returns an Array of OAuthApplication records (raises on error).
+# list returns an Array of OAuthApplication entities, one per record (raises on error).
 o_auth_applications = client.OAuthApplication.list
+o_auth_applications.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -5509,8 +5555,9 @@ organization_invite = client.OrganizationInvite.load({ "id" => "organization_inv
 #### Example: List
 
 ```ruby
-# list returns an Array of OrganizationInvite records (raises on error).
+# list returns an Array of OrganizationInvite entities, one per record (raises on error).
 organization_invites = client.OrganizationInvite.list
+organization_invites.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -5657,8 +5704,9 @@ project = client.Project.load({ "id" => "project_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Project records (raises on error).
+# list returns an Array of Project entities, one per record (raises on error).
 projects = client.Project.list
+projects.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -5739,8 +5787,9 @@ project_label = client.ProjectLabel.load({ "id" => "project_label_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of ProjectLabel records (raises on error).
+# list returns an Array of ProjectLabel entities, one per record (raises on error).
 project_labels = client.ProjectLabel.list
+project_labels.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -5801,8 +5850,9 @@ project_milestone = client.ProjectMilestone.load({ "id" => "project_milestone_id
 #### Example: List
 
 ```ruby
-# list returns an Array of ProjectMilestone records (raises on error).
+# list returns an Array of ProjectMilestone entities, one per record (raises on error).
 project_milestones = client.ProjectMilestone.list
+project_milestones.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -5882,8 +5932,9 @@ project_relation = client.ProjectRelation.load({ "id" => "project_relation_id" }
 #### Example: List
 
 ```ruby
-# list returns an Array of ProjectRelation records (raises on error).
+# list returns an Array of ProjectRelation entities, one per record (raises on error).
 project_relations = client.ProjectRelation.list
+project_relations.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -5977,8 +6028,9 @@ Create an instance: `project_search_result = client.ProjectSearchResult`
 #### Example: List
 
 ```ruby
-# list returns an Array of ProjectSearchResult records (raises on error).
-project_search_results = client.ProjectSearchResult.list
+# list returns an Array of ProjectSearchResult entities, one per record (raises on error).
+project_search_results = client.ProjectSearchResult.list({ "term" => "example" })
+project_search_results.each { |item| puts item.data_get }
 ```
 
 
@@ -6022,8 +6074,9 @@ project_status = client.ProjectStatus.load({ "id" => "project_status_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of ProjectStatus records (raises on error).
+# list returns an Array of ProjectStatus entities, one per record (raises on error).
 project_statuss = client.ProjectStatus.list
+project_statuss.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -6091,8 +6144,9 @@ project_update = client.ProjectUpdate.load({ "id" => "project_update_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of ProjectUpdate records (raises on error).
+# list returns an Array of ProjectUpdate entities, one per record (raises on error).
 project_updates = client.ProjectUpdate.list
+project_updates.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -6239,8 +6293,9 @@ release = client.Release.load({ "id" => "release_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Release records (raises on error).
+# list returns an Array of Release entities, one per record (raises on error).
 releases = client.Release.list
+releases.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -6302,8 +6357,9 @@ release_note = client.ReleaseNote.load({ "id" => "release_note_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of ReleaseNote records (raises on error).
+# list returns an Array of ReleaseNote entities, one per record (raises on error).
 release_notes = client.ReleaseNote.list
+release_notes.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -6365,8 +6421,9 @@ release_pipeline = client.ReleasePipeline.load({ "id" => "release_pipeline_id" }
 #### Example: List
 
 ```ruby
-# list returns an Array of ReleasePipeline records (raises on error).
+# list returns an Array of ReleasePipeline entities, one per record (raises on error).
 release_pipelines = client.ReleasePipeline.list
+release_pipelines.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -6427,8 +6484,9 @@ release_stage = client.ReleaseStage.load({ "id" => "release_stage_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of ReleaseStage records (raises on error).
+# list returns an Array of ReleaseStage entities, one per record (raises on error).
 release_stages = client.ReleaseStage.list
+release_stages.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -6489,8 +6547,9 @@ roadmap = client.Roadmap.load({ "id" => "roadmap_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Roadmap records (raises on error).
+# list returns an Array of Roadmap entities, one per record (raises on error).
 roadmaps = client.Roadmap.list
+roadmaps.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -6544,8 +6603,9 @@ roadmap_to_project = client.RoadmapToProject.load({ "id" => "roadmap_to_project_
 #### Example: List
 
 ```ruby
-# list returns an Array of RoadmapToProject records (raises on error).
+# list returns an Array of RoadmapToProject entities, one per record (raises on error).
 roadmap_to_projects = client.RoadmapToProject.list
+roadmap_to_projects.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -6585,8 +6645,9 @@ Create an instance: `sla_configuration = client.SlaConfiguration`
 #### Example: List
 
 ```ruby
-# list returns an Array of SlaConfiguration records (raises on error).
-sla_configurations = client.SlaConfiguration.list
+# list returns an Array of SlaConfiguration entities, one per record (raises on error).
+sla_configurations = client.SlaConfiguration.list({ "team_id" => "example" })
+sla_configurations.each { |item| puts item.data_get }
 ```
 
 
@@ -6708,8 +6769,9 @@ team = client.Team.load({ "id" => "team_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Team records (raises on error).
+# list returns an Array of Team entities, one per record (raises on error).
 teams = client.Team.list
+teams.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -6796,8 +6858,9 @@ team_membership = client.TeamMembership.load({ "id" => "team_membership_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of TeamMembership records (raises on error).
+# list returns an Array of TeamMembership entities, one per record (raises on error).
 team_memberships = client.TeamMembership.list
+team_memberships.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -6862,8 +6925,9 @@ template = client.Template.load({ "id" => "template_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Template records (raises on error).
+# list returns an Array of Template entities, one per record (raises on error).
 templates = client.Template.list
+templates.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -6920,8 +6984,9 @@ time_schedule = client.TimeSchedule.load({ "id" => "time_schedule_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of TimeSchedule records (raises on error).
+# list returns an Array of TimeSchedule entities, one per record (raises on error).
 time_schedules = client.TimeSchedule.list
+time_schedules.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -6973,8 +7038,9 @@ triage_responsibility = client.TriageResponsibility.load({ "id" => "triage_respo
 #### Example: List
 
 ```ruby
-# list returns an Array of TriageResponsibility records (raises on error).
+# list returns an Array of TriageResponsibility entities, one per record (raises on error).
 triage_responsibilitys = client.TriageResponsibility.list
+triage_responsibilitys.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -7010,19 +7076,6 @@ Create an instance: `upload_file = client.UploadFile`
 | `size` | `Integer` | The size of the uploaded file. |
 | `uploadUrl` | `String` | The pre-signed URL to which the file should be uploaded via a PUT request. |
 
-#### Example: Create
-
-```ruby
-upload_file = client.UploadFile.create({
-  "content_type" => "example_content_type", # String
-  "filename" => "example_filename", # String
-  "size" => 1, # Integer
-  "assetUrl" => "example_assetUrl", # String
-  "contentType" => "example_contentType", # String
-  "uploadUrl" => "example_uploadUrl", # String
-})
-```
-
 
 ### UsageAlert
 
@@ -7057,8 +7110,9 @@ usage_alert = client.UsageAlert.load({ "id" => "usage_alert_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of UsageAlert records (raises on error).
+# list returns an Array of UsageAlert entities, one per record (raises on error).
 usage_alerts = client.UsageAlert.list
+usage_alerts.each { |item| puts item.data_get }
 ```
 
 
@@ -7125,36 +7179,9 @@ user = client.User.load({ "id" => "user_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of User records (raises on error).
+# list returns an Array of User entities, one per record (raises on error).
 users = client.User.list
-```
-
-#### Example: Create
-
-```ruby
-user = client.User.create({
-  "active" => true, # Boolean
-  "admin" => true, # Boolean
-  "app" => true, # Boolean
-  "avatarBackgroundColor" => "example_avatarBackgroundColor", # String
-  "canAccessAnyPublicTeam" => true, # Boolean
-  "createdAt" => "example_createdAt", # Object
-  "createdIssueCount" => 1, # Integer
-  "displayName" => "example_displayName", # String
-  "email" => "example_email", # String
-  "guest" => true, # Boolean
-  "hasGitHubCodeAccess" => true, # Boolean
-  "id" => "example_id", # String
-  "initials" => "example_initials", # String
-  "isAssignable" => true, # Boolean
-  "isMe" => true, # Boolean
-  "isMentionable" => true, # Boolean
-  "name" => "example_name", # String
-  "owner" => true, # Boolean
-  "supportsAgentSessions" => true, # Boolean
-  "updatedAt" => "example_updatedAt", # Object
-  "url" => "example_url", # String
-})
+users.each { |item| puts item.data_get }
 ```
 
 
@@ -7303,8 +7330,9 @@ webhook = client.Webhook.load({ "id" => "webhook_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of Webhook records (raises on error).
+# list returns an Array of Webhook entities, one per record (raises on error).
 webhooks = client.Webhook.list
+webhooks.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -7346,8 +7374,9 @@ Create an instance: `webhook_failure_event = client.WebhookFailureEvent`
 #### Example: List
 
 ```ruby
-# list returns an Array of WebhookFailureEvent records (raises on error).
-webhook_failure_events = client.WebhookFailureEvent.list
+# list returns an Array of WebhookFailureEvent entities, one per record (raises on error).
+webhook_failure_events = client.WebhookFailureEvent.list({ "oauth_client_id" => "example" })
+webhook_failure_events.each { |item| puts item.data_get }
 ```
 
 
@@ -7390,8 +7419,9 @@ workflow_state = client.WorkflowState.load({ "id" => "workflow_state_id" })
 #### Example: List
 
 ```ruby
-# list returns an Array of WorkflowState records (raises on error).
+# list returns an Array of WorkflowState entities, one per record (raises on error).
 workflow_states = client.WorkflowState.list
+workflow_states.each { |item| puts item.data_get }
 ```
 
 #### Example: Create
@@ -7410,7 +7440,7 @@ workflow_state = client.WorkflowState.create({
 
 ## Features
 
-This SDK ships 8 optional features. Each is **inactive until you
+This SDK ships 9 optional features. Each is **inactive until you
 switch it on**, so an SDK you have not configured behaves exactly as if none of
 them existed — no retries, no cache, no logging, no measurable overhead.
 
@@ -7425,10 +7455,11 @@ above:
 | [`paging`](#paging) | Paging |
 | [`ratelimit`](#ratelimit) | Rate limiting |
 | [`retry`](#retry) | Retry |
+| [`station`](#station) | Station control surface binding for outbound integrations |
 | [`test`](#test) | Test transport |
 | [`timeout`](#timeout) | Timeout |
 
-> **Order matters for `ratelimit`, `retry`, `timeout`.** These wrap the
+> **Order matters for `ratelimit`, `retry`, `station`, `timeout`.** These wrap the
 > transport, so each one wraps whatever is already installed: the order you
 > activate them in IS the nesting order. Activating them as an ordered list
 > rather than a map is what fixes that order.
@@ -7519,6 +7550,27 @@ Set `feature.retry.active` to enable it, then override any of the options above.
 transport features decides what it sees. A feature activated later wraps one
 activated earlier.
 
+### station
+
+Station control surface binding for outbound integrations.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `capture` | `'meta'` |
+| `fromEnv` | `true` |
+| `instance` | `''` |
+| `profile` | `''` |
+| `register` | `true` |
+| `secret` | `''` |
+| `url` | `''` |
+
+Set `feature.station.active` to enable it, then override any of the options above.
+
+`station` wraps the transport, so its position among the other
+transport features decides what it sees. A feature activated later wraps one
+activated earlier.
+
 ### test
 
 Test transport.
@@ -7589,6 +7641,7 @@ The SDK ships with built-in features:
 - **PagingFeature**: Paging
 - **RatelimitFeature**: Rate limiting
 - **RetryFeature**: Retry
+- **StationFeature**: Station control surface binding for outbound integrations
 - **TestFeature**: Test transport
 - **TimeoutFeature**: Timeout
 

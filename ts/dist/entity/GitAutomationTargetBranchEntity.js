@@ -79,9 +79,15 @@ class GitAutomationTargetBranchEntity extends LinearEntityBase_1.LinearEntityBas
             return (ctx.result && ctx.result.ok) ? this : out;
         }
         catch (err) {
-            fres = featureHook(ctx, 'PreUnexpected');
-            if (fres instanceof Promise) {
-                await fres;
+            // What a hook throws here must not escape the cleaning below.
+            try {
+                fres = featureHook(ctx, 'PreUnexpected');
+                if (fres instanceof Promise) {
+                    await fres;
+                }
+            }
+            catch (hookerr) {
+                err = hookerr;
             }
             err = this._unexpected(ctx, err);
             if (err) {
@@ -89,7 +95,7 @@ class GitAutomationTargetBranchEntity extends LinearEntityBase_1.LinearEntityBas
             }
             else {
                 // Off-happy-path (throw disabled): typed as any so the method's
-                // Promise<GitAutomationTargetBranch> return stays clean under strict null checks.
+                // Promise<GitAutomationTargetBranchEntity> return stays clean under strict null checks.
                 return undefined;
             }
         }
@@ -164,9 +170,15 @@ class GitAutomationTargetBranchEntity extends LinearEntityBase_1.LinearEntityBas
             return (ctx.result && ctx.result.ok) ? this : out;
         }
         catch (err) {
-            fres = featureHook(ctx, 'PreUnexpected');
-            if (fres instanceof Promise) {
-                await fres;
+            // What a hook throws here must not escape the cleaning below.
+            try {
+                fres = featureHook(ctx, 'PreUnexpected');
+                if (fres instanceof Promise) {
+                    await fres;
+                }
+            }
+            catch (hookerr) {
+                err = hookerr;
             }
             err = this._unexpected(ctx, err);
             if (err) {
@@ -174,7 +186,7 @@ class GitAutomationTargetBranchEntity extends LinearEntityBase_1.LinearEntityBas
             }
             else {
                 // Off-happy-path (throw disabled): typed as any so the method's
-                // Promise<GitAutomationTargetBranch> return stays clean under strict null checks.
+                // Promise<GitAutomationTargetBranchEntity> return stays clean under strict null checks.
                 return undefined;
             }
         }
@@ -253,9 +265,15 @@ class GitAutomationTargetBranchEntity extends LinearEntityBase_1.LinearEntityBas
             return out;
         }
         catch (err) {
-            fres = featureHook(ctx, 'PreUnexpected');
-            if (fres instanceof Promise) {
-                await fres;
+            // What a hook throws here must not escape the cleaning below.
+            try {
+                fres = featureHook(ctx, 'PreUnexpected');
+                if (fres instanceof Promise) {
+                    await fres;
+                }
+            }
+            catch (hookerr) {
+                err = hookerr;
             }
             err = this._unexpected(ctx, err);
             if (err) {

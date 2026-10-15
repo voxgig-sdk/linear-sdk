@@ -54,6 +54,14 @@ const utility_1 = require("../../utility");
         const ent = testsdk.SsoUrlFromEmailResponse();
         (0, node_assert_1.default)(null != ent);
     });
+    (0, node_test_1.test)('validate', async (t) => {
+        if (null == __1.config.feature?.validate) {
+            t.skip('feature not present in this SDK: validate');
+            return;
+        }
+        const client = __1.LinearSDK.test(undefined, { feature: { validate: { active: true } } });
+        await node_assert_1.default.rejects(client.SsoUrlFromEmailResponse().load({ "email": 1, "type": "x" }), (err) => 'validate_failed' === err.code);
+    });
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.LINEAR_TEST_LIVE;
         for (const op of ['load']) {
@@ -62,7 +70,7 @@ const utility_1 = require("../../utility");
         }
         const setup = basicSetup();
         if (setup.live) {
-            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "samlSsoUrl": { "a": true, "h": "Saml Sso Url", "n": "samlSsoUrl", "r": true, "sh": "SAML SSO sign-in URL.", "t": "`$STRING`", "key$": "samlSsoUrl", "index$": 0 }, "success": { "a": true, "h": "Success", "n": "success", "r": true, "sh": "Whether the operation was successful.", "t": "`$BOOLEAN`", "key$": "success", "index$": 1 } }, "name": "sso_url_from_email_response", "op": { "load": { "input": "data", "name": "load", "points": [{ "a": true, "co": { "id": "POST ssoUrlFromEmail", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "email", "or": "email", "r": true, "t": "`$STRING`", "index$": 0 }, { "a": true, "k": "param", "n": "is_desktop", "or": "is_desktop", "r": false, "t": "`$BOOLEAN`", "index$": 1 }, { "a": true, "k": "param", "n": "type", "or": "type", "r": true, "t": "`$ANY`", "index$": 2 }] }, "gq": { "doc": "query SsoUrlFromEmailResponseLoad($email: String!, $isDesktop: Boolean, $type: IdentityProviderType!) { ssoUrlFromEmail(email: $email, isDesktop: $isDesktop, type: $type) { ...SsoUrlFromEmailResponseFields } } fragment SsoUrlFromEmailResponseFields on SsoUrlFromEmailResponse { samlSsoUrl success }", "field": "ssoUrlFromEmail", "optype": "query", "vars": [{ "from": "email", "gqltype": "String!", "name": "email" }, { "from": "isDesktop", "gqltype": "Boolean", "name": "isDesktop" }, { "from": "type", "gqltype": "IdentityProviderType!", "name": "type" }] }, "k": "graphql", "m": "POST", "o": "ssoUrlFromEmail", "q": { "exist": ["email", "type"] }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.ssoUrlFromEmail`" }, "index$": 0 }], "key$": "load" } }, "relations": { "ancestors": [] }, "key$": "sso_url_from_email_response", "name__orig": "sso_url_from_email_response", "Name": "SsoUrlFromEmailResponse", "name_": "sso_url_from_email_response", "name-": "sso-url-from-email-response", "NAME": "SSO_URL_FROM_EMAIL_RESPONSE", "index$": 73 }, { "active": true, "entity": "sso_url_from_email_response", "key$": "BasicSsoUrlFromEmailResponseFlow", "kind": "basic", "name": "BasicSsoUrlFromEmailResponseFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": { "ref": "sso_url_from_email_response_ref01", "srcdatavar": "sso_url_from_email_response_ref01_data", "suffix": "_dt0" }, "m": { "email": "email01", "is_desktop": "is_desktop01", "type": "type01" }, "o": "load", "s": [], "v": [{ "apply": "TextFieldMark", "def": { "mark": "Mark01-sso_url_from_email_response_ref01" } }], "index$": 0 }] }, 'SsoUrlFromEmailResponse', { "POST ssoUrlFromEmail": { "protocol": "graphql" } });
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "samlSsoUrl": { "a": true, "h": "Saml Sso Url", "n": "samlSsoUrl", "r": true, "sh": "SAML SSO sign-in URL.", "t": "`$STRING`", "key$": "samlSsoUrl", "index$": 0 }, "success": { "a": true, "h": "Success", "n": "success", "r": true, "sh": "Whether the operation was successful.", "t": "`$BOOLEAN`", "key$": "success", "index$": 1 } }, "name": "sso_url_from_email_response", "op": { "load": { "input": "data", "name": "load", "points": [{ "a": true, "co": { "id": "POST ssoUrlFromEmail", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "email", "or": "email", "r": true, "t": "`$STRING`", "index$": 0 }, { "a": true, "k": "param", "n": "is_desktop", "or": "isDesktop", "r": false, "t": "`$BOOLEAN`", "index$": 1 }, { "a": true, "k": "param", "n": "type", "or": "type", "r": true, "t": "`$ANY`", "index$": 2 }] }, "gq": { "doc": "query SsoUrlFromEmailResponseLoad($email: String!, $isDesktop: Boolean, $type: IdentityProviderType!) { ssoUrlFromEmail(email: $email, isDesktop: $isDesktop, type: $type) { ...SsoUrlFromEmailResponseFields } } fragment SsoUrlFromEmailResponseFields on SsoUrlFromEmailResponse { samlSsoUrl success }", "field": "ssoUrlFromEmail", "optype": "query", "vars": [{ "from": "email", "gqltype": "String!", "name": "email" }, { "from": "isDesktop", "gqltype": "Boolean", "name": "isDesktop" }, { "from": "type", "gqltype": "IdentityProviderType!", "name": "type" }] }, "k": "graphql", "m": "POST", "o": "ssoUrlFromEmail", "q": { "exist": ["email", "type"] }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.ssoUrlFromEmail`" }, "index$": 0 }], "key$": "load" } }, "relations": { "ancestors": [] }, "key$": "sso_url_from_email_response", "name__orig": "sso_url_from_email_response", "Name": "SsoUrlFromEmailResponse", "name_": "sso_url_from_email_response", "name-": "sso-url-from-email-response", "NAME": "SSO_URL_FROM_EMAIL_RESPONSE", "index$": 73 }, { "active": true, "entity": "sso_url_from_email_response", "key$": "BasicSsoUrlFromEmailResponseFlow", "kind": "basic", "name": "BasicSsoUrlFromEmailResponseFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": { "ref": "sso_url_from_email_response_ref01", "srcdatavar": "sso_url_from_email_response_ref01_data", "suffix": "_dt0" }, "m": { "email": "email01", "is_desktop": "is_desktop01", "type": "type01" }, "o": "load", "s": [], "v": [{ "apply": "TextFieldMark", "def": { "mark": "Mark01-sso_url_from_email_response_ref01" } }], "index$": 0 }] }, 'SsoUrlFromEmailResponse', { "POST ssoUrlFromEmail": { "protocol": "graphql" } }, { strict: LIVE_STRICT, t });
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -74,6 +82,11 @@ const utility_1 = require("../../utility");
         const sso_url_from_email_response_ref01_ent = client.SsoUrlFromEmailResponse();
     });
 });
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true;
 function basicSetup(extra) {
     // TODO: fix test def options
     const options = {}; // null

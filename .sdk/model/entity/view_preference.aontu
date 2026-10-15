@@ -101,7 +101,7 @@ main: kit: entity: view_preference: {
               {
                 k: "param"
                 n: "view_type"
-                or: "view_type"
+                or: "viewType"
                 r: true
                 t: "`$ANY`"
               }

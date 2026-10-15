@@ -8,6 +8,37 @@ local runner = require("test.runner")
 
 local _test_dir = debug.getinfo(1, "S").source:match("^@(.+/)")  or "./"
 
+-- main.kit.test.live.strict is true (the default is true): a live
+-- request that fails, or a live test missing an input it needs,
+-- fails the test.
+-- An account with no record for a test to read skips it either way.
+local LIVE_STRICT = true
+
+
+local BaseFeature = require("feature.base_feature")
+
+local FailHook = {}
+FailHook.__index = FailHook
+setmetatable(FailHook, { __index = BaseFeature })
+
+function FailHook.new()
+  local self = setmetatable(BaseFeature.new(), FailHook)
+  self.name = "failhook"
+  self.unexpected = 0
+  return self
+end
+
+function FailHook:init(_ctx, _options) end
+function FailHook:PreSpec(_ctx) error("integration hook failed") end
+function FailHook:PreUnexpected(_ctx) self.unexpected = self.unexpected + 1 end
+
+local function errtext(err)
+  if type(err) == "table" then
+    return tostring(err.msg or err.message or "")
+  end
+  return tostring(err)
+end
+
 describe("IntegrationEntity", function()
   it("should create instance", function()
     local testsdk = sdk.test(nil, nil)
@@ -56,65 +87,95 @@ describe("IntegrationEntity", function()
     end
   end)
 
+  it("should report a failed stream", function()
+    local offline = { net = { offline = true } }
+    local ok, err = pcall(function()
+      for _ in sdk.test(offline, nil):Integration(nil):stream("list", nil, nil) do end
+    end)
+    assert.is_false(ok)
+    assert.truthy(string.find(errtext(err), "offline", 1, true))
+
+    for _ in sdk.test(offline, nil):Integration(nil):stream("list", nil, { ctrl = { throw = false } }) do end
+
+    local config = require("config_shared")()
+    if type(config.feature) == "table" and config.feature.rbac ~= nil then
+      local denied = sdk.test(nil, { feature = { rbac = { active = true, deny = true } } })
+      local dok, derr = pcall(function()
+        for _ in denied:Integration(nil):stream("list", nil, nil) do end
+      end)
+      assert.is_false(dok)
+      assert.are.equal("rbac_denied", type(derr) == "table" and derr.code or nil)
+    end
+  end)
+
+  it("should leave the caller's ctrl", function()
+    local explain = {}
+    local ctrl = { explain = explain }
+    for _ in sdk.test(nil, nil):Integration(nil):stream("list", nil, { ctrl = ctrl }) do end
+    assert.is_nil(ctrl.stream)
+    assert.are.equal(explain, ctrl.explain)
+    assert.is_not_nil(next(explain))
+  end)
+
+  it("should fire PreUnexpected", function()
+    local hook = FailHook.new()
+    local client = sdk.new({ feature = { test = { active = true } }, extend = { hook } })
+
+    local out, err = client:Integration(nil):list(nil, nil)
+    assert.is_nil(out)
+    assert.truthy(string.find(errtext(err), "hook failed", 1, true))
+    assert.is_true(hook.unexpected > 0)
+
+    local fired = hook.unexpected
+    out, err = client:Integration(nil):list(nil, { throw = false })
+    assert.is_nil(err)
+    assert.is_true(hook.unexpected > fired)
+  end)
+
+  it("should refuse an invalid request", function()
+    local config = require("config_shared")()
+    if type(config.feature) ~= "table" or config.feature.validate == nil then
+      pending("feature not present in this SDK: validate")
+      return
+    end
+    local client = sdk.test(nil, { feature = { validate = { active = true } } })
+    local _, err = client:Integration(nil):list({ ["after"] = 1 }, nil)
+    assert.are.equal("validate_failed", type(err) == "table" and err.code or nil)
+  end)
+
   it("should run basic flow", function()
     local setup = integration_basic_setup(nil)
     -- Per-op sdk-test-control.json skip.
     local _live = setup.live or false
-    for _, _op in ipairs({"create", "list", "update", "load", "remove"}) do
+    for _, _op in ipairs({"list", "update", "load", "remove"}) do
       local _should_skip, _reason = runner.is_control_skipped("entityOp", "integration." .. _op, _live and "live" or "unit")
       if _should_skip then
         pending(_reason or "skipped via sdk-test-control.json")
         return
       end
     end
-    -- The basic flow consumes synthetic IDs from the fixture. In live mode
-    -- without an *_ENTID env override, those IDs hit the live API and 4xx.
-    if setup.synthetic_only then
-      pending("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_INTEGRATION_ENTID JSON to run live")
-      return
+    if setup.live then
+      for _, _live_key in ipairs({"after01", "before01", "first01", "include_archived01", "last01", "order_by01"}) do
+        if setup.synthetic_only or setup.idmap[_live_key] == nil then
+          runner.live_miss(pending, LIVE_STRICT, "Live entity test blocked: needs " .. _live_key .. " via LINEAR_TEST_INTEGRATION_ENTID")
+        end
+      end
+    end
+    if setup.live then
+      runner.live_miss(pending, LIVE_STRICT, "Live entity test blocked: " .. "the flow updates a integration record it did not create")
     end
     local client = setup.client
 
-    -- CREATE
-    local integration_ref01_ent = client:Integration(nil)
-    local integration_ref01_data = helpers.to_map(vs.getprop(
-      vs.getpath(setup.data, "new.integration"), "integration_ref01"))
-    integration_ref01_data["after"] = setup.idmap["after01"]
-    integration_ref01_data["api_key"] = setup.idmap["api_key01"]
-    integration_ref01_data["application_key"] = setup.idmap["application_key01"]
-    integration_ref01_data["before"] = setup.idmap["before01"]
-    integration_ref01_data["channel_id"] = setup.idmap["channel01"]
-    integration_ref01_data["channel_name"] = setup.idmap["channel_name01"]
-    integration_ref01_data["code"] = setup.idmap["code01"]
-    integration_ref01_data["code_access"] = setup.idmap["code_access01"]
-    integration_ref01_data["confirm_replace"] = setup.idmap["confirm_replace01"]
-    integration_ref01_data["enabled"] = setup.idmap["enabled01"]
-    integration_ref01_data["environment_id"] = setup.idmap["environment01"]
-    integration_ref01_data["first"] = setup.idmap["first01"]
-    integration_ref01_data["github_host"] = setup.idmap["github_host01"]
-    integration_ref01_data["include_archived"] = setup.idmap["include_archived01"]
-    integration_ref01_data["installation_id"] = setup.idmap["installation01"]
-    integration_ref01_data["integration_id"] = setup.idmap["integration01"]
-    integration_ref01_data["last"] = setup.idmap["last01"]
-    integration_ref01_data["membership_type"] = setup.idmap["membership_type01"]
-    integration_ref01_data["order_by"] = setup.idmap["order_by01"]
-    integration_ref01_data["organization_slug"] = setup.idmap["organization_slug01"]
-    integration_ref01_data["project_id"] = setup.idmap["project01"]
-    integration_ref01_data["redirect_uri"] = setup.idmap["redirect_uri01"]
-    integration_ref01_data["requested_scope"] = setup.idmap["requested_scope01"]
-    integration_ref01_data["site"] = setup.idmap["site01"]
-    integration_ref01_data["skip_installation_deletion"] = setup.idmap["skip_installation_deletion01"]
-    integration_ref01_data["team_id"] = setup.idmap["team01"]
-    integration_ref01_data["team_name"] = setup.idmap["team_name01"]
-    integration_ref01_data["type"] = setup.idmap["type01"]
-
-    local integration_ref01_data_result, err = integration_ref01_ent:create(integration_ref01_data, nil)
-    assert.is_nil(err)
-    integration_ref01_data = helpers.to_map(type(integration_ref01_data_result) == 'table' and integration_ref01_data_result.data_get and integration_ref01_data_result:data_get() or integration_ref01_data_result)
-    assert.is_not_nil(integration_ref01_data)
-    assert.is_not_nil(integration_ref01_data["id"])
+    -- Bootstrap entity data from existing test data.
+    local integration_ref01_data_raw = vs.items(helpers.to_map(
+      vs.getpath(setup.data, "existing.integration")))
+    local integration_ref01_data = nil
+    if #integration_ref01_data_raw > 0 then
+      integration_ref01_data = helpers.to_map(integration_ref01_data_raw[1][2])
+    end
 
     -- LIST
+    local integration_ref01_ent = client:Integration(nil)
     local integration_ref01_match = {
       ["after"] = setup.idmap["after01"],
       ["before"] = setup.idmap["before01"],
@@ -127,11 +188,6 @@ describe("IntegrationEntity", function()
     local integration_ref01_list_result, err = integration_ref01_ent:list(integration_ref01_match, nil)
     assert.is_nil(err)
     assert.is_table(integration_ref01_list_result)
-
-    local found_item = vs.select(
-      runner.entity_list_to_data(integration_ref01_list_result),
-      { id = integration_ref01_data["id"] })
-    assert.is_false(vs.isempty(found_item))
 
     -- UPDATE
     local integration_ref01_data_up0_up = {
@@ -159,32 +215,6 @@ describe("IntegrationEntity", function()
     assert.is_not_nil(integration_ref01_data_dt0_load_result)
     assert.are.equal(integration_ref01_data_dt0_load_result["id"], integration_ref01_data["id"])
 
-    -- REMOVE
-    local integration_ref01_match_rm0 = {
-      id = integration_ref01_data["id"],
-    }
-    local _, err = integration_ref01_ent:remove(integration_ref01_match_rm0, nil)
-    assert.is_nil(err)
-
-    -- LIST
-    local integration_ref01_match_rt0 = {
-      ["after"] = setup.idmap["after01"],
-      ["before"] = setup.idmap["before01"],
-      ["first"] = setup.idmap["first01"],
-      ["include_archived"] = setup.idmap["include_archived01"],
-      ["last"] = setup.idmap["last01"],
-      ["order_by"] = setup.idmap["order_by01"],
-    }
-
-    local integration_ref01_list_rt0_result, err = integration_ref01_ent:list(integration_ref01_match_rt0, nil)
-    assert.is_nil(err)
-    assert.is_table(integration_ref01_list_rt0_result)
-
-    local not_found_item = vs.select(
-      runner.entity_list_to_data(integration_ref01_list_rt0_result),
-      { id = integration_ref01_data["id"] })
-    assert.is_true(vs.isempty(not_found_item))
-
   end)
 end)
 
@@ -208,7 +238,7 @@ function integration_basic_setup(extra)
 
   -- Generate idmap via transform.
   local idmap = vs.transform(
-    { "integration01", "integration02", "integration03", "after01", "api_key01", "application_key01", "before01", "channel01", "channel_name01", "code01", "code_access01", "confirm_replace01", "enabled01", "environment01", "first01", "github_host01", "include_archived01", "installation01", "last01", "membership_type01", "order_by01", "organization_slug01", "project01", "redirect_uri01", "requested_scope01", "site01", "skip_installation_deletion01", "team01", "team_name01", "type01" },
+    { "integration01", "integration02", "integration03", "after01", "before01", "first01", "include_archived01", "last01", "order_by01", "skip_installation_deletion01" },
     {
       ["`$PACK`"] = { "", {
         ["`$KEY`"] = "`$COPY`",
@@ -217,9 +247,8 @@ function integration_basic_setup(extra)
     }
   )
 
-  -- Detect ENTID env override before envOverride consumes it. When live
-  -- mode is on without a real override, the basic test runs against synthetic
-  -- IDs from the fixture and 4xx's. Surface this so the test can skip.
+  -- Whether *_ENTID supplied the idmap, read before env_override consumes
+  -- it: without it, the ids a live flow binds are the fixture's synthetic ones.
   local entid_env_raw = os.getenv("LINEAR_TEST_INTEGRATION_ENTID")
   local idmap_overridden = entid_env_raw ~= nil and entid_env_raw:match("^%s*{") ~= nil
 

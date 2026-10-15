@@ -15,9 +15,13 @@ predictable and low-friction for both humans and AI agents.
 
 ## Install
 This package is not yet published to npm. Install it from the GitHub
-release tag (`ts/vX.Y.Z`):
+release tag (`ts/vX.Y.Z`, see [Tags](https://github.com/voxgig-sdk/linear-sdk/tags)), or from a
+clone, which carries the compiled `dist/`:
 
-- Releases: [https://github.com/voxgig-sdk/linear-sdk/releases](https://github.com/voxgig-sdk/linear-sdk/releases)
+```bash
+git clone https://github.com/voxgig-sdk/linear-sdk
+npm install ./linear-sdk/ts
+```
 
 
 ## Tutorial: your first API call
@@ -45,36 +49,95 @@ resolves to entities, not raw records. Iterate them directly, and call
 const accesskeyreleases = await client.AccessKeyRelease().list()
 
 for (const accesskeyrelease of accesskeyreleases) {
-  console.log(accesskeyrelease)
+  console.log(accesskeyrelease.data())
 }
 ```
 
 ### 3. Load an accesskeyrelease
 
-`load()` returns the entity directly and throws on failure:
+`load()` returns the entity and throws on failure; `.data()` reads its record:
 
 ```ts
 try {
   const accesskeyrelease = await client.AccessKeyRelease().load({ id: 'example_id' })
-  console.log(accesskeyrelease)
+  console.log(accesskeyrelease.data())
 } catch (err) {
   console.error('load failed:', err)
 }
 ```
 
-### 4. Create, update, and remove
 
-```ts
-// Create — returns the created AccessKeyRelease ENTITY (.data() for the record)
-const created = await client.AccessKeyRelease().create({
-  createdAt: 'example_createdAt',
-  id: 'example_id',
-  name: 'example_name',
-  url: 'example_url',
-})
+## Use with Station
 
+This SDK ships as a [voxgig/station](https://github.com/voxgig/station)
+plugin: bind it to a local `Station` and outbound configuration,
+credentials, and observability move to one place. The feature is
+present but **off by default** — nothing changes until you bind.
+
+### Declarative: `station.json` + `station.sdk()`
+
+Declare an instance in `station.json` at the repo root (committable —
+names and stores, never values):
+
+```json
+{ "station": 1,
+  "profiles": { "default": {
+    "sdk": { "linear": {
+      "package": "@voxgig-sdk/linear-sdk" } } } } }
 ```
 
+Then get the client where you need it:
+
+1. `station = Station.open()` — reads and validates `station.json`;
+   constructs nothing.
+2. `client = station.sdk('linear')` — built on first ask and cached,
+   so the same name returns the same client.
+
+Loading this package is the whole bootstrap: it registers its own
+factory (constructor plus embedded config) with the station library at
+module init, so `station.sdk()` needs no SDK import in application
+code. That is what the `package` key above is for — it names the module
+for station to load, since nothing else in this example would execute
+it. An application that imports this SDK for its types anyway can drop
+the key: that import is itself the bootstrap.
+
+A second instance of the same API is one more key — `"linear$test"`
+beside `"linear"` — and `station.sdk('linear$test')` returns it.
+SDK features are configured in the same file too: fleet-wide, per api,
+or per instance. `station.check()` resolves and constructs every
+active instance without sending a request — run it in CI.
+
+### The secret name derives from the instance
+
+The credential comes from [sekreto](https://github.com/voxgig/sekreto)
+under a name derived from the **instance** name — the instance token
+lowercased, plus `.apikey`. The untagged instance `linear` derives
+`linear.apikey` — by default the `LINEAR_APIKEY` environment
+variable this README already documents, unchanged. A tagged instance
+derives its own: `linear$test` → `linear_test.apikey` →
+`LINEAR_TEST_APIKEY` — each instance is a separate credentialed use
+of the API, and its env var is derivable from the name you chose. To
+pin a name instead, set `secret` on the instance block, or at the
+api level for several instances sharing one key. Point a profile at a
+vault later and application code does not change; sekreto's own
+documentation covers the stores. The key stays out of `options()` and
+`prepare()` output; `station.tap(...)` shows live traffic.
+
+### Imperative: `connect()` — the retrofit path
+
+Bind by passing the SDK class to the station:
+
+1. `station = Station.open()` — profile, env, and proxy all defaulted.
+2. `client = station.connect(LinearSDK)` — replaces direct
+   construction; `connect(LinearSDK, { as: 'test' })` binds
+   a second, tagged instance.
+
+With no `station.json` at all this runs solo with everything
+defaulted — the two-line form is how an existing application starts.
+
+Station failures surface through this SDK's own error path
+(`err.code`, `station_*`); the codes are catalogued in
+[station error codes](https://github.com/voxgig/sdkgen/blob/main/docs/reference/station-errors.md).
 
 ## Error handling
 
@@ -83,14 +146,15 @@ Entity operations reject on failure, so wrap them in `try` / `catch`:
 ```ts
 try {
   const agentactivitys = await client.AgentActivity().list()
-  console.log(agentactivitys)
+  console.log(agentactivitys.map((item) => item.data()))
 } catch (err) {
   console.error('list failed:', err)
 }
 ```
 
 The low-level `direct()` method does **not** throw — it returns the
-value or an `Error`, so check the result before using it:
+result envelope. Branch on `ok`; on failure `status` holds the HTTP status
+(for error responses) and `err` holds the error:
 
 ```ts
 const result = await client.direct({
@@ -99,8 +163,8 @@ const result = await client.direct({
   params: { id: 'example_id' },
 })
 
-if (result instanceof Error) {
-  throw result
+if (!result.ok) {
+  console.error('request failed:', result.status, result.err)
 }
 ```
 
@@ -118,9 +182,6 @@ const result = await client.direct({
   params: { id: 'example' },
 })
 
-if (result instanceof Error) {
-  throw result
-}
 if (result.ok) {
   console.log(result.status)  // 200
   console.log(result.data)    // response body
@@ -149,10 +210,9 @@ Create a mock client for unit testing — no server required:
 ```ts
 const client = LinearSDK.test()
 
-const agentactivity = await client.AgentActivity().list()
-// agentactivity is the entity, populated with mock response data
-// — call agentactivity.data() for the record itself
-console.log(agentactivity)
+const agentactivitys = await client.AgentActivity().list()
+// agentactivitys is an array of AgentActivity entities, one per mock record
+console.log(agentactivitys.map((agentactivity) => agentactivity.data()))
 ```
 
 You can also use the instance method:
@@ -357,11 +417,11 @@ All entities share the same interface.
 
 | Method | Signature | Description |
 | --- | --- | --- |
-| `load` | `load(reqmatch?, ctrl?): Promise<Entity>` | Load a single entity by match criteria. |
-| `list` | `list(reqmatch?, ctrl?): Promise<Entity[]>` | List entities matching the criteria. |
-| `create` | `create(reqdata?, ctrl?): Promise<Entity>` | Create a new entity. |
-| `update` | `update(reqdata?, ctrl?): Promise<Entity>` | Update an existing entity. |
-| `remove` | `remove(reqmatch?, ctrl?): Promise<void>` | Remove an entity. |
+| `load` | `load(reqmatch?, ctrl?): Promise<Entity>` | Load a single entity by match criteria, and return it. |
+| `list` | `list(reqmatch?, ctrl?): Promise<Entity[]>` | List entities matching the criteria, one per record. |
+| `create` | `create(reqdata?, ctrl?): Promise<Entity>` | Create a new entity, and return it. |
+| `update` | `update(reqdata?, ctrl?): Promise<Entity>` | Update an existing entity, and return it. |
+| `remove` | `remove(reqmatch?, ctrl?): Promise<Entity>` | Remove an entity, and return it marked as deleted. |
 | `data` | `data(data?: Partial<Entity>): Entity` | Get or set entity data. |
 | `match` | `match(match?: Partial<Entity>): Partial<Entity>` | Get or set entity match criteria. |
 | `make` | `make(): Entity` | Create a new instance with the same options. |
@@ -370,13 +430,13 @@ All entities share the same interface.
 
 #### Return values
 
-Entity operations resolve to the entity data directly — there is no
-result envelope:
+Entity operations resolve to the entity itself — there is no result
+envelope, and an entity's `data()` reads its record:
 
 - `load`, `create` and `update` resolve to a single entity object.
 - `list` resolves to an **array** of entity objects (iterate it directly;
   there is no `.data` and no `.ok`).
-- `remove` resolves to `void`.
+- `remove` resolves to the entity, marked as deleted.
 
 On a failed request these methods **throw**, so wrap calls in
 `try`/`catch` to handle errors. Only `direct()` returns the result
@@ -2657,17 +2717,6 @@ const access_key_release = await client.AccessKeyRelease().load({ id: 'access_ke
 const access_key_releases = await client.AccessKeyRelease().list()
 ```
 
-#### Example: Create
-
-```ts
-const access_key_release = await client.AccessKeyRelease().create({
-  createdAt: 'example_createdAt',
-  id: 'example_id',
-  name: 'example_name',
-  url: 'example_url',
-})
-```
-
 
 ### AccessKeyReleasePipeline
 
@@ -3060,15 +3109,6 @@ Create an instance: `const auth_resolver_response = client.AuthResolverResponse(
 const auth_resolver_response = await client.AuthResolverResponse().load({ id: 'auth_resolver_response_id' })
 ```
 
-#### Example: Create
-
-```ts
-const auth_resolver_response = await client.AuthResolverResponse().create({
-  email: 'example_email',
-  id: 'example_id',
-})
-```
-
 
 ### AuthenticationSessionResponse
 
@@ -3215,13 +3255,6 @@ Create an instance: `const create_or_join_organization_response = client.CreateO
 | --- | --- | --- |
 | `organization` | `Record<string, any>` | The workspace that was created or joined. |
 | `user` | `Record<string, any>` | The user who created or joined the workspace. |
-
-#### Example: Create
-
-```ts
-const create_or_join_organization_response = await client.CreateOrJoinOrganizationResponse().create({
-})
-```
 
 
 ### CustomView
@@ -4186,13 +4219,6 @@ Create an instance: `const git_hub_integration_connect_detail = client.GitHubInt
 | --- | --- | --- |
 | `lostRepositoryNames` | `string` | Full names ('owner/repo') of repositories whose existing GitHub Issues sync mappings would become inaccessible if the new GitHub App installation replaces the existing one. |
 
-#### Example: Create
-
-```ts
-const git_hub_integration_connect_detail = await client.GitHubIntegrationConnectDetail().create({
-})
-```
-
 
 ### Initiative
 
@@ -4580,17 +4606,6 @@ const integration = await client.Integration().load({ id: 'integration_id' })
 const integrations = await client.Integration().list()
 ```
 
-#### Example: Create
-
-```ts
-const integration = await client.Integration().create({
-  createdAt: 'example_createdAt',
-  id: 'example_id',
-  service: 'example_service',
-  updatedAt: 'example_updatedAt',
-})
-```
-
 
 ### IntegrationTemplate
 
@@ -4845,18 +4860,6 @@ Create an instance: `const issue_import = client.IssueImport()`
 | `status` | `string` | The current status of the import job, indicating its position in the import lifecycle (e.g., not started, in progress, complete, error). |
 | `teamName` | `string` | The name of the new team to be created for the import, when the import is configured to create a new team rather than importing into an existing one. |
 | `updatedAt` | `any` | The last time at which the entity was meaningfully updated. |
-
-#### Example: Create
-
-```ts
-const issue_import = await client.IssueImport().create({
-  createdAt: 'example_createdAt',
-  displayName: 'example_displayName',
-  service: 'example_service',
-  status: 'example_status',
-  updatedAt: 'example_updatedAt',
-})
-```
 
 
 ### IssueLabel
@@ -5144,14 +5147,6 @@ Create an instance: `const logout_response = client.LogoutResponse()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `success` | `boolean` | Whether the operation was successful. |
-
-#### Example: Create
-
-```ts
-const logout_response = await client.LogoutResponse().create({
-  success: true,
-})
-```
 
 
 ### Notification
@@ -6957,19 +6952,6 @@ Create an instance: `const upload_file = client.UploadFile()`
 | `size` | `number` | The size of the uploaded file. |
 | `uploadUrl` | `string` | The pre-signed URL to which the file should be uploaded via a PUT request. |
 
-#### Example: Create
-
-```ts
-const upload_file = await client.UploadFile().create({
-  content_type: 'example_content_type',
-  filename: 'example_filename',
-  size: 1,
-  assetUrl: 'example_assetUrl',
-  contentType: 'example_contentType',
-  uploadUrl: 'example_uploadUrl',
-})
-```
-
 
 ### UsageAlert
 
@@ -7070,34 +7052,6 @@ const user = await client.User().load({ id: 'user_id' })
 
 ```ts
 const users = await client.User().list()
-```
-
-#### Example: Create
-
-```ts
-const user = await client.User().create({
-  active: true,
-  admin: true,
-  app: true,
-  avatarBackgroundColor: 'example_avatarBackgroundColor',
-  canAccessAnyPublicTeam: true,
-  createdAt: 'example_createdAt',
-  createdIssueCount: 1,
-  displayName: 'example_displayName',
-  email: 'example_email',
-  guest: true,
-  hasGitHubCodeAccess: true,
-  id: 'example_id',
-  initials: 'example_initials',
-  isAssignable: true,
-  isMe: true,
-  isMentionable: true,
-  name: 'example_name',
-  owner: true,
-  supportsAgentSessions: true,
-  updatedAt: 'example_updatedAt',
-  url: 'example_url',
-})
 ```
 
 
@@ -7285,7 +7239,7 @@ Create an instance: `const webhook_failure_event = client.WebhookFailureEvent()`
 #### Example: List
 
 ```ts
-const webhook_failure_events = await client.WebhookFailureEvent().list()
+const webhook_failure_events = await client.WebhookFailureEvent().list({ oauth_client_id: "example" })
 ```
 
 
@@ -7346,7 +7300,7 @@ const workflow_state = await client.WorkflowState().create({
 
 ## Features
 
-This SDK ships 8 optional features. Each is **inactive until you
+This SDK ships 9 optional features. Each is **inactive until you
 switch it on**, so an SDK you have not configured behaves exactly as if none of
 them existed — no retries, no cache, no logging, no measurable overhead.
 
@@ -7361,10 +7315,11 @@ above:
 | [`paging`](#paging) | Paging |
 | [`ratelimit`](#ratelimit) | Rate limiting |
 | [`retry`](#retry) | Retry |
+| [`station`](#station) | Station control surface binding for outbound integrations |
 | [`test`](#test) | Test transport |
 | [`timeout`](#timeout) | Timeout |
 
-> **Order matters for `ratelimit`, `retry`, `timeout`.** These wrap the
+> **Order matters for `ratelimit`, `retry`, `station`, `timeout`.** These wrap the
 > transport, so each one wraps whatever is already installed: the order you
 > activate them in IS the nesting order. Activating them as an ordered list
 > rather than a map is what fixes that order.
@@ -7455,6 +7410,27 @@ Set `feature.retry.active` to enable it, then override any of the options above.
 transport features decides what it sees. A feature activated later wraps one
 activated earlier.
 
+### station
+
+Station control surface binding for outbound integrations.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `capture` | `'meta'` |
+| `fromEnv` | `true` |
+| `instance` | `''` |
+| `profile` | `''` |
+| `register` | `true` |
+| `secret` | `''` |
+| `url` | `''` |
+
+Set `feature.station.active` to enable it, then override any of the options above.
+
+`station` wraps the transport, so its position among the other
+transport features decides what it sees. A feature activated later wraps one
+activated earlier.
+
 ### test
 
 Test transport.
@@ -7525,6 +7501,7 @@ The SDK ships with built-in features:
 - **PagingFeature**: Paging
 - **RatelimitFeature**: Rate limiting
 - **RetryFeature**: Retry
+- **StationFeature**: Station control surface binding for outbound integrations
 - **TestFeature**: Test transport
 - **TimeoutFeature**: Timeout
 

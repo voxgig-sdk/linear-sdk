@@ -9,7 +9,7 @@ import { createLiveTransport } from '../../live-runner'
 import { runLiveEntity } from '../../live-entity'
 
 
-import { LinearSDK, BaseFeature, stdutil } from '../../..'
+import { LinearSDK, BaseFeature, config, stdutil } from '../../..'
 
 import {
   envOverride,
@@ -41,6 +41,18 @@ describe('ReactionEntity', async () => {
   })
 
 
+  test('validate', async (t) => {
+    if (null == (config as any).feature?.validate) {
+      t.skip('feature not present in this SDK: validate')
+      return
+    }
+    const client = LinearSDK.test(undefined, { feature: { validate: { active: true } } })
+    await assert.rejects(client.Reaction().create({"createdAt":"x","emoji":1,"id":"x","updatedAt":"x"} as any),
+      (err: any) => 'validate_failed' === err.code)
+  })
+
+
+
   test('basic', async (t) => {
 
     const live = 'TRUE' === process.env.LINEAR_TEST_LIVE
@@ -51,7 +63,7 @@ describe('ReactionEntity', async () => {
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"archivedAt":{"a":true,"h":"Archived At","n":"archivedAt","r":false,"sh":"The time at which the entity was archived.","t":"`$ANY`","key$":"archivedAt","index$":0},"comment":{"a":true,"h":"Comment","n":"comment","r":false,"sh":"The comment that the reaction is associated with.","t":"`$OBJECT`","key$":"comment","index$":1},"createdAt":{"a":true,"h":"Created At","n":"createdAt","r":true,"sh":"The time at which the entity was created.","t":"`$ANY`","key$":"createdAt","index$":2},"emoji":{"a":true,"h":"Emoji","n":"emoji","r":true,"sh":"The name of the emoji used for this reaction.","t":"`$STRING`","key$":"emoji","index$":3},"externalUser":{"a":true,"h":"External User","n":"externalUser","r":false,"sh":"The external user that created the reaction through an integration.","t":"`$OBJECT`","key$":"externalUser","index$":4},"id":{"a":true,"h":"Id","n":"id","r":true,"sh":"The unique identifier of the entity.","t":"`$STRING`","key$":"id","index$":5},"initiativeUpdate":{"a":true,"h":"Initiative Update","n":"initiativeUpdate","r":false,"sh":"The initiative update that the reaction is associated with.","t":"`$OBJECT`","key$":"initiativeUpdate","index$":6},"issue":{"a":true,"h":"Issue","n":"issue","r":false,"sh":"The issue that the reaction is associated with.","t":"`$OBJECT`","key$":"issue","index$":7},"post":{"a":true,"h":"Post","n":"post","r":false,"sh":"The post that the reaction is associated with.","t":"`$OBJECT`","key$":"post","index$":8},"projectUpdate":{"a":true,"h":"Project Update","n":"projectUpdate","r":false,"sh":"The project update that the reaction is associated with.","t":"`$OBJECT`","key$":"projectUpdate","index$":9},"updatedAt":{"a":true,"h":"Updated At","n":"updatedAt","r":true,"sh":"The last time at which the entity was meaningfully updated.","t":"`$ANY`","key$":"updatedAt","index$":10},"user":{"a":true,"h":"User","n":"user","r":false,"sh":"The workspace user that created the reaction.","t":"`$OBJECT`","key$":"user","index$":11}},"id":{"field":"id","name":"id"},"name":"reaction","op":{"create":{"input":"data","name":"create","points":[{"a":true,"co":{"id":"POST reactionCreate","source":"graphql","version":2},"g":{},"gq":{"doc":"mutation ReactionCreate($input: ReactionCreateInput!) { reactionCreate(input: $input) { reaction { ...ReactionFields } success } } fragment ReactionFields on Reaction { archivedAt comment { id } createdAt emoji externalUser { id } id initiativeUpdate { id } issue { id } post { id } projectUpdate { id } updatedAt user { id } }","field":"reactionCreate","optype":"mutation","vars":[{"from":"","gqltype":"ReactionCreateInput!","name":"input"}]},"k":"graphql","m":"POST","o":"reactionCreate","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.reactionCreate.reaction`"},"index$":0}],"key$":"create"},"remove":{"input":"data","name":"remove","points":[{"a":true,"co":{"id":"POST reactionDelete","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"id","or":"id","r":true,"t":"`$STRING`","index$":0}]},"gq":{"doc":"mutation ReactionRemove($id: String!) { reactionDelete(id: $id) { entityId lastSyncId success } }","field":"reactionDelete","optype":"mutation","vars":[{"from":"id","gqltype":"String!","name":"id"}]},"k":"graphql","m":"POST","o":"reactionDelete","q":{"exist":["id"]},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.reactionDelete`"},"index$":0}],"key$":"remove"}},"relations":{"ancestors":[]},"key$":"reaction","name__orig":"reaction","Name":"Reaction","name_":"reaction","name-":"reaction","NAME":"REACTION","index$":65}, {"active":true,"entity":"reaction","key$":"BasicReactionFlow","kind":"basic","name":"BasicReactionFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"reaction_ref01"},"m":{},"o":"create","s":[],"v":[],"index$":0},{"a":true,"d":{},"i":{"ref":"reaction_ref01","suffix":"_rm0"},"m":{"id":"reaction01"},"o":"remove","s":[],"v":[],"index$":1}]}, 'Reaction', {"POST reactionCreate":{"protocol":"graphql"},"POST reactionDelete":{"protocol":"graphql"}})
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"archivedAt":{"a":true,"h":"Archived At","n":"archivedAt","r":false,"sh":"The time at which the entity was archived.","t":"`$ANY`","key$":"archivedAt","index$":0},"comment":{"a":true,"h":"Comment","n":"comment","r":false,"sh":"The comment that the reaction is associated with.","t":"`$OBJECT`","key$":"comment","index$":1},"createdAt":{"a":true,"h":"Created At","n":"createdAt","r":true,"sh":"The time at which the entity was created.","t":"`$ANY`","key$":"createdAt","index$":2},"emoji":{"a":true,"h":"Emoji","n":"emoji","r":true,"sh":"The name of the emoji used for this reaction.","t":"`$STRING`","key$":"emoji","index$":3},"externalUser":{"a":true,"h":"External User","n":"externalUser","r":false,"sh":"The external user that created the reaction through an integration.","t":"`$OBJECT`","key$":"externalUser","index$":4},"id":{"a":true,"h":"Id","n":"id","r":true,"sh":"The unique identifier of the entity.","t":"`$STRING`","key$":"id","index$":5},"initiativeUpdate":{"a":true,"h":"Initiative Update","n":"initiativeUpdate","r":false,"sh":"The initiative update that the reaction is associated with.","t":"`$OBJECT`","key$":"initiativeUpdate","index$":6},"issue":{"a":true,"h":"Issue","n":"issue","r":false,"sh":"The issue that the reaction is associated with.","t":"`$OBJECT`","key$":"issue","index$":7},"post":{"a":true,"h":"Post","n":"post","r":false,"sh":"The post that the reaction is associated with.","t":"`$OBJECT`","key$":"post","index$":8},"projectUpdate":{"a":true,"h":"Project Update","n":"projectUpdate","r":false,"sh":"The project update that the reaction is associated with.","t":"`$OBJECT`","key$":"projectUpdate","index$":9},"updatedAt":{"a":true,"h":"Updated At","n":"updatedAt","r":true,"sh":"The last time at which the entity was meaningfully updated.","t":"`$ANY`","key$":"updatedAt","index$":10},"user":{"a":true,"h":"User","n":"user","r":false,"sh":"The workspace user that created the reaction.","t":"`$OBJECT`","key$":"user","index$":11}},"id":{"field":"id","name":"id"},"name":"reaction","op":{"create":{"input":"data","name":"create","points":[{"a":true,"co":{"id":"POST reactionCreate","source":"graphql","version":2},"g":{},"gq":{"doc":"mutation ReactionCreate($input: ReactionCreateInput!) { reactionCreate(input: $input) { reaction { ...ReactionFields } success } } fragment ReactionFields on Reaction { archivedAt comment { id } createdAt emoji externalUser { id } id initiativeUpdate { id } issue { id } post { id } projectUpdate { id } updatedAt user { id } }","field":"reactionCreate","optype":"mutation","vars":[{"from":"","gqltype":"ReactionCreateInput!","name":"input"}]},"k":"graphql","m":"POST","o":"reactionCreate","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.reactionCreate.reaction`"},"index$":0}],"key$":"create"},"remove":{"input":"data","name":"remove","points":[{"a":true,"co":{"id":"POST reactionDelete","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"id","or":"id","r":true,"t":"`$STRING`","index$":0}]},"gq":{"doc":"mutation ReactionRemove($id: String!) { reactionDelete(id: $id) { entityId lastSyncId success } }","field":"reactionDelete","optype":"mutation","vars":[{"from":"id","gqltype":"String!","name":"id"}]},"k":"graphql","m":"POST","o":"reactionDelete","q":{"exist":["id"]},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.reactionDelete`"},"index$":0}],"key$":"remove"}},"relations":{"ancestors":[]},"key$":"reaction","name__orig":"reaction","Name":"Reaction","name_":"reaction","name-":"reaction","NAME":"REACTION","index$":65}, {"active":true,"entity":"reaction","key$":"BasicReactionFlow","kind":"basic","name":"BasicReactionFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"reaction_ref01"},"m":{},"o":"create","s":[],"v":[],"index$":0},{"a":true,"d":{},"i":{"ref":"reaction_ref01","suffix":"_rm0"},"m":{"id":"reaction01"},"o":"remove","s":[],"v":[],"index$":1}]}, 'Reaction', {"POST reactionCreate":{"protocol":"graphql"},"POST reactionDelete":{"protocol":"graphql"}}, { strict: LIVE_STRICT, t })
     }
     const client = setup.client
     const struct = setup.struct
@@ -77,6 +89,12 @@ describe('ReactionEntity', async () => {
 })
 
 
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
 
 function basicSetup(extra?: any) {
   // TODO: fix test def options

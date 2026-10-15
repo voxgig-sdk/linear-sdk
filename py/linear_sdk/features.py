@@ -7,6 +7,7 @@ from linear_sdk.feature.metrics_feature import LinearMetricsFeature
 from linear_sdk.feature.paging_feature import LinearPagingFeature
 from linear_sdk.feature.ratelimit_feature import LinearRatelimitFeature
 from linear_sdk.feature.retry_feature import LinearRetryFeature
+from linear_sdk.feature.station_feature import LinearStationFeature
 from linear_sdk.feature.test_feature import LinearTestFeature
 from linear_sdk.feature.timeout_feature import LinearTimeoutFeature
 
@@ -19,6 +20,7 @@ _FEATURES = {
     "paging": lambda: LinearPagingFeature(),
     "ratelimit": lambda: LinearRatelimitFeature(),
     "retry": lambda: LinearRetryFeature(),
+    "station": lambda: LinearStationFeature(),
     "test": lambda: LinearTestFeature(),
     "timeout": lambda: LinearTimeoutFeature(),
 }

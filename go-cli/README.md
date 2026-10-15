@@ -22,7 +22,7 @@ export LINEAR_APIKEY=sk_live_xxx
 ./linear-cli list access_key_release
 ./linear-cli load 1 access_key_release            # {id:1} shorthand
 ./linear-cli load '{id:1}' access_key_release       # explicit match map
-./linear-cli list access_key_release_pipeline
+./linear-cli list agent_activity
 
 # 5. Override the API base URL for a single call
 LINEAR_BASE=https://api.example.com ./linear-cli list access_key_release

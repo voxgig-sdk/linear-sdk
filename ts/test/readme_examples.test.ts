@@ -26,6 +26,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
 import * as Fs from 'node:fs'
+import * as Os from 'node:os'
 import * as Path from 'node:path'
 import { createRequire } from 'node:module'
 import { spawnSync } from 'node:child_process'
@@ -35,11 +36,19 @@ import { LinearSDK } from '..'
 
 const SDK_NAME = 'LinearSDK'
 
+// The package root, by absolute path: the snippets compile outside the SDK.
+const SDK_ROOT = Path.join(__dirname, '..').split(Path.sep).join('/')
+
 // A fixture for every entity, so list()/load() resolve offline with no
 // network. Snippet client construction is rewritten to seed this.
 const TEST_SEED = {"entity":{"access_key_release":{"test01":{"id":"test01"}},"access_key_release_pipeline":{"test01":{"id":"test01"}},"agent_activity":{"test01":{"id":"test01"}},"agent_session":{"test01":{"id":"test01"}},"agent_skill":{"test01":{"id":"test01"}},"application":{"test01":{"id":"test01"}},"attachment":{"test01":{"id":"test01"}},"audit_entry":{"test01":{"id":"test01"}},"audit_entry_type":{"test01":{"id":"test01"}},"auth_resolver_response":{"test01":{"id":"test01"}},"authentication_session_response":{"test01":{"id":"test01"}},"comment":{"test01":{"id":"test01"}},"create_or_join_organization_response":{"test01":{"id":"test01"}},"custom_view":{"test01":{"id":"test01"}},"customer":{"test01":{"id":"test01"}},"customer_need":{"test01":{"id":"test01"}},"customer_status":{"test01":{"id":"test01"}},"customer_tier":{"test01":{"id":"test01"}},"cycle":{"test01":{"id":"test01"}},"diff":{"test01":{"id":"test01"}},"document":{"test01":{"id":"test01"}},"document_search_result":{"test01":{"id":"test01"}},"email_intake_address":{"test01":{"id":"test01"}},"email_user_account_auth_challenge_response":{"test01":{"id":"test01"}},"emoji":{"test01":{"id":"test01"}},"entity_external_link":{"test01":{"id":"test01"}},"external_user":{"test01":{"id":"test01"}},"favorite":{"test01":{"id":"test01"}},"git_automation_state":{"test01":{"id":"test01"}},"git_automation_target_branch":{"test01":{"id":"test01"}},"git_hub_integration_connect_detail":{"test01":{"id":"test01"}},"initiative":{"test01":{"id":"test01"}},"initiative_label":{"test01":{"id":"test01"}},"initiative_lead_team_change_impact":{"test01":{"id":"test01"}},"initiative_relation":{"test01":{"id":"test01"}},"initiative_to_project":{"test01":{"id":"test01"}},"initiative_update":{"test01":{"id":"test01"}},"integration":{"test01":{"id":"test01"}},"integration_template":{"test01":{"id":"test01"}},"integrations_setting":{"test01":{"id":"test01"}},"issue":{"test01":{"id":"test01"}},"issue_import":{"test01":{"id":"test01"}},"issue_label":{"test01":{"id":"test01"}},"issue_priority_value":{"test01":{"id":"test01"}},"issue_relation":{"test01":{"id":"test01"}},"issue_search_result":{"test01":{"id":"test01"}},"issue_to_release":{"test01":{"id":"test01"}},"logout_response":{"test01":{"id":"test01"}},"notification":{"test01":{"id":"test01"}},"notification_subscription":{"test01":{"id":"test01"}},"o_auth_application":{"test01":{"id":"test01"}},"organization":{"test01":{"id":"test01"}},"organization_domain":{"test01":{"id":"test01"}},"organization_invite":{"test01":{"id":"test01"}},"organization_meta":{"test01":{"id":"test01"}},"passkey_login_start_response":{"test01":{"id":"test01"}},"project":{"test01":{"id":"test01"}},"project_label":{"test01":{"id":"test01"}},"project_milestone":{"test01":{"id":"test01"}},"project_milestone_move_project_team":{"test01":{"id":"test01"}},"project_relation":{"test01":{"id":"test01"}},"project_search_result":{"test01":{"id":"test01"}},"project_status":{"test01":{"id":"test01"}},"project_update":{"test01":{"id":"test01"}},"push_subscription":{"test01":{"id":"test01"}},"reaction":{"test01":{"id":"test01"}},"release":{"test01":{"id":"test01"}},"release_note":{"test01":{"id":"test01"}},"release_pipeline":{"test01":{"id":"test01"}},"release_stage":{"test01":{"id":"test01"}},"roadmap":{"test01":{"id":"test01"}},"roadmap_to_project":{"test01":{"id":"test01"}},"sla_configuration":{"test01":{"id":"test01"}},"sso_url_from_email_response":{"test01":{"id":"test01"}},"team":{"test01":{"id":"test01"}},"team_membership":{"test01":{"id":"test01"}},"template":{"test01":{"id":"test01"}},"time_schedule":{"test01":{"id":"test01"}},"triage_responsibility":{"test01":{"id":"test01"}},"upload_file":{"test01":{"id":"test01"}},"usage_alert":{"test01":{"id":"test01"}},"user":{"test01":{"id":"test01"}},"user_setting":{"test01":{"id":"test01"}},"view_preference":{"test01":{"id":"test01"}},"webhook":{"test01":{"id":"test01"}},"webhook_failure_event":{"test01":{"id":"test01"}},"workflow_state":{"test01":{"id":"test01"}}}}
 const SEED_ARG = JSON.stringify(TEST_SEED)
 const SEEDED_CTOR = SDK_NAME + '.test(' + SEED_ARG + ')'
+
+// The client VARIABLE, not the word: a package name carries the word between
+// hyphens (@voxgig-sdk/multifon-client-sdk).
+const CLIENT = /(?<![\w$.\-\/'"`])client(?![\w$\-\/'"`])/
+const CLIENT_CALL = new RegExp(CLIENT.source + '\\s*\\.')
 
 
 // The three docs this gate covers, resolved relative to dist-test/.
@@ -106,7 +115,7 @@ function isRunnable(code: string): boolean {
   return (
     /new\s+LinearSDK\b/.test(code) ||
     /\bLinearSDK\.test\b/.test(code) ||
-    /\bclient\s*\./.test(code)
+    CLIENT_CALL.test(code)
   )
 }
 
@@ -116,7 +125,7 @@ function isRunnable(code: string): boolean {
 function buildSnippetModule(block: string): string {
   const inner = stripImports(block).split('\n').map((l) => '    ' + l).join('\n')
   return [
-    "import { " + SDK_NAME + " } from '..'",
+    'import { ' + SDK_NAME + ' } from ' + JSON.stringify(SDK_ROOT),
     '',
     'async function __ex() {',
     // Shared client for snippets that reference `client` without constructing
@@ -143,20 +152,23 @@ function compileBatch(indices: number[], blocks: string[], key: string): {
   errored: Set<number>; raw: string; unattributed: boolean
 } {
   const tsDir = Path.join(__dirname, '..')
-  const testDir = Path.join(tsDir, 'test')
-  // Leading dot: TypeScript wildcard includes skip dot-files, so these temp
-  // files are never swept into the normal build.
+  // Outside the SDK's tree, so a run leaves nothing there even when it is
+  // interrupted. `.cts` keeps them CommonJS whatever package.json is above.
+  const dir = Fs.mkdtempSync(Path.join(Os.tmpdir(), 'readme-examples-'))
   const files: string[] = []
 
   try {
     for (const i of indices) {
-      const f = Path.join(testDir, '.examples_' + key + '_snippet' + i + '.gen.ts')
+      const f = Path.join(dir, 'examples_' + key + '_snippet' + i + '.gen.cts')
       Fs.writeFileSync(f, buildSnippetModule(blocks[i]), 'utf8')
       files.push(f)
     }
 
     const requireFrom = createRequire(__filename)
-    const tsc = requireFrom.resolve('typescript/bin/tsc')
+    // Every TypeScript exports its package.json; TypeScript 7 exports no
+    // ./bin/tsc, so the binary is found through the manifest's bin.
+    const tsPackage = requireFrom.resolve('typescript/package.json')
+    const tsc = Path.join(Path.dirname(tsPackage), requireFrom(tsPackage).bin.tsc)
 
     const res = spawnSync(process.execPath, [
       tsc,
@@ -179,7 +191,7 @@ function compileBatch(indices: number[], blocks: string[], key: string): {
 
     if (0 !== res.status) {
       for (const line of raw.split('\n')) {
-        const m = /_snippet(\d+)\.gen\.ts\(\d+,\d+\):\s*error/.exec(line)
+        const m = /_snippet(\d+)\.gen\.cts\(\d+,\d+\):\s*error/.exec(line)
         if (null == m) {
           // A genuine error diagnostic not attributable to a snippet file
           // (e.g. inside the SDK itself) is an anomaly.
@@ -194,9 +206,7 @@ function compileBatch(indices: number[], blocks: string[], key: string): {
 
     return { errored, raw, unattributed }
   } finally {
-    for (const f of files) {
-      Fs.rmSync(f, { force: true })
-    }
+    Fs.rmSync(dir, { recursive: true, force: true })
   }
 }
 
@@ -244,7 +254,7 @@ function rewriteForRun(code: string): string {
   let out = stripImports(code)
   out = out.replace(/new\s+LinearSDK\s*\([^)]*\)/g, () => SEEDED_CTOR)
   out = out.replace(/LinearSDK\.test\s*\([^)]*\)/g, () => SEEDED_CTOR)
-  if (/\bclient\b/.test(out) && !/\b(?:const|let|var)\s+client\b/.test(out)) {
+  if (CLIENT.test(out) && !/\b(?:const|let|var)\s+client\b/.test(out)) {
     out = 'const client = ' + SEEDED_CTOR + '\n' + out
   }
   return out
@@ -255,7 +265,13 @@ function rewriteForRun(code: string): string {
 // test mode. Returns a list of failure descriptions (empty === all passed).
 async function executeBlocks(blocks: string[]): Promise<string[]> {
   const requireFrom = createRequire(__filename)
-  const ts = requireFrom('typescript')
+  // Node strips a snippet's types itself from 22.13; before that TypeScript 5
+  // does, through an API TypeScript 7 no longer ships.
+  const strip = requireFrom('node:module').stripTypeScriptTypes
+  const ts = 'function' === typeof strip ? null : requireFrom('typescript')
+  if (null == strip && 'function' !== typeof ts.transpileModule) {
+    throw new Error('running the examples needs node 22.13 or TypeScript 5 to strip their types')
+  }
 
   const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor
   const silentConsole = { log() {}, error() {}, warn() {}, info() {} }
@@ -273,14 +289,16 @@ async function executeBlocks(blocks: string[]): Promise<string[]> {
       continue
     }
 
-    // Compile the snippet to JS (strips type annotations) so it runs under
-    // node exactly as a real caller would.
-    const js = ts.transpileModule(src, {
-      compilerOptions: {
-        target: ts.ScriptTarget.ES2020,
-        module: ts.ModuleKind.ESNext,
-      },
-    }).outputText
+    // Strip the snippet's types so it runs under node exactly as a real
+    // caller would.
+    const js = null != strip
+      ? strip(src, { mode: 'transform' })
+      : ts.transpileModule(src, {
+        compilerOptions: {
+          target: ts.ScriptTarget.ES2020,
+          module: ts.ModuleKind.ESNext,
+        },
+      }).outputText
 
     let runner: any
     try {

@@ -6,44 +6,63 @@ require_relative "../Linear_sdk"
 require_relative "runner"
 
 class AuthResolverResponseEntityTest < Minitest::Test
+  # main.kit.test.live.strict is true (the default is true): a live
+  # request that fails, or a live test missing an input it needs,
+  # fails the test.
+  # An account with no record for a test to read skips it either way.
+  LIVE_STRICT = true
+
   def test_create_instance
     testsdk = LinearSDK.test(nil, nil)
     ent = testsdk.AuthResolverResponse(nil)
     assert !ent.nil?
   end
 
+  def test_validate
+    cfg = LinearConfig.shared_config
+    unless cfg["feature"].is_a?(Hash) && cfg["feature"].key?("validate")
+      skip("feature not present in this SDK: validate")
+    end
+    client = LinearSDK.test(nil, { "feature" => { "validate" => { "active" => true } } })
+    err = assert_raises(StandardError) do
+      client.AuthResolverResponse(nil).load({ "allowDomainAccess" => "x", "id" => "x" }, nil)
+    end
+    assert_equal "validate_failed", err.code
+  end
+
   def test_basic_flow
     setup = auth_resolver_response_basic_setup(nil)
     # Per-op sdk-test-control.json skip.
     _live = setup[:live] || false
-    ["create", "update", "load"].each do |_op|
+    ["update", "load"].each do |_op|
       _should_skip, _reason = Runner.is_control_skipped("entityOp", "auth_resolver_response." + _op, _live ? "live" : "unit")
       if _should_skip
         skip(_reason || "skipped via sdk-test-control.json")
         return
       end
     end
-    # The basic flow consumes synthetic IDs from the fixture. In live mode
-    # without an *_ENTID env override, those IDs hit the live API and 4xx.
-    if setup[:synthetic_only]
-      skip "live entity test uses synthetic IDs from fixture — set LINEAR_TEST_AUTH_RESOLVER_RESPONSE_ENTID JSON to run live"
-      return
+    if setup[:live]
+      ["auth01", "response01"].each do |_live_key|
+        if setup[:synthetic_only] || setup[:idmap][_live_key].nil?
+          Runner.live_miss(LIVE_STRICT, "Live entity test blocked: needs #{_live_key} via LINEAR_TEST_AUTH_RESOLVER_RESPONSE_ENTID")
+        end
+      end
+    end
+    if setup[:live]
+      Runner.live_miss(LIVE_STRICT, "Live entity test blocked: " + "the flow updates a auth_resolver_response record it did not create")
     end
     client = setup[:client]
 
-    # CREATE
-    auth_resolver_response_ref01_ent = client.AuthResolverResponse(nil)
-    auth_resolver_response_ref01_data = Helpers.to_map(Vs.getprop(
-      Vs.getpath(setup[:data], "new.auth_resolver_response"), "auth_resolver_response_ref01"))
-    auth_resolver_response_ref01_data["auth_id"] = setup[:idmap]["auth01"]
-    auth_resolver_response_ref01_data["response"] = setup[:idmap]["response01"]
-
-    auth_resolver_response_ref01_data_result = auth_resolver_response_ref01_ent.create(auth_resolver_response_ref01_data, nil)
-    auth_resolver_response_ref01_data = Helpers.to_map(auth_resolver_response_ref01_data_result.respond_to?(:data_get) ? auth_resolver_response_ref01_data_result.data_get : auth_resolver_response_ref01_data_result)
-    assert !auth_resolver_response_ref01_data.nil?
-    assert !auth_resolver_response_ref01_data["id"].nil?
+    # Bootstrap entity data from existing test data.
+    auth_resolver_response_ref01_data_raw = Vs.items(Helpers.to_map(
+      Vs.getpath(setup[:data], "existing.auth_resolver_response")))
+    auth_resolver_response_ref01_data = nil
+    if auth_resolver_response_ref01_data_raw.length > 0
+      auth_resolver_response_ref01_data = Helpers.to_map(auth_resolver_response_ref01_data_raw[0][1])
+    end
 
     # UPDATE
+    auth_resolver_response_ref01_ent = client.AuthResolverResponse(nil)
     auth_resolver_response_ref01_data_up0_up = {
       "id" => auth_resolver_response_ref01_data["id"],
       "auth_id" => setup[:idmap]["auth_id"],
@@ -76,7 +95,7 @@ def auth_resolver_response_basic_setup(extra)
   Runner.load_env_local
 
   entity_data_file = File.join(__dir__, "..", "..", ".sdk", "test", "entity", "auth_resolver_response", "AuthResolverResponseTestData.json")
-  entity_data_source = File.read(entity_data_file)
+  entity_data_source = File.read(entity_data_file, encoding: "UTF-8")
   entity_data = JSON.parse(entity_data_source)
 
   options = {}
@@ -95,9 +114,8 @@ def auth_resolver_response_basic_setup(extra)
     }
   )
 
-  # Detect ENTID env override before envOverride consumes it. When live
-  # mode is on without a real override, the basic test runs against synthetic
-  # IDs from the fixture and 4xx's. Surface this so the test can skip.
+  # Whether *_ENTID supplied the idmap, read before env_override consumes
+  # it: without it, the ids a live flow binds are the fixture's synthetic ones.
   entid_env_raw = ENV["LINEAR_TEST_AUTH_RESOLVER_RESPONSE_ENTID"]
   idmap_overridden = !entid_env_raw.nil? && entid_env_raw.strip.start_with?("{")
 

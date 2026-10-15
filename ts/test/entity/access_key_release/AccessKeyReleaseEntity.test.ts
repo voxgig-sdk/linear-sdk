@@ -9,7 +9,7 @@ import { createLiveTransport } from '../../live-runner'
 import { runLiveEntity } from '../../live-entity'
 
 
-import { LinearSDK, BaseFeature, stdutil } from '../../..'
+import { LinearSDK, BaseFeature, config, stdutil } from '../../..'
 
 import {
   envOverride,
@@ -41,17 +41,75 @@ describe('AccessKeyReleaseEntity', async () => {
   })
 
 
+  class FailHook extends BaseFeature {
+    name = 'failhook'
+    version = '0.0.1'
+    active = true
+    unexpected = 0
+    init() { }
+    PreSpec() { throw new Error('access_key_release hook failed') }
+    PreUnexpected() { this.unexpected++ }
+  }
+
+  test('stream-error', async () => {
+    const offline = { net: { offline: true } }
+    await assert.rejects(async () => {
+      for await (const _item of LinearSDK.test(offline).AccessKeyRelease().stream('list')) { }
+    }, /offline/)
+
+    for await (const _item of LinearSDK.test(offline).AccessKeyRelease()
+      .stream('list', undefined, { ctrl: { throw: false } })) { }
+
+    if (null != (config as any).feature?.rbac) {
+      const denied = LinearSDK.test(undefined, { feature: { rbac: { active: true, deny: true } } })
+      await assert.rejects(async () => {
+        for await (const _item of denied.AccessKeyRelease().stream('list')) { }
+      }, (err: any) => 'rbac_denied' === err.code)
+    }
+  })
+
+  test('stream-ctrl', async () => {
+    const explain: any = {}
+    const ctrl: any = { explain }
+    for await (const _item of LinearSDK.test().AccessKeyRelease().stream('list', undefined, { ctrl })) { }
+    assert.deepStrictEqual(Object.keys(ctrl), ['explain'])
+    assert(explain === ctrl.explain && 0 < Object.keys(explain).length)
+  })
+
+  test('unexpected', async () => {
+    const hook = new FailHook()
+    const client = new LinearSDK({ feature: { test: { active: true } }, extend: [hook] })
+    await assert.rejects(client.AccessKeyRelease().list(), /hook failed/)
+    assert(0 < hook.unexpected)
+
+    const fired = hook.unexpected
+    assert.strictEqual(await client.AccessKeyRelease().list(undefined, { throw: false }), undefined)
+    assert(fired < hook.unexpected)
+  })
+
+  test('validate', async (t) => {
+    if (null == (config as any).feature?.validate) {
+      t.skip('feature not present in this SDK: validate')
+      return
+    }
+    const client = LinearSDK.test(undefined, { feature: { validate: { active: true } } })
+    await assert.rejects(client.AccessKeyRelease().list({"limit":"x"} as any),
+      (err: any) => 'validate_failed' === err.code)
+  })
+
+
+
   test('basic', async (t) => {
 
     const live = 'TRUE' === process.env.LINEAR_TEST_LIVE
-    for (const op of ['create', 'list', 'load']) {
+    for (const op of ['list', 'load']) {
       if (!live && maybeSkipControl(t, 'entityOp', 'access_key_release.' + op, live)) return
     }
 
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"archivedAt":{"a":true,"h":"Archived At","n":"archivedAt","r":false,"sh":"The time at which the release was archived.","t":"`$ANY`","key$":"archivedAt","index$":0},"commitSha":{"a":true,"h":"Commit Sha","n":"commitSha","r":false,"sh":"The Git commit SHA associated with the release.","t":"`$STRING`","key$":"commitSha","index$":1},"completedAt":{"a":true,"h":"Completed At","n":"completedAt","r":false,"sh":"The time at which the release was completed.","t":"`$ANY`","key$":"completedAt","index$":2},"createdAt":{"a":true,"h":"Created At","n":"createdAt","r":true,"sh":"The time at which the release was created.","t":"`$ANY`","key$":"createdAt","index$":3},"id":{"a":true,"h":"Id","n":"id","r":true,"sh":"The unique identifier of the release.","t":"`$STRING`","key$":"id","index$":4},"name":{"a":true,"h":"Name","n":"name","r":true,"sh":"The name of the release.","t":"`$STRING`","key$":"name","index$":5},"url":{"a":true,"h":"Url","n":"url","r":true,"sh":"The URL to the release page in the Linear app.","t":"`$STRING`","key$":"url","index$":6},"version":{"a":true,"h":"Version","n":"version","r":false,"sh":"The version identifier for this release.","t":"`$STRING`","key$":"version","index$":7}},"id":{"field":"id","name":"id"},"name":"access_key_release","op":{"create":{"input":"data","name":"create","points":[{"a":true,"co":{"id":"POST releaseCompleteByAccessKey","source":"graphql","version":2},"g":{},"gq":{"doc":"mutation AccessKeyReleaseCreateReleaseCompleteByAccessKey($input: ReleaseCompleteInputBase!) { releaseCompleteByAccessKey(input: $input) { release { ...AccessKeyReleaseFields } success } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }","field":"releaseCompleteByAccessKey","optype":"mutation","vars":[{"from":"","gqltype":"ReleaseCompleteInputBase!","name":"input"}]},"k":"graphql","m":"POST","o":"releaseCompleteByAccessKey","q":{"$action":"release_complete_by_access_key"},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.releaseCompleteByAccessKey.release`"},"index$":0},{"a":true,"co":{"id":"POST releaseSyncByAccessKey","source":"graphql","version":2},"g":{},"gq":{"doc":"mutation AccessKeyReleaseCreateReleaseSyncByAccessKey($input: ReleaseSyncInputBase!) { releaseSyncByAccessKey(input: $input) { release { ...AccessKeyReleaseFields } success } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }","field":"releaseSyncByAccessKey","optype":"mutation","vars":[{"from":"","gqltype":"ReleaseSyncInputBase!","name":"input"}]},"k":"graphql","m":"POST","o":"releaseSyncByAccessKey","q":{"$action":"release_sync_by_access_key"},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.releaseSyncByAccessKey.release`"},"index$":1},{"a":true,"co":{"id":"POST releaseUpdateByPipelineByAccessKey","source":"graphql","version":2},"g":{},"gq":{"doc":"mutation AccessKeyReleaseCreateReleaseUpdateByPipelineByAccessKey($input: ReleaseUpdateByPipelineInputBase!) { releaseUpdateByPipelineByAccessKey(input: $input) { release { ...AccessKeyReleaseFields } success } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }","field":"releaseUpdateByPipelineByAccessKey","optype":"mutation","vars":[{"from":"","gqltype":"ReleaseUpdateByPipelineInputBase!","name":"input"}]},"k":"graphql","m":"POST","o":"releaseUpdateByPipelineByAccessKey","q":{"$action":"release_update_by_pipeline_by_access_key"},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.releaseUpdateByPipelineByAccessKey.release`"},"index$":2}],"key$":"create"},"list":{"input":"data","name":"list","points":[{"a":true,"co":{"id":"POST recentReleasesByAccessKey","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"limit","or":"limit","r":false,"t":"`$INTEGER`","index$":0}]},"gq":{"doc":"query AccessKeyReleaseList($limit: Int) { recentReleasesByAccessKey(limit: $limit) { ...AccessKeyReleaseFields } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }","field":"recentReleasesByAccessKey","optype":"query","vars":[{"from":"limit","gqltype":"Int","name":"limit"}]},"k":"graphql","m":"POST","o":"recentReleasesByAccessKey","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.recentReleasesByAccessKey`"},"index$":0}],"key$":"list"},"load":{"input":"data","name":"load","points":[{"a":true,"co":{"id":"POST latestReleaseByAccessKey","source":"graphql","version":2},"g":{},"gq":{"doc":"query AccessKeyReleaseLoad { latestReleaseByAccessKey { ...AccessKeyReleaseFields } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }","field":"latestReleaseByAccessKey","optype":"query","vars":[]},"k":"graphql","m":"POST","o":"latestReleaseByAccessKey","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.latestReleaseByAccessKey`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[]},"key$":"access_key_release","name__orig":"access_key_release","Name":"AccessKeyRelease","name_":"access_key_release","name-":"access-key-release","NAME":"ACCESS_KEY_RELEASE","index$":0}, {"active":true,"entity":"access_key_release","key$":"BasicAccessKeyReleaseFlow","kind":"basic","name":"BasicAccessKeyReleaseFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"access_key_release_ref01"},"m":{"limit":"limit01"},"o":"create","s":[],"v":[],"index$":0},{"a":true,"d":{},"i":{},"m":{"limit":"limit01"},"o":"list","s":[],"v":[{"apply":"ItemExists","def":{"ref":"access_key_release_ref01"}}],"index$":1},{"a":true,"d":{},"i":{"ref":"access_key_release_ref01","srcdatavar":"access_key_release_ref01_data","suffix":"_dt0"},"m":{},"o":"load","s":[],"v":[{"apply":"TextFieldMark","def":{"mark":"Mark01-access_key_release_ref01"}}],"index$":2}]}, 'AccessKeyRelease', {"POST releaseCompleteByAccessKey":{"protocol":"graphql"},"POST releaseSyncByAccessKey":{"protocol":"graphql"},"POST releaseUpdateByPipelineByAccessKey":{"protocol":"graphql"},"POST recentReleasesByAccessKey":{"protocol":"graphql"},"POST latestReleaseByAccessKey":{"protocol":"graphql"}})
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"archivedAt":{"a":true,"h":"Archived At","n":"archivedAt","r":false,"sh":"The time at which the release was archived.","t":"`$ANY`","key$":"archivedAt","index$":0},"commitSha":{"a":true,"h":"Commit Sha","n":"commitSha","r":false,"sh":"The Git commit SHA associated with the release.","t":"`$STRING`","key$":"commitSha","index$":1},"completedAt":{"a":true,"h":"Completed At","n":"completedAt","r":false,"sh":"The time at which the release was completed.","t":"`$ANY`","key$":"completedAt","index$":2},"createdAt":{"a":true,"h":"Created At","n":"createdAt","r":true,"sh":"The time at which the release was created.","t":"`$ANY`","key$":"createdAt","index$":3},"id":{"a":true,"h":"Id","n":"id","r":true,"sh":"The unique identifier of the release.","t":"`$STRING`","key$":"id","index$":4},"name":{"a":true,"h":"Name","n":"name","r":true,"sh":"The name of the release.","t":"`$STRING`","key$":"name","index$":5},"url":{"a":true,"h":"Url","n":"url","r":true,"sh":"The URL to the release page in the Linear app.","t":"`$STRING`","key$":"url","index$":6},"version":{"a":true,"h":"Version","n":"version","r":false,"sh":"The version identifier for this release.","t":"`$STRING`","key$":"version","index$":7}},"id":{"field":"id","name":"id"},"name":"access_key_release","op":{"create":{"input":"data","name":"create","points":[{"a":true,"co":{"id":"POST releaseCompleteByAccessKey","source":"graphql","version":2},"g":{},"gq":{"doc":"mutation AccessKeyReleaseCreateReleaseCompleteByAccessKey($input: ReleaseCompleteInputBase!) { releaseCompleteByAccessKey(input: $input) { release { ...AccessKeyReleaseFields } success } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }","field":"releaseCompleteByAccessKey","optype":"mutation","vars":[{"from":"","gqltype":"ReleaseCompleteInputBase!","name":"input"}]},"k":"graphql","m":"POST","o":"releaseCompleteByAccessKey","q":{"$action":"release_complete_by_access_key"},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.releaseCompleteByAccessKey.release`"},"index$":0},{"a":true,"co":{"id":"POST releaseSyncByAccessKey","source":"graphql","version":2},"g":{},"gq":{"doc":"mutation AccessKeyReleaseCreateReleaseSyncByAccessKey($input: ReleaseSyncInputBase!) { releaseSyncByAccessKey(input: $input) { release { ...AccessKeyReleaseFields } success } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }","field":"releaseSyncByAccessKey","optype":"mutation","vars":[{"from":"","gqltype":"ReleaseSyncInputBase!","name":"input"}]},"k":"graphql","m":"POST","o":"releaseSyncByAccessKey","q":{"$action":"release_sync_by_access_key"},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.releaseSyncByAccessKey.release`"},"index$":1},{"a":true,"co":{"id":"POST releaseUpdateByPipelineByAccessKey","source":"graphql","version":2},"g":{},"gq":{"doc":"mutation AccessKeyReleaseCreateReleaseUpdateByPipelineByAccessKey($input: ReleaseUpdateByPipelineInputBase!) { releaseUpdateByPipelineByAccessKey(input: $input) { release { ...AccessKeyReleaseFields } success } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }","field":"releaseUpdateByPipelineByAccessKey","optype":"mutation","vars":[{"from":"","gqltype":"ReleaseUpdateByPipelineInputBase!","name":"input"}]},"k":"graphql","m":"POST","o":"releaseUpdateByPipelineByAccessKey","q":{"$action":"release_update_by_pipeline_by_access_key"},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.releaseUpdateByPipelineByAccessKey.release`"},"index$":2}],"key$":"create"},"list":{"input":"data","name":"list","points":[{"a":true,"co":{"id":"POST recentReleasesByAccessKey","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"limit","or":"limit","r":false,"t":"`$INTEGER`","index$":0}]},"gq":{"doc":"query AccessKeyReleaseList($limit: Int) { recentReleasesByAccessKey(limit: $limit) { ...AccessKeyReleaseFields } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }","field":"recentReleasesByAccessKey","optype":"query","vars":[{"from":"limit","gqltype":"Int","name":"limit"}]},"k":"graphql","m":"POST","o":"recentReleasesByAccessKey","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.recentReleasesByAccessKey`"},"index$":0}],"key$":"list"},"load":{"input":"data","name":"load","points":[{"a":true,"co":{"id":"POST latestReleaseByAccessKey","source":"graphql","version":2},"g":{},"gq":{"doc":"query AccessKeyReleaseLoad { latestReleaseByAccessKey { ...AccessKeyReleaseFields } } fragment AccessKeyReleaseFields on AccessKeyRelease { archivedAt commitSha completedAt createdAt id name url version }","field":"latestReleaseByAccessKey","optype":"query","vars":[]},"k":"graphql","m":"POST","o":"latestReleaseByAccessKey","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.latestReleaseByAccessKey`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[]},"key$":"access_key_release","name__orig":"access_key_release","Name":"AccessKeyRelease","name_":"access_key_release","name-":"access-key-release","NAME":"ACCESS_KEY_RELEASE","index$":0}, {"active":true,"entity":"access_key_release","key$":"BasicAccessKeyReleaseFlow","kind":"basic","name":"BasicAccessKeyReleaseFlow","param":{},"step":[{"a":false,"d":{},"i":{"ref":"access_key_release_ref01"},"m":{"limit":"limit01"},"o":"create","s":[],"v":[],"unreachable":true},{"a":true,"d":{},"i":{},"m":{"limit":"limit01"},"o":"list","s":[],"v":[{"apply":"ItemExists","def":{"ref":"access_key_release_ref01"}}],"index$":0},{"a":true,"d":{},"i":{"ref":"access_key_release_ref01","srcdatavar":"access_key_release_ref01_data","suffix":"_dt0"},"m":{},"o":"load","s":[],"v":[{"apply":"TextFieldMark","def":{"mark":"Mark01-access_key_release_ref01"}}],"index$":1}]}, 'AccessKeyRelease', {"POST releaseCompleteByAccessKey":{"protocol":"graphql"},"POST releaseSyncByAccessKey":{"protocol":"graphql"},"POST releaseUpdateByPipelineByAccessKey":{"protocol":"graphql"},"POST recentReleasesByAccessKey":{"protocol":"graphql"},"POST latestReleaseByAccessKey":{"protocol":"graphql"}}, { strict: LIVE_STRICT, t })
     }
     const client = setup.client
     const struct = setup.struct
@@ -59,23 +117,14 @@ describe('AccessKeyReleaseEntity', async () => {
     const isempty = struct.isempty
     const select = struct.select
 
-
-    // CREATE
-    const access_key_release_ref01_ent = client.AccessKeyRelease()
-    let access_key_release_ref01_data = setup.data.new.access_key_release['access_key_release_ref01']
-    access_key_release_ref01_data['limit'] = setup.idmap['limit01']
-
-    access_key_release_ref01_data = (await access_key_release_ref01_ent.create(access_key_release_ref01_data)).data()
-    assert(null != access_key_release_ref01_data.id)
-
+    let access_key_release_ref01_data = Object.values(setup.data.existing.access_key_release)[0] as any
 
     // LIST
+    const access_key_release_ref01_ent = client.AccessKeyRelease()
     const access_key_release_ref01_match: any = {}
     access_key_release_ref01_match['limit'] = setup.idmap['limit01']
 
     const access_key_release_ref01_list = (await access_key_release_ref01_ent.list(access_key_release_ref01_match)).map((e: any) => e.data())
-
-    assert(!isempty(select(access_key_release_ref01_list, { id: access_key_release_ref01_data.id })))
 
 
     // LOAD
@@ -89,6 +138,12 @@ describe('AccessKeyReleaseEntity', async () => {
 })
 
 
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
 
 function basicSetup(extra?: any) {
   // TODO: fix test def options

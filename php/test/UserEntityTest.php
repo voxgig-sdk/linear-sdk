@@ -9,8 +9,39 @@ require_once __DIR__ . '/Runner.php';
 use PHPUnit\Framework\TestCase;
 use Voxgig\Struct\Struct as Vs;
 
+class UserEntityTestFailHook extends LinearBaseFeature
+{
+    public int $unexpected = 0;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->name = 'failhook';
+    }
+
+    public function init(LinearContext $ctx, array $options): void
+    {
+    }
+
+    public function PreSpec(LinearContext $ctx): void
+    {
+        throw new \RuntimeException('user hook failed');
+    }
+
+    public function PreUnexpected(LinearContext $ctx): void
+    {
+        $this->unexpected++;
+    }
+}
+
 class UserEntityTest extends TestCase
 {
+    // main.kit.test.live.strict is true (the default is true): a live
+    // request that fails, or a live test missing an input it needs,
+    // fails the test.
+    // An account with no record for a test to read skips it either way.
+    private const LIVE_STRICT = true;
+
     public function test_create_instance(): void
     {
         $testsdk = LinearSDK::test(null, null);
@@ -57,45 +88,141 @@ class UserEntityTest extends TestCase
         }
     }
 
+    public function test_stream_error(): void
+    {
+        $offline = ["net" => ["offline" => true]];
+        $streamerr = null;
+        try {
+            iterator_to_array(LinearSDK::test($offline, null)->User(null)
+                ->stream("list", null, null), false);
+        } catch (\Throwable $e) {
+            $streamerr = $e;
+        }
+        $this->assertNotNull($streamerr, 'the stream should raise the transport failure');
+        $this->assertStringContainsString('offline', $streamerr->getMessage());
+
+        iterator_to_array(LinearSDK::test($offline, null)->User(null)
+            ->stream("list", null, ["ctrl" => ["throw" => false]]), false);
+
+        $cfg = LinearConfig::shared_config();
+        if (isset($cfg["feature"]["rbac"])) {
+            $denied = LinearSDK::test(null, ["feature" => ["rbac" => ["active" => true, "deny" => true]]]);
+            $denyerr = null;
+            try {
+                iterator_to_array($denied->User(null)->stream("list", null, null), false);
+            } catch (\Throwable $e) {
+                $denyerr = $e;
+            }
+            $this->assertSame('rbac_denied', $denyerr->sdk_code ?? null);
+        }
+    }
+
+    public function test_stream_ctrl(): void
+    {
+        $ctrl = ["explain" => []];
+        iterator_to_array(LinearSDK::test(null, null)->User(null)
+            ->stream("list", null, ["ctrl" => $ctrl]), false);
+        $this->assertSame(["explain"], array_keys($ctrl));
+    }
+
+    public function test_unexpected(): void
+    {
+        $hook = new UserEntityTestFailHook();
+        $client = new LinearSDK(["feature" => ["test" => ["active" => true]], "extend" => [$hook]]);
+
+        $err = null;
+        try {
+            $client->User(null)->list(null, null);
+        } catch (\Throwable $e) {
+            $err = $e;
+        }
+        $this->assertNotNull($err, 'the throwing hook should fail the operation');
+        $this->assertStringContainsString('hook failed', $err->getMessage());
+        $this->assertGreaterThan(0, $hook->unexpected, 'PreUnexpected did not fire');
+
+        $fired = $hook->unexpected;
+        $this->assertNull($client->User(null)->list(null, ["throw" => false]));
+        $this->assertGreaterThan($fired, $hook->unexpected, 'PreUnexpected did not fire');
+    }
+
+    public function test_cost_commits_a_throwing_transport(): void
+    {
+        $cfg = LinearConfig::shared_config();
+        if (!isset($cfg["feature"]["cost"])) {
+            $this->markTestSkipped('feature not present in this SDK: cost');
+        }
+        $client = new LinearSDK([
+            "test" => ["active" => true],
+            "feature" => ["cost" => ["active" => true, "unit" => 1]],
+            "utility" => ["fetcher" => function ($ctx, $url, $fetchdef) {
+                throw new \RuntimeException('user transport failed');
+            }],
+        ]);
+
+        $err = null;
+        try {
+            $client->User(null)->list(null, null);
+        } catch (\Throwable $e) {
+            $err = $e;
+        }
+        $this->assertInstanceOf(LinearError::class, $err);
+        $this->assertStringContainsString('transport failed', $err->getMessage());
+
+        $client->User(null)->list(null, ["throw" => false]);
+        $this->assertSame(2, $client->_cost["total"]["calls"]);
+        $this->assertSame(2, $client->_cost["total"]["attempts"]);
+    }
+
+    public function test_validate(): void
+    {
+        $cfg = LinearConfig::shared_config();
+        if (!isset($cfg["feature"]["validate"])) {
+            $this->markTestSkipped('feature not present in this SDK: validate');
+        }
+        $client = LinearSDK::test(null, ["feature" => ["validate" => ["active" => true]]]);
+        $err = null;
+        try {
+            $client->User(null)->list(["after" => 1], null);
+        } catch (\Throwable $e) {
+            $err = $e;
+        }
+        $this->assertSame('validate_failed', $err->sdk_code ?? null);
+    }
+
     public function test_basic_flow(): void
     {
         $setup = user_basic_setup(null);
         // Per-op sdk-test-control.json skip.
         $_live = !empty($setup["live"]);
-        foreach (["create", "list", "update", "load"] as $_op) {
+        foreach (["list", "update", "load"] as $_op) {
             [$_shouldSkip, $_reason] = Runner::is_control_skipped("entityOp", "user." . $_op, $_live ? "live" : "unit");
             if ($_shouldSkip) {
                 $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
                 return;
             }
         }
-        // The basic flow consumes synthetic IDs from the fixture. In live mode
-        // without an *_ENTID env override, those IDs hit the live API and 4xx.
-        if (!empty($setup["synthetic_only"])) {
-            $this->markTestSkipped("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_USER_ENTID JSON to run live");
-            return;
+        if (!empty($setup["live"])) {
+            foreach (["after01", "before01", "first01", "include_archived01", "include_disabled01", "last01", "order_by01"] as $_liveKey) {
+                if (!empty($setup["synthetic_only"]) || null === ($setup["idmap"][$_liveKey] ?? null)) {
+                    Runner::live_miss(self::LIVE_STRICT, "Live entity test blocked: needs " . $_liveKey . " via LINEAR_TEST_USER_ENTID");
+                }
+            }
+        }
+        if (!empty($setup["live"])) {
+            Runner::live_miss(self::LIVE_STRICT, "Live entity test blocked: " . "the flow updates a user record it did not create");
         }
         $client = $setup["client"];
 
-        // CREATE
-        $user_ref01_ent = $client->User(null);
-        $user_ref01_data = Helpers::to_map(Vs::getprop(
-            Vs::getpath($setup["data"], "new.user"), "user_ref01"));
-        $user_ref01_data["after"] = $setup["idmap"]["after01"];
-        $user_ref01_data["before"] = $setup["idmap"]["before01"];
-        $user_ref01_data["first"] = $setup["idmap"]["first01"];
-        $user_ref01_data["include_archived"] = $setup["idmap"]["include_archived01"];
-        $user_ref01_data["include_disabled"] = $setup["idmap"]["include_disabled01"];
-        $user_ref01_data["last"] = $setup["idmap"]["last01"];
-        $user_ref01_data["order_by"] = $setup["idmap"]["order_by01"];
-        $user_ref01_data["service"] = $setup["idmap"]["service01"];
-
-        $user_ref01_data_result = $user_ref01_ent->create($user_ref01_data, null);
-        $user_ref01_data = Helpers::to_map(is_object($user_ref01_data_result) && method_exists($user_ref01_data_result, 'data_get') ? $user_ref01_data_result->data_get() : $user_ref01_data_result);
-        $this->assertNotNull($user_ref01_data);
-        $this->assertNotNull($user_ref01_data["id"]);
+        // Bootstrap entity data from existing test data.
+        $user_ref01_data_raw = Vs::items(Helpers::to_map(
+            Vs::getpath($setup["data"], "existing.user")));
+        $user_ref01_data = null;
+        if (count($user_ref01_data_raw) > 0) {
+            $user_ref01_data = Helpers::to_map($user_ref01_data_raw[0][1]);
+        }
 
         // LIST
+        $user_ref01_ent = $client->User(null);
         $user_ref01_match = [
             "after" => $setup["idmap"]["after01"],
             "before" => $setup["idmap"]["before01"],
@@ -108,11 +235,6 @@ class UserEntityTest extends TestCase
 
         $user_ref01_list_result = $user_ref01_ent->list($user_ref01_match, null);
         $this->assertIsArray($user_ref01_list_result);
-
-        $found_item = sdk_select(
-            Runner::entity_list_to_data($user_ref01_list_result),
-            ["id" => $user_ref01_data["id"]]);
-        $this->assertNotEmpty($found_item);
 
         // UPDATE
         $user_ref01_data_up0_up = [
@@ -156,13 +278,12 @@ function user_basic_setup($extra)
 
     // Generate idmap.
     $idmap = [];
-    foreach (["user01", "user02", "user03", "after01", "before01", "first01", "include_archived01", "include_disabled01", "last01", "order_by01", "service01"] as $k) {
+    foreach (["user01", "user02", "user03", "after01", "before01", "first01", "include_archived01", "include_disabled01", "last01", "order_by01"] as $k) {
         $idmap[$k] = strtoupper($k);
     }
 
-    // Detect ENTID env override before envOverride consumes it. When live
-    // mode is on without a real override, the basic test runs against synthetic
-    // IDs from the fixture and 4xx's. Surface this so the test can skip.
+    // Whether *_ENTID supplied the idmap, read before env_override consumes
+    // it: without it, the ids a live flow binds are the fixture's synthetic ones.
     $entid_env_raw = getenv("LINEAR_TEST_USER_ENTID");
     $idmap_overridden = $entid_env_raw !== false && str_starts_with(trim($entid_env_raw), "{");
 

@@ -54,6 +54,14 @@ const utility_1 = require("../../utility");
         const ent = testsdk.PasskeyLoginStartResponse();
         (0, node_assert_1.default)(null != ent);
     });
+    (0, node_test_1.test)('validate', async (t) => {
+        if (null == __1.config.feature?.validate) {
+            t.skip('feature not present in this SDK: validate');
+            return;
+        }
+        const client = __1.LinearSDK.test(undefined, { feature: { validate: { active: true } } });
+        await node_assert_1.default.rejects(client.PasskeyLoginStartResponse().update({ "auth_id": 1 }), (err) => 'validate_failed' === err.code);
+    });
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.LINEAR_TEST_LIVE;
         for (const op of ['update']) {
@@ -62,7 +70,7 @@ const utility_1 = require("../../utility");
         }
         const setup = basicSetup();
         if (setup.live) {
-            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "options": { "a": true, "h": "Options", "n": "options", "r": true, "sh": "The passkey authentication options to pass to the WebAuthn API.", "t": "`$ANY`", "key$": "options", "index$": 0 }, "success": { "a": true, "h": "Success", "n": "success", "r": true, "sh": "Whether the operation was successful.", "t": "`$BOOLEAN`", "key$": "success", "index$": 1 } }, "name": "passkey_login_start_response", "op": { "update": { "input": "data", "name": "update", "points": [{ "a": true, "co": { "id": "POST passkeyLoginStart", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "auth_id", "or": "auth_id", "r": true, "t": "`$STRING`", "index$": 0 }] }, "gq": { "doc": "mutation PasskeyLoginStartResponseUpdatePasskeyLoginStart($authId: String!) { passkeyLoginStart(authId: $authId) { ...PasskeyLoginStartResponseFields } } fragment PasskeyLoginStartResponseFields on PasskeyLoginStartResponse { options success }", "field": "passkeyLoginStart", "optype": "mutation", "vars": [{ "from": "authId", "gqltype": "String!", "name": "authId" }] }, "k": "graphql", "m": "POST", "o": "passkeyLoginStart", "q": { "$action": "passkey_login_start", "exist": ["auth_id"] }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.passkeyLoginStart`" }, "index$": 0 }], "key$": "update" } }, "relations": { "ancestors": [] }, "key$": "passkey_login_start_response", "name__orig": "passkey_login_start_response", "Name": "PasskeyLoginStartResponse", "name_": "passkey_login_start_response", "name-": "passkey-login-start-response", "NAME": "PASSKEY_LOGIN_START_RESPONSE", "index$": 55 }, { "active": true, "entity": "passkey_login_start_response", "key$": "BasicPasskeyLoginStartResponseFlow", "kind": "basic", "name": "BasicPasskeyLoginStartResponseFlow", "param": {}, "step": [{ "a": true, "d": { "auth_id": "auth01" }, "i": { "ref": "passkey_login_start_response_ref01", "srcdatavar": "passkey_login_start_response_ref01_data", "suffix": "_up0" }, "m": {}, "o": "update", "s": [{ "apply": "TextFieldMark", "def": { "mark": "Mark01-passkey_login_start_response_ref01" } }], "v": [], "index$": 0 }] }, 'PasskeyLoginStartResponse', { "POST passkeyLoginStart": { "protocol": "graphql" } });
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "options": { "a": true, "h": "Options", "n": "options", "r": true, "sh": "The passkey authentication options to pass to the WebAuthn API.", "t": "`$ANY`", "key$": "options", "index$": 0 }, "success": { "a": true, "h": "Success", "n": "success", "r": true, "sh": "Whether the operation was successful.", "t": "`$BOOLEAN`", "key$": "success", "index$": 1 } }, "name": "passkey_login_start_response", "op": { "update": { "input": "data", "name": "update", "points": [{ "a": true, "co": { "id": "POST passkeyLoginStart", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "auth_id", "or": "authId", "r": true, "t": "`$STRING`", "index$": 0 }] }, "gq": { "doc": "mutation PasskeyLoginStartResponseUpdatePasskeyLoginStart($authId: String!) { passkeyLoginStart(authId: $authId) { ...PasskeyLoginStartResponseFields } } fragment PasskeyLoginStartResponseFields on PasskeyLoginStartResponse { options success }", "field": "passkeyLoginStart", "optype": "mutation", "vars": [{ "from": "authId", "gqltype": "String!", "name": "authId" }] }, "k": "graphql", "m": "POST", "o": "passkeyLoginStart", "q": { "$action": "passkey_login_start", "exist": ["auth_id"] }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.passkeyLoginStart`" }, "index$": 0 }], "key$": "update" } }, "relations": { "ancestors": [] }, "key$": "passkey_login_start_response", "name__orig": "passkey_login_start_response", "Name": "PasskeyLoginStartResponse", "name_": "passkey_login_start_response", "name-": "passkey-login-start-response", "NAME": "PASSKEY_LOGIN_START_RESPONSE", "index$": 55 }, { "active": true, "entity": "passkey_login_start_response", "key$": "BasicPasskeyLoginStartResponseFlow", "kind": "basic", "name": "BasicPasskeyLoginStartResponseFlow", "param": {}, "step": [{ "a": true, "d": { "auth_id": "auth01" }, "i": { "ref": "passkey_login_start_response_ref01", "srcdatavar": "passkey_login_start_response_ref01_data", "suffix": "_up0" }, "m": {}, "o": "update", "s": [{ "apply": "TextFieldMark", "def": { "mark": "Mark01-passkey_login_start_response_ref01" } }], "v": [], "index$": 0 }] }, 'PasskeyLoginStartResponse', { "POST passkeyLoginStart": { "protocol": "graphql" } }, { strict: LIVE_STRICT, t });
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -72,11 +80,16 @@ const utility_1 = require("../../utility");
         // UPDATE
         const passkey_login_start_response_ref01_ent = client.PasskeyLoginStartResponse();
         const passkey_login_start_response_ref01_data_up0 = {};
-        passkey_login_start_response_ref01_data_up0['auth_id'] = setup.idmap['auth_id'];
+        passkey_login_start_response_ref01_data_up0['auth_id'] = setup.idmap['auth_id'] ?? setup.idmap['auth01'];
         const passkey_login_start_response_ref01_resdata_up0 = (await passkey_login_start_response_ref01_ent.update(passkey_login_start_response_ref01_data_up0)).data();
         (0, node_assert_1.default)(null != passkey_login_start_response_ref01_resdata_up0);
     });
 });
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true;
 function basicSetup(extra) {
     // TODO: fix test def options
     const options = {}; // null

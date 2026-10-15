@@ -10,7 +10,7 @@ Learn more about Voxgig SDKs at [voxgig.com/sdk](https://voxgig.com/sdk/).
 
 > TypeScript, Python, PHP, Golang, Ruby, Lua, C SDKs, a CLI with an interactive REPL, and an MCP server for AI agents — all generated from one OpenAPI spec by [@voxgig/sdkgen](https://github.com/voxgig/sdkgen).
 
-> **Features:** `undefined`, `undefined`, `undefined`, `undefined`, `undefined`, `undefined`, `undefined`, `undefined` — opt-in,
+> **Features:** `debug`, `idempotency`, `metrics`, `paging`, `ratelimit`, `retry`, `station`, `test`, `timeout` — opt-in,
 > inactive until switched on, and configured per client. See the Features
 > section of any SDK README below for what each one does.
 
@@ -48,9 +48,8 @@ const client = LinearSDK.test({
   },
 })
 const agentactivitys = await client.AgentActivity().list()
-// agentactivitys is an array of AgentActivity entities, populated with mock data
-// — call agentactivitys[0].data() for the record itself
-console.log(agentactivitys)
+// agentactivitys is an array of AgentActivity entities, one per mock record
+console.log(agentactivitys.map((agentactivity) => agentactivity.data()))
 ```
 
 ### Python
@@ -58,7 +57,7 @@ console.log(agentactivitys)
 ```python
 client = LinearSDK.test()
 agentactivitys = client.AgentActivity().list()
-print(agentactivitys)
+print([item.data_get() for item in agentactivitys])
 ```
 
 ### PHP
@@ -66,7 +65,7 @@ print(agentactivitys)
 ```php
 // Seed fixture data so offline calls resolve without a live server.
 $client = LinearSDK::test([
-    "entity" => ["agentactivity" => ["test01" => ["id" => "test01"]]],
+    "entity" => ["agent_activity" => ["test01" => ["id" => "test01"]]],
 ]);
 $agentactivitys = $client->AgentActivity()->list();
 ```
@@ -85,7 +84,7 @@ result, err := client.AgentActivity(nil).List(
 ```ruby
 # Seed fixture data so offline calls resolve without a live server.
 client = LinearSDK.test({
-  "entity" => { "agentactivity" => { "test01" => { "id" => "test01" } } },
+  "entity" => { "agent_activity" => { "test01" => { "id" => "test01" } } },
 })
 agentactivitys = client.AgentActivity.list()
 ```
@@ -105,23 +104,25 @@ local results, err = client:AgentActivity():list()
 LinearSDK* client = test_sdk(NULL, NULL);
 PNError* err = NULL;
 Entity* agent_activity = linear_agent_activity(client, NULL);
-voxgig_value* agent_activitys = agent_activity->vt->list(agent_activity, NULL, NULL, &err);
-printf("%s\n", voxgig_to_json(agent_activitys));
+Entity** agent_activitys = agent_activity->vt->list(agent_activity, NULL, NULL, &err);
+for (size_t i = 0; agent_activitys && agent_activitys[i]; i++) {
+    printf("%s\n", voxgig_to_json(agent_activitys[i]->vt->data(agent_activitys[i], NULL)));
+}
 ```
 
 ## Packages
 
 | Language | Package | Install |
 | --- | --- | --- |
-| TypeScript | `@voxgig-sdk/linear-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/linear-sdk/tags) |
-| Python | `voxgig-sdk-linear-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/linear-sdk/tags) |
-| PHP | `voxgig-sdk/linear-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/linear-sdk/tags) |
+| TypeScript | `@voxgig-sdk/linear-sdk` | publish pending — [install from source](ts/README.md#install) |
+| Python | `voxgig-sdk-linear-sdk` | publish pending — [install from source](py/README.md#install) |
+| PHP | `voxgig-sdk/linear-sdk` | publish pending — [install from source](php/README.md#install) |
 | Golang | `github.com/voxgig-sdk/linear-sdk/go` | `go get github.com/voxgig-sdk/linear-sdk/go@latest` |
-| Ruby | `voxgig-sdk-linear-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/linear-sdk/tags) |
-| Lua | `voxgig-sdk-linear-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/linear-sdk/tags) |
-| C | `voxgig-sdk-linear-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/linear-sdk/tags) |
-| Go CLI | `github.com/voxgig-sdk/linear-sdk/go-cli` | `go install github.com/voxgig-sdk/linear-sdk/go-cli/cmd/linear@latest` |
-| Go MCP server | `github.com/voxgig-sdk/linear-sdk/go-mcp` | `go get github.com/voxgig-sdk/linear-sdk/go-mcp@latest` |
+| Ruby | `voxgig-sdk-linear-sdk` | publish pending — [install from source](rb/README.md#install) |
+| Lua | `voxgig-sdk-linear-sdk` | publish pending — [install from source](lua/README.md#install) |
+| C | `voxgig-sdk-linear-sdk` | publish pending — [install from source](c/README.md#install) |
+| Go CLI | `github.com/voxgig-sdk/linear-sdk/go-cli` | build from source — [go-cli/README.md](go-cli/README.md) |
+| Go MCP server | `github.com/voxgig-sdk/linear-sdk/go-mcp` | build from source — [go-mcp/README.md](go-mcp/README.md) |
 
 ## Quickstart
 
@@ -134,10 +135,10 @@ const client = new LinearSDK({
   apikey: process.env.LINEAR_APIKEY,
 })
 
-// List all accesskeyreleases (returns AccessKeyReleaseEntity[] — .data() for the record)
+// List all accesskeyreleases (returns AccessKeyReleaseEntity[], one entity per record)
 const accesskeyreleases = await client.AccessKeyRelease().list()
 for (const accesskeyrelease of accesskeyreleases) {
-  console.log(accesskeyrelease)
+  console.log(accesskeyrelease.data())
 }
 ```
 
@@ -153,9 +154,10 @@ See the [TypeScript README](ts/README.md) for the full guide.
 
 ## Use it from an AI agent (MCP)
 
-The generated MCP server exposes every operation in this SDK as an
-[MCP](https://modelcontextprotocol.io) tool that Claude, Cursor or Cline
-can call directly. Build and register it:
+The generated MCP server exposes this SDK's list and load operations as
+[MCP](https://modelcontextprotocol.io) tools that Claude, Cursor or Cline
+can call directly. It only reads: create, update, patch and remove become tools when the SDK's model sets
+`main: kit: target: 'go-mcp': tool: write: true`. Build and register it:
 
 ```bash
 cd go-mcp && go build -o linear-mcp .
@@ -282,14 +284,14 @@ client = LinearSDK({
     "apikey": os.environ.get("LINEAR_APIKEY"),
 })
 
-# List all accesskeyreleases (returns a list, raises on error)
+# List all accesskeyreleases (a list of entities, one per record; raises on error)
 accesskeyreleases = client.AccessKeyRelease().list()
 for accesskeyrelease in accesskeyreleases:
-    print(accesskeyrelease)
+    print(accesskeyrelease.data_get())
 
-# Load a specific accesskeyrelease (returns the record, raises on error)
+# Load a specific accesskeyrelease (returns the entity, raises on error)
 accesskeyrelease = client.AccessKeyRelease().load({"id": "example_id"})
-print(accesskeyrelease)
+print(accesskeyrelease.data_get())
 ```
 
 ### PHP
@@ -302,11 +304,11 @@ $client = new LinearSDK([
     "apikey" => getenv("LINEAR_APIKEY"),
 ]);
 
-// List all accesskeyreleases (returns an array; throws on error)
+// List all accesskeyreleases (an array of entities, one per record; throws on error)
 $accesskeyreleases = $client->AccessKeyRelease()->list();
 print_r(array_map(fn($item) => $item->data_get(), $accesskeyreleases));
 
-// Load a specific accesskeyrelease (returns the ENTITY; call data_get() for the record; throws on error)
+// Load a specific accesskeyrelease (returns the entity; data_get() reads its record; throws on error)
 $accesskeyrelease = $client->AccessKeyRelease()->load(["id" => "example_id"]);
 print_r($accesskeyrelease->data_get());
 ```
@@ -320,12 +322,14 @@ client := sdk.NewLinearSDK(map[string]any{
     "apikey": os.Getenv("LINEAR_APIKEY"),
 })
 
-// List all accesskeyreleases
+// List all accesskeyreleases (one entity per record; err is non-nil on failure)
 accessKeyReleases, err := client.AccessKeyRelease(nil).List(nil, nil)
 if err != nil {
     panic(err)
 }
-fmt.Println(accessKeyReleases)
+for _, accessKeyRelease := range accessKeyReleases.([]any) {
+    fmt.Println(accessKeyRelease.(sdk.Entity).Data())
+}
 ```
 
 ### Ruby
@@ -337,31 +341,36 @@ client = LinearSDK.new({
   "apikey" => ENV["LINEAR_APIKEY"],
 })
 
-# List all accesskeyreleases (returns an Array; raises on error)
+# List all accesskeyreleases (an Array of entities, one per record; raises on error)
 accesskeyreleases = client.AccessKeyRelease.list
-puts accesskeyreleases
+accesskeyreleases.each { |item| puts item.data_get }
 
-# Load a specific accesskeyrelease (returns the ENTITY; call data_get for the record)
+# Load a specific accesskeyrelease (returns the entity; data_get reads its record; raises on error)
 accesskeyrelease = client.AccessKeyRelease.load({ "id" => "example_id" })
-puts accesskeyrelease
+puts accesskeyrelease.data_get
 ```
 
 ### Lua
 
 ```lua
 local sdk = require("linear_sdk")
+local json = require("dkjson")
 
 local client = sdk.new({
   apikey = os.getenv("LINEAR_APIKEY"),
 })
 
--- List all accesskeyreleases
+-- List all accesskeyreleases (an array of entities, one per record; err on failure)
 local accesskeyreleases, err = client:AccessKeyRelease():list()
-print(accesskeyreleases)
+if err then error(err) end
+for _, accesskeyrelease in ipairs(accesskeyreleases) do
+  print(json.encode(accesskeyrelease:data_get()))
+end
 
--- Load a specific accesskeyrelease
+-- Load a specific accesskeyrelease (returns the entity; err on failure)
 local accesskeyrelease, err = client:AccessKeyRelease():load({ id = "example_id" })
-print(accesskeyrelease)
+if err then error(err) end
+print(json.encode(accesskeyrelease:data_get()))
 ```
 
 ### C
@@ -375,15 +384,17 @@ PNError* err = NULL;
 
 Entity* access_key_release = linear_access_key_release(client, NULL);
 
-// List all accesskeyreleases (returns a List, sets *err on failure)
-voxgig_value* access_key_releases = access_key_release->vt->list(access_key_release, NULL, NULL, &err);
-for (size_t i = 0; i < (size_t)voxgig_size(access_key_releases); i++) {
-    printf("%s\n", voxgig_to_json(voxgig_getelem(access_key_releases, v_int(i), NULL)));
+// List all accesskeyreleases (one entity per record, sets *err on failure)
+Entity** access_key_releases = access_key_release->vt->list(access_key_release, NULL, NULL, &err);
+for (size_t i = 0; access_key_releases && access_key_releases[i]; i++) {
+    printf("%s\n", voxgig_to_json(access_key_releases[i]->vt->data(access_key_releases[i], NULL)));
 }
 
-// Load a specific accesskeyrelease (returns the record, sets *err on failure)
-voxgig_value* access_key_release_rec = access_key_release->vt->load(access_key_release, cmap(1, "id", v_str("example_id")), NULL, &err);
-printf("%s\n", voxgig_to_json(access_key_release_rec));
+// Load a specific accesskeyrelease (returns the entity, sets *err on failure)
+Entity* loaded = access_key_release->vt->load(access_key_release, cmap(1, "id", v_str("example_id")), NULL, &err);
+if (loaded) {
+    printf("%s\n", voxgig_to_json(loaded->vt->data(loaded, NULL)));
+}
 ```
 
 ## Direct and prepare
@@ -409,10 +420,9 @@ const result = await client.direct({
   method: 'GET',
   params: { id: 'example' },
 })
-if (result instanceof Error) {
-  throw result
+if (result.ok) {
+  console.log(result.data)
 }
-console.log(result.data)
 ```
 
 **Python:**
@@ -500,6 +510,7 @@ forking the SDK.
 | **PagingFeature** | Paging |
 | **RatelimitFeature** | Rate limiting |
 | **RetryFeature** | Retry |
+| **StationFeature** | Station control surface binding for outbound integrations |
 | **TestFeature** | Test transport |
 | **TimeoutFeature** | Timeout |
 
@@ -519,10 +530,12 @@ customizable without forking any upstream tool:
 - **Templates** (`.sdk/tm/`) and **components** (`.sdk/src/cmp/`) are
   the two layers of generation, copied into this repo: templates are the
   literal per-language source, components generate the API-shaped parts.
-- **Regeneration merges.** By default, newly generated content is
-  three-way merged into existing files, so generator updates and local
-  edits usually converge without manual conflict handling. A project can
-  opt for plain overwrite instead.
+- **Regeneration overwrites.** Each run rewrites every generated file from
+  the model, the templates and the components, so an edit made to
+  generated output is lost. Say what this project needs in its own model
+  (`.sdk/model/sdk.aontu`), or extend a target with a component of its
+  own in `.sdk/src/cmp/<target>/`, registered with `registerComponent`,
+  which `voxgig-sdkgen doctor` reports as an addition rather than drift.
 - **Custom features and entire custom targets** arrive through sdkgen
   packages (`voxgig-sdkgen package add`), on the same rails as the
   bundled languages, and `voxgig-sdkgen doctor` reports any drift from

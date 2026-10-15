@@ -451,28 +451,20 @@ access_key_release = client.AccessKeyRelease
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
-
-```ruby
-result = client.AccessKeyRelease.create({
-  "createdAt" => "example_createdAt", # Object
-  "id" => "example_id", # String
-  "name" => "example_name", # String
-  "url" => "example_url", # String
-})
-```
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.AccessKeyRelease.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.AccessKeyRelease.load({ "id" => "access_key_release_id" })
@@ -525,7 +517,7 @@ access_key_release_pipeline = client.AccessKeyReleasePipeline
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.AccessKeyReleasePipeline.load({ "id" => "access_key_release_pipeline_id" })
@@ -591,7 +583,7 @@ agent_activity = client.AgentActivity
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.AgentActivity.create({
@@ -605,15 +597,16 @@ result = client.AgentActivity.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.AgentActivity.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.AgentActivity.load({ "id" => "agent_activity_id" })
@@ -621,14 +614,7 @@ result = client.AgentActivity.load({ "id" => "agent_activity_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
-
-```ruby
-result = client.AgentActivity.update({
-  "id" => "agent_activity_id",
-  # Fields to update
-})
-```
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ### Common Methods
 
@@ -698,7 +684,7 @@ agent_session = client.AgentSession
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.AgentSession.create({
@@ -713,15 +699,16 @@ result = client.AgentSession.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.AgentSession.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.AgentSession.load({ "id" => "agent_session_id" })
@@ -729,7 +716,7 @@ result = client.AgentSession.load({ "id" => "agent_session_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.AgentSession.update({
@@ -801,7 +788,7 @@ agent_skill = client.AgentSkill
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.AgentSkill.create({
@@ -818,15 +805,16 @@ result = client.AgentSkill.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.AgentSkill.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.AgentSkill.load({ "id" => "agent_skill_id" })
@@ -834,7 +822,7 @@ result = client.AgentSkill.load({ "id" => "agent_skill_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.AgentSkill.remove({ "id" => "agent_skill_id" })
@@ -842,7 +830,7 @@ result = client.AgentSkill.remove({ "id" => "agent_skill_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.AgentSkill.update({
@@ -903,7 +891,7 @@ application = client.Application
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Application.load({ "client_id" => "client_id" })
@@ -970,7 +958,7 @@ attachment = client.Attachment
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Attachment.create({
@@ -986,15 +974,16 @@ result = client.Attachment.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Attachment.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Attachment.load({ "id" => "attachment_id" })
@@ -1002,7 +991,7 @@ result = client.Attachment.load({ "id" => "attachment_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Attachment.remove({ "id" => "attachment_id" })
@@ -1010,7 +999,7 @@ result = client.Attachment.remove({ "id" => "attachment_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Attachment.update({
@@ -1076,10 +1065,11 @@ audit_entry = client.AuditEntry
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.AuditEntry.list
+results.each { |item| puts item.data_get }
 ```
 
 ### Common Methods
@@ -1129,10 +1119,11 @@ audit_entry_type = client.AuditEntryType
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.AuditEntryType.list
+results.each { |item| puts item.data_get }
 ```
 
 ### Common Methods
@@ -1185,18 +1176,11 @@ auth_resolver_response = client.AuthResolverResponse
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
-
-```ruby
-result = client.AuthResolverResponse.create({
-  "email" => "example_email", # String
-  "id" => "example_id", # String
-})
-```
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.AuthResolverResponse.load({ "id" => "auth_resolver_response_id" })
@@ -1204,7 +1188,7 @@ result = client.AuthResolverResponse.load({ "id" => "auth_resolver_response_id" 
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.AuthResolverResponse.update({
@@ -1280,10 +1264,11 @@ authentication_session_response = client.AuthenticationSessionResponse
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.AuthenticationSessionResponse.list
+results.each { |item| puts item.data_get }
 ```
 
 ### Common Methods
@@ -1369,7 +1354,7 @@ comment = client.Comment
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Comment.create({
@@ -1387,15 +1372,16 @@ result = client.Comment.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Comment.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Comment.load({ "id" => "comment_id" })
@@ -1403,7 +1389,7 @@ result = client.Comment.load({ "id" => "comment_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Comment.remove({ "id" => "comment_id" })
@@ -1411,7 +1397,7 @@ result = client.Comment.remove({ "id" => "comment_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Comment.update({
@@ -1467,16 +1453,11 @@ create_or_join_organization_response = client.CreateOrJoinOrganizationResponse
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
-
-```ruby
-result = client.CreateOrJoinOrganizationResponse.create({
-})
-```
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.CreateOrJoinOrganizationResponse.update({
@@ -1553,7 +1534,7 @@ custom_view = client.CustomView
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.CustomView.create({
@@ -1570,15 +1551,16 @@ result = client.CustomView.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.CustomView.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.CustomView.load({ "id" => "custom_view_id" })
@@ -1586,7 +1568,7 @@ result = client.CustomView.load({ "id" => "custom_view_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.CustomView.remove({ "id" => "custom_view_id" })
@@ -1594,7 +1576,7 @@ result = client.CustomView.remove({ "id" => "custom_view_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.CustomView.update({
@@ -1667,7 +1649,7 @@ customer = client.Customer
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Customer.create({
@@ -1685,15 +1667,16 @@ result = client.Customer.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Customer.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Customer.load({ "id" => "customer_id" })
@@ -1701,7 +1684,7 @@ result = client.Customer.load({ "id" => "customer_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Customer.remove({ "id" => "customer_id" })
@@ -1709,7 +1692,7 @@ result = client.Customer.remove({ "id" => "customer_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Customer.update({
@@ -1780,7 +1763,7 @@ customer_need = client.CustomerNeed
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.CustomerNeed.create({
@@ -1793,15 +1776,16 @@ result = client.CustomerNeed.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.CustomerNeed.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.CustomerNeed.load({ "id" => "customer_need_id" })
@@ -1809,7 +1793,7 @@ result = client.CustomerNeed.load({ "id" => "customer_need_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.CustomerNeed.remove({ "id" => "customer_need_id" })
@@ -1817,7 +1801,7 @@ result = client.CustomerNeed.remove({ "id" => "customer_need_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.CustomerNeed.update({
@@ -1880,7 +1864,7 @@ customer_status = client.CustomerStatus
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.CustomerStatus.create({
@@ -1896,15 +1880,16 @@ result = client.CustomerStatus.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.CustomerStatus.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.CustomerStatus.load({ "id" => "customer_status_id" })
@@ -1912,7 +1897,7 @@ result = client.CustomerStatus.load({ "id" => "customer_status_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.CustomerStatus.remove({ "id" => "customer_status_id" })
@@ -1920,7 +1905,7 @@ result = client.CustomerStatus.remove({ "id" => "customer_status_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.CustomerStatus.update({
@@ -1983,7 +1968,7 @@ customer_tier = client.CustomerTier
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.CustomerTier.create({
@@ -1999,15 +1984,16 @@ result = client.CustomerTier.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.CustomerTier.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.CustomerTier.load({ "id" => "customer_tier_id" })
@@ -2015,7 +2001,7 @@ result = client.CustomerTier.load({ "id" => "customer_tier_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.CustomerTier.remove({ "id" => "customer_tier_id" })
@@ -2023,7 +2009,7 @@ result = client.CustomerTier.remove({ "id" => "customer_tier_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.CustomerTier.update({
@@ -2103,7 +2089,7 @@ cycle = client.Cycle
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Cycle.create({
@@ -2131,15 +2117,16 @@ result = client.Cycle.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Cycle.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Cycle.load({ "id" => "cycle_id" })
@@ -2147,7 +2134,7 @@ result = client.Cycle.load({ "id" => "cycle_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Cycle.update({
@@ -2215,7 +2202,7 @@ diff = client.Diff
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Diff.load({ "id" => "diff_id" })
@@ -2292,7 +2279,7 @@ document = client.Document
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Document.create({
@@ -2308,15 +2295,16 @@ result = client.Document.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Document.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Document.load({ "id" => "document_id" })
@@ -2324,7 +2312,7 @@ result = client.Document.load({ "id" => "document_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Document.remove({ "id" => "document_id" })
@@ -2332,7 +2320,7 @@ result = client.Document.remove({ "id" => "document_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Document.update({
@@ -2413,10 +2401,11 @@ document_search_result = client.DocumentSearchResult
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
-results = client.DocumentSearchResult.list
+results = client.DocumentSearchResult.list({ "term" => "example" })
+results.each { |item| puts item.data_get }
 ```
 
 ### Common Methods
@@ -2489,7 +2478,7 @@ email_intake_address = client.EmailIntakeAddress
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.EmailIntakeAddress.create({
@@ -2511,7 +2500,7 @@ result = client.EmailIntakeAddress.create({
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.EmailIntakeAddress.load({ "id" => "email_intake_address_id" })
@@ -2519,7 +2508,7 @@ result = client.EmailIntakeAddress.load({ "id" => "email_intake_address_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.EmailIntakeAddress.remove({ "id" => "email_intake_address_id" })
@@ -2527,7 +2516,7 @@ result = client.EmailIntakeAddress.remove({ "id" => "email_intake_address_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.EmailIntakeAddress.update({
@@ -2583,7 +2572,7 @@ email_user_account_auth_challenge_response = client.EmailUserAccountAuthChalleng
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.EmailUserAccountAuthChallengeResponse.create({
@@ -2646,7 +2635,7 @@ emoji = client.Emoji
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Emoji.create({
@@ -2661,15 +2650,16 @@ result = client.Emoji.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Emoji.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Emoji.load({ "id" => "emoji_id" })
@@ -2677,7 +2667,7 @@ result = client.Emoji.load({ "id" => "emoji_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Emoji.remove({ "id" => "emoji_id" })
@@ -2738,7 +2728,7 @@ entity_external_link = client.EntityExternalLink
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.EntityExternalLink.create({
@@ -2753,7 +2743,7 @@ result = client.EntityExternalLink.create({
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.EntityExternalLink.load({ "id" => "entity_external_link_id" })
@@ -2761,7 +2751,7 @@ result = client.EntityExternalLink.load({ "id" => "entity_external_link_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.EntityExternalLink.remove({ "id" => "entity_external_link_id" })
@@ -2769,7 +2759,7 @@ result = client.EntityExternalLink.remove({ "id" => "entity_external_link_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.EntityExternalLink.update({
@@ -2833,15 +2823,16 @@ external_user = client.ExternalUser
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.ExternalUser.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.ExternalUser.load({ "id" => "external_user_id" })
@@ -2934,7 +2925,7 @@ favorite = client.Favorite
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Favorite.create({
@@ -2949,15 +2940,16 @@ result = client.Favorite.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Favorite.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Favorite.load({ "id" => "favorite_id" })
@@ -2965,7 +2957,7 @@ result = client.Favorite.load({ "id" => "favorite_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Favorite.remove({ "id" => "favorite_id" })
@@ -2973,7 +2965,7 @@ result = client.Favorite.remove({ "id" => "favorite_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Favorite.update({
@@ -3035,7 +3027,7 @@ git_automation_state = client.GitAutomationState
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.GitAutomationState.create({
@@ -3048,19 +3040,19 @@ result = client.GitAutomationState.create({
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
-result = client.GitAutomationState.remove({ "id" => "id" })
+result = client.GitAutomationState.remove({ "id" => "git_automation_state_id" })
 ```
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.GitAutomationState.update({
-  "id" => "id",
+  "id" => "git_automation_state_id",
   # Fields to update
 })
 ```
@@ -3117,7 +3109,7 @@ git_automation_target_branch = client.GitAutomationTargetBranch
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.GitAutomationTargetBranch.create({
@@ -3131,19 +3123,19 @@ result = client.GitAutomationTargetBranch.create({
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
-result = client.GitAutomationTargetBranch.remove({ "id" => "id" })
+result = client.GitAutomationTargetBranch.remove({ "id" => "git_automation_target_branch_id" })
 ```
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.GitAutomationTargetBranch.update({
-  "id" => "id",
+  "id" => "git_automation_target_branch_id",
   # Fields to update
 })
 ```
@@ -3194,22 +3186,11 @@ git_hub_integration_connect_detail = client.GitHubIntegrationConnectDetail
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
-
-```ruby
-result = client.GitHubIntegrationConnectDetail.create({
-})
-```
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
-
-```ruby
-result = client.GitHubIntegrationConnectDetail.update({
-  # Fields to update
-})
-```
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ### Common Methods
 
@@ -3296,7 +3277,7 @@ initiative = client.Initiative
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Initiative.create({
@@ -3319,15 +3300,16 @@ result = client.Initiative.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Initiative.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Initiative.load({ "id" => "initiative_id" })
@@ -3335,7 +3317,7 @@ result = client.Initiative.load({ "id" => "initiative_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Initiative.remove({ "id" => "initiative_id" })
@@ -3343,7 +3325,7 @@ result = client.Initiative.remove({ "id" => "initiative_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Initiative.update({
@@ -3411,7 +3393,7 @@ initiative_label = client.InitiativeLabel
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.InitiativeLabel.create({
@@ -3426,15 +3408,16 @@ result = client.InitiativeLabel.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.InitiativeLabel.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.InitiativeLabel.load({ "id" => "initiative_label_id" })
@@ -3442,7 +3425,7 @@ result = client.InitiativeLabel.load({ "id" => "initiative_label_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.InitiativeLabel.remove({ "id" => "initiative_label_id" })
@@ -3450,7 +3433,7 @@ result = client.InitiativeLabel.remove({ "id" => "initiative_label_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.InitiativeLabel.update({
@@ -3507,7 +3490,7 @@ initiative_lead_team_change_impact = client.InitiativeLeadTeamChangeImpact
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.InitiativeLeadTeamChangeImpact.load({ "id" => "initiative_lead_team_change_impact_id" })
@@ -3566,7 +3549,7 @@ initiative_relation = client.InitiativeRelation
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.InitiativeRelation.create({
@@ -3579,15 +3562,16 @@ result = client.InitiativeRelation.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.InitiativeRelation.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.InitiativeRelation.load({ "id" => "initiative_relation_id" })
@@ -3595,7 +3579,7 @@ result = client.InitiativeRelation.load({ "id" => "initiative_relation_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.InitiativeRelation.remove({ "id" => "initiative_relation_id" })
@@ -3603,7 +3587,7 @@ result = client.InitiativeRelation.remove({ "id" => "initiative_relation_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.InitiativeRelation.update({
@@ -3664,7 +3648,7 @@ initiative_to_project = client.InitiativeToProject
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.InitiativeToProject.create({
@@ -3677,15 +3661,16 @@ result = client.InitiativeToProject.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.InitiativeToProject.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.InitiativeToProject.load({ "id" => "initiative_to_project_id" })
@@ -3693,7 +3678,7 @@ result = client.InitiativeToProject.load({ "id" => "initiative_to_project_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.InitiativeToProject.remove({ "id" => "initiative_to_project_id" })
@@ -3701,7 +3686,7 @@ result = client.InitiativeToProject.remove({ "id" => "initiative_to_project_id" 
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.InitiativeToProject.update({
@@ -3774,7 +3759,7 @@ initiative_update = client.InitiativeUpdate
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.InitiativeUpdate.create({
@@ -3795,15 +3780,16 @@ result = client.InitiativeUpdate.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.InitiativeUpdate.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.InitiativeUpdate.load({ "id" => "initiative_update_id" })
@@ -3811,7 +3797,7 @@ result = client.InitiativeUpdate.load({ "id" => "initiative_update_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.InitiativeUpdate.update({
@@ -3873,28 +3859,20 @@ integration = client.Integration
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
-
-```ruby
-result = client.Integration.create({
-  "createdAt" => "example_createdAt", # Object
-  "id" => "example_id", # String
-  "service" => "example_service", # String
-  "updatedAt" => "example_updatedAt", # Object
-})
-```
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Integration.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Integration.load({ "id" => "integration_id" })
@@ -3902,7 +3880,7 @@ result = client.Integration.load({ "id" => "integration_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Integration.remove({ "id" => "integration_id" })
@@ -3910,7 +3888,7 @@ result = client.Integration.remove({ "id" => "integration_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Integration.update({
@@ -3971,7 +3949,7 @@ integration_template = client.IntegrationTemplate
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.IntegrationTemplate.create({
@@ -3983,15 +3961,16 @@ result = client.IntegrationTemplate.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.IntegrationTemplate.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.IntegrationTemplate.load({ "id" => "integration_template_id" })
@@ -3999,7 +3978,7 @@ result = client.IntegrationTemplate.load({ "id" => "integration_template_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.IntegrationTemplate.remove({ "id" => "integration_template_id" })
@@ -4070,7 +4049,7 @@ integrations_setting = client.IntegrationsSetting
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.IntegrationsSetting.create({
@@ -4082,7 +4061,7 @@ result = client.IntegrationsSetting.create({
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.IntegrationsSetting.load({ "id" => "integrations_setting_id" })
@@ -4090,7 +4069,7 @@ result = client.IntegrationsSetting.load({ "id" => "integrations_setting_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.IntegrationsSetting.update({
@@ -4208,7 +4187,7 @@ issue = client.Issue
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Issue.create({
@@ -4234,15 +4213,16 @@ result = client.Issue.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Issue.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Issue.load({ "id" => "issue_id" })
@@ -4250,7 +4230,7 @@ result = client.Issue.load({ "id" => "issue_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Issue.remove({ "id" => "issue_id" })
@@ -4258,7 +4238,7 @@ result = client.Issue.remove({ "id" => "issue_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Issue.update({
@@ -4327,21 +4307,11 @@ issue_import = client.IssueImport
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
-
-```ruby
-result = client.IssueImport.create({
-  "createdAt" => "example_createdAt", # Object
-  "displayName" => "example_displayName", # String
-  "service" => "example_service", # String
-  "status" => "example_status", # String
-  "updatedAt" => "example_updatedAt", # Object
-})
-```
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.IssueImport.remove({ "issue_import_id" => "issue_import_id" })
@@ -4349,7 +4319,7 @@ result = client.IssueImport.remove({ "issue_import_id" => "issue_import_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.IssueImport.update({
@@ -4419,7 +4389,7 @@ issue_label = client.IssueLabel
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.IssueLabel.create({
@@ -4434,15 +4404,16 @@ result = client.IssueLabel.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.IssueLabel.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.IssueLabel.load({ "id" => "issue_label_id" })
@@ -4450,7 +4421,7 @@ result = client.IssueLabel.load({ "id" => "issue_label_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.IssueLabel.remove({ "id" => "issue_label_id" })
@@ -4458,7 +4429,7 @@ result = client.IssueLabel.remove({ "id" => "issue_label_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.IssueLabel.update({
@@ -4514,10 +4485,11 @@ issue_priority_value = client.IssuePriorityValue
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.IssuePriorityValue.list
+results.each { |item| puts item.data_get }
 ```
 
 ### Common Methods
@@ -4572,7 +4544,7 @@ issue_relation = client.IssueRelation
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.IssueRelation.create({
@@ -4585,15 +4557,16 @@ result = client.IssueRelation.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.IssueRelation.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.IssueRelation.load({ "id" => "issue_relation_id" })
@@ -4601,7 +4574,7 @@ result = client.IssueRelation.load({ "id" => "issue_relation_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.IssueRelation.remove({ "id" => "issue_relation_id" })
@@ -4609,7 +4582,7 @@ result = client.IssueRelation.remove({ "id" => "issue_relation_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.IssueRelation.update({
@@ -4728,10 +4701,11 @@ issue_search_result = client.IssueSearchResult
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
-results = client.IssueSearchResult.list
+results = client.IssueSearchResult.list({ "term" => "example" })
+results.each { |item| puts item.data_get }
 ```
 
 ### Common Methods
@@ -4785,7 +4759,7 @@ issue_to_release = client.IssueToRelease
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.IssueToRelease.create({
@@ -4797,15 +4771,16 @@ result = client.IssueToRelease.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.IssueToRelease.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.IssueToRelease.load({ "id" => "issue_to_release_id" })
@@ -4813,7 +4788,7 @@ result = client.IssueToRelease.load({ "id" => "issue_to_release_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.IssueToRelease.remove({ "id" => "issue_to_release_id" })
@@ -4865,17 +4840,11 @@ logout_response = client.LogoutResponse
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
-
-```ruby
-result = client.LogoutResponse.create({
-  "success" => true, # Boolean
-})
-```
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.LogoutResponse.update({
@@ -4957,15 +4926,16 @@ notification = client.Notification
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Notification.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Notification.load({ "id" => "notification_id" })
@@ -5032,15 +5002,16 @@ notification_subscription = client.NotificationSubscription
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.NotificationSubscription.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.NotificationSubscription.load({ "id" => "notification_subscription_id" })
@@ -5106,7 +5077,7 @@ o_auth_application = client.OAuthApplication
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.OAuthApplication.create({
@@ -5127,15 +5098,16 @@ result = client.OAuthApplication.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.OAuthApplication.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.OAuthApplication.load({ "id" => "o_auth_application_id" })
@@ -5143,7 +5115,7 @@ result = client.OAuthApplication.load({ "id" => "o_auth_application_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.OAuthApplication.update({
@@ -5263,7 +5235,7 @@ organization = client.Organization
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Organization.load({ "id" => "organization_id" })
@@ -5271,7 +5243,7 @@ result = client.Organization.load({ "id" => "organization_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Organization.remove({ "id" => "organization_id" })
@@ -5279,7 +5251,7 @@ result = client.Organization.remove({ "id" => "organization_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Organization.update({
@@ -5345,7 +5317,7 @@ organization_domain = client.OrganizationDomain
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.OrganizationDomain.create({
@@ -5360,19 +5332,19 @@ result = client.OrganizationDomain.create({
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
-result = client.OrganizationDomain.remove({ "id" => "id" })
+result = client.OrganizationDomain.remove({ "id" => "organization_domain_id" })
 ```
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.OrganizationDomain.update({
-  "id" => "id",
+  "id" => "organization_domain_id",
   # Fields to update
 })
 ```
@@ -5435,7 +5407,7 @@ organization_invite = client.OrganizationInvite
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.OrganizationInvite.create({
@@ -5450,15 +5422,16 @@ result = client.OrganizationInvite.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.OrganizationInvite.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.OrganizationInvite.load({ "id" => "organization_invite_id" })
@@ -5466,7 +5439,7 @@ result = client.OrganizationInvite.load({ "id" => "organization_invite_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.OrganizationInvite.remove({ "id" => "organization_invite_id" })
@@ -5474,7 +5447,7 @@ result = client.OrganizationInvite.remove({ "id" => "organization_invite_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.OrganizationInvite.update({
@@ -5530,7 +5503,7 @@ organization_meta = client.OrganizationMeta
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.OrganizationMeta.load({ "url_key" => "url_key" })
@@ -5583,7 +5556,7 @@ passkey_login_start_response = client.PasskeyLoginStartResponse
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.PasskeyLoginStartResponse.update({
@@ -5695,7 +5668,7 @@ project = client.Project
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Project.create({
@@ -5729,15 +5702,16 @@ result = client.Project.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Project.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Project.load({ "id" => "project_id" })
@@ -5745,7 +5719,7 @@ result = client.Project.load({ "id" => "project_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Project.remove({ "id" => "project_id" })
@@ -5753,7 +5727,7 @@ result = client.Project.remove({ "id" => "project_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Project.update({
@@ -5823,7 +5797,7 @@ project_label = client.ProjectLabel
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.ProjectLabel.create({
@@ -5838,15 +5812,16 @@ result = client.ProjectLabel.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.ProjectLabel.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.ProjectLabel.load({ "id" => "project_label_id" })
@@ -5854,7 +5829,7 @@ result = client.ProjectLabel.load({ "id" => "project_label_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.ProjectLabel.remove({ "id" => "project_label_id" })
@@ -5862,7 +5837,7 @@ result = client.ProjectLabel.remove({ "id" => "project_label_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.ProjectLabel.update({
@@ -5931,7 +5906,7 @@ project_milestone = client.ProjectMilestone
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.ProjectMilestone.create({
@@ -5949,15 +5924,16 @@ result = client.ProjectMilestone.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.ProjectMilestone.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.ProjectMilestone.load({ "id" => "project_milestone_id" })
@@ -5965,7 +5941,7 @@ result = client.ProjectMilestone.load({ "id" => "project_milestone_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.ProjectMilestone.remove({ "id" => "project_milestone_id" })
@@ -5973,7 +5949,7 @@ result = client.ProjectMilestone.remove({ "id" => "project_milestone_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.ProjectMilestone.update({
@@ -6030,7 +6006,7 @@ project_milestone_move_project_team = client.ProjectMilestoneMoveProjectTeam
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.ProjectMilestoneMoveProjectTeam.update({
@@ -6096,7 +6072,7 @@ project_relation = client.ProjectRelation
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.ProjectRelation.create({
@@ -6111,15 +6087,16 @@ result = client.ProjectRelation.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.ProjectRelation.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.ProjectRelation.load({ "id" => "project_relation_id" })
@@ -6127,7 +6104,7 @@ result = client.ProjectRelation.load({ "id" => "project_relation_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.ProjectRelation.remove({ "id" => "project_relation_id" })
@@ -6135,7 +6112,7 @@ result = client.ProjectRelation.remove({ "id" => "project_relation_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.ProjectRelation.update({
@@ -6248,10 +6225,11 @@ project_search_result = client.ProjectSearchResult
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
-results = client.ProjectSearchResult.list
+results = client.ProjectSearchResult.list({ "term" => "example" })
+results.each { |item| puts item.data_get }
 ```
 
 ### Common Methods
@@ -6311,7 +6289,7 @@ project_status = client.ProjectStatus
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.ProjectStatus.create({
@@ -6328,15 +6306,16 @@ result = client.ProjectStatus.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.ProjectStatus.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.ProjectStatus.load({ "id" => "project_status_id" })
@@ -6344,7 +6323,7 @@ result = client.ProjectStatus.load({ "id" => "project_status_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.ProjectStatus.update({
@@ -6418,7 +6397,7 @@ project_update = client.ProjectUpdate
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.ProjectUpdate.create({
@@ -6439,15 +6418,16 @@ result = client.ProjectUpdate.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.ProjectUpdate.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.ProjectUpdate.load({ "id" => "project_update_id" })
@@ -6455,7 +6435,7 @@ result = client.ProjectUpdate.load({ "id" => "project_update_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.ProjectUpdate.remove({ "id" => "project_update_id" })
@@ -6463,7 +6443,7 @@ result = client.ProjectUpdate.remove({ "id" => "project_update_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.ProjectUpdate.update({
@@ -6521,7 +6501,7 @@ push_subscription = client.PushSubscription
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.PushSubscription.create({
@@ -6533,10 +6513,10 @@ result = client.PushSubscription.create({
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
-result = client.PushSubscription.remove({ "id" => "id" })
+result = client.PushSubscription.remove({ "id" => "push_subscription_id" })
 ```
 
 ### Common Methods
@@ -6596,7 +6576,7 @@ reaction = client.Reaction
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Reaction.create({
@@ -6609,10 +6589,10 @@ result = client.Reaction.create({
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
-result = client.Reaction.remove({ "id" => "id" })
+result = client.Reaction.remove({ "id" => "reaction_id" })
 ```
 
 ### Common Methods
@@ -6684,7 +6664,7 @@ release = client.Release
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Release.create({
@@ -6702,15 +6682,16 @@ result = client.Release.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Release.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Release.load({ "id" => "release_id" })
@@ -6718,7 +6699,7 @@ result = client.Release.load({ "id" => "release_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Release.remove({ "id" => "release_id" })
@@ -6726,7 +6707,7 @@ result = client.Release.remove({ "id" => "release_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Release.update({
@@ -6793,7 +6774,7 @@ release_note = client.ReleaseNote
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.ReleaseNote.create({
@@ -6808,15 +6789,16 @@ result = client.ReleaseNote.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.ReleaseNote.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.ReleaseNote.load({ "id" => "release_note_id" })
@@ -6824,7 +6806,7 @@ result = client.ReleaseNote.load({ "id" => "release_note_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.ReleaseNote.remove({ "id" => "release_note_id" })
@@ -6832,7 +6814,7 @@ result = client.ReleaseNote.remove({ "id" => "release_note_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.ReleaseNote.update({
@@ -6902,7 +6884,7 @@ release_pipeline = client.ReleasePipeline
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.ReleasePipeline.create({
@@ -6923,15 +6905,16 @@ result = client.ReleasePipeline.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.ReleasePipeline.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.ReleasePipeline.load({ "id" => "release_pipeline_id" })
@@ -6939,7 +6922,7 @@ result = client.ReleasePipeline.load({ "id" => "release_pipeline_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.ReleasePipeline.remove({ "id" => "release_pipeline_id" })
@@ -6947,7 +6930,7 @@ result = client.ReleasePipeline.remove({ "id" => "release_pipeline_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.ReleasePipeline.update({
@@ -7011,7 +6994,7 @@ release_stage = client.ReleaseStage
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.ReleaseStage.create({
@@ -7028,15 +7011,16 @@ result = client.ReleaseStage.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.ReleaseStage.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.ReleaseStage.load({ "id" => "release_stage_id" })
@@ -7044,7 +7028,7 @@ result = client.ReleaseStage.load({ "id" => "release_stage_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.ReleaseStage.update({
@@ -7111,7 +7095,7 @@ roadmap = client.Roadmap
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Roadmap.create({
@@ -7127,15 +7111,16 @@ result = client.Roadmap.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Roadmap.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Roadmap.load({ "id" => "roadmap_id" })
@@ -7143,7 +7128,7 @@ result = client.Roadmap.load({ "id" => "roadmap_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Roadmap.remove({ "id" => "roadmap_id" })
@@ -7151,7 +7136,7 @@ result = client.Roadmap.remove({ "id" => "roadmap_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Roadmap.update({
@@ -7212,7 +7197,7 @@ roadmap_to_project = client.RoadmapToProject
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.RoadmapToProject.create({
@@ -7225,15 +7210,16 @@ result = client.RoadmapToProject.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.RoadmapToProject.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.RoadmapToProject.load({ "id" => "roadmap_to_project_id" })
@@ -7241,7 +7227,7 @@ result = client.RoadmapToProject.load({ "id" => "roadmap_to_project_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.RoadmapToProject.remove({ "id" => "roadmap_to_project_id" })
@@ -7249,7 +7235,7 @@ result = client.RoadmapToProject.remove({ "id" => "roadmap_to_project_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.RoadmapToProject.update({
@@ -7310,10 +7296,11 @@ sla_configuration = client.SlaConfiguration
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
-results = client.SlaConfiguration.list
+results = client.SlaConfiguration.list({ "team_id" => "example" })
+results.each { |item| puts item.data_get }
 ```
 
 ### Common Methods
@@ -7363,7 +7350,7 @@ sso_url_from_email_response = client.SsoUrlFromEmailResponse
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.SsoUrlFromEmailResponse.load({ "email" => "email", "type" => "type" })
@@ -7478,7 +7465,7 @@ team = client.Team
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Team.create({
@@ -7526,15 +7513,16 @@ result = client.Team.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Team.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Team.load({ "id" => "team_id" })
@@ -7542,7 +7530,7 @@ result = client.Team.load({ "id" => "team_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Team.remove({ "id" => "team_id" })
@@ -7550,7 +7538,7 @@ result = client.Team.remove({ "id" => "team_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Team.update({
@@ -7612,7 +7600,7 @@ team_membership = client.TeamMembership
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.TeamMembership.create({
@@ -7626,15 +7614,16 @@ result = client.TeamMembership.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.TeamMembership.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.TeamMembership.load({ "id" => "team_membership_id" })
@@ -7642,7 +7631,7 @@ result = client.TeamMembership.load({ "id" => "team_membership_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.TeamMembership.remove({ "id" => "team_membership_id" })
@@ -7650,7 +7639,7 @@ result = client.TeamMembership.remove({ "id" => "team_membership_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.TeamMembership.update({
@@ -7724,7 +7713,7 @@ template = client.Template
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Template.create({
@@ -7741,15 +7730,16 @@ result = client.Template.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Template.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Template.load({ "id" => "template_id" })
@@ -7757,7 +7747,7 @@ result = client.Template.load({ "id" => "template_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Template.remove({ "id" => "template_id" })
@@ -7765,7 +7755,7 @@ result = client.Template.remove({ "id" => "template_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Template.update({
@@ -7828,7 +7818,7 @@ time_schedule = client.TimeSchedule
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.TimeSchedule.create({
@@ -7841,15 +7831,16 @@ result = client.TimeSchedule.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.TimeSchedule.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.TimeSchedule.load({ "id" => "time_schedule_id" })
@@ -7857,7 +7848,7 @@ result = client.TimeSchedule.load({ "id" => "time_schedule_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.TimeSchedule.remove({ "id" => "time_schedule_id" })
@@ -7865,7 +7856,7 @@ result = client.TimeSchedule.remove({ "id" => "time_schedule_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.TimeSchedule.update({
@@ -7927,7 +7918,7 @@ triage_responsibility = client.TriageResponsibility
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.TriageResponsibility.create({
@@ -7940,15 +7931,16 @@ result = client.TriageResponsibility.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.TriageResponsibility.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.TriageResponsibility.load({ "id" => "triage_responsibility_id" })
@@ -7956,7 +7948,7 @@ result = client.TriageResponsibility.load({ "id" => "triage_responsibility_id" }
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.TriageResponsibility.remove({ "id" => "triage_responsibility_id" })
@@ -7964,7 +7956,7 @@ result = client.TriageResponsibility.remove({ "id" => "triage_responsibility_id"
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.TriageResponsibility.update({
@@ -8024,18 +8016,7 @@ upload_file = client.UploadFile
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
-
-```ruby
-result = client.UploadFile.create({
-  "content_type" => "example_content_type", # String
-  "filename" => "example_filename", # String
-  "size" => 1, # Integer
-  "assetUrl" => "example_assetUrl", # String
-  "contentType" => "example_contentType", # String
-  "uploadUrl" => "example_uploadUrl", # String
-})
-```
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ### Common Methods
 
@@ -8089,15 +8070,16 @@ usage_alert = client.UsageAlert
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.UsageAlert.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.UsageAlert.load({ "id" => "usage_alert_id" })
@@ -8183,45 +8165,20 @@ user = client.User
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
-
-```ruby
-result = client.User.create({
-  "active" => true, # Boolean
-  "admin" => true, # Boolean
-  "app" => true, # Boolean
-  "avatarBackgroundColor" => "example_avatarBackgroundColor", # String
-  "canAccessAnyPublicTeam" => true, # Boolean
-  "createdAt" => "example_createdAt", # Object
-  "createdIssueCount" => 1, # Integer
-  "displayName" => "example_displayName", # String
-  "email" => "example_email", # String
-  "guest" => true, # Boolean
-  "hasGitHubCodeAccess" => true, # Boolean
-  "id" => "example_id", # String
-  "initials" => "example_initials", # String
-  "isAssignable" => true, # Boolean
-  "isMe" => true, # Boolean
-  "isMentionable" => true, # Boolean
-  "name" => "example_name", # String
-  "owner" => true, # Boolean
-  "supportsAgentSessions" => true, # Boolean
-  "updatedAt" => "example_updatedAt", # Object
-  "url" => "example_url", # String
-})
-```
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.User.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.User.load({ "id" => "user_id" })
@@ -8229,7 +8186,7 @@ result = client.User.load({ "id" => "user_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.User.update({
@@ -8298,7 +8255,7 @@ user_setting = client.UserSetting
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.UserSetting.create({
@@ -8319,7 +8276,7 @@ result = client.UserSetting.create({
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.UserSetting.load({ "id" => "user_setting_id" })
@@ -8327,7 +8284,7 @@ result = client.UserSetting.load({ "id" => "user_setting_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.UserSetting.update({
@@ -8387,7 +8344,7 @@ view_preference = client.ViewPreference
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.ViewPreference.create({
@@ -8401,7 +8358,7 @@ result = client.ViewPreference.create({
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.ViewPreference.load({ "view_type" => "view_type" })
@@ -8409,7 +8366,7 @@ result = client.ViewPreference.load({ "view_type" => "view_type" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.ViewPreference.remove({ "id" => "id" })
@@ -8417,7 +8374,7 @@ result = client.ViewPreference.remove({ "id" => "id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.ViewPreference.update({
@@ -8484,7 +8441,7 @@ webhook = client.Webhook
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.Webhook.create({
@@ -8499,15 +8456,16 @@ result = client.Webhook.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.Webhook.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.Webhook.load({ "id" => "webhook_id" })
@@ -8515,7 +8473,7 @@ result = client.Webhook.load({ "id" => "webhook_id" })
 
 #### `remove(reqmatch, ctrl = nil) -> result`
 
-Remove the entity matching the given criteria. Raises on error.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, and raises on error.
 
 ```ruby
 result = client.Webhook.remove({ "id" => "webhook_id" })
@@ -8523,7 +8481,7 @@ result = client.Webhook.remove({ "id" => "webhook_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.Webhook.update({
@@ -8584,10 +8542,11 @@ webhook_failure_event = client.WebhookFailureEvent
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
-results = client.WebhookFailureEvent.list
+results = client.WebhookFailureEvent.list({ "oauth_client_id" => "example" })
+results.each { |item| puts item.data_get }
 ```
 
 ### Common Methods
@@ -8646,7 +8605,7 @@ workflow_state = client.WorkflowState
 
 #### `create(reqdata, ctrl = nil) -> result`
 
-Create a new entity with the given data. Raises on error.
+Create a new entity with the given data. Returns the created entity and raises on error.
 
 ```ruby
 result = client.WorkflowState.create({
@@ -8662,15 +8621,16 @@ result = client.WorkflowState.create({
 
 #### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
 results = client.WorkflowState.list
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
-Load a single entity matching the given criteria. Raises on error.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
 
 ```ruby
 result = client.WorkflowState.load({ "id" => "workflow_state_id" })
@@ -8678,7 +8638,7 @@ result = client.WorkflowState.load({ "id" => "workflow_state_id" })
 
 #### `update(reqdata, ctrl = nil) -> result`
 
-Update an existing entity. The data must include the entity `id`. Raises on error.
+Update an existing entity. The data must include the entity `id`. Returns the updated entity and raises on error.
 
 ```ruby
 result = client.WorkflowState.update({
@@ -8727,6 +8687,7 @@ Return the entity name.
 | `paging` | 0.0.1 | Paging |
 | `ratelimit` | 0.0.1 | Rate limiting |
 | `retry` | 0.0.1 | Retry |
+| `station` | 0.0.1 | Station control surface binding for outbound integrations |
 | `test` | 0.0.1 | Test transport |
 | `timeout` | 0.0.1 | Timeout |
 
@@ -8742,6 +8703,7 @@ client = LinearSDK.new({
     "paging" => { "active" => true },
     "ratelimit" => { "active" => true },
     "retry" => { "active" => true },
+    "station" => { "active" => true },
     "test" => { "active" => true },
     "timeout" => { "active" => true },
   },
@@ -8760,7 +8722,7 @@ transport, and the order you list them in is the order they nest.
 
 #### Ordering
 
-`ratelimit`, `retry`, `timeout` wrap the transport. Each
+`ratelimit`, `retry`, `station`, `timeout` wrap the transport. Each
 wraps whatever is already installed, so **activation order is nesting order**:
 a feature activated later sits OUTSIDE one activated earlier, and sees the call
 first.
@@ -8962,6 +8924,34 @@ its default unless you name it.
   sees. See [Ordering](#ordering) above.
 - Inactive by default: leaving it out costs nothing at runtime.
 
+#### `station`
+
+Station control surface binding for outbound integrations.
+
+**Configuration**
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `capture` | `'meta'` |
+| `fromEnv` | `true` |
+| `instance` | `''` |
+| `profile` | `''` |
+| `register` | `true` |
+| `secret` | `''` |
+| `url` | `''` |
+
+**Usage**
+
+Set `feature.station.active` to true in the client options, and override any option above in the same entry. Every option keeps
+its default unless you name it.
+
+**Considerations**
+
+- Wraps the transport: its place in the activation order decides what it
+  sees. See [Ordering](#ordering) above.
+- Inactive by default: leaving it out costs nothing at runtime.
+
 #### `test`
 
 Test transport.
@@ -9007,6 +8997,7 @@ Timeout.
 | Option | Type |
 |---|---|
 | `clearTimer` | function |
+| `now` | function |
 | `setTimer` | function |
 
 These take no default: the feature behaves one way when you supply them and
