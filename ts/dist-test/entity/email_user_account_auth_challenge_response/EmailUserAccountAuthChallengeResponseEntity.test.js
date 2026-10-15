@@ -54,6 +54,14 @@ const utility_1 = require("../../utility");
         const ent = testsdk.EmailUserAccountAuthChallengeResponse();
         (0, node_assert_1.default)(null != ent);
     });
+    (0, node_test_1.test)('validate', async (t) => {
+        if (null == __1.config.feature?.validate) {
+            t.skip('feature not present in this SDK: validate');
+            return;
+        }
+        const client = __1.LinearSDK.test(undefined, { feature: { validate: { active: true } } });
+        await node_assert_1.default.rejects(client.EmailUserAccountAuthChallengeResponse().create({ "authType": 1, "success": true }), (err) => 'validate_failed' === err.code);
+    });
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.LINEAR_TEST_LIVE;
         for (const op of ['create']) {
@@ -62,7 +70,7 @@ const utility_1 = require("../../utility");
         }
         const setup = basicSetup();
         if (setup.live) {
-            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "authType": { "a": true, "h": "Auth Type", "n": "authType", "r": true, "sh": "Supported challenge for this user account.", "t": "`$STRING`", "key$": "authType", "index$": 0 }, "success": { "a": true, "h": "Success", "n": "success", "r": true, "sh": "Whether the operation was successful.", "t": "`$BOOLEAN`", "key$": "success", "index$": 1 } }, "name": "email_user_account_auth_challenge_response", "op": { "create": { "input": "data", "name": "create", "points": [{ "a": true, "co": { "id": "POST emailUserAccountAuthChallenge", "source": "graphql", "version": 2 }, "g": {}, "gq": { "doc": "mutation EmailUserAccountAuthChallengeResponseCreateEmailUserAccountAuthChallenge($input: EmailUserAccountAuthChallengeInput!) { emailUserAccountAuthChallenge(input: $input) { ...EmailUserAccountAuthChallengeResponseFields } } fragment EmailUserAccountAuthChallengeResponseFields on EmailUserAccountAuthChallengeResponse { authType success }", "field": "emailUserAccountAuthChallenge", "optype": "mutation", "vars": [{ "from": "", "gqltype": "EmailUserAccountAuthChallengeInput!", "name": "input" }] }, "k": "graphql", "m": "POST", "o": "emailUserAccountAuthChallenge", "q": { "$action": "email_user_account_auth_challenge" }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.emailUserAccountAuthChallenge`" }, "index$": 0 }], "key$": "create" } }, "relations": { "ancestors": [] }, "key$": "email_user_account_auth_challenge_response", "name__orig": "email_user_account_auth_challenge_response", "Name": "EmailUserAccountAuthChallengeResponse", "name_": "email_user_account_auth_challenge_response", "name-": "email-user-account-auth-challenge-response", "NAME": "EMAIL_USER_ACCOUNT_AUTH_CHALLENGE_RESPONSE", "index$": 23 }, { "active": true, "entity": "email_user_account_auth_challenge_response", "key$": "BasicEmailUserAccountAuthChallengeResponseFlow", "kind": "basic", "name": "BasicEmailUserAccountAuthChallengeResponseFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": { "ref": "email_user_account_auth_challenge_response_ref01" }, "m": {}, "o": "create", "s": [], "v": [], "index$": 0 }] }, 'EmailUserAccountAuthChallengeResponse', { "POST emailUserAccountAuthChallenge": { "protocol": "graphql" } });
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "authType": { "a": true, "h": "Auth Type", "n": "authType", "r": true, "sh": "Supported challenge for this user account.", "t": "`$STRING`", "key$": "authType", "index$": 0 }, "success": { "a": true, "h": "Success", "n": "success", "r": true, "sh": "Whether the operation was successful.", "t": "`$BOOLEAN`", "key$": "success", "index$": 1 } }, "name": "email_user_account_auth_challenge_response", "op": { "create": { "input": "data", "name": "create", "points": [{ "a": true, "co": { "id": "POST emailUserAccountAuthChallenge", "source": "graphql", "version": 2 }, "g": {}, "gq": { "doc": "mutation EmailUserAccountAuthChallengeResponseCreateEmailUserAccountAuthChallenge($input: EmailUserAccountAuthChallengeInput!) { emailUserAccountAuthChallenge(input: $input) { ...EmailUserAccountAuthChallengeResponseFields } } fragment EmailUserAccountAuthChallengeResponseFields on EmailUserAccountAuthChallengeResponse { authType success }", "field": "emailUserAccountAuthChallenge", "optype": "mutation", "vars": [{ "from": "", "gqltype": "EmailUserAccountAuthChallengeInput!", "name": "input" }] }, "k": "graphql", "m": "POST", "o": "emailUserAccountAuthChallenge", "q": { "$action": "email_user_account_auth_challenge" }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.emailUserAccountAuthChallenge`" }, "index$": 0 }], "key$": "create" } }, "relations": { "ancestors": [] }, "key$": "email_user_account_auth_challenge_response", "name__orig": "email_user_account_auth_challenge_response", "Name": "EmailUserAccountAuthChallengeResponse", "name_": "email_user_account_auth_challenge_response", "name-": "email-user-account-auth-challenge-response", "NAME": "EMAIL_USER_ACCOUNT_AUTH_CHALLENGE_RESPONSE", "index$": 23 }, { "active": true, "entity": "email_user_account_auth_challenge_response", "key$": "BasicEmailUserAccountAuthChallengeResponseFlow", "kind": "basic", "name": "BasicEmailUserAccountAuthChallengeResponseFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": { "ref": "email_user_account_auth_challenge_response_ref01" }, "m": {}, "o": "create", "s": [], "v": [], "index$": 0 }] }, 'EmailUserAccountAuthChallengeResponse', { "POST emailUserAccountAuthChallenge": { "protocol": "graphql" } }, { strict: LIVE_STRICT, t });
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -75,6 +83,11 @@ const utility_1 = require("../../utility");
         (0, node_assert_1.default)(null != email_user_account_auth_challenge_response_ref01_data);
     });
 });
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true;
 function basicSetup(extra) {
     // TODO: fix test def options
     const options = {}; // null

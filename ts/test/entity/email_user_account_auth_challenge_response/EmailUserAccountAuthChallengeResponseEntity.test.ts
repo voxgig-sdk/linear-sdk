@@ -9,7 +9,7 @@ import { createLiveTransport } from '../../live-runner'
 import { runLiveEntity } from '../../live-entity'
 
 
-import { LinearSDK, BaseFeature, stdutil } from '../../..'
+import { LinearSDK, BaseFeature, config, stdutil } from '../../..'
 
 import {
   envOverride,
@@ -41,6 +41,18 @@ describe('EmailUserAccountAuthChallengeResponseEntity', async () => {
   })
 
 
+  test('validate', async (t) => {
+    if (null == (config as any).feature?.validate) {
+      t.skip('feature not present in this SDK: validate')
+      return
+    }
+    const client = LinearSDK.test(undefined, { feature: { validate: { active: true } } })
+    await assert.rejects(client.EmailUserAccountAuthChallengeResponse().create({"authType":1,"success":true} as any),
+      (err: any) => 'validate_failed' === err.code)
+  })
+
+
+
   test('basic', async (t) => {
 
     const live = 'TRUE' === process.env.LINEAR_TEST_LIVE
@@ -51,7 +63,7 @@ describe('EmailUserAccountAuthChallengeResponseEntity', async () => {
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"authType":{"a":true,"h":"Auth Type","n":"authType","r":true,"sh":"Supported challenge for this user account.","t":"`$STRING`","key$":"authType","index$":0},"success":{"a":true,"h":"Success","n":"success","r":true,"sh":"Whether the operation was successful.","t":"`$BOOLEAN`","key$":"success","index$":1}},"name":"email_user_account_auth_challenge_response","op":{"create":{"input":"data","name":"create","points":[{"a":true,"co":{"id":"POST emailUserAccountAuthChallenge","source":"graphql","version":2},"g":{},"gq":{"doc":"mutation EmailUserAccountAuthChallengeResponseCreateEmailUserAccountAuthChallenge($input: EmailUserAccountAuthChallengeInput!) { emailUserAccountAuthChallenge(input: $input) { ...EmailUserAccountAuthChallengeResponseFields } } fragment EmailUserAccountAuthChallengeResponseFields on EmailUserAccountAuthChallengeResponse { authType success }","field":"emailUserAccountAuthChallenge","optype":"mutation","vars":[{"from":"","gqltype":"EmailUserAccountAuthChallengeInput!","name":"input"}]},"k":"graphql","m":"POST","o":"emailUserAccountAuthChallenge","q":{"$action":"email_user_account_auth_challenge"},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.emailUserAccountAuthChallenge`"},"index$":0}],"key$":"create"}},"relations":{"ancestors":[]},"key$":"email_user_account_auth_challenge_response","name__orig":"email_user_account_auth_challenge_response","Name":"EmailUserAccountAuthChallengeResponse","name_":"email_user_account_auth_challenge_response","name-":"email-user-account-auth-challenge-response","NAME":"EMAIL_USER_ACCOUNT_AUTH_CHALLENGE_RESPONSE","index$":23}, {"active":true,"entity":"email_user_account_auth_challenge_response","key$":"BasicEmailUserAccountAuthChallengeResponseFlow","kind":"basic","name":"BasicEmailUserAccountAuthChallengeResponseFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"email_user_account_auth_challenge_response_ref01"},"m":{},"o":"create","s":[],"v":[],"index$":0}]}, 'EmailUserAccountAuthChallengeResponse', {"POST emailUserAccountAuthChallenge":{"protocol":"graphql"}})
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"authType":{"a":true,"h":"Auth Type","n":"authType","r":true,"sh":"Supported challenge for this user account.","t":"`$STRING`","key$":"authType","index$":0},"success":{"a":true,"h":"Success","n":"success","r":true,"sh":"Whether the operation was successful.","t":"`$BOOLEAN`","key$":"success","index$":1}},"name":"email_user_account_auth_challenge_response","op":{"create":{"input":"data","name":"create","points":[{"a":true,"co":{"id":"POST emailUserAccountAuthChallenge","source":"graphql","version":2},"g":{},"gq":{"doc":"mutation EmailUserAccountAuthChallengeResponseCreateEmailUserAccountAuthChallenge($input: EmailUserAccountAuthChallengeInput!) { emailUserAccountAuthChallenge(input: $input) { ...EmailUserAccountAuthChallengeResponseFields } } fragment EmailUserAccountAuthChallengeResponseFields on EmailUserAccountAuthChallengeResponse { authType success }","field":"emailUserAccountAuthChallenge","optype":"mutation","vars":[{"from":"","gqltype":"EmailUserAccountAuthChallengeInput!","name":"input"}]},"k":"graphql","m":"POST","o":"emailUserAccountAuthChallenge","q":{"$action":"email_user_account_auth_challenge"},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.emailUserAccountAuthChallenge`"},"index$":0}],"key$":"create"}},"relations":{"ancestors":[]},"key$":"email_user_account_auth_challenge_response","name__orig":"email_user_account_auth_challenge_response","Name":"EmailUserAccountAuthChallengeResponse","name_":"email_user_account_auth_challenge_response","name-":"email-user-account-auth-challenge-response","NAME":"EMAIL_USER_ACCOUNT_AUTH_CHALLENGE_RESPONSE","index$":23}, {"active":true,"entity":"email_user_account_auth_challenge_response","key$":"BasicEmailUserAccountAuthChallengeResponseFlow","kind":"basic","name":"BasicEmailUserAccountAuthChallengeResponseFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"email_user_account_auth_challenge_response_ref01"},"m":{},"o":"create","s":[],"v":[],"index$":0}]}, 'EmailUserAccountAuthChallengeResponse', {"POST emailUserAccountAuthChallenge":{"protocol":"graphql"}}, { strict: LIVE_STRICT, t })
     }
     const client = setup.client
     const struct = setup.struct
@@ -72,6 +84,12 @@ describe('EmailUserAccountAuthChallengeResponseEntity', async () => {
 })
 
 
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
 
 function basicSetup(extra?: any) {
   // TODO: fix test def options

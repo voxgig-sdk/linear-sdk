@@ -10,6 +10,7 @@ require_once __DIR__ . '/feature/MetricsFeature.php';
 require_once __DIR__ . '/feature/PagingFeature.php';
 require_once __DIR__ . '/feature/RatelimitFeature.php';
 require_once __DIR__ . '/feature/RetryFeature.php';
+require_once __DIR__ . '/feature/StationFeature.php';
 require_once __DIR__ . '/feature/TestFeature.php';
 require_once __DIR__ . '/feature/TimeoutFeature.php';
 
@@ -33,6 +34,8 @@ class LinearFeatures
                 return new LinearRatelimitFeature();
             case "retry":
                 return new LinearRetryFeature();
+            case "station":
+                return new LinearStationFeature();
             case "test":
                 return new LinearTestFeature();
             case "timeout":
@@ -58,6 +61,7 @@ class LinearFeatures
             case "paging":
             case "ratelimit":
             case "retry":
+            case "station":
             case "test":
             case "timeout":
                 return true;

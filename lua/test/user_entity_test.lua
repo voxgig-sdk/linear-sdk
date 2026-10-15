@@ -8,6 +8,37 @@ local runner = require("test.runner")
 
 local _test_dir = debug.getinfo(1, "S").source:match("^@(.+/)")  or "./"
 
+-- main.kit.test.live.strict is true (the default is true): a live
+-- request that fails, or a live test missing an input it needs,
+-- fails the test.
+-- An account with no record for a test to read skips it either way.
+local LIVE_STRICT = true
+
+
+local BaseFeature = require("feature.base_feature")
+
+local FailHook = {}
+FailHook.__index = FailHook
+setmetatable(FailHook, { __index = BaseFeature })
+
+function FailHook.new()
+  local self = setmetatable(BaseFeature.new(), FailHook)
+  self.name = "failhook"
+  self.unexpected = 0
+  return self
+end
+
+function FailHook:init(_ctx, _options) end
+function FailHook:PreSpec(_ctx) error("user hook failed") end
+function FailHook:PreUnexpected(_ctx) self.unexpected = self.unexpected + 1 end
+
+local function errtext(err)
+  if type(err) == "table" then
+    return tostring(err.msg or err.message or "")
+  end
+  return tostring(err)
+end
+
 describe("UserEntity", function()
   it("should create instance", function()
     local testsdk = sdk.test(nil, nil)
@@ -56,45 +87,95 @@ describe("UserEntity", function()
     end
   end)
 
+  it("should report a failed stream", function()
+    local offline = { net = { offline = true } }
+    local ok, err = pcall(function()
+      for _ in sdk.test(offline, nil):User(nil):stream("list", nil, nil) do end
+    end)
+    assert.is_false(ok)
+    assert.truthy(string.find(errtext(err), "offline", 1, true))
+
+    for _ in sdk.test(offline, nil):User(nil):stream("list", nil, { ctrl = { throw = false } }) do end
+
+    local config = require("config_shared")()
+    if type(config.feature) == "table" and config.feature.rbac ~= nil then
+      local denied = sdk.test(nil, { feature = { rbac = { active = true, deny = true } } })
+      local dok, derr = pcall(function()
+        for _ in denied:User(nil):stream("list", nil, nil) do end
+      end)
+      assert.is_false(dok)
+      assert.are.equal("rbac_denied", type(derr) == "table" and derr.code or nil)
+    end
+  end)
+
+  it("should leave the caller's ctrl", function()
+    local explain = {}
+    local ctrl = { explain = explain }
+    for _ in sdk.test(nil, nil):User(nil):stream("list", nil, { ctrl = ctrl }) do end
+    assert.is_nil(ctrl.stream)
+    assert.are.equal(explain, ctrl.explain)
+    assert.is_not_nil(next(explain))
+  end)
+
+  it("should fire PreUnexpected", function()
+    local hook = FailHook.new()
+    local client = sdk.new({ feature = { test = { active = true } }, extend = { hook } })
+
+    local out, err = client:User(nil):list(nil, nil)
+    assert.is_nil(out)
+    assert.truthy(string.find(errtext(err), "hook failed", 1, true))
+    assert.is_true(hook.unexpected > 0)
+
+    local fired = hook.unexpected
+    out, err = client:User(nil):list(nil, { throw = false })
+    assert.is_nil(err)
+    assert.is_true(hook.unexpected > fired)
+  end)
+
+  it("should refuse an invalid request", function()
+    local config = require("config_shared")()
+    if type(config.feature) ~= "table" or config.feature.validate == nil then
+      pending("feature not present in this SDK: validate")
+      return
+    end
+    local client = sdk.test(nil, { feature = { validate = { active = true } } })
+    local _, err = client:User(nil):list({ ["after"] = 1 }, nil)
+    assert.are.equal("validate_failed", type(err) == "table" and err.code or nil)
+  end)
+
   it("should run basic flow", function()
     local setup = user_basic_setup(nil)
     -- Per-op sdk-test-control.json skip.
     local _live = setup.live or false
-    for _, _op in ipairs({"create", "list", "update", "load"}) do
+    for _, _op in ipairs({"list", "update", "load"}) do
       local _should_skip, _reason = runner.is_control_skipped("entityOp", "user." .. _op, _live and "live" or "unit")
       if _should_skip then
         pending(_reason or "skipped via sdk-test-control.json")
         return
       end
     end
-    -- The basic flow consumes synthetic IDs from the fixture. In live mode
-    -- without an *_ENTID env override, those IDs hit the live API and 4xx.
-    if setup.synthetic_only then
-      pending("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_USER_ENTID JSON to run live")
-      return
+    if setup.live then
+      for _, _live_key in ipairs({"after01", "before01", "first01", "include_archived01", "include_disabled01", "last01", "order_by01"}) do
+        if setup.synthetic_only or setup.idmap[_live_key] == nil then
+          runner.live_miss(pending, LIVE_STRICT, "Live entity test blocked: needs " .. _live_key .. " via LINEAR_TEST_USER_ENTID")
+        end
+      end
+    end
+    if setup.live then
+      runner.live_miss(pending, LIVE_STRICT, "Live entity test blocked: " .. "the flow updates a user record it did not create")
     end
     local client = setup.client
 
-    -- CREATE
-    local user_ref01_ent = client:User(nil)
-    local user_ref01_data = helpers.to_map(vs.getprop(
-      vs.getpath(setup.data, "new.user"), "user_ref01"))
-    user_ref01_data["after"] = setup.idmap["after01"]
-    user_ref01_data["before"] = setup.idmap["before01"]
-    user_ref01_data["first"] = setup.idmap["first01"]
-    user_ref01_data["include_archived"] = setup.idmap["include_archived01"]
-    user_ref01_data["include_disabled"] = setup.idmap["include_disabled01"]
-    user_ref01_data["last"] = setup.idmap["last01"]
-    user_ref01_data["order_by"] = setup.idmap["order_by01"]
-    user_ref01_data["service"] = setup.idmap["service01"]
-
-    local user_ref01_data_result, err = user_ref01_ent:create(user_ref01_data, nil)
-    assert.is_nil(err)
-    user_ref01_data = helpers.to_map(type(user_ref01_data_result) == 'table' and user_ref01_data_result.data_get and user_ref01_data_result:data_get() or user_ref01_data_result)
-    assert.is_not_nil(user_ref01_data)
-    assert.is_not_nil(user_ref01_data["id"])
+    -- Bootstrap entity data from existing test data.
+    local user_ref01_data_raw = vs.items(helpers.to_map(
+      vs.getpath(setup.data, "existing.user")))
+    local user_ref01_data = nil
+    if #user_ref01_data_raw > 0 then
+      user_ref01_data = helpers.to_map(user_ref01_data_raw[1][2])
+    end
 
     -- LIST
+    local user_ref01_ent = client:User(nil)
     local user_ref01_match = {
       ["after"] = setup.idmap["after01"],
       ["before"] = setup.idmap["before01"],
@@ -108,11 +189,6 @@ describe("UserEntity", function()
     local user_ref01_list_result, err = user_ref01_ent:list(user_ref01_match, nil)
     assert.is_nil(err)
     assert.is_table(user_ref01_list_result)
-
-    local found_item = vs.select(
-      runner.entity_list_to_data(user_ref01_list_result),
-      { id = user_ref01_data["id"] })
-    assert.is_false(vs.isempty(found_item))
 
     -- UPDATE
     local user_ref01_data_up0_up = {
@@ -163,7 +239,7 @@ function user_basic_setup(extra)
 
   -- Generate idmap via transform.
   local idmap = vs.transform(
-    { "user01", "user02", "user03", "after01", "before01", "first01", "include_archived01", "include_disabled01", "last01", "order_by01", "service01" },
+    { "user01", "user02", "user03", "after01", "before01", "first01", "include_archived01", "include_disabled01", "last01", "order_by01" },
     {
       ["`$PACK`"] = { "", {
         ["`$KEY`"] = "`$COPY`",
@@ -172,9 +248,8 @@ function user_basic_setup(extra)
     }
   )
 
-  -- Detect ENTID env override before envOverride consumes it. When live
-  -- mode is on without a real override, the basic test runs against synthetic
-  -- IDs from the fixture and 4xx's. Surface this so the test can skip.
+  -- Whether *_ENTID supplied the idmap, read before env_override consumes
+  -- it: without it, the ids a live flow binds are the fixture's synthetic ones.
   local entid_env_raw = os.getenv("LINEAR_TEST_USER_ENTID")
   local idmap_overridden = entid_env_raw ~= nil and entid_env_raw:match("^%s*{") ~= nil
 

@@ -6,6 +6,17 @@ require_relative "../Linear_sdk"
 require_relative "runner"
 
 class IssueSearchResultDirectTest < Minitest::Test
+  # main.kit.test.live.strict is true (the default is true): a live
+  # request that fails, or a live test missing an input it needs,
+  # fails the test.
+  # An account with no record for a test to read skips it either way.
+  LIVE_STRICT = true
+
+  def live_ok(result)
+    status = Helpers.to_int(result["status"])
+    result["err"].nil? && result["ok"] && status >= 200 && status < 300
+  end
+
   def test_direct_list_issue_search_result
     setup = issue_search_result_direct_setup([
       { "id" => "direct01" },
@@ -19,59 +30,22 @@ class IssueSearchResultDirectTest < Minitest::Test
     if setup[:live]
       ["after01", "before01", "first01", "include_archived01", "include_comment01", "last01", "order_by01", "team01", "term01"].each do |_live_key|
         if setup[:idmap][_live_key].nil?
-          skip "live test needs #{_live_key} via *_ENTID env var (synthetic IDs only)"
-          return
+          Runner.live_miss(LIVE_STRICT, "Live test blocked: needs #{_live_key} via LINEAR_TEST_ISSUE_SEARCH_RESULT_ENTID")
         end
       end
     end
     client = setup[:client]
 
     params = {}
-    if setup[:live]
-      params["after"] = setup[:idmap]["after01"]
-    else
-      params["after"] = "direct01"
-    end
-    if setup[:live]
-      params["before"] = setup[:idmap]["before01"]
-    else
-      params["before"] = "direct01"
-    end
-    if setup[:live]
-      params["first"] = setup[:idmap]["first01"]
-    else
-      params["first"] = "direct01"
-    end
-    if setup[:live]
-      params["include_archived"] = setup[:idmap]["include_archived01"]
-    else
-      params["include_archived"] = "direct01"
-    end
-    if setup[:live]
-      params["include_comment"] = setup[:idmap]["include_comment01"]
-    else
-      params["include_comment"] = "direct01"
-    end
-    if setup[:live]
-      params["last"] = setup[:idmap]["last01"]
-    else
-      params["last"] = "direct01"
-    end
-    if setup[:live]
-      params["order_by"] = setup[:idmap]["order_by01"]
-    else
-      params["order_by"] = "direct01"
-    end
-    if setup[:live]
-      params["team_id"] = setup[:idmap]["team01"]
-    else
-      params["team_id"] = "direct01"
-    end
-    if setup[:live]
-      params["term"] = setup[:idmap]["term01"]
-    else
-      params["term"] = "direct01"
-    end
+    params["after"] = setup[:live] ? setup[:idmap]["after01"] : "direct01"
+    params["before"] = setup[:live] ? setup[:idmap]["before01"] : "direct02"
+    params["first"] = setup[:live] ? setup[:idmap]["first01"] : "direct03"
+    params["include_archived"] = setup[:live] ? setup[:idmap]["include_archived01"] : "direct04"
+    params["include_comment"] = setup[:live] ? setup[:idmap]["include_comment01"] : "direct05"
+    params["last"] = setup[:live] ? setup[:idmap]["last01"] : "direct06"
+    params["order_by"] = setup[:live] ? setup[:idmap]["order_by01"] : "direct07"
+    params["team_id"] = setup[:live] ? setup[:idmap]["team01"] : "direct08"
+    params["term"] = setup[:live] ? setup[:idmap]["term01"] : "direct09"
 
     result = client.direct({
       "path" => "",
@@ -79,22 +53,13 @@ class IssueSearchResultDirectTest < Minitest::Test
       "params" => params,
     })
     if setup[:live]
-      # Live mode is lenient: synthetic IDs frequently 4xx and the list-
-      # response shape varies wildly across public APIs. Skip rather than
-      # fail when the call doesn't return a usable list.
-      if !result["err"].nil?
-        skip("list call failed (likely synthetic IDs against live API): #{result["err"]}")
-        return
+      unless live_ok(result)
+        Runner.live_miss(LIVE_STRICT, "Live list failed: " + Runner.live_describe(result))
       end
-      unless result["ok"]
-        skip("list call not ok (likely synthetic IDs against live API)")
-        return
+      if Runner.live_list(result["data"]).nil?
+        Runner.live_miss(LIVE_STRICT, "Live list returned no list: " + Runner.live_describe(result))
       end
-      status = Helpers.to_int(result["status"])
-      if status < 200 || status >= 300
-        skip("expected 2xx status, got #{status}")
-        return
-      end
+      assert Runner.live_list(result["data"]).is_a?(Array)
     else
       assert_nil result["err"]
       assert result["ok"]
@@ -128,11 +93,12 @@ def issue_search_result_direct_setup(mockres)
       "apikey" => env["LINEAR_APIKEY"],
     })
     client = LinearSDK.new(merged_opts)
+    idmap = env["LINEAR_TEST_ISSUE_SEARCH_RESULT_ENTID"]
     return {
       client: client,
       calls: calls,
       live: true,
-      idmap: {},
+      idmap: idmap.is_a?(Hash) ? idmap : {},
     }
   end
 

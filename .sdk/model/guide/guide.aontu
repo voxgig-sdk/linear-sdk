@@ -5,4 +5,24 @@
 @"./base-guide.aontu"
 
 
+# A bare list or load takes the first point its arguments satisfy, and the
+# points of an operation sort by root field name, so a field that sorts before
+# the entity's own collection or record field answers every bare call
+# (voxgig/sdkgen#400). Switched off here, a bare Issue list reaches issues,
+# an Issue load by id reaches issue, and a bare Team list reaches teams.
 
+guide: entity: issue: field: {
+  # Deprecated in the schema in favour of searchIssues.
+  issueSearch: active: false
+
+  # Deprecated in the schema, and its id is an attachment id, not an issue id.
+  attachmentIssue: active: false
+}
+
+guide: entity: team: field: {
+  # Only the teams the key can administer, not the teams whose issues it reads.
+  administrableTeams: active: false
+
+  # Internal in the schema, and next in line once administrableTeams is off.
+  archivedTeams: active: false
+}

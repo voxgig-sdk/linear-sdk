@@ -31,6 +31,7 @@ static Entity* git_automation_state_load(Entity* e, voxgig_value* reqmatch, voxg
 static Entity** git_automation_state_list(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err);
 static Entity* git_automation_state_create(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err);
 static Entity* git_automation_state_update(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err);
+static Entity* git_automation_state_patch(Entity* e, voxgig_value* reqdata, voxgig_value* ctrl, PNError** err);
 static Entity* git_automation_state_remove(Entity* e, voxgig_value* reqmatch, voxgig_value* ctrl, PNError** err);
 static void git_automation_state_mark_deleted(Entity* e);
 static bool git_automation_state_deleted(Entity* e);
@@ -110,6 +111,22 @@ static voxgig_value* git_automation_state_run_op(git_automation_state_entity* se
   return done_util(ctx, err);
 }
 
+// The items of what done or make_error hands back: NULL with *err set, or
+// under `throw: false` the data there is, as a List.
+static voxgig_value* git_automation_state_stream_items(voxgig_value* data, PNError** err) {
+  if (*err) return NULL;
+  voxgig_value* out = voxgig_new_list();
+  if (voxgig_is_list(data)) {
+    voxgig_list* l = voxgig_as_list(data);
+    for (size_t i = 0; i < l->len; i++) {
+      voxgig_list_push(voxgig_as_list(out), voxgig_retain(l->items[i]));
+    }
+  } else if (data && !v_is_noval(data) && !v_is_null(data)) {
+    voxgig_list_push(voxgig_as_list(out), voxgig_retain(data));
+  }
+  return out;
+}
+
 // Streaming operation. Runs `action` through the full pipeline and returns a
 // List of the result items, so the `streaming` feature's incremental output
 // is reachable from a generated entity (a normal op call materialises the
@@ -128,8 +145,15 @@ voxgig_value* git_automation_state_stream(Entity* e, const char* action, voxgig_
 
   voxgig_value* stream_opts = voxgig_is_map(callopts) ? callopts : voxgig_new_map();
 
-  voxgig_value* ctrl = to_map(getp(stream_opts, "ctrl"));
-  if (!voxgig_is_map(ctrl)) ctrl = voxgig_new_map();
+  // A copy: the caller's ctrl gains no key, and explain stays its own record.
+  voxgig_value* ctrl = voxgig_new_map();
+  voxgig_value* given = to_map(getp(stream_opts, "ctrl"));
+  if (voxgig_is_map(given)) {
+    voxgig_map* gm = voxgig_as_map(given);
+    for (size_t i = 0; i < gm->len; i++) {
+      setp(ctrl, gm->entries[i].key, voxgig_retain(gm->entries[i].value));
+    }
+  }
   setp(ctrl, "stream", v_share(stream_opts));
 
   voxgig_value* reqmatch = to_map(args);
@@ -156,27 +180,27 @@ voxgig_value* git_automation_state_stream(Entity* e, const char* action, voxgig_
 
   feature_hook_util(ctx, "PrePoint");
   voxgig_value* point = make_point_util(ctx, &pe);
-  if (pe) { *err = pe; return NULL; }
+  if (pe) return git_automation_state_stream_items(make_error_util(ctx, pe, err), err);
   ctx_out_set_point_val(ctx, point);
 
   feature_hook_util(ctx, "PreSpec");
   Spec* spec = make_spec_util(ctx, &pe);
-  if (pe) { *err = pe; return NULL; }
+  if (pe) return git_automation_state_stream_items(make_error_util(ctx, pe, err), err);
   ctx->out_spec = spec;
 
   feature_hook_util(ctx, "PreRequest");
   Response* resp = make_request_util(ctx, &pe);
-  if (pe) { *err = pe; return NULL; }
+  if (pe) return git_automation_state_stream_items(make_error_util(ctx, pe, err), err);
   ctx->out_request = resp;
 
   feature_hook_util(ctx, "PreResponse");
   Response* resp2 = make_response_util(ctx, &pe);
-  if (pe) { *err = pe; return NULL; }
+  if (pe) return git_automation_state_stream_items(make_error_util(ctx, pe, err), err);
   ctx->out_response = resp2;
 
   feature_hook_util(ctx, "PreResult");
   SdkResult* result = make_result_util(ctx, &pe);
-  if (pe) { *err = pe; return NULL; }
+  if (pe) return git_automation_state_stream_items(make_error_util(ctx, pe, err), err);
   ctx->out_result = result;
 
   feature_hook_util(ctx, "PreDone");
@@ -185,22 +209,12 @@ voxgig_value* git_automation_state_stream(Entity* e, const char* action, voxgig_
   // back to the materialised items so `stream` always yields.
   SdkResult* res = ctx->result;
   if (res && res->stream) {
+    // done() does not run on this path, so its record is cleaned here.
+    clean_explain_util(ctx);
     return res->stream(res->stream_ud);
   }
 
-  voxgig_value* data = done_util(ctx, err);
-  if (*err) return NULL;
-
-  voxgig_value* out = voxgig_new_list();
-  if (voxgig_is_list(data)) {
-    voxgig_list* l = voxgig_as_list(data);
-    for (size_t i = 0; i < l->len; i++) {
-      voxgig_list_push(voxgig_as_list(out), voxgig_retain(l->items[i]));
-    }
-  } else if (!v_is_noval(data) && !v_is_null(data)) {
-    voxgig_list_push(voxgig_as_list(out), voxgig_retain(data));
-  }
-  return out;
+  return git_automation_state_stream_items(done_util(ctx, err), err);
 }
 
 static const char* git_automation_state_get_name(Entity* e) {
@@ -321,6 +335,12 @@ static Entity* git_automation_state_update(Entity* e, voxgig_value* reqdata, vox
 }
 
 
+static Entity* git_automation_state_patch(Entity* e, voxgig_value* reqarg, voxgig_value* ctrl, PNError** err) {
+  (void)e; (void)reqarg; (void)ctrl;
+  *err = unsupported_op("patch", "git_automation_state");
+  return NULL;
+}
+
 
 static void git_automation_state_remove_postdone(git_automation_state_entity* self, Context* ctx) {
   SdkResult* result = ctx->result;
@@ -381,5 +401,6 @@ static const EntityVT git_automation_state_VT = {
   git_automation_state_list,
   git_automation_state_create,
   git_automation_state_update,
+  git_automation_state_patch,
   git_automation_state_remove,
 };

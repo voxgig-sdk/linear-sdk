@@ -1,10 +1,14 @@
 # linear-mcp
 
 [MCP](https://modelcontextprotocol.io) server exposing the Linear SDK as
-two agent tools — `linear_list` and `linear_load` — built on the
+2 agent tools, `linear_list` and `linear_load`, built on the
 [official Go MCP SDK](https://github.com/modelcontextprotocol/go-sdk) and the
 sibling Go SDK at `../go`. Runs over **stdio** (default, for spawnable installs)
 or **streamable HTTP** (one shared server for several agents).
+
+The server only reads. Create, update, patch and remove become tools too when the
+SDK's own model sets `main: kit: target: 'go-mcp': tool: write: true`; they are off by default, as an agent calling
+them changes the API's data.
 
 ## Examples
 
@@ -28,10 +32,9 @@ Tool-call arguments (what an agent sends):
 ```jsonc
 // linear_list: first page of records
 { "entity": "access_key_release" }
-{ "entity": "access_key_release", "query": { } }
 
-// linear_load: one record by id
-{ "entity": "access_key_release", "query": { "id": 1 } }
+// linear_load: one record
+{ "entity": "access_key_release", "query": { "id": "example_id" } }
 ```
 
 > The rest of this guide follows the [Diátaxis](https://diataxis.fr) framework:
@@ -59,8 +62,8 @@ Tool-call arguments (what an agent sends):
      -- "$PWD"/dist/*/linear-mcp -transport stdio
    ```
 
-4. **Restart Claude Code.** The `linear_list` and `linear_load` tools now appear
-   in new sessions. Ask the agent to *"list access_key_release using linear"*
+4. **Restart Claude Code.** The `linear_list` and `linear_load` tools now appear in new
+   sessions. Ask the agent to *"list access_key_release using linear"*
    and it calls `linear_list` with `{"entity":"access_key_release"}`.
 
 ## How-to guides
@@ -88,8 +91,8 @@ default) spawns a fresh process per client.
 
 ### Call the `linear_list` tool
 
-Args: `entity` (required), `query` (optional filter map). Returns the first
-page of records as JSON:
+Args: `entity` (required), `query` (optional: optional filter map; omit it for the first page).
+Returns the first page of records as JSON:
 
 ```jsonc
 { "entity": "access_key_release" }
@@ -97,11 +100,19 @@ page of records as JSON:
 
 ### Call the `linear_load` tool
 
-Args: `entity` (required), `query` = `{"id":N}` (required). Returns the single
-record as JSON:
+Args: `entity` (required), `query` (required: match map naming the record, such as {"id":1}).
+Returns the record as JSON:
 
 ```jsonc
-{ "entity": "access_key_release", "query": { "id": 1 } }
+{ "entity": "access_key_release", "query": { "id": "example_id" } }
+```
+
+### Turn on the write tools
+
+In the SDK's own model (`.sdk/model/sdk.aontu`), then regenerate:
+
+```
+main: kit: target: 'go-mcp': tool: write: true
 ```
 
 ### Cross-compile release binaries
@@ -115,25 +126,28 @@ make build-all   # linux/darwin/windows x amd64/arm64, under dist/<os>-<arch>/
 
 ### Tools
 
-| Tool | Args | Returns |
-|------|------|---------|
-| `linear_list` | `entity` (required), `query` (optional map) | First page of records as JSON |
-| `linear_load` | `entity` (required), `query` = `{id:N}` | Single record as JSON |
+| Tool | Args | Returns | MCP hints |
+|------|------|---------|-----------|
+| `linear_list` | `entity`, `query` (optional map) | The first page of records as JSON | read-only |
+| `linear_load` | `entity`, `query` (required map) | The record as JSON | read-only |
 
 On error, a tool returns an MCP error result (`isError: true`) whose text is the
 failure message (e.g. unknown entity, or an API error).
 
-### `Args` schema
+### Entities
 
-Both tools take the same argument object:
+Each tool takes as its `entity` argument one of the entities that has its
+operation, of the 87 the SDK has:
 
-| Field | Type | Notes |
-|-------|------|-------|
-| `entity` | string | One of the 87 supported entities (see below). |
-| `query` | object | Optional match map. `{"id":N}` for load; omit or `{}` for list. |
+| Tool | Entities |
+|------|----------|
+| `linear_list` | access_key_release, agent_activity, agent_session, agent_skill, attachment, audit_entry, audit_entry_type, authentication_session_response, comment, custom_view, customer, customer_need, customer_status, customer_tier, cycle, document, document_search_result, emoji, external_user, favorite, initiative, initiative_label, initiative_relation, initiative_to_project, initiative_update, integration, integration_template, issue, issue_label, issue_priority_value, issue_relation, issue_search_result, issue_to_release, notification, notification_subscription, o_auth_application, organization_invite, project, project_label, project_milestone, project_relation, project_search_result, project_status, project_update, release, release_note, release_pipeline, release_stage, roadmap, roadmap_to_project, sla_configuration, team, team_membership, template, time_schedule, triage_responsibility, usage_alert, user, webhook, webhook_failure_event, workflow_state |
+| `linear_load` | access_key_release, access_key_release_pipeline, agent_activity, agent_session, agent_skill, application, attachment, auth_resolver_response, comment, custom_view, customer, customer_need, customer_status, customer_tier, cycle, diff, document, email_intake_address, emoji, entity_external_link, external_user, favorite, initiative, initiative_label, initiative_lead_team_change_impact, initiative_relation, initiative_to_project, initiative_update, integration, integration_template, integrations_setting, issue, issue_label, issue_relation, issue_to_release, notification, notification_subscription, o_auth_application, organization, organization_invite, organization_meta, project, project_label, project_milestone, project_relation, project_status, project_update, release, release_note, release_pipeline, release_stage, roadmap, roadmap_to_project, sso_url_from_email_response, team, team_membership, template, time_schedule, triage_responsibility, usage_alert, user, user_setting, view_preference, webhook, workflow_state |
 
-JSON schemas are emitted by the SDK from the `Args` struct's `json` /
-`jsonschema` tags — no schema is hand-written.
+JSON schemas are emitted by the SDK from each tool's argument struct's
+`json` / `jsonschema` tags — no schema is hand-written. Each tool's
+`entity` is an `enum` of the entities in its row, so the server refuses
+any other before it runs a call.
 
 ### Transports & flags
 
@@ -148,12 +162,6 @@ JSON schemas are emitted by the SDK from the `Args` struct's `json` /
 |----------|---------|
 | `LINEAR_APIKEY` | API key sent with every request. |
 | `LINEAR_BASE` | Optional override of the API base URL. |
-
-### Entities
-
-The 87 entities valid as the `entity` argument:
-
-access_key_release | access_key_release_pipeline | agent_activity | agent_session | agent_skill | application | attachment | audit_entry | audit_entry_type | auth_resolver_response | authentication_session_response | comment | create_or_join_organization_response | custom_view | customer | customer_need | customer_status | customer_tier | cycle | diff | document | document_search_result | email_intake_address | email_user_account_auth_challenge_response | emoji | entity_external_link | external_user | favorite | git_automation_state | git_automation_target_branch | git_hub_integration_connect_detail | initiative | initiative_label | initiative_lead_team_change_impact | initiative_relation | initiative_to_project | initiative_update | integration | integration_template | integrations_setting | issue | issue_import | issue_label | issue_priority_value | issue_relation | issue_search_result | issue_to_release | logout_response | notification | notification_subscription | o_auth_application | organization | organization_domain | organization_invite | organization_meta | passkey_login_start_response | project | project_label | project_milestone | project_milestone_move_project_team | project_relation | project_search_result | project_status | project_update | push_subscription | reaction | release | release_note | release_pipeline | release_stage | roadmap | roadmap_to_project | sla_configuration | sso_url_from_email_response | team | team_membership | template | time_schedule | triage_responsibility | upload_file | usage_alert | user | user_setting | view_preference | webhook | webhook_failure_event | workflow_state
 
 ### Smoke test via HTTP (raw JSON-RPC)
 
@@ -173,7 +181,7 @@ curl -sN -X POST http://localhost:18080 \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -H "Mcp-Session-Id: $SESSION" \
-  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"linear_load","arguments":{"entity":"access_key_release","query":{"id":1}}}}'
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"linear_list","arguments":{"entity":"access_key_release"}}}'
 ```
 
 ## Explanation
@@ -181,9 +189,10 @@ curl -sN -X POST http://localhost:18080 \
 ### How tools map to the SDK
 
 `main.go` builds the SDK client (configured from the environment) and registers
-two tools. Each dispatches on the `entity` argument to the matching entity in
-the sibling Go SDK at `../go`, calls `List` or `Load`, unwraps the `Entity`
-wrappers to plain data, and returns it as pretty-printed JSON.
+one tool per operation the SDK's entities have. Each dispatches on the
+`entity` argument to the matching entity in the sibling Go SDK at `../go`,
+calls its operation, unwraps the `Entity` wrappers to plain data, and returns
+it as pretty-printed JSON.
 
 ### Why two transports
 
@@ -193,9 +202,10 @@ that many agents can share — handy for a long-lived deployment.
 
 ### Schema generation
 
-The input schema is derived from the `Args` Go struct's `json` / `jsonschema`
-tags at registration time, so the advertised tool schema can never drift from
-the code that consumes it.
+The input schema is derived from each tool's argument struct's `json` /
+`jsonschema` tags at registration time, so the advertised tool schema can
+never drift from the code that consumes it. The `entity` enum comes from the
+same list the tool is registered for.
 
 ## Generated by
 

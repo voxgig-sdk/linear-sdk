@@ -2700,7 +2700,6 @@ class IssueListMatch(TypedDict, total=False):
     include_archived: bool
     last: int
     order_by: Any
-    query: str
 
 
 class IssueCreateDataRequired(TypedDict):

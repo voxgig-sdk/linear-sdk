@@ -12,7 +12,7 @@ It exposes the API as capitalised, semantic **Entities** — e.g. `client:Access
 
 ## Install
 This package is not yet published to LuaRocks. Install it from the
-GitHub release tag (`lua/vX.Y.Z`, see [Releases](https://github.com/voxgig-sdk/linear-sdk/releases)),
+GitHub release tag (`lua/vX.Y.Z`, see [Tags](https://github.com/voxgig-sdk/linear-sdk/tags)),
 or add the source directory to your `LUA_PATH`:
 
 ```bash
@@ -37,35 +37,103 @@ local client = sdk.new({
 
 ### 2. List accesskeyrelease records
 
-Entity operations return `(value, err)`. For `list`, `value` is the
-array of records itself — iterate it directly (there is no wrapper).
+Entity operations return `(value, err)`. For `list`, `value` is an
+array of entities, one per record — iterate it directly (there is no
+wrapper), and read each record with `data_get()`.
 
 ```lua
 local accesskeyreleases, err = client:AccessKeyRelease():list()
 if err then error(err) end
 
 for _, item in ipairs(accesskeyreleases) do
-  print(item["id"])
+  local rec = item:data_get()
+  print(rec["id"])
 end
 ```
 
 ### 3. Load an accesskeyrelease
 
+`load` returns the entity; `data_get()` reads its record.
+
 ```lua
 local accesskeyrelease, err = client:AccessKeyRelease():load({ id = "example_id" })
 if err then error(err) end
-print(accesskeyrelease)
+local rec = accesskeyrelease:data_get()
+print(rec["id"])
 ```
 
-### 4. Create, update, and remove
 
-```lua
--- Create
-local created, err = client:AccessKeyRelease():create({ createdAt = "example_createdAt", id = "example_id", name = "example_name", url = "example_url" })
-if err then error(err) end
+## Use with Station
 
+This SDK ships as a [voxgig/station](https://github.com/voxgig/station)
+plugin: bind it to a local `Station` and outbound configuration,
+credentials, and observability move to one place. The feature is
+present but **off by default** — nothing changes until you bind.
+
+### Declarative: `station.json` + `station.sdk()`
+
+Declare an instance in `station.json` at the repo root (committable —
+names and stores, never values):
+
+```json
+{ "station": 1,
+  "profiles": { "default": {
+    "sdk": { "linear": {
+      "package": "voxgig-sdk-linear-sdk" } } } } }
 ```
 
+Then get the client where you need it:
+
+1. `station = Station.open()` — reads and validates `station.json`;
+   constructs nothing.
+2. `client = station.sdk('linear')` — built on first ask and cached,
+   so the same name returns the same client.
+
+Loading this package is the whole bootstrap: it registers its own
+factory (constructor plus embedded config) with the station library at
+module init, so `station.sdk()` needs no SDK import in application
+code. That is what the `package` key above is for — it names the module
+for station to load, since nothing else in this example would execute
+it. An application that imports this SDK for its types anyway can drop
+the key: that import is itself the bootstrap.
+
+A second instance of the same API is one more key — `"linear$test"`
+beside `"linear"` — and `station.sdk('linear$test')` returns it.
+SDK features are configured in the same file too: fleet-wide, per api,
+or per instance. `station.check()` resolves and constructs every
+active instance without sending a request — run it in CI.
+
+### The secret name derives from the instance
+
+The credential comes from [sekreto](https://github.com/voxgig/sekreto)
+under a name derived from the **instance** name — the instance token
+lowercased, plus `.apikey`. The untagged instance `linear` derives
+`linear.apikey` — by default the `LINEAR_APIKEY` environment
+variable this README already documents, unchanged. A tagged instance
+derives its own: `linear$test` → `linear_test.apikey` →
+`LINEAR_TEST_APIKEY` — each instance is a separate credentialed use
+of the API, and its env var is derivable from the name you chose. To
+pin a name instead, set `secret` on the instance block, or at the
+api level for several instances sharing one key. Point a profile at a
+vault later and application code does not change; sekreto's own
+documentation covers the stores. The key stays out of `options()` and
+`prepare()` output; `station.tap(...)` shows live traffic.
+
+### Imperative: `connect()` — the retrofit path
+
+Bind by passing the SDK class to the station:
+
+1. `station = Station.open()` — profile, env, and proxy all defaulted.
+2. `client = station.connect(LinearSDK)` — replaces direct
+   construction; `connect(LinearSDK, { as: 'test' })` binds
+   a second, tagged instance.
+
+With no `station.json` at all this runs solo with everything
+defaulted — the two-line form is how an existing application starts.
+
+Station failures surface through this SDK's own error path
+(`err.code`, `station_*`); the codes are catalogued in
+[station error codes](https://github.com/voxgig/sdkgen/blob/main/docs/reference/station-errors.md).
 
 ## Error handling
 
@@ -132,7 +200,7 @@ Create a mock client for unit testing — no server required:
 local client = sdk.test()
 
 local result, err = client:AgentActivity():list()
--- result is the returned data; err is set on failure
+-- result is an array of entities, one per mock record; err is set on failure
 ```
 
 ### Use a custom fetch function
@@ -306,11 +374,11 @@ All entities share the same interface.
 
 | Method | Signature | Description |
 | --- | --- | --- |
-| `load` | `(reqmatch, ctrl) -> any, err` | Load a single entity by match criteria. |
-| `list` | `(reqmatch, ctrl) -> any, err` | List entities matching the criteria. |
-| `create` | `(reqdata, ctrl) -> any, err` | Create a new entity. |
-| `update` | `(reqdata, ctrl) -> any, err` | Update an existing entity. |
-| `remove` | `(reqmatch, ctrl) -> any, err` | Remove an entity. |
+| `load` | `(reqmatch, ctrl) -> any, err` | Load a single entity by match criteria, and return it. |
+| `list` | `(reqmatch, ctrl) -> any, err` | List entities matching the criteria, one per record. |
+| `create` | `(reqdata, ctrl) -> any, err` | Create a new entity, and return it. |
+| `update` | `(reqdata, ctrl) -> any, err` | Update an existing entity, and return it. |
+| `remove` | `(reqmatch, ctrl) -> any, err` | Remove an entity, and return it marked as deleted. |
 | `data_get` | `() -> table` | Get entity data. |
 | `data_set` | `(data)` | Set entity data. |
 | `match_get` | `() -> table` | Get entity match criteria. |
@@ -320,19 +388,19 @@ All entities share the same interface.
 
 ### Result shape
 
-Entity operations return `(value, err)`. The `value` is the operation's
-data **directly** — there is no wrapper:
+Entity operations return `(value, err)`. The `value` is the entity
+itself — there is no wrapper:
 
 | Operation | `value` |
 | --- | --- |
-| `load` / `create` / `update` / `remove` | the entity record (a `table`) |
-| `list` | an array (`table`) of entity records |
+| `load` / `create` / `update` / `remove` | the entity, whose `data_get()` reads its record (a `table`) |
+| `list` | an array (`table`) of entities, one per record |
 
 Check `err` first (it is non-`nil` on failure), then use `value`:
 
     local access_key_release, err = client:AccessKeyRelease():load({ id = "example_id" })
     if err then error(err) end
-    -- access_key_release is the loaded record
+    -- access_key_release is the loaded entity
 
 Only `direct()` returns a response envelope — a `table` with `ok`,
 `status`, `headers`, and `data` keys.
@@ -2584,17 +2652,6 @@ local access_key_release, err = client:AccessKeyRelease():load({ id = "access_ke
 local access_key_releases, err = client:AccessKeyRelease():list()
 ```
 
-#### Example: Create
-
-```lua
-local access_key_release, err = client:AccessKeyRelease():create({
-  createdAt = "example_createdAt", -- any
-  id = "example_id", -- string
-  name = "example_name", -- string
-  url = "example_url", -- string
-})
-```
-
 
 ### AccessKeyReleasePipeline
 
@@ -2987,15 +3044,6 @@ Create an instance: `local auth_resolver_response = client:AuthResolverResponse(
 local auth_resolver_response, err = client:AuthResolverResponse():load({ id = "auth_resolver_response_id" })
 ```
 
-#### Example: Create
-
-```lua
-local auth_resolver_response, err = client:AuthResolverResponse():create({
-  email = "example_email", -- string
-  id = "example_id", -- string
-})
-```
-
 
 ### AuthenticationSessionResponse
 
@@ -3142,13 +3190,6 @@ Create an instance: `local create_or_join_organization_response = client:CreateO
 | --- | --- | --- |
 | `organization` | `table` | The workspace that was created or joined. |
 | `user` | `table` | The user who created or joined the workspace. |
-
-#### Example: Create
-
-```lua
-local create_or_join_organization_response, err = client:CreateOrJoinOrganizationResponse():create({
-})
-```
 
 
 ### CustomView
@@ -3694,7 +3735,7 @@ Create an instance: `local document_search_result = client:DocumentSearchResult(
 #### Example: List
 
 ```lua
-local document_search_results, err = client:DocumentSearchResult():list()
+local document_search_results, err = client:DocumentSearchResult():list({ term = "example" })
 ```
 
 
@@ -4113,13 +4154,6 @@ Create an instance: `local git_hub_integration_connect_detail = client:GitHubInt
 | --- | --- | --- |
 | `lostRepositoryNames` | `string` | Full names ('owner/repo') of repositories whose existing GitHub Issues sync mappings would become inaccessible if the new GitHub App installation replaces the existing one. |
 
-#### Example: Create
-
-```lua
-local git_hub_integration_connect_detail, err = client:GitHubIntegrationConnectDetail():create({
-})
-```
-
 
 ### Initiative
 
@@ -4507,17 +4541,6 @@ local integration, err = client:Integration():load({ id = "integration_id" })
 local integrations, err = client:Integration():list()
 ```
 
-#### Example: Create
-
-```lua
-local integration, err = client:Integration():create({
-  createdAt = "example_createdAt", -- any
-  id = "example_id", -- string
-  service = "example_service", -- string
-  updatedAt = "example_updatedAt", -- any
-})
-```
-
 
 ### IntegrationTemplate
 
@@ -4773,18 +4796,6 @@ Create an instance: `local issue_import = client:IssueImport(nil)`
 | `teamName` | `string` | The name of the new team to be created for the import, when the import is configured to create a new team rather than importing into an existing one. |
 | `updatedAt` | `any` | The last time at which the entity was meaningfully updated. |
 
-#### Example: Create
-
-```lua
-local issue_import, err = client:IssueImport():create({
-  createdAt = "example_createdAt", -- any
-  displayName = "example_displayName", -- string
-  service = "example_service", -- string
-  status = "example_status", -- string
-  updatedAt = "example_updatedAt", -- any
-})
-```
-
 
 ### IssueLabel
 
@@ -5004,7 +5015,7 @@ Create an instance: `local issue_search_result = client:IssueSearchResult(nil)`
 #### Example: List
 
 ```lua
-local issue_search_results, err = client:IssueSearchResult():list()
+local issue_search_results, err = client:IssueSearchResult():list({ term = "example" })
 ```
 
 
@@ -5071,14 +5082,6 @@ Create an instance: `local logout_response = client:LogoutResponse(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `success` | `boolean` | Whether the operation was successful. |
-
-#### Example: Create
-
-```lua
-local logout_response, err = client:LogoutResponse():create({
-  success = true, -- boolean
-})
-```
 
 
 ### Notification
@@ -5880,7 +5883,7 @@ Create an instance: `local project_search_result = client:ProjectSearchResult(ni
 #### Example: List
 
 ```lua
-local project_search_results, err = client:ProjectSearchResult():list()
+local project_search_results, err = client:ProjectSearchResult():list({ term = "example" })
 ```
 
 
@@ -6471,7 +6474,7 @@ Create an instance: `local sla_configuration = client:SlaConfiguration(nil)`
 #### Example: List
 
 ```lua
-local sla_configurations, err = client:SlaConfiguration():list()
+local sla_configurations, err = client:SlaConfiguration():list({ team_id = "example" })
 ```
 
 
@@ -6884,19 +6887,6 @@ Create an instance: `local upload_file = client:UploadFile(nil)`
 | `size` | `number` | The size of the uploaded file. |
 | `uploadUrl` | `string` | The pre-signed URL to which the file should be uploaded via a PUT request. |
 
-#### Example: Create
-
-```lua
-local upload_file, err = client:UploadFile():create({
-  content_type = "example_content_type", -- string
-  filename = "example_filename", -- string
-  size = 1, -- number
-  assetUrl = "example_assetUrl", -- string
-  contentType = "example_contentType", -- string
-  uploadUrl = "example_uploadUrl", -- string
-})
-```
-
 
 ### UsageAlert
 
@@ -6997,34 +6987,6 @@ local user, err = client:User():load({ id = "user_id" })
 
 ```lua
 local users, err = client:User():list()
-```
-
-#### Example: Create
-
-```lua
-local user, err = client:User():create({
-  active = true, -- boolean
-  admin = true, -- boolean
-  app = true, -- boolean
-  avatarBackgroundColor = "example_avatarBackgroundColor", -- string
-  canAccessAnyPublicTeam = true, -- boolean
-  createdAt = "example_createdAt", -- any
-  createdIssueCount = 1, -- number
-  displayName = "example_displayName", -- string
-  email = "example_email", -- string
-  guest = true, -- boolean
-  hasGitHubCodeAccess = true, -- boolean
-  id = "example_id", -- string
-  initials = "example_initials", -- string
-  isAssignable = true, -- boolean
-  isMe = true, -- boolean
-  isMentionable = true, -- boolean
-  name = "example_name", -- string
-  owner = true, -- boolean
-  supportsAgentSessions = true, -- boolean
-  updatedAt = "example_updatedAt", -- any
-  url = "example_url", -- string
-})
 ```
 
 
@@ -7212,7 +7174,7 @@ Create an instance: `local webhook_failure_event = client:WebhookFailureEvent(ni
 #### Example: List
 
 ```lua
-local webhook_failure_events, err = client:WebhookFailureEvent():list()
+local webhook_failure_events, err = client:WebhookFailureEvent():list({ oauth_client_id = "example" })
 ```
 
 
@@ -7273,7 +7235,7 @@ local workflow_state, err = client:WorkflowState():create({
 
 ## Features
 
-This SDK ships 8 optional features. Each is **inactive until you
+This SDK ships 9 optional features. Each is **inactive until you
 switch it on**, so an SDK you have not configured behaves exactly as if none of
 them existed — no retries, no cache, no logging, no measurable overhead.
 
@@ -7288,10 +7250,11 @@ above:
 | [`paging`](#paging) | Paging |
 | [`ratelimit`](#ratelimit) | Rate limiting |
 | [`retry`](#retry) | Retry |
+| [`station`](#station) | Station control surface binding for outbound integrations |
 | [`test`](#test) | Test transport |
 | [`timeout`](#timeout) | Timeout |
 
-> **Order matters for `ratelimit`, `retry`, `timeout`.** These wrap the
+> **Order matters for `ratelimit`, `retry`, `station`, `timeout`.** These wrap the
 > transport, so each one wraps whatever is already installed: the order you
 > activate them in IS the nesting order. Activating them as an ordered list
 > rather than a map is what fixes that order.
@@ -7382,6 +7345,27 @@ Set `feature.retry.active` to enable it, then override any of the options above.
 transport features decides what it sees. A feature activated later wraps one
 activated earlier.
 
+### station
+
+Station control surface binding for outbound integrations.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `capture` | `'meta'` |
+| `fromEnv` | `true` |
+| `instance` | `''` |
+| `profile` | `''` |
+| `register` | `true` |
+| `secret` | `''` |
+| `url` | `''` |
+
+Set `feature.station.active` to enable it, then override any of the options above.
+
+`station` wraps the transport, so its position among the other
+transport features decides what it sees. A feature activated later wraps one
+activated earlier.
+
 ### test
 
 Test transport.
@@ -7452,6 +7436,7 @@ The SDK ships with built-in features:
 - **PagingFeature**: Paging
 - **RatelimitFeature**: Rate limiting
 - **RetryFeature**: Retry
+- **StationFeature**: Station control surface binding for outbound integrations
 - **TestFeature**: Test transport
 - **TimeoutFeature**: Timeout
 

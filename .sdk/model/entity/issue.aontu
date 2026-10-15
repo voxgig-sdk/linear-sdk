@@ -521,7 +521,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "file_key"
-                or: "file_key"
+                or: "fileKey"
                 r: true
                 t: "`$STRING`"
               }
@@ -535,7 +535,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "include_archived"
-                or: "include_archived"
+                or: "includeArchived"
                 r: false
                 t: "`$BOOLEAN`"
               }
@@ -549,7 +549,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "order_by"
-                or: "order_by"
+                or: "orderBy"
                 r: false
                 t: "`$ANY`"
               }
@@ -618,126 +618,6 @@ main: kit: entity: issue: {
         }
         {
           co: {
-            id: "POST issueSearch"
-            source: "graphql"
-            version: 2
-          }
-          g: {
-            params: [
-              {
-                k: "param"
-                n: "after"
-                or: "after"
-                r: false
-                t: "`$STRING`"
-              }
-              {
-                k: "param"
-                n: "before"
-                or: "before"
-                r: false
-                t: "`$STRING`"
-              }
-              {
-                k: "param"
-                n: "first"
-                or: "first"
-                r: false
-                t: "`$INTEGER`"
-              }
-              {
-                k: "param"
-                n: "include_archived"
-                or: "include_archived"
-                r: false
-                t: "`$BOOLEAN`"
-              }
-              {
-                k: "param"
-                n: "last"
-                or: "last"
-                r: false
-                t: "`$INTEGER`"
-              }
-              {
-                k: "param"
-                n: "order_by"
-                or: "order_by"
-                r: false
-                t: "`$ANY`"
-              }
-              {
-                k: "param"
-                n: "query"
-                or: "query"
-                r: false
-                t: "`$STRING`"
-              }
-            ]
-          }
-          gq: {
-            doc: "query IssueList($after: String, $before: String, $filter: IssueFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy, $query: String) { issueSearch(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy, query: $query) { nodes { ...IssueFields } pageInfo { endCursor hasNextPage } } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
-            field: "issueSearch"
-            optype: "query"
-            page: {
-              cursor: "pageInfo.endCursor"
-              more: "pageInfo.hasNextPage"
-              nodes: "nodes"
-              style: "relay"
-            }
-            vars: [
-              {
-                from: "after"
-                gqltype: "String"
-                name: "after"
-              }
-              {
-                from: "before"
-                gqltype: "String"
-                name: "before"
-              }
-              {
-                from: ""
-                gqltype: "IssueFilter"
-                name: "filter"
-              }
-              {
-                from: "first"
-                gqltype: "Int"
-                name: "first"
-              }
-              {
-                from: "includeArchived"
-                gqltype: "Boolean"
-                name: "includeArchived"
-              }
-              {
-                from: "last"
-                gqltype: "Int"
-                name: "last"
-              }
-              {
-                from: "orderBy"
-                gqltype: "PaginationOrderBy"
-                name: "orderBy"
-              }
-              {
-                from: "query"
-                gqltype: "String"
-                name: "query"
-              }
-            ]
-          }
-          k: "graphql"
-          m: "POST"
-          o: "issueSearch"
-          t: {
-            req: "`reqdata`"
-            res: "`body.data.issueSearch.nodes`"
-          }
-        }
-        {
-          co: {
             id: "POST issues"
             source: "graphql"
             version: 2
@@ -768,7 +648,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "include_archived"
-                or: "include_archived"
+                or: "includeArchived"
                 r: false
                 t: "`$BOOLEAN`"
               }
@@ -782,7 +662,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "order_by"
-                or: "order_by"
+                or: "orderBy"
                 r: false
                 t: "`$ANY`"
               }
@@ -865,7 +745,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "branch_name"
-                or: "branch_name"
+                or: "branchName"
                 r: true
                 t: "`$STRING`"
               }
@@ -894,48 +774,6 @@ main: kit: entity: issue: {
           t: {
             req: "`reqdata`"
             res: "`body.data.issueVcsBranchSearch`"
-          }
-        }
-        {
-          co: {
-            id: "POST attachmentIssue"
-            source: "graphql"
-            version: 2
-          }
-          g: {
-            params: [
-              {
-                k: "param"
-                n: "id"
-                or: "id"
-                r: true
-                t: "`$STRING`"
-              }
-            ]
-          }
-          gq: {
-            doc: "query IssueLoad($id: String!) { attachmentIssue(id: $id) { ...IssueFields } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }"
-            field: "attachmentIssue"
-            optype: "query"
-            vars: [
-              {
-                from: "id"
-                gqltype: "String!"
-                name: "id"
-              }
-            ]
-          }
-          k: "graphql"
-          m: "POST"
-          o: "attachmentIssue"
-          q: {
-            exist: [
-              "id"
-            ]
-          }
-          t: {
-            req: "`reqdata`"
-            res: "`body.data.attachmentIssue`"
           }
         }
         {
@@ -1003,7 +841,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "permanently_delete"
-                or: "permanently_delete"
+                or: "permanentlyDelete"
                 r: false
                 t: "`$BOOLEAN`"
               }
@@ -1062,7 +900,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "label_id"
-                or: "label_id"
+                or: "labelId"
                 r: true
                 t: "`$STRING`"
               }
@@ -1174,7 +1012,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "reminder_at"
-                or: "reminder_at"
+                or: "reminderAt"
                 r: true
                 t: "`$ANY`"
               }
@@ -1230,7 +1068,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "label_id"
-                or: "label_id"
+                or: "labelId"
                 r: true
                 t: "`$STRING`"
               }
@@ -1286,7 +1124,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "user_id"
-                or: "user_id"
+                or: "userId"
                 r: true
                 t: "`$STRING`"
               }
@@ -1342,7 +1180,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "user_id"
-                or: "user_id"
+                or: "userId"
                 r: true
                 t: "`$STRING`"
               }
@@ -1446,7 +1284,7 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "attachment_id"
-                or: "attachment_id"
+                or: "attachmentId"
                 r: true
                 t: "`$STRING`"
               }
@@ -1496,14 +1334,14 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "user_email"
-                or: "user_email"
+                or: "userEmail"
                 r: false
                 t: "`$STRING`"
               }
               {
                 k: "param"
                 n: "user_id"
-                or: "user_id"
+                or: "userId"
                 r: false
                 t: "`$STRING`"
               }
@@ -1606,14 +1444,14 @@ main: kit: entity: issue: {
               {
                 k: "param"
                 n: "user_email"
-                or: "user_email"
+                or: "userEmail"
                 r: false
                 t: "`$STRING`"
               }
               {
                 k: "param"
                 n: "user_id"
-                or: "user_id"
+                or: "userId"
                 r: false
                 t: "`$STRING`"
               }

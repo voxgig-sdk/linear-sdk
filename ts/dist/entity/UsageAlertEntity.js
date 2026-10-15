@@ -82,9 +82,15 @@ class UsageAlertEntity extends LinearEntityBase_1.LinearEntityBase {
             return (ctx.result && ctx.result.ok) ? this : out;
         }
         catch (err) {
-            fres = featureHook(ctx, 'PreUnexpected');
-            if (fres instanceof Promise) {
-                await fres;
+            // What a hook throws here must not escape the cleaning below.
+            try {
+                fres = featureHook(ctx, 'PreUnexpected');
+                if (fres instanceof Promise) {
+                    await fres;
+                }
+            }
+            catch (hookerr) {
+                err = hookerr;
             }
             err = this._unexpected(ctx, err);
             if (err) {
@@ -92,7 +98,7 @@ class UsageAlertEntity extends LinearEntityBase_1.LinearEntityBase {
             }
             else {
                 // Off-happy-path (throw disabled): typed as any so the method's
-                // Promise<UsageAlert> return stays clean under strict null checks.
+                // Promise<UsageAlertEntity> return stays clean under strict null checks.
                 return undefined;
             }
         }
@@ -163,9 +169,15 @@ class UsageAlertEntity extends LinearEntityBase_1.LinearEntityBase {
             return done(ctx);
         }
         catch (err) {
-            fres = featureHook(ctx, 'PreUnexpected');
-            if (fres instanceof Promise) {
-                await fres;
+            // What a hook throws here must not escape the cleaning below.
+            try {
+                fres = featureHook(ctx, 'PreUnexpected');
+                if (fres instanceof Promise) {
+                    await fres;
+                }
+            }
+            catch (hookerr) {
+                err = hookerr;
             }
             err = this._unexpected(ctx, err);
             if (err) {
@@ -173,7 +185,7 @@ class UsageAlertEntity extends LinearEntityBase_1.LinearEntityBase {
             }
             else {
                 // Off-happy-path (throw disabled): typed as any so the method's
-                // Promise<UsageAlert[]> return stays clean under strict null checks.
+                // Promise<UsageAlertEntity[]> return stays clean under strict null checks.
                 return undefined;
             }
         }

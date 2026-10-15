@@ -12,9 +12,14 @@ The SDK exposes the API as capitalised, semantic **Entities** — for example `$
 
 ## Install
 This package is not yet published to Packagist. Install it from the
-GitHub release tag (`php/vX.Y.Z`):
+GitHub release tag (`php/vX.Y.Z`, see [Tags](https://github.com/voxgig-sdk/linear-sdk/tags)), or
+from a clone as a Composer path repository:
 
-- Releases: [https://github.com/voxgig-sdk/linear-sdk/releases](https://github.com/voxgig-sdk/linear-sdk/releases)
+```bash
+git clone https://github.com/voxgig-sdk/linear-sdk
+composer config repositories.linear-sdk path ./linear-sdk/php
+composer require voxgig-sdk/linear-sdk:@dev
+```
 
 
 ## Tutorial: your first API call
@@ -60,14 +65,78 @@ try {
 }
 ```
 
-### 4. Create, update, and remove
 
-```php
-// create() returns the ENTITY — call data_get() for the created AccessKeyRelease record.
-$created = $client->AccessKeyRelease()->create(["createdAt" => "example_createdAt", "id" => "example_id", "name" => "example_name", "url" => "example_url"]);
+## Use with Station
 
+This SDK ships as a [voxgig/station](https://github.com/voxgig/station)
+plugin: bind it to a local `Station` and outbound configuration,
+credentials, and observability move to one place. The feature is
+present but **off by default** — nothing changes until you bind.
+
+### Declarative: `station.json` + `station.sdk()`
+
+Declare an instance in `station.json` at the repo root (committable —
+names and stores, never values):
+
+```json
+{ "station": 1,
+  "profiles": { "default": {
+    "sdk": { "linear": {
+      "package": "voxgig-sdk/linear-sdk" } } } } }
 ```
 
+Then get the client where you need it:
+
+1. `station = Station.open()` — reads and validates `station.json`;
+   constructs nothing.
+2. `client = station.sdk('linear')` — built on first ask and cached,
+   so the same name returns the same client.
+
+Loading this package is the whole bootstrap: it registers its own
+factory (constructor plus embedded config) with the station library at
+module init, so `station.sdk()` needs no SDK import in application
+code. That is what the `package` key above is for — it names the module
+for station to load, since nothing else in this example would execute
+it. An application that imports this SDK for its types anyway can drop
+the key: that import is itself the bootstrap.
+
+A second instance of the same API is one more key — `"linear$test"`
+beside `"linear"` — and `station.sdk('linear$test')` returns it.
+SDK features are configured in the same file too: fleet-wide, per api,
+or per instance. `station.check()` resolves and constructs every
+active instance without sending a request — run it in CI.
+
+### The secret name derives from the instance
+
+The credential comes from [sekreto](https://github.com/voxgig/sekreto)
+under a name derived from the **instance** name — the instance token
+lowercased, plus `.apikey`. The untagged instance `linear` derives
+`linear.apikey` — by default the `LINEAR_APIKEY` environment
+variable this README already documents, unchanged. A tagged instance
+derives its own: `linear$test` → `linear_test.apikey` →
+`LINEAR_TEST_APIKEY` — each instance is a separate credentialed use
+of the API, and its env var is derivable from the name you chose. To
+pin a name instead, set `secret` on the instance block, or at the
+api level for several instances sharing one key. Point a profile at a
+vault later and application code does not change; sekreto's own
+documentation covers the stores. The key stays out of `options()` and
+`prepare()` output; `station.tap(...)` shows live traffic.
+
+### Imperative: `connect()` — the retrofit path
+
+Bind by passing the SDK class to the station:
+
+1. `station = Station.open()` — profile, env, and proxy all defaulted.
+2. `client = station.connect(LinearSDK)` — replaces direct
+   construction; `connect(LinearSDK, { as: 'test' })` binds
+   a second, tagged instance.
+
+With no `station.json` at all this runs solo with everything
+defaulted — the two-line form is how an existing application starts.
+
+Station failures surface through this SDK's own error path
+(`err.code`, `station_*`); the codes are catalogued in
+[station error codes](https://github.com/voxgig/sdkgen/blob/main/docs/reference/station-errors.md).
 
 ## Error handling
 
@@ -148,7 +217,7 @@ data via the `entity` option so offline calls resolve without a live server:
 
 ```php
 $client = LinearSDK::test([
-    "entity" => ["projectlabel" => ["test01" => ["id" => "test01"]]],
+    "entity" => ["project_label" => ["test01" => ["id" => "test01"]]],
 ]);
 
 // list() returns entity instances (throws on error);
@@ -329,11 +398,11 @@ All entities share the same interface.
 
 | Method | Signature | Description |
 | --- | --- | --- |
-| `load` | `($reqmatch, $ctrl): array` | Load a single entity by match criteria. |
-| `list` | `(?array $reqmatch = null, $ctrl): array` | List entities matching the criteria (call with no argument to list all). |
-| `create` | `($reqdata, $ctrl): array` | Create a new entity. |
-| `update` | `($reqdata, $ctrl): array` | Update an existing entity. |
-| `remove` | `($reqmatch, $ctrl): array` | Remove an entity. |
+| `load` | `($reqmatch, $ctrl): mixed` | Load a single entity by match criteria, and return it. |
+| `list` | `(?array $reqmatch = null, $ctrl): mixed` | List entities matching the criteria (call with no argument to list all), one per record. |
+| `create` | `($reqdata, $ctrl): mixed` | Create a new entity, and return it. |
+| `update` | `($reqdata, $ctrl): mixed` | Update an existing entity, and return it. |
+| `remove` | `($reqmatch, $ctrl): mixed` | Remove an entity, and return it marked as deleted. |
 | `data_get` | `(): array` | Get entity data. |
 | `data_set` | `($data): void` | Set entity data. |
 | `match_get` | `(): array` | Get entity match criteria. |
@@ -343,9 +412,9 @@ All entities share the same interface.
 
 ### Result shape
 
-Entity operations return the ENTITY (call data_get() for the record) (an `array` for single-entity
-ops, a `list` for `list`) and throw on error. Wrap calls in
-`try`/`catch` to handle failures.
+Entity operations return the entity, and `list` an `array` of entities, one
+per record; an entity's `data_get()` reads its record (an `array`). They
+throw on error, so wrap calls in `try`/`catch` to handle failures.
 
 The `direct()` escape hatch never throws — it returns a result `array`
 you branch on via `$result["ok"]`:
@@ -2604,19 +2673,8 @@ $access_key_release = $client->AccessKeyRelease()->load(["id" => "access_key_rel
 #### Example: List
 
 ```php
-// list() returns an array of AccessKeyRelease records (throws on error).
+// list() returns an array of AccessKeyRelease entities, one per record (throws on error).
 $access_key_releases = $client->AccessKeyRelease()->list();
-```
-
-#### Example: Create
-
-```php
-$access_key_release = $client->AccessKeyRelease()->create([
-    "createdAt" => null, // mixed
-    "id" => null, // string
-    "name" => null, // string
-    "url" => null, // string
-]);
 ```
 
 
@@ -2688,7 +2746,7 @@ $agent_activity = $client->AgentActivity()->load(["id" => "agent_activity_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of AgentActivity records (throws on error).
+// list() returns an array of AgentActivity entities, one per record (throws on error).
 $agent_activitys = $client->AgentActivity()->list();
 ```
 
@@ -2756,7 +2814,7 @@ $agent_session = $client->AgentSession()->load(["id" => "agent_session_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of AgentSession records (throws on error).
+// list() returns an array of AgentSession entities, one per record (throws on error).
 $agent_sessions = $client->AgentSession()->list();
 ```
 
@@ -2821,7 +2879,7 @@ $agent_skill = $client->AgentSkill()->load(["id" => "agent_skill_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of AgentSkill records (throws on error).
+// list() returns an array of AgentSkill entities, one per record (throws on error).
 $agent_skills = $client->AgentSkill()->list();
 ```
 
@@ -2916,7 +2974,7 @@ $attachment = $client->Attachment()->load(["id" => "attachment_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Attachment records (throws on error).
+// list() returns an array of Attachment entities, one per record (throws on error).
 $attachments = $client->Attachment()->list();
 ```
 
@@ -2965,7 +3023,7 @@ Create an instance: `$audit_entry = $client->AuditEntry();`
 #### Example: List
 
 ```php
-// list() returns an array of AuditEntry records (throws on error).
+// list() returns an array of AuditEntry entities, one per record (throws on error).
 $audit_entrys = $client->AuditEntry()->list();
 ```
 
@@ -2990,7 +3048,7 @@ Create an instance: `$audit_entry_type = $client->AuditEntryType();`
 #### Example: List
 
 ```php
-// list() returns an array of AuditEntryType records (throws on error).
+// list() returns an array of AuditEntryType entities, one per record (throws on error).
 $audit_entry_types = $client->AuditEntryType()->list();
 ```
 
@@ -3022,15 +3080,6 @@ Create an instance: `$auth_resolver_response = $client->AuthResolverResponse();`
 ```php
 // load() returns the ENTITY — call data_get() for the AuthResolverResponse record (throws on error).
 $auth_resolver_response = $client->AuthResolverResponse()->load(["id" => "auth_resolver_response_id"]);
-```
-
-#### Example: Create
-
-```php
-$auth_resolver_response = $client->AuthResolverResponse()->create([
-    "email" => null, // string
-    "id" => null, // string
-]);
 ```
 
 
@@ -3072,7 +3121,7 @@ Create an instance: `$authentication_session_response = $client->AuthenticationS
 #### Example: List
 
 ```php
-// list() returns an array of AuthenticationSessionResponse records (throws on error).
+// list() returns an array of AuthenticationSessionResponse entities, one per record (throws on error).
 $authentication_session_responses = $client->AuthenticationSessionResponse()->list();
 ```
 
@@ -3144,7 +3193,7 @@ $comment = $client->Comment()->load(["id" => "comment_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Comment records (throws on error).
+// list() returns an array of Comment entities, one per record (throws on error).
 $comments = $client->Comment()->list();
 ```
 
@@ -3182,13 +3231,6 @@ Create an instance: `$create_or_join_organization_response = $client->CreateOrJo
 | --- | --- | --- |
 | `organization` | `array` | The workspace that was created or joined. |
 | `user` | `array` | The user who created or joined the workspace. |
-
-#### Example: Create
-
-```php
-$create_or_join_organization_response = $client->CreateOrJoinOrganizationResponse()->create([
-]);
-```
 
 
 ### CustomView
@@ -3243,7 +3285,7 @@ $custom_view = $client->CustomView()->load(["id" => "custom_view_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of CustomView records (throws on error).
+// list() returns an array of CustomView entities, one per record (throws on error).
 $custom_views = $client->CustomView()->list();
 ```
 
@@ -3311,7 +3353,7 @@ $customer = $client->Customer()->load(["id" => "customer_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Customer records (throws on error).
+// list() returns an array of Customer entities, one per record (throws on error).
 $customers = $client->Customer()->list();
 ```
 
@@ -3378,7 +3420,7 @@ $customer_need = $client->CustomerNeed()->load(["id" => "customer_need_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of CustomerNeed records (throws on error).
+// list() returns an array of CustomerNeed entities, one per record (throws on error).
 $customer_needs = $client->CustomerNeed()->list();
 ```
 
@@ -3432,7 +3474,7 @@ $customer_status = $client->CustomerStatus()->load(["id" => "customer_status_id"
 #### Example: List
 
 ```php
-// list() returns an array of CustomerStatus records (throws on error).
+// list() returns an array of CustomerStatus entities, one per record (throws on error).
 $customer_statuss = $client->CustomerStatus()->list();
 ```
 
@@ -3489,7 +3531,7 @@ $customer_tier = $client->CustomerTier()->load(["id" => "customer_tier_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of CustomerTier records (throws on error).
+// list() returns an array of CustomerTier entities, one per record (throws on error).
 $customer_tiers = $client->CustomerTier()->list();
 ```
 
@@ -3562,7 +3604,7 @@ $cycle = $client->Cycle()->load(["id" => "cycle_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Cycle records (throws on error).
+// list() returns an array of Cycle entities, one per record (throws on error).
 $cycles = $client->Cycle()->list();
 ```
 
@@ -3685,7 +3727,7 @@ $document = $client->Document()->load(["id" => "document_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Document records (throws on error).
+// list() returns an array of Document entities, one per record (throws on error).
 $documents = $client->Document()->list();
 ```
 
@@ -3749,8 +3791,8 @@ Create an instance: `$document_search_result = $client->DocumentSearchResult();`
 #### Example: List
 
 ```php
-// list() returns an array of DocumentSearchResult records (throws on error).
-$document_search_results = $client->DocumentSearchResult()->list();
+// list() returns an array of DocumentSearchResult entities, one per record (throws on error).
+$document_search_results = $client->DocumentSearchResult()->list(["term" => "example"]);
 ```
 
 
@@ -3889,7 +3931,7 @@ $emoji = $client->Emoji()->load(["id" => "emoji_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Emoji records (throws on error).
+// list() returns an array of Emoji entities, one per record (throws on error).
 $emojis = $client->Emoji()->list();
 ```
 
@@ -3992,7 +4034,7 @@ $external_user = $client->ExternalUser()->load(["id" => "external_user_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of ExternalUser records (throws on error).
+// list() returns an array of ExternalUser entities, one per record (throws on error).
 $external_users = $client->ExternalUser()->list();
 ```
 
@@ -4068,7 +4110,7 @@ $favorite = $client->Favorite()->load(["id" => "favorite_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Favorite records (throws on error).
+// list() returns an array of Favorite entities, one per record (throws on error).
 $favorites = $client->Favorite()->list();
 ```
 
@@ -4177,13 +4219,6 @@ Create an instance: `$git_hub_integration_connect_detail = $client->GitHubIntegr
 | --- | --- | --- |
 | `lostRepositoryNames` | `string` | Full names ('owner/repo') of repositories whose existing GitHub Issues sync mappings would become inaccessible if the new GitHub App installation replaces the existing one. |
 
-#### Example: Create
-
-```php
-$git_hub_integration_connect_detail = $client->GitHubIntegrationConnectDetail()->create([
-]);
-```
-
 
 ### Initiative
 
@@ -4254,7 +4289,7 @@ $initiative = $client->Initiative()->load(["id" => "initiative_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Initiative records (throws on error).
+// list() returns an array of Initiative entities, one per record (throws on error).
 $initiatives = $client->Initiative()->list();
 ```
 
@@ -4323,7 +4358,7 @@ $initiative_label = $client->InitiativeLabel()->load(["id" => "initiative_label_
 #### Example: List
 
 ```php
-// list() returns an array of InitiativeLabel records (throws on error).
+// list() returns an array of InitiativeLabel entities, one per record (throws on error).
 $initiative_labels = $client->InitiativeLabel()->list();
 ```
 
@@ -4404,7 +4439,7 @@ $initiative_relation = $client->InitiativeRelation()->load(["id" => "initiative_
 #### Example: List
 
 ```php
-// list() returns an array of InitiativeRelation records (throws on error).
+// list() returns an array of InitiativeRelation entities, one per record (throws on error).
 $initiative_relations = $client->InitiativeRelation()->list();
 ```
 
@@ -4456,7 +4491,7 @@ $initiative_to_project = $client->InitiativeToProject()->load(["id" => "initiati
 #### Example: List
 
 ```php
-// list() returns an array of InitiativeToProject records (throws on error).
+// list() returns an array of InitiativeToProject entities, one per record (throws on error).
 $initiative_to_projects = $client->InitiativeToProject()->list();
 ```
 
@@ -4519,7 +4554,7 @@ $initiative_update = $client->InitiativeUpdate()->load(["id" => "initiative_upda
 #### Example: List
 
 ```php
-// list() returns an array of InitiativeUpdate records (throws on error).
+// list() returns an array of InitiativeUpdate entities, one per record (throws on error).
 $initiative_updates = $client->InitiativeUpdate()->list();
 ```
 
@@ -4580,19 +4615,8 @@ $integration = $client->Integration()->load(["id" => "integration_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Integration records (throws on error).
+// list() returns an array of Integration entities, one per record (throws on error).
 $integrations = $client->Integration()->list();
-```
-
-#### Example: Create
-
-```php
-$integration = $client->Integration()->create([
-    "createdAt" => null, // mixed
-    "id" => null, // string
-    "service" => null, // string
-    "updatedAt" => null, // mixed
-]);
 ```
 
 
@@ -4631,7 +4655,7 @@ $integration_template = $client->IntegrationTemplate()->load(["id" => "integrati
 #### Example: List
 
 ```php
-// list() returns an array of IntegrationTemplate records (throws on error).
+// list() returns an array of IntegrationTemplate entities, one per record (throws on error).
 $integration_templates = $client->IntegrationTemplate()->list();
 ```
 
@@ -4794,7 +4818,7 @@ $issue = $client->Issue()->load(["id" => "issue_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Issue records (throws on error).
+// list() returns an array of Issue entities, one per record (throws on error).
 $issues = $client->Issue()->list();
 ```
 
@@ -4855,18 +4879,6 @@ Create an instance: `$issue_import = $client->IssueImport();`
 | `teamName` | `string` | The name of the new team to be created for the import, when the import is configured to create a new team rather than importing into an existing one. |
 | `updatedAt` | `mixed` | The last time at which the entity was meaningfully updated. |
 
-#### Example: Create
-
-```php
-$issue_import = $client->IssueImport()->create([
-    "createdAt" => null, // mixed
-    "displayName" => null, // string
-    "service" => null, // string
-    "status" => null, // string
-    "updatedAt" => null, // mixed
-]);
-```
-
 
 ### IssueLabel
 
@@ -4913,7 +4925,7 @@ $issue_label = $client->IssueLabel()->load(["id" => "issue_label_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of IssueLabel records (throws on error).
+// list() returns an array of IssueLabel entities, one per record (throws on error).
 $issue_labels = $client->IssueLabel()->list();
 ```
 
@@ -4951,7 +4963,7 @@ Create an instance: `$issue_priority_value = $client->IssuePriorityValue();`
 #### Example: List
 
 ```php
-// list() returns an array of IssuePriorityValue records (throws on error).
+// list() returns an array of IssuePriorityValue entities, one per record (throws on error).
 $issue_priority_values = $client->IssuePriorityValue()->list();
 ```
 
@@ -4992,7 +5004,7 @@ $issue_relation = $client->IssueRelation()->load(["id" => "issue_relation_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of IssueRelation records (throws on error).
+// list() returns an array of IssueRelation entities, one per record (throws on error).
 $issue_relations = $client->IssueRelation()->list();
 ```
 
@@ -5091,8 +5103,8 @@ Create an instance: `$issue_search_result = $client->IssueSearchResult();`
 #### Example: List
 
 ```php
-// list() returns an array of IssueSearchResult records (throws on error).
-$issue_search_results = $client->IssueSearchResult()->list();
+// list() returns an array of IssueSearchResult entities, one per record (throws on error).
+$issue_search_results = $client->IssueSearchResult()->list(["term" => "example"]);
 ```
 
 
@@ -5130,7 +5142,7 @@ $issue_to_release = $client->IssueToRelease()->load(["id" => "issue_to_release_i
 #### Example: List
 
 ```php
-// list() returns an array of IssueToRelease records (throws on error).
+// list() returns an array of IssueToRelease entities, one per record (throws on error).
 $issue_to_releases = $client->IssueToRelease()->list();
 ```
 
@@ -5161,14 +5173,6 @@ Create an instance: `$logout_response = $client->LogoutResponse();`
 | Field | Type | Description |
 | --- | --- | --- |
 | `success` | `bool` | Whether the operation was successful. |
-
-#### Example: Create
-
-```php
-$logout_response = $client->LogoutResponse()->create([
-    "success" => null, // bool
-]);
-```
 
 
 ### Notification
@@ -5225,7 +5229,7 @@ $notification = $client->Notification()->load(["id" => "notification_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Notification records (throws on error).
+// list() returns an array of Notification entities, one per record (throws on error).
 $notifications = $client->Notification()->list();
 ```
 
@@ -5272,7 +5276,7 @@ $notification_subscription = $client->NotificationSubscription()->load(["id" => 
 #### Example: List
 
 ```php
-// list() returns an array of NotificationSubscription records (throws on error).
+// list() returns an array of NotificationSubscription entities, one per record (throws on error).
 $notification_subscriptions = $client->NotificationSubscription()->list();
 ```
 
@@ -5320,7 +5324,7 @@ $o_auth_application = $client->OAuthApplication()->load(["id" => "o_auth_applica
 #### Example: List
 
 ```php
-// list() returns an array of OAuthApplication records (throws on error).
+// list() returns an array of OAuthApplication entities, one per record (throws on error).
 $o_auth_applications = $client->OAuthApplication()->list();
 ```
 
@@ -5520,7 +5524,7 @@ $organization_invite = $client->OrganizationInvite()->load(["id" => "organizatio
 #### Example: List
 
 ```php
-// list() returns an array of OrganizationInvite records (throws on error).
+// list() returns an array of OrganizationInvite entities, one per record (throws on error).
 $organization_invites = $client->OrganizationInvite()->list();
 ```
 
@@ -5668,7 +5672,7 @@ $project = $client->Project()->load(["id" => "project_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Project records (throws on error).
+// list() returns an array of Project entities, one per record (throws on error).
 $projects = $client->Project()->list();
 ```
 
@@ -5750,7 +5754,7 @@ $project_label = $client->ProjectLabel()->load(["id" => "project_label_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of ProjectLabel records (throws on error).
+// list() returns an array of ProjectLabel entities, one per record (throws on error).
 $project_labels = $client->ProjectLabel()->list();
 ```
 
@@ -5812,7 +5816,7 @@ $project_milestone = $client->ProjectMilestone()->load(["id" => "project_milesto
 #### Example: List
 
 ```php
-// list() returns an array of ProjectMilestone records (throws on error).
+// list() returns an array of ProjectMilestone entities, one per record (throws on error).
 $project_milestones = $client->ProjectMilestone()->list();
 ```
 
@@ -5893,7 +5897,7 @@ $project_relation = $client->ProjectRelation()->load(["id" => "project_relation_
 #### Example: List
 
 ```php
-// list() returns an array of ProjectRelation records (throws on error).
+// list() returns an array of ProjectRelation entities, one per record (throws on error).
 $project_relations = $client->ProjectRelation()->list();
 ```
 
@@ -5988,8 +5992,8 @@ Create an instance: `$project_search_result = $client->ProjectSearchResult();`
 #### Example: List
 
 ```php
-// list() returns an array of ProjectSearchResult records (throws on error).
-$project_search_results = $client->ProjectSearchResult()->list();
+// list() returns an array of ProjectSearchResult entities, one per record (throws on error).
+$project_search_results = $client->ProjectSearchResult()->list(["term" => "example"]);
 ```
 
 
@@ -6033,7 +6037,7 @@ $project_status = $client->ProjectStatus()->load(["id" => "project_status_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of ProjectStatus records (throws on error).
+// list() returns an array of ProjectStatus entities, one per record (throws on error).
 $project_statuss = $client->ProjectStatus()->list();
 ```
 
@@ -6102,7 +6106,7 @@ $project_update = $client->ProjectUpdate()->load(["id" => "project_update_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of ProjectUpdate records (throws on error).
+// list() returns an array of ProjectUpdate entities, one per record (throws on error).
 $project_updates = $client->ProjectUpdate()->list();
 ```
 
@@ -6250,7 +6254,7 @@ $release = $client->Release()->load(["id" => "release_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Release records (throws on error).
+// list() returns an array of Release entities, one per record (throws on error).
 $releases = $client->Release()->list();
 ```
 
@@ -6313,7 +6317,7 @@ $release_note = $client->ReleaseNote()->load(["id" => "release_note_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of ReleaseNote records (throws on error).
+// list() returns an array of ReleaseNote entities, one per record (throws on error).
 $release_notes = $client->ReleaseNote()->list();
 ```
 
@@ -6376,7 +6380,7 @@ $release_pipeline = $client->ReleasePipeline()->load(["id" => "release_pipeline_
 #### Example: List
 
 ```php
-// list() returns an array of ReleasePipeline records (throws on error).
+// list() returns an array of ReleasePipeline entities, one per record (throws on error).
 $release_pipelines = $client->ReleasePipeline()->list();
 ```
 
@@ -6438,7 +6442,7 @@ $release_stage = $client->ReleaseStage()->load(["id" => "release_stage_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of ReleaseStage records (throws on error).
+// list() returns an array of ReleaseStage entities, one per record (throws on error).
 $release_stages = $client->ReleaseStage()->list();
 ```
 
@@ -6500,7 +6504,7 @@ $roadmap = $client->Roadmap()->load(["id" => "roadmap_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Roadmap records (throws on error).
+// list() returns an array of Roadmap entities, one per record (throws on error).
 $roadmaps = $client->Roadmap()->list();
 ```
 
@@ -6555,7 +6559,7 @@ $roadmap_to_project = $client->RoadmapToProject()->load(["id" => "roadmap_to_pro
 #### Example: List
 
 ```php
-// list() returns an array of RoadmapToProject records (throws on error).
+// list() returns an array of RoadmapToProject entities, one per record (throws on error).
 $roadmap_to_projects = $client->RoadmapToProject()->list();
 ```
 
@@ -6596,8 +6600,8 @@ Create an instance: `$sla_configuration = $client->SlaConfiguration();`
 #### Example: List
 
 ```php
-// list() returns an array of SlaConfiguration records (throws on error).
-$sla_configurations = $client->SlaConfiguration()->list();
+// list() returns an array of SlaConfiguration entities, one per record (throws on error).
+$sla_configurations = $client->SlaConfiguration()->list(["team_id" => "example"]);
 ```
 
 
@@ -6719,7 +6723,7 @@ $team = $client->Team()->load(["id" => "team_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Team records (throws on error).
+// list() returns an array of Team entities, one per record (throws on error).
 $teams = $client->Team()->list();
 ```
 
@@ -6807,7 +6811,7 @@ $team_membership = $client->TeamMembership()->load(["id" => "team_membership_id"
 #### Example: List
 
 ```php
-// list() returns an array of TeamMembership records (throws on error).
+// list() returns an array of TeamMembership entities, one per record (throws on error).
 $team_memberships = $client->TeamMembership()->list();
 ```
 
@@ -6873,7 +6877,7 @@ $template = $client->Template()->load(["id" => "template_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Template records (throws on error).
+// list() returns an array of Template entities, one per record (throws on error).
 $templates = $client->Template()->list();
 ```
 
@@ -6931,7 +6935,7 @@ $time_schedule = $client->TimeSchedule()->load(["id" => "time_schedule_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of TimeSchedule records (throws on error).
+// list() returns an array of TimeSchedule entities, one per record (throws on error).
 $time_schedules = $client->TimeSchedule()->list();
 ```
 
@@ -6984,7 +6988,7 @@ $triage_responsibility = $client->TriageResponsibility()->load(["id" => "triage_
 #### Example: List
 
 ```php
-// list() returns an array of TriageResponsibility records (throws on error).
+// list() returns an array of TriageResponsibility entities, one per record (throws on error).
 $triage_responsibilitys = $client->TriageResponsibility()->list();
 ```
 
@@ -7021,19 +7025,6 @@ Create an instance: `$upload_file = $client->UploadFile();`
 | `size` | `int` | The size of the uploaded file. |
 | `uploadUrl` | `string` | The pre-signed URL to which the file should be uploaded via a PUT request. |
 
-#### Example: Create
-
-```php
-$upload_file = $client->UploadFile()->create([
-    "content_type" => null, // string
-    "filename" => null, // string
-    "size" => null, // int
-    "assetUrl" => null, // string
-    "contentType" => null, // string
-    "uploadUrl" => null, // string
-]);
-```
-
 
 ### UsageAlert
 
@@ -7068,7 +7059,7 @@ $usage_alert = $client->UsageAlert()->load(["id" => "usage_alert_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of UsageAlert records (throws on error).
+// list() returns an array of UsageAlert entities, one per record (throws on error).
 $usage_alerts = $client->UsageAlert()->list();
 ```
 
@@ -7136,36 +7127,8 @@ $user = $client->User()->load(["id" => "user_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of User records (throws on error).
+// list() returns an array of User entities, one per record (throws on error).
 $users = $client->User()->list();
-```
-
-#### Example: Create
-
-```php
-$user = $client->User()->create([
-    "active" => null, // bool
-    "admin" => null, // bool
-    "app" => null, // bool
-    "avatarBackgroundColor" => null, // string
-    "canAccessAnyPublicTeam" => null, // bool
-    "createdAt" => null, // mixed
-    "createdIssueCount" => null, // int
-    "displayName" => null, // string
-    "email" => null, // string
-    "guest" => null, // bool
-    "hasGitHubCodeAccess" => null, // bool
-    "id" => null, // string
-    "initials" => null, // string
-    "isAssignable" => null, // bool
-    "isMe" => null, // bool
-    "isMentionable" => null, // bool
-    "name" => null, // string
-    "owner" => null, // bool
-    "supportsAgentSessions" => null, // bool
-    "updatedAt" => null, // mixed
-    "url" => null, // string
-]);
 ```
 
 
@@ -7314,7 +7277,7 @@ $webhook = $client->Webhook()->load(["id" => "webhook_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of Webhook records (throws on error).
+// list() returns an array of Webhook entities, one per record (throws on error).
 $webhooks = $client->Webhook()->list();
 ```
 
@@ -7357,8 +7320,8 @@ Create an instance: `$webhook_failure_event = $client->WebhookFailureEvent();`
 #### Example: List
 
 ```php
-// list() returns an array of WebhookFailureEvent records (throws on error).
-$webhook_failure_events = $client->WebhookFailureEvent()->list();
+// list() returns an array of WebhookFailureEvent entities, one per record (throws on error).
+$webhook_failure_events = $client->WebhookFailureEvent()->list(["oauth_client_id" => "example"]);
 ```
 
 
@@ -7401,7 +7364,7 @@ $workflow_state = $client->WorkflowState()->load(["id" => "workflow_state_id"]);
 #### Example: List
 
 ```php
-// list() returns an array of WorkflowState records (throws on error).
+// list() returns an array of WorkflowState entities, one per record (throws on error).
 $workflow_states = $client->WorkflowState()->list();
 ```
 
@@ -7421,7 +7384,7 @@ $workflow_state = $client->WorkflowState()->create([
 
 ## Features
 
-This SDK ships 8 optional features. Each is **inactive until you
+This SDK ships 9 optional features. Each is **inactive until you
 switch it on**, so an SDK you have not configured behaves exactly as if none of
 them existed — no retries, no cache, no logging, no measurable overhead.
 
@@ -7436,10 +7399,11 @@ above:
 | [`paging`](#paging) | Paging |
 | [`ratelimit`](#ratelimit) | Rate limiting |
 | [`retry`](#retry) | Retry |
+| [`station`](#station) | Station control surface binding for outbound integrations |
 | [`test`](#test) | Test transport |
 | [`timeout`](#timeout) | Timeout |
 
-> **Order matters for `ratelimit`, `retry`, `timeout`.** These wrap the
+> **Order matters for `ratelimit`, `retry`, `station`, `timeout`.** These wrap the
 > transport, so each one wraps whatever is already installed: the order you
 > activate them in IS the nesting order. Activating them as an ordered list
 > rather than a map is what fixes that order.
@@ -7530,6 +7494,27 @@ Set `feature.retry.active` to enable it, then override any of the options above.
 transport features decides what it sees. A feature activated later wraps one
 activated earlier.
 
+### station
+
+Station control surface binding for outbound integrations.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+| `capture` | `'meta'` |
+| `fromEnv` | `true` |
+| `instance` | `''` |
+| `profile` | `''` |
+| `register` | `true` |
+| `secret` | `''` |
+| `url` | `''` |
+
+Set `feature.station.active` to enable it, then override any of the options above.
+
+`station` wraps the transport, so its position among the other
+transport features decides what it sees. A feature activated later wraps one
+activated earlier.
+
 ### test
 
 Test transport.
@@ -7600,6 +7585,7 @@ The SDK ships with built-in features:
 - **PagingFeature**: Paging
 - **RatelimitFeature**: Rate limiting
 - **RetryFeature**: Retry
+- **StationFeature**: Station control surface binding for outbound integrations
 - **TestFeature**: Test transport
 - **TimeoutFeature**: Timeout
 

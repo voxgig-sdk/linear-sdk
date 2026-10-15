@@ -9,7 +9,7 @@ import { createLiveTransport } from '../../live-runner'
 import { runLiveEntity } from '../../live-entity'
 
 
-import { LinearSDK, BaseFeature, stdutil } from '../../..'
+import { LinearSDK, BaseFeature, config, stdutil } from '../../..'
 
 import {
   envOverride,
@@ -41,6 +41,64 @@ describe('AuditEntryTypeEntity', async () => {
   })
 
 
+  class FailHook extends BaseFeature {
+    name = 'failhook'
+    version = '0.0.1'
+    active = true
+    unexpected = 0
+    init() { }
+    PreSpec() { throw new Error('audit_entry_type hook failed') }
+    PreUnexpected() { this.unexpected++ }
+  }
+
+  test('stream-error', async () => {
+    const offline = { net: { offline: true } }
+    await assert.rejects(async () => {
+      for await (const _item of LinearSDK.test(offline).AuditEntryType().stream('list')) { }
+    }, /offline/)
+
+    for await (const _item of LinearSDK.test(offline).AuditEntryType()
+      .stream('list', undefined, { ctrl: { throw: false } })) { }
+
+    if (null != (config as any).feature?.rbac) {
+      const denied = LinearSDK.test(undefined, { feature: { rbac: { active: true, deny: true } } })
+      await assert.rejects(async () => {
+        for await (const _item of denied.AuditEntryType().stream('list')) { }
+      }, (err: any) => 'rbac_denied' === err.code)
+    }
+  })
+
+  test('stream-ctrl', async () => {
+    const explain: any = {}
+    const ctrl: any = { explain }
+    for await (const _item of LinearSDK.test().AuditEntryType().stream('list', undefined, { ctrl })) { }
+    assert.deepStrictEqual(Object.keys(ctrl), ['explain'])
+    assert(explain === ctrl.explain && 0 < Object.keys(explain).length)
+  })
+
+  test('unexpected', async () => {
+    const hook = new FailHook()
+    const client = new LinearSDK({ feature: { test: { active: true } }, extend: [hook] })
+    await assert.rejects(client.AuditEntryType().list(), /hook failed/)
+    assert(0 < hook.unexpected)
+
+    const fired = hook.unexpected
+    assert.strictEqual(await client.AuditEntryType().list(undefined, { throw: false }), undefined)
+    assert(fired < hook.unexpected)
+  })
+
+  test('validate', async (t) => {
+    if (null == (config as any).feature?.validate) {
+      t.skip('feature not present in this SDK: validate')
+      return
+    }
+    const client = LinearSDK.test(undefined, { feature: { validate: { active: true } } })
+    await assert.rejects(client.AuditEntryType().list({"description":1} as any),
+      (err: any) => 'validate_failed' === err.code)
+  })
+
+
+
   test('basic', async (t) => {
 
     const live = 'TRUE' === process.env.LINEAR_TEST_LIVE
@@ -51,7 +109,7 @@ describe('AuditEntryTypeEntity', async () => {
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"description":{"a":true,"h":"Description","n":"description","r":true,"sh":"Description of the audit entry type.","t":"`$STRING`","key$":"description","index$":0},"type":{"a":true,"h":"Type","n":"type","r":true,"sh":"The audit entry type.","t":"`$STRING`","key$":"type","index$":1}},"name":"audit_entry_type","op":{"list":{"input":"data","name":"list","points":[{"a":true,"co":{"id":"POST auditEntryTypes","source":"graphql","version":2},"g":{},"gq":{"doc":"query AuditEntryTypeList { auditEntryTypes { ...AuditEntryTypeFields } } fragment AuditEntryTypeFields on AuditEntryType { description type }","field":"auditEntryTypes","optype":"query","vars":[]},"k":"graphql","m":"POST","o":"auditEntryTypes","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.auditEntryTypes`"},"index$":0}],"key$":"list"}},"relations":{"ancestors":[]},"key$":"audit_entry_type","name__orig":"audit_entry_type","Name":"AuditEntryType","name_":"audit_entry_type","name-":"audit-entry-type","NAME":"AUDIT_ENTRY_TYPE","index$":8}, {"active":true,"entity":"audit_entry_type","key$":"BasicAuditEntryTypeFlow","kind":"basic","name":"BasicAuditEntryTypeFlow","param":{},"step":[{"a":true,"d":{},"i":{},"m":{},"o":"list","s":[],"v":[{"apply":"ItemExists","def":{"ref":"audit_entry_type_ref01"}}],"index$":0}]}, 'AuditEntryType', {"POST auditEntryTypes":{"protocol":"graphql"}})
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"description":{"a":true,"h":"Description","n":"description","r":true,"sh":"Description of the audit entry type.","t":"`$STRING`","key$":"description","index$":0},"type":{"a":true,"h":"Type","n":"type","r":true,"sh":"The audit entry type.","t":"`$STRING`","key$":"type","index$":1}},"name":"audit_entry_type","op":{"list":{"input":"data","name":"list","points":[{"a":true,"co":{"id":"POST auditEntryTypes","source":"graphql","version":2},"g":{},"gq":{"doc":"query AuditEntryTypeList { auditEntryTypes { ...AuditEntryTypeFields } } fragment AuditEntryTypeFields on AuditEntryType { description type }","field":"auditEntryTypes","optype":"query","vars":[]},"k":"graphql","m":"POST","o":"auditEntryTypes","q":{},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.auditEntryTypes`"},"index$":0}],"key$":"list"}},"relations":{"ancestors":[]},"key$":"audit_entry_type","name__orig":"audit_entry_type","Name":"AuditEntryType","name_":"audit_entry_type","name-":"audit-entry-type","NAME":"AUDIT_ENTRY_TYPE","index$":8}, {"active":true,"entity":"audit_entry_type","key$":"BasicAuditEntryTypeFlow","kind":"basic","name":"BasicAuditEntryTypeFlow","param":{},"step":[{"a":true,"d":{},"i":{},"m":{},"o":"list","s":[],"v":[{"apply":"ItemExists","def":{"ref":"audit_entry_type_ref01"}}],"index$":0}]}, 'AuditEntryType', {"POST auditEntryTypes":{"protocol":"graphql"}}, { strict: LIVE_STRICT, t })
     }
     const client = setup.client
     const struct = setup.struct
@@ -72,6 +130,12 @@ describe('AuditEntryTypeEntity', async () => {
 })
 
 
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
 
 function basicSetup(extra?: any) {
   // TODO: fix test def options

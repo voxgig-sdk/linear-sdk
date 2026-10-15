@@ -6,40 +6,59 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/google/jsonschema-go/jsonschema"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	sdk "github.com/voxgig-sdk/linear-sdk/go"
 )
 
-// Args is the common argument shape for both tools. `entity` selects
-// the SDK entity to operate on; `query` is the optional reqmatch /
-// reqdata map passed through to the SDK. For load, `query` should be
-// `{"id": <value>}`. For list, omit `query` or pass an empty map.
-type Args struct {
-	Entity string         `json:"entity" jsonschema:"access_key_release | access_key_release_pipeline | agent_activity | agent_session | agent_skill | application | attachment | audit_entry | audit_entry_type | auth_resolver_response | authentication_session_response | comment | create_or_join_organization_response | custom_view | customer | customer_need | customer_status | customer_tier | cycle | diff | document | document_search_result | email_intake_address | email_user_account_auth_challenge_response | emoji | entity_external_link | external_user | favorite | git_automation_state | git_automation_target_branch | git_hub_integration_connect_detail | initiative | initiative_label | initiative_lead_team_change_impact | initiative_relation | initiative_to_project | initiative_update | integration | integration_template | integrations_setting | issue | issue_import | issue_label | issue_priority_value | issue_relation | issue_search_result | issue_to_release | logout_response | notification | notification_subscription | o_auth_application | organization | organization_domain | organization_invite | organization_meta | passkey_login_start_response | project | project_label | project_milestone | project_milestone_move_project_team | project_relation | project_search_result | project_status | project_update | push_subscription | reaction | release | release_note | release_pipeline | release_stage | roadmap | roadmap_to_project | sla_configuration | sso_url_from_email_response | team | team_membership | template | time_schedule | triage_responsibility | upload_file | usage_alert | user | user_setting | view_preference | webhook | webhook_failure_event | workflow_state"`
-	Query  map[string]any `json:"query,omitempty" jsonschema:"optional match map e.g. {\"id\":1} for load, omit for list"`
+// ListArgs is what an agent sends to linear_list.
+type ListArgs struct {
+	Entity string         `json:"entity" jsonschema:"one of: access_key_release | agent_activity | agent_session | agent_skill | attachment | audit_entry | audit_entry_type | authentication_session_response | comment | custom_view | customer | customer_need | customer_status | customer_tier | cycle | document | document_search_result | emoji | external_user | favorite | initiative | initiative_label | initiative_relation | initiative_to_project | initiative_update | integration | integration_template | issue | issue_label | issue_priority_value | issue_relation | issue_search_result | issue_to_release | notification | notification_subscription | o_auth_application | organization_invite | project | project_label | project_milestone | project_relation | project_search_result | project_status | project_update | release | release_note | release_pipeline | release_stage | roadmap | roadmap_to_project | sla_configuration | team | team_membership | template | time_schedule | triage_responsibility | usage_alert | user | webhook | webhook_failure_event | workflow_state"`
+	Query  map[string]any `json:"query,omitempty" jsonschema:"optional filter map; omit it for the first page"`
+}
+
+// LoadArgs is what an agent sends to linear_load.
+type LoadArgs struct {
+	Entity string         `json:"entity" jsonschema:"one of: access_key_release | access_key_release_pipeline | agent_activity | agent_session | agent_skill | application | attachment | auth_resolver_response | comment | custom_view | customer | customer_need | customer_status | customer_tier | cycle | diff | document | email_intake_address | emoji | entity_external_link | external_user | favorite | initiative | initiative_label | initiative_lead_team_change_impact | initiative_relation | initiative_to_project | initiative_update | integration | integration_template | integrations_setting | issue | issue_label | issue_relation | issue_to_release | notification | notification_subscription | o_auth_application | organization | organization_invite | organization_meta | project | project_label | project_milestone | project_relation | project_status | project_update | release | release_note | release_pipeline | release_stage | roadmap | roadmap_to_project | sso_url_from_email_response | team | team_membership | template | time_schedule | triage_responsibility | usage_alert | user | user_setting | view_preference | webhook | workflow_state"`
+	Query  map[string]any `json:"query" jsonschema:"match map naming the record, such as {\"id\":1}"`
 }
 
 func registerTools(server *mcp.Server, client *sdk.LinearSDK) {
 	mcp.AddTool(server, &mcp.Tool{
-		Name: "linear_list",
-		Description: "List records from Linear. " +
-			"Args: entity (one of the supported SDK entities), query (optional filter map). " +
-			"Returns the first page of records as JSON.",
-	}, func(ctx context.Context, req *mcp.CallToolRequest, args Args) (*mcp.CallToolResult, any, error) {
-		return runOp(client, "list", args)
+		Name:        "linear_list",
+		Description: "List records from Linear. Args: entity, query (optional filter map; omit it for the first page). Returns the first page of records as JSON.",
+		Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true},
+		InputSchema: entitySchema[ListArgs]("access_key_release", "agent_activity", "agent_session", "agent_skill", "attachment", "audit_entry", "audit_entry_type", "authentication_session_response", "comment", "custom_view", "customer", "customer_need", "customer_status", "customer_tier", "cycle", "document", "document_search_result", "emoji", "external_user", "favorite", "initiative", "initiative_label", "initiative_relation", "initiative_to_project", "initiative_update", "integration", "integration_template", "issue", "issue_label", "issue_priority_value", "issue_relation", "issue_search_result", "issue_to_release", "notification", "notification_subscription", "o_auth_application", "organization_invite", "project", "project_label", "project_milestone", "project_relation", "project_search_result", "project_status", "project_update", "release", "release_note", "release_pipeline", "release_stage", "roadmap", "roadmap_to_project", "sla_configuration", "team", "team_membership", "template", "time_schedule", "triage_responsibility", "usage_alert", "user", "webhook", "webhook_failure_event", "workflow_state"),
+	}, func(ctx context.Context, req *mcp.CallToolRequest, args ListArgs) (*mcp.CallToolResult, any, error) {
+		return runOp(ctx, client, "list", args.Entity, args.Query)
 	})
-
 	mcp.AddTool(server, &mcp.Tool{
-		Name: "linear_load",
-		Description: "Load a single record from Linear. " +
-			"Args: entity, query ({\"id\":N} required). Returns the record as JSON.",
-	}, func(ctx context.Context, req *mcp.CallToolRequest, args Args) (*mcp.CallToolResult, any, error) {
-		return runOp(client, "load", args)
+		Name:        "linear_load",
+		Description: "Load one record from Linear. Args: entity, query (match map naming the record, such as {\"id\":1}). Returns the record as JSON.",
+		Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true},
+		InputSchema: entitySchema[LoadArgs]("access_key_release", "access_key_release_pipeline", "agent_activity", "agent_session", "agent_skill", "application", "attachment", "auth_resolver_response", "comment", "custom_view", "customer", "customer_need", "customer_status", "customer_tier", "cycle", "diff", "document", "email_intake_address", "emoji", "entity_external_link", "external_user", "favorite", "initiative", "initiative_label", "initiative_lead_team_change_impact", "initiative_relation", "initiative_to_project", "initiative_update", "integration", "integration_template", "integrations_setting", "issue", "issue_label", "issue_relation", "issue_to_release", "notification", "notification_subscription", "o_auth_application", "organization", "organization_invite", "organization_meta", "project", "project_label", "project_milestone", "project_relation", "project_status", "project_update", "release", "release_note", "release_pipeline", "release_stage", "roadmap", "roadmap_to_project", "sso_url_from_email_response", "team", "team_membership", "template", "time_schedule", "triage_responsibility", "usage_alert", "user", "user_setting", "view_preference", "webhook", "workflow_state"),
+	}, func(ctx context.Context, req *mcp.CallToolRequest, args LoadArgs) (*mcp.CallToolResult, any, error) {
+		return runOp(ctx, client, "load", args.Entity, args.Query)
 	})
 }
 
-func runOp(client *sdk.LinearSDK, op string, args Args) (*mcp.CallToolResult, any, error) {
-	ent, err := entityFor(client, args.Entity)
+// entitySchema is the schema inferred from In, its entity limited to the
+// entities the tool serves.
+func entitySchema[In any](names ...string) *jsonschema.Schema {
+	schema, err := jsonschema.For[In](nil)
+	if err != nil {
+		panic(err)
+	}
+	enum := make([]any, len(names))
+	for i, name := range names {
+		enum[i] = name
+	}
+	schema.Properties["entity"].Enum = enum
+	return schema
+}
+
+func runOp(_ context.Context, client *sdk.LinearSDK, op string, entity string, input map[string]any) (*mcp.CallToolResult, any, error) {
+	ent, err := entityFor(client, entity)
 	if err != nil {
 		return toolError(err.Error())
 	}
@@ -47,9 +66,17 @@ func runOp(client *sdk.LinearSDK, op string, args Args) (*mcp.CallToolResult, an
 	var result any
 	switch op {
 	case "list":
-		result, err = ent.List(args.Query, nil)
+		result, err = ent.List(input, nil)
 	case "load":
-		result, err = ent.Load(args.Query, nil)
+		result, err = ent.Load(input, nil)
+	case "create":
+		result, err = ent.Create(input, nil)
+	case "update":
+		result, err = ent.Update(input, nil)
+	case "patch":
+		result, err = ent.Patch(input, nil)
+	case "remove":
+		result, err = ent.Remove(input, nil)
 	default:
 		return toolError(fmt.Sprintf("unknown op %q", op))
 	}
@@ -250,7 +277,6 @@ func entityFor(client *sdk.LinearSDK, name string) (sdk.LinearEntity, error) {
 		return client.WebhookFailureEvent(nil), nil
 	case "workflow_state":
 		return client.WorkflowState(nil), nil
-
 	}
 	return nil, fmt.Errorf("unknown entity %q", name)
 }
@@ -282,4 +308,9 @@ func toolError(msg string) (*mcp.CallToolResult, any, error) {
 			&mcp.TextContent{Text: msg},
 		},
 	}, nil, nil
+}
+
+// hint is an MCP annotation that defaults to true unless stated.
+func hint(b bool) *bool {
+	return &b
 }

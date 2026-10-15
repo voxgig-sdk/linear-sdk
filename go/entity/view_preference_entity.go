@@ -1,6 +1,9 @@
 package entity
 
 import (
+	"encoding/json"
+	"fmt"
+
 	"github.com/voxgig-sdk/linear-sdk/go/core"
 
 	vs "github.com/voxgig-sdk/linear-sdk/go/utility/struct"
@@ -49,6 +52,25 @@ func NewViewPreferenceEntity(client *core.LinearSDK, entopts map[string]any) *Vi
 }
 
 func (e *ViewPreferenceEntity) GetName() string { return e.name }
+
+// An entity prints and serialises as its data, as ts's toString and toJSON
+// do: the client it holds carries the options.
+func (e *ViewPreferenceEntity) String() string {
+	return "ViewPreference " + vs.Jsonify(e.data, map[string]any{"indent": 0})
+}
+
+func (e *ViewPreferenceEntity) GoString() string {
+	return e.String()
+}
+
+func (e *ViewPreferenceEntity) MarshalJSON() ([]byte, error) {
+	out := map[string]any{}
+	for k, v := range e.data {
+		out[k] = v
+	}
+	out["voxgig$entity"] = "ViewPreference"
+	return json.Marshal(out)
+}
 
 func (e *ViewPreferenceEntity) MarkDeleted() {
 	e.deleted = true
@@ -118,8 +140,8 @@ func (e *ViewPreferenceEntity) MatchTyped(match ...ViewPreference) ViewPreferenc
 	return typedFrom[ViewPreference](e.Match())
 }
 
-func (e *ViewPreferenceEntity) Stream(action string, args map[string]any, callopts map[string]any) <-chan any {
-	out := make(chan any)
+func (e *ViewPreferenceEntity) Stream(action string, args map[string]any, callopts map[string]any) <-chan core.StreamItem {
+	out := make(chan core.StreamItem)
 
 	if callopts == nil {
 		callopts = map[string]any{}
@@ -161,7 +183,7 @@ func (e *ViewPreferenceEntity) Stream(action string, args map[string]any, callop
 		ctx.Meta["stream_out"] = body
 	}
 
-	send := func(item any) bool {
+	send := func(item core.StreamItem) bool {
 		select {
 		case <-signal:
 			return false
@@ -170,76 +192,105 @@ func (e *ViewPreferenceEntity) Stream(action string, args map[string]any, callop
 		}
 	}
 
-	go func() {
-		defer close(out)
-
-		utility.FeatureHook(ctx, "PrePoint")
-		point, err := utility.MakePoint(ctx)
-		ctx.Out["point"] = point
+	// What MakeError or Done hands back: the error, as the last value, or
+	// under `throw: false` the data there is.
+	sendData := func(data any, err error) {
 		if err != nil {
-			return
-		}
-
-		utility.FeatureHook(ctx, "PreSpec")
-		spec, err := utility.MakeSpec(ctx)
-		ctx.Out["spec"] = spec
-		if err != nil {
-			return
-		}
-
-		utility.FeatureHook(ctx, "PreRequest")
-		req, err := utility.MakeRequest(ctx)
-		ctx.Out["request"] = req
-		if err != nil {
-			return
-		}
-
-		utility.FeatureHook(ctx, "PreResponse")
-		resp, err := utility.MakeResponse(ctx)
-		ctx.Out["response"] = resp
-		if err != nil {
-			return
-		}
-
-		utility.FeatureHook(ctx, "PreResult")
-		result, err := utility.MakeResult(ctx)
-		ctx.Out["result"] = result
-		if err != nil {
-			return
-		}
-
-		utility.FeatureHook(ctx, "PreDone")
-
-		// Inbound: prefer the streaming feature's incremental iterator; else
-		// fall back to the materialised items so Stream always yields.
-		if ctx.Result != nil && ctx.Result.Stream != nil {
-			for item := range ctx.Result.Stream() {
-				if !send(item) {
-					return
-				}
-			}
-			return
-		}
-
-		data, derr := utility.Done(ctx)
-		if derr != nil {
+			send(core.StreamItem{Err: err})
 			return
 		}
 		switch d := data.(type) {
 		case []any:
 			for _, item := range d {
-				if !send(item) {
+				if !send(core.StreamItem{Item: item}) {
 					return
 				}
 			}
 		case nil:
 			// nothing to yield
 		default:
-			send(d)
+			send(core.StreamItem{Item: d})
 		}
+	}
+
+	go func() {
+		defer close(out)
+
+		// A panicking hook or stream function leaves through MakeError, as
+		// runOp's does. A goroutine the stream function starts is out of reach.
+		defer func() {
+			if r := recover(); r != nil {
+				sendData(e.recovered(ctx, r))
+			}
+		}()
+
+		// A failed step leaves through MakeError, as an operation's does.
+		if err := e.streamSteps(ctx); err != nil {
+			sendData(utility.MakeError(ctx, err))
+			return
+		}
+
+		// Inbound: prefer the streaming feature's incremental iterator; else
+		// fall back to the materialised items so Stream always yields.
+		if ctx.Result != nil && ctx.Result.Stream != nil {
+			// Done does not run on this path, so its record is cleaned here.
+			utility.CleanExplain(ctx)
+			for item := range ctx.Result.Stream() {
+				if !send(core.StreamItem{Item: item}) {
+					return
+				}
+			}
+			return
+		}
+
+		sendData(utility.Done(ctx))
 	}()
 
 	return out
+}
+
+// The steps an operation runs, with their hooks; the first that fails hands
+// back its error.
+func (e *ViewPreferenceEntity) streamSteps(ctx *core.Context) error {
+	utility := e.utility
+
+	utility.FeatureHook(ctx, "PrePoint")
+	point, err := utility.MakePoint(ctx)
+	ctx.Out["point"] = point
+	if err != nil {
+		return err
+	}
+
+	utility.FeatureHook(ctx, "PreSpec")
+	spec, err := utility.MakeSpec(ctx)
+	ctx.Out["spec"] = spec
+	if err != nil {
+		return err
+	}
+
+	utility.FeatureHook(ctx, "PreRequest")
+	req, err := utility.MakeRequest(ctx)
+	ctx.Out["request"] = req
+	if err != nil {
+		return err
+	}
+
+	utility.FeatureHook(ctx, "PreResponse")
+	resp, err := utility.MakeResponse(ctx)
+	ctx.Out["response"] = resp
+	if err != nil {
+		return err
+	}
+
+	utility.FeatureHook(ctx, "PreResult")
+	result, err := utility.MakeResult(ctx)
+	ctx.Out["result"] = result
+	if err != nil {
+		return err
+	}
+
+	utility.FeatureHook(ctx, "PreDone")
+	return nil
 }
 
 
@@ -361,6 +412,11 @@ func (e *ViewPreferenceEntity) UpdateTyped(reqdata ViewPreferenceUpdateData, ctr
 
 
 
+func (e *ViewPreferenceEntity) Patch(_ map[string]any, _ map[string]any) (any, error) {
+	return core.UnsupportedOp("patch", e.name)
+}
+
+
 
 func (e *ViewPreferenceEntity) Remove(reqmatch map[string]any, ctrl map[string]any) (any, error) {
 	utility := e.utility
@@ -400,8 +456,14 @@ func (e *ViewPreferenceEntity) RemoveTyped(reqmatch ViewPreferenceRemoveMatch, c
 
 
 
-func (e *ViewPreferenceEntity) runOp(ctx *core.Context, postDone func()) (any, error) {
+func (e *ViewPreferenceEntity) runOp(ctx *core.Context, postDone func()) (out any, err error) {
 	utility := e.utility
+
+	defer func() {
+		if r := recover(); r != nil {
+			out, err = e.recovered(ctx, r)
+		}
+	}()
 
 	utility.FeatureHook(ctx, "PrePoint")
 	point, err := utility.MakePoint(ctx)
@@ -441,9 +503,9 @@ func (e *ViewPreferenceEntity) runOp(ctx *core.Context, postDone func()) (any, e
 	utility.FeatureHook(ctx, "PreDone")
 	postDone()
 
-	out, doneErr := utility.Done(ctx)
-	if doneErr != nil {
-		return out, doneErr
+	out, err = utility.Done(ctx)
+	if err != nil {
+		return out, err
 	}
 
 	opname := ""
@@ -459,4 +521,14 @@ func (e *ViewPreferenceEntity) runOp(ctx *core.Context, postDone func()) (any, e
 	}
 
 	return out, nil
+}
+
+// A hook, fetcher or parser that panics never reached MakeError, and its
+// message can quote the request.
+func (e *ViewPreferenceEntity) recovered(ctx *core.Context, r any) (any, error) {
+	perr, ok := r.(error)
+	if !ok {
+		perr = fmt.Errorf("%v", r)
+	}
+	return e.utility.MakeError(ctx, perr)
 }

@@ -54,6 +54,14 @@ const utility_1 = require("../../utility");
         const ent = testsdk.OrganizationMeta();
         (0, node_assert_1.default)(null != ent);
     });
+    (0, node_test_1.test)('validate', async (t) => {
+        if (null == __1.config.feature?.validate) {
+            t.skip('feature not present in this SDK: validate');
+            return;
+        }
+        const client = __1.LinearSDK.test(undefined, { feature: { validate: { active: true } } });
+        await node_assert_1.default.rejects(client.OrganizationMeta().load({ "url_key": 1 }), (err) => 'validate_failed' === err.code);
+    });
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.LINEAR_TEST_LIVE;
         for (const op of ['load']) {
@@ -62,7 +70,7 @@ const utility_1 = require("../../utility");
         }
         const setup = basicSetup();
         if (setup.live) {
-            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "allowedAuthServices": { "a": true, "h": "Allowed Auth Services", "n": "allowedAuthServices", "r": true, "sh": "Allowed authentication providers, empty array means all are allowed.", "t": "`$STRING`", "key$": "allowedAuthServices", "index$": 0 }, "region": { "a": true, "h": "Region", "n": "region", "r": true, "sh": "The region the workspace is hosted in.", "t": "`$STRING`", "key$": "region", "index$": 1 } }, "name": "organization_meta", "op": { "load": { "input": "data", "name": "load", "points": [{ "a": true, "co": { "id": "POST organizationMeta", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "url_key", "or": "url_key", "r": true, "t": "`$STRING`", "index$": 0 }] }, "gq": { "doc": "query OrganizationMetaLoad($urlKey: String!) { organizationMeta(urlKey: $urlKey) { ...OrganizationMetaFields } } fragment OrganizationMetaFields on OrganizationMeta { allowedAuthServices region }", "field": "organizationMeta", "optype": "query", "vars": [{ "from": "urlKey", "gqltype": "String!", "name": "urlKey" }] }, "k": "graphql", "m": "POST", "o": "organizationMeta", "q": { "exist": ["url_key"] }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.organizationMeta`" }, "index$": 0 }], "key$": "load" } }, "relations": { "ancestors": [] }, "key$": "organization_meta", "name__orig": "organization_meta", "Name": "OrganizationMeta", "name_": "organization_meta", "name-": "organization-meta", "NAME": "ORGANIZATION_META", "index$": 54 }, { "active": true, "entity": "organization_meta", "key$": "BasicOrganizationMetaFlow", "kind": "basic", "name": "BasicOrganizationMetaFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": { "ref": "organization_meta_ref01", "srcdatavar": "organization_meta_ref01_data", "suffix": "_dt0" }, "m": { "url_key": "url_key01" }, "o": "load", "s": [], "v": [{ "apply": "TextFieldMark", "def": { "mark": "Mark01-organization_meta_ref01" } }], "index$": 0 }] }, 'OrganizationMeta', { "POST organizationMeta": { "protocol": "graphql" } });
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "allowedAuthServices": { "a": true, "h": "Allowed Auth Services", "n": "allowedAuthServices", "r": true, "sh": "Allowed authentication providers, empty array means all are allowed.", "t": "`$STRING`", "key$": "allowedAuthServices", "index$": 0 }, "region": { "a": true, "h": "Region", "n": "region", "r": true, "sh": "The region the workspace is hosted in.", "t": "`$STRING`", "key$": "region", "index$": 1 } }, "name": "organization_meta", "op": { "load": { "input": "data", "name": "load", "points": [{ "a": true, "co": { "id": "POST organizationMeta", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "url_key", "or": "urlKey", "r": true, "t": "`$STRING`", "index$": 0 }] }, "gq": { "doc": "query OrganizationMetaLoad($urlKey: String!) { organizationMeta(urlKey: $urlKey) { ...OrganizationMetaFields } } fragment OrganizationMetaFields on OrganizationMeta { allowedAuthServices region }", "field": "organizationMeta", "optype": "query", "vars": [{ "from": "urlKey", "gqltype": "String!", "name": "urlKey" }] }, "k": "graphql", "m": "POST", "o": "organizationMeta", "q": { "exist": ["url_key"] }, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.organizationMeta`" }, "index$": 0 }], "key$": "load" } }, "relations": { "ancestors": [] }, "key$": "organization_meta", "name__orig": "organization_meta", "Name": "OrganizationMeta", "name_": "organization_meta", "name-": "organization-meta", "NAME": "ORGANIZATION_META", "index$": 54 }, { "active": true, "entity": "organization_meta", "key$": "BasicOrganizationMetaFlow", "kind": "basic", "name": "BasicOrganizationMetaFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": { "ref": "organization_meta_ref01", "srcdatavar": "organization_meta_ref01_data", "suffix": "_dt0" }, "m": { "url_key": "url_key01" }, "o": "load", "s": [], "v": [{ "apply": "TextFieldMark", "def": { "mark": "Mark01-organization_meta_ref01" } }], "index$": 0 }] }, 'OrganizationMeta', { "POST organizationMeta": { "protocol": "graphql" } }, { strict: LIVE_STRICT, t });
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -74,6 +82,11 @@ const utility_1 = require("../../utility");
         const organization_meta_ref01_ent = client.OrganizationMeta();
     });
 });
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true;
 function basicSetup(extra) {
     // TODO: fix test def options
     const options = {}; // null

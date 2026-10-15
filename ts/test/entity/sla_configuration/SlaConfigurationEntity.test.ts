@@ -9,7 +9,7 @@ import { createLiveTransport } from '../../live-runner'
 import { runLiveEntity } from '../../live-entity'
 
 
-import { LinearSDK, BaseFeature, stdutil } from '../../..'
+import { LinearSDK, BaseFeature, config, stdutil } from '../../..'
 
 import {
   envOverride,
@@ -41,6 +41,64 @@ describe('SlaConfigurationEntity', async () => {
   })
 
 
+  class FailHook extends BaseFeature {
+    name = 'failhook'
+    version = '0.0.1'
+    active = true
+    unexpected = 0
+    init() { }
+    PreSpec() { throw new Error('sla_configuration hook failed') }
+    PreUnexpected() { this.unexpected++ }
+  }
+
+  test('stream-error', async () => {
+    const offline = { net: { offline: true } }
+    await assert.rejects(async () => {
+      for await (const _item of LinearSDK.test(offline).SlaConfiguration().stream('list')) { }
+    }, /offline/)
+
+    for await (const _item of LinearSDK.test(offline).SlaConfiguration()
+      .stream('list', undefined, { ctrl: { throw: false } })) { }
+
+    if (null != (config as any).feature?.rbac) {
+      const denied = LinearSDK.test(undefined, { feature: { rbac: { active: true, deny: true } } })
+      await assert.rejects(async () => {
+        for await (const _item of denied.SlaConfiguration().stream('list')) { }
+      }, (err: any) => 'rbac_denied' === err.code)
+    }
+  })
+
+  test('stream-ctrl', async () => {
+    const explain: any = {}
+    const ctrl: any = { explain }
+    for await (const _item of LinearSDK.test().SlaConfiguration().stream('list', undefined, { ctrl })) { }
+    assert.deepStrictEqual(Object.keys(ctrl), ['explain'])
+    assert(explain === ctrl.explain && 0 < Object.keys(explain).length)
+  })
+
+  test('unexpected', async () => {
+    const hook = new FailHook()
+    const client = new LinearSDK({ feature: { test: { active: true } }, extend: [hook] })
+    await assert.rejects(client.SlaConfiguration().list(), /hook failed/)
+    assert(0 < hook.unexpected)
+
+    const fired = hook.unexpected
+    assert.strictEqual(await client.SlaConfiguration().list(undefined, { throw: false }), undefined)
+    assert(fired < hook.unexpected)
+  })
+
+  test('validate', async (t) => {
+    if (null == (config as any).feature?.validate) {
+      t.skip('feature not present in this SDK: validate')
+      return
+    }
+    const client = LinearSDK.test(undefined, { feature: { validate: { active: true } } })
+    await assert.rejects(client.SlaConfiguration().list({"team_id":1} as any),
+      (err: any) => 'validate_failed' === err.code)
+  })
+
+
+
   test('basic', async (t) => {
 
     const live = 'TRUE' === process.env.LINEAR_TEST_LIVE
@@ -51,7 +109,7 @@ describe('SlaConfigurationEntity', async () => {
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"conditions":{"a":true,"h":"Conditions","n":"conditions","r":true,"sh":"The workflow conditions that determine when this SLA rule applies.","t":"`$ANY`","key$":"conditions","index$":0},"id":{"a":true,"h":"Id","n":"id","r":true,"sh":"The identifier of the SLA rule.","t":"`$STRING`","key$":"id","index$":1},"name":{"a":true,"h":"Name","n":"name","r":true,"sh":"The name of the SLA rule.","t":"`$STRING`","key$":"name","index$":2},"removesSla":{"a":true,"h":"Removes Sla","n":"removesSla","r":true,"sh":"Whether the rule removes an SLA instead of setting one.","t":"`$BOOLEAN`","key$":"removesSla","index$":3},"sla":{"a":true,"h":"Sla","n":"sla","r":false,"sh":"The SLA value configured by the rule, expressed in milliseconds or business days depending on the day-count type.","t":"`$NUMBER`","key$":"sla","index$":4},"slaType":{"a":true,"h":"Sla Type","n":"slaType","r":false,"sh":"The SLA type used when the rule sets an SLA.","t":"`$STRING`","key$":"slaType","index$":5},"startMode":{"a":true,"h":"Start Mode","n":"startMode","r":false,"sh":"When SLA timing begins.","t":"`$STRING`","key$":"startMode","index$":6}},"id":{"field":"id","name":"id"},"name":"sla_configuration","op":{"list":{"input":"data","name":"list","points":[{"a":true,"co":{"id":"POST slaConfigurations","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"team_id","or":"team_id","r":true,"t":"`$STRING`","index$":0}]},"gq":{"doc":"query SlaConfigurationList($teamId: String!) { slaConfigurations(teamId: $teamId) { ...SlaConfigurationFields } } fragment SlaConfigurationFields on SlaConfiguration { conditions id name removesSla sla slaType startMode }","field":"slaConfigurations","optype":"query","vars":[{"from":"teamId","gqltype":"String!","name":"teamId"}]},"k":"graphql","m":"POST","o":"slaConfigurations","q":{"exist":["team_id"]},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.slaConfigurations`"},"index$":0}],"key$":"list"}},"relations":{"ancestors":[]},"key$":"sla_configuration","name__orig":"sla_configuration","Name":"SlaConfiguration","name_":"sla_configuration","name-":"sla-configuration","NAME":"SLA_CONFIGURATION","index$":72}, {"active":true,"entity":"sla_configuration","key$":"BasicSlaConfigurationFlow","kind":"basic","name":"BasicSlaConfigurationFlow","param":{},"step":[{"a":true,"d":{},"i":{},"m":{"team_id":"team01"},"o":"list","s":[],"v":[{"apply":"ItemExists","def":{"ref":"sla_configuration_ref01"}}],"index$":0}]}, 'SlaConfiguration', {"POST slaConfigurations":{"protocol":"graphql"}})
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"conditions":{"a":true,"h":"Conditions","n":"conditions","r":true,"sh":"The workflow conditions that determine when this SLA rule applies.","t":"`$ANY`","key$":"conditions","index$":0},"id":{"a":true,"h":"Id","n":"id","r":true,"sh":"The identifier of the SLA rule.","t":"`$STRING`","key$":"id","index$":1},"name":{"a":true,"h":"Name","n":"name","r":true,"sh":"The name of the SLA rule.","t":"`$STRING`","key$":"name","index$":2},"removesSla":{"a":true,"h":"Removes Sla","n":"removesSla","r":true,"sh":"Whether the rule removes an SLA instead of setting one.","t":"`$BOOLEAN`","key$":"removesSla","index$":3},"sla":{"a":true,"h":"Sla","n":"sla","r":false,"sh":"The SLA value configured by the rule, expressed in milliseconds or business days depending on the day-count type.","t":"`$NUMBER`","key$":"sla","index$":4},"slaType":{"a":true,"h":"Sla Type","n":"slaType","r":false,"sh":"The SLA type used when the rule sets an SLA.","t":"`$STRING`","key$":"slaType","index$":5},"startMode":{"a":true,"h":"Start Mode","n":"startMode","r":false,"sh":"When SLA timing begins.","t":"`$STRING`","key$":"startMode","index$":6}},"id":{"field":"id","name":"id"},"name":"sla_configuration","op":{"list":{"input":"data","name":"list","points":[{"a":true,"co":{"id":"POST slaConfigurations","source":"graphql","version":2},"g":{"params":[{"a":true,"k":"param","n":"team_id","or":"teamId","r":true,"t":"`$STRING`","index$":0}]},"gq":{"doc":"query SlaConfigurationList($teamId: String!) { slaConfigurations(teamId: $teamId) { ...SlaConfigurationFields } } fragment SlaConfigurationFields on SlaConfiguration { conditions id name removesSla sla slaType startMode }","field":"slaConfigurations","optype":"query","vars":[{"from":"teamId","gqltype":"String!","name":"teamId"}]},"k":"graphql","m":"POST","o":"slaConfigurations","q":{"exist":["team_id"]},"r":{},"s":[],"t":{"req":"`reqdata`","res":"`body.data.slaConfigurations`"},"index$":0}],"key$":"list"}},"relations":{"ancestors":[]},"key$":"sla_configuration","name__orig":"sla_configuration","Name":"SlaConfiguration","name_":"sla_configuration","name-":"sla-configuration","NAME":"SLA_CONFIGURATION","index$":72}, {"active":true,"entity":"sla_configuration","key$":"BasicSlaConfigurationFlow","kind":"basic","name":"BasicSlaConfigurationFlow","param":{},"step":[{"a":true,"d":{},"i":{},"m":{"team_id":"team01"},"o":"list","s":[],"v":[{"apply":"ItemExists","def":{"ref":"sla_configuration_ref01"}}],"index$":0}]}, 'SlaConfiguration', {"POST slaConfigurations":{"protocol":"graphql"}}, { strict: LIVE_STRICT, t })
     }
     const client = setup.client
     const struct = setup.struct
@@ -73,6 +131,12 @@ describe('SlaConfigurationEntity', async () => {
 })
 
 
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
 
 function basicSetup(extra?: any) {
   // TODO: fix test def options

@@ -73,7 +73,6 @@
         "include_archived": "INCLUDE_ARCHIVED01",
         "last": "LAST01",
         "order_by": "ORDER_BY01",
-        "query": "QUERY01",
         "branch_name": "BRANCH_NAME01",
         "permanently_delete": "PERMANENTLY_DELETE01",
         "label_id": "LABEL01",
@@ -155,7 +154,6 @@
         "include_archived": "INCLUDE_ARCHIVED01",
         "last": "LAST01",
         "order_by": "ORDER_BY01",
-        "query": "QUERY01",
         "branch_name": "BRANCH_NAME01",
         "permanently_delete": "PERMANENTLY_DELETE01",
         "label_id": "LABEL01",
@@ -237,7 +235,6 @@
         "include_archived": "INCLUDE_ARCHIVED01",
         "last": "LAST01",
         "order_by": "ORDER_BY01",
-        "query": "QUERY01",
         "branch_name": "BRANCH_NAME01",
         "permanently_delete": "PERMANENTLY_DELETE01",
         "label_id": "LABEL01",
@@ -329,22 +326,12 @@
       "version": 2,
       "source": "graphql"
     },
-    "POST issueSearch": {
-      "provenance": "operation-contract",
-      "version": 2,
-      "source": "graphql"
-    },
     "POST issues": {
       "provenance": "operation-contract",
       "version": 2,
       "source": "graphql"
     },
     "POST issueVcsBranchSearch": {
-      "provenance": "operation-contract",
-      "version": 2,
-      "source": "graphql"
-    },
-    "POST attachmentIssue": {
       "provenance": "operation-contract",
       "version": 2,
       "source": "graphql"

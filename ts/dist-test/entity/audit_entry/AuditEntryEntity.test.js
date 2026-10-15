@@ -54,6 +54,53 @@ const utility_1 = require("../../utility");
         const ent = testsdk.AuditEntry();
         (0, node_assert_1.default)(null != ent);
     });
+    class FailHook extends __1.BaseFeature {
+        name = 'failhook';
+        version = '0.0.1';
+        active = true;
+        unexpected = 0;
+        init() { }
+        PreSpec() { throw new Error('audit_entry hook failed'); }
+        PreUnexpected() { this.unexpected++; }
+    }
+    (0, node_test_1.test)('stream-error', async () => {
+        const offline = { net: { offline: true } };
+        await node_assert_1.default.rejects(async () => {
+            for await (const _item of __1.LinearSDK.test(offline).AuditEntry().stream('list')) { }
+        }, /offline/);
+        for await (const _item of __1.LinearSDK.test(offline).AuditEntry()
+            .stream('list', undefined, { ctrl: { throw: false } })) { }
+        if (null != __1.config.feature?.rbac) {
+            const denied = __1.LinearSDK.test(undefined, { feature: { rbac: { active: true, deny: true } } });
+            await node_assert_1.default.rejects(async () => {
+                for await (const _item of denied.AuditEntry().stream('list')) { }
+            }, (err) => 'rbac_denied' === err.code);
+        }
+    });
+    (0, node_test_1.test)('stream-ctrl', async () => {
+        const explain = {};
+        const ctrl = { explain };
+        for await (const _item of __1.LinearSDK.test().AuditEntry().stream('list', undefined, { ctrl })) { }
+        node_assert_1.default.deepStrictEqual(Object.keys(ctrl), ['explain']);
+        (0, node_assert_1.default)(explain === ctrl.explain && 0 < Object.keys(explain).length);
+    });
+    (0, node_test_1.test)('unexpected', async () => {
+        const hook = new FailHook();
+        const client = new __1.LinearSDK({ feature: { test: { active: true } }, extend: [hook] });
+        await node_assert_1.default.rejects(client.AuditEntry().list(), /hook failed/);
+        (0, node_assert_1.default)(0 < hook.unexpected);
+        const fired = hook.unexpected;
+        node_assert_1.default.strictEqual(await client.AuditEntry().list(undefined, { throw: false }), undefined);
+        (0, node_assert_1.default)(fired < hook.unexpected);
+    });
+    (0, node_test_1.test)('validate', async (t) => {
+        if (null == __1.config.feature?.validate) {
+            t.skip('feature not present in this SDK: validate');
+            return;
+        }
+        const client = __1.LinearSDK.test(undefined, { feature: { validate: { active: true } } });
+        await node_assert_1.default.rejects(client.AuditEntry().list({ "after": 1 }), (err) => 'validate_failed' === err.code);
+    });
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.LINEAR_TEST_LIVE;
         for (const op of ['list']) {
@@ -62,7 +109,7 @@ const utility_1 = require("../../utility");
         }
         const setup = basicSetup();
         if (setup.live) {
-            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "actor": { "a": true, "h": "Actor", "n": "actor", "r": false, "sh": "The user that caused the audit entry to be created.", "t": "`$OBJECT`", "key$": "actor", "index$": 0 }, "actorId": { "a": true, "h": "Actor Id", "n": "actorId", "r": false, "sh": "The ID of the user that caused the audit entry to be created.", "t": "`$STRING`", "key$": "actorId", "index$": 1 }, "archivedAt": { "a": true, "h": "Archived At", "n": "archivedAt", "r": false, "sh": "The time at which the entity was archived.", "t": "`$ANY`", "key$": "archivedAt", "index$": 2 }, "countryCode": { "a": true, "h": "Country Code", "n": "countryCode", "r": false, "sh": "The ISO 3166-1 alpha-2 country code derived from the request IP address.", "t": "`$STRING`", "key$": "countryCode", "index$": 3 }, "createdAt": { "a": true, "h": "Created At", "n": "createdAt", "r": true, "sh": "The time at which the entity was created.", "t": "`$ANY`", "key$": "createdAt", "index$": 4 }, "id": { "a": true, "h": "Id", "n": "id", "r": true, "sh": "The unique identifier of the entity.", "t": "`$STRING`", "key$": "id", "index$": 5 }, "ip": { "a": true, "h": "Ip", "n": "ip", "r": false, "sh": "The IP address of the actor at the time the audited action was performed.", "t": "`$STRING`", "key$": "ip", "index$": 6 }, "metadata": { "a": true, "h": "Metadata", "n": "metadata", "r": false, "sh": "Additional metadata related to the audit entry.", "t": "`$ANY`", "key$": "metadata", "index$": 7 }, "organization": { "a": true, "h": "Organization", "n": "organization", "r": false, "sh": "The workspace the audit log belongs to.", "t": "`$OBJECT`", "key$": "organization", "index$": 8 }, "requestInformation": { "a": true, "h": "Request Information", "n": "requestInformation", "r": false, "sh": "Additional information related to the request which performed the action.", "t": "`$ANY`", "key$": "requestInformation", "index$": 9 }, "type": { "a": true, "h": "Type", "n": "type", "r": true, "sh": "The type of audited action (e.g., user authentication, permission change, data export, setting modification).", "t": "`$STRING`", "key$": "type", "index$": 10 }, "updatedAt": { "a": true, "h": "Updated At", "n": "updatedAt", "r": true, "sh": "The last time at which the entity was meaningfully updated.", "t": "`$ANY`", "key$": "updatedAt", "index$": 11 } }, "id": { "field": "id", "name": "id" }, "name": "audit_entry", "op": { "list": { "input": "data", "name": "list", "points": [{ "a": true, "co": { "id": "POST auditEntries", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "after", "or": "after", "r": false, "t": "`$STRING`", "index$": 0 }, { "a": true, "k": "param", "n": "before", "or": "before", "r": false, "t": "`$STRING`", "index$": 1 }, { "a": true, "k": "param", "n": "first", "or": "first", "r": false, "t": "`$INTEGER`", "index$": 2 }, { "a": true, "k": "param", "n": "include_archived", "or": "include_archived", "r": false, "t": "`$BOOLEAN`", "index$": 3 }, { "a": true, "k": "param", "n": "last", "or": "last", "r": false, "t": "`$INTEGER`", "index$": 4 }, { "a": true, "k": "param", "n": "order_by", "or": "order_by", "r": false, "t": "`$ANY`", "index$": 5 }] }, "gq": { "doc": "query AuditEntryList($after: String, $before: String, $filter: AuditEntryFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { auditEntries(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...AuditEntryFields } pageInfo { endCursor hasNextPage } } } fragment AuditEntryFields on AuditEntry { actor { id } actorId archivedAt countryCode createdAt id ip metadata organization { id } requestInformation type updatedAt }", "field": "auditEntries", "optype": "query", "page": { "cursor": "pageInfo.endCursor", "more": "pageInfo.hasNextPage", "nodes": "nodes", "style": "relay" }, "vars": [{ "from": "after", "gqltype": "String", "name": "after" }, { "from": "before", "gqltype": "String", "name": "before" }, { "from": "", "gqltype": "AuditEntryFilter", "name": "filter" }, { "from": "first", "gqltype": "Int", "name": "first" }, { "from": "includeArchived", "gqltype": "Boolean", "name": "includeArchived" }, { "from": "last", "gqltype": "Int", "name": "last" }, { "from": "orderBy", "gqltype": "PaginationOrderBy", "name": "orderBy" }] }, "k": "graphql", "m": "POST", "o": "auditEntries", "q": {}, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.auditEntries.nodes`" }, "index$": 0 }], "key$": "list" } }, "relations": { "ancestors": [] }, "key$": "audit_entry", "name__orig": "audit_entry", "Name": "AuditEntry", "name_": "audit_entry", "name-": "audit-entry", "NAME": "AUDIT_ENTRY", "index$": 7 }, { "active": true, "entity": "audit_entry", "key$": "BasicAuditEntryFlow", "kind": "basic", "name": "BasicAuditEntryFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": {}, "m": { "after": "after01", "before": "before01", "first": "first01", "include_archived": "include_archived01", "last": "last01", "order_by": "order_by01" }, "o": "list", "s": [], "v": [{ "apply": "ItemExists", "def": { "ref": "audit_entry_ref01" } }], "index$": 0 }] }, 'AuditEntry', { "POST auditEntries": { "protocol": "graphql" } });
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "actor": { "a": true, "h": "Actor", "n": "actor", "r": false, "sh": "The user that caused the audit entry to be created.", "t": "`$OBJECT`", "key$": "actor", "index$": 0 }, "actorId": { "a": true, "h": "Actor Id", "n": "actorId", "r": false, "sh": "The ID of the user that caused the audit entry to be created.", "t": "`$STRING`", "key$": "actorId", "index$": 1 }, "archivedAt": { "a": true, "h": "Archived At", "n": "archivedAt", "r": false, "sh": "The time at which the entity was archived.", "t": "`$ANY`", "key$": "archivedAt", "index$": 2 }, "countryCode": { "a": true, "h": "Country Code", "n": "countryCode", "r": false, "sh": "The ISO 3166-1 alpha-2 country code derived from the request IP address.", "t": "`$STRING`", "key$": "countryCode", "index$": 3 }, "createdAt": { "a": true, "h": "Created At", "n": "createdAt", "r": true, "sh": "The time at which the entity was created.", "t": "`$ANY`", "key$": "createdAt", "index$": 4 }, "id": { "a": true, "h": "Id", "n": "id", "r": true, "sh": "The unique identifier of the entity.", "t": "`$STRING`", "key$": "id", "index$": 5 }, "ip": { "a": true, "h": "Ip", "n": "ip", "r": false, "sh": "The IP address of the actor at the time the audited action was performed.", "t": "`$STRING`", "key$": "ip", "index$": 6 }, "metadata": { "a": true, "h": "Metadata", "n": "metadata", "r": false, "sh": "Additional metadata related to the audit entry.", "t": "`$ANY`", "key$": "metadata", "index$": 7 }, "organization": { "a": true, "h": "Organization", "n": "organization", "r": false, "sh": "The workspace the audit log belongs to.", "t": "`$OBJECT`", "key$": "organization", "index$": 8 }, "requestInformation": { "a": true, "h": "Request Information", "n": "requestInformation", "r": false, "sh": "Additional information related to the request which performed the action.", "t": "`$ANY`", "key$": "requestInformation", "index$": 9 }, "type": { "a": true, "h": "Type", "n": "type", "r": true, "sh": "The type of audited action (e.g., user authentication, permission change, data export, setting modification).", "t": "`$STRING`", "key$": "type", "index$": 10 }, "updatedAt": { "a": true, "h": "Updated At", "n": "updatedAt", "r": true, "sh": "The last time at which the entity was meaningfully updated.", "t": "`$ANY`", "key$": "updatedAt", "index$": 11 } }, "id": { "field": "id", "name": "id" }, "name": "audit_entry", "op": { "list": { "input": "data", "name": "list", "points": [{ "a": true, "co": { "id": "POST auditEntries", "source": "graphql", "version": 2 }, "g": { "params": [{ "a": true, "k": "param", "n": "after", "or": "after", "r": false, "t": "`$STRING`", "index$": 0 }, { "a": true, "k": "param", "n": "before", "or": "before", "r": false, "t": "`$STRING`", "index$": 1 }, { "a": true, "k": "param", "n": "first", "or": "first", "r": false, "t": "`$INTEGER`", "index$": 2 }, { "a": true, "k": "param", "n": "include_archived", "or": "includeArchived", "r": false, "t": "`$BOOLEAN`", "index$": 3 }, { "a": true, "k": "param", "n": "last", "or": "last", "r": false, "t": "`$INTEGER`", "index$": 4 }, { "a": true, "k": "param", "n": "order_by", "or": "orderBy", "r": false, "t": "`$ANY`", "index$": 5 }] }, "gq": { "doc": "query AuditEntryList($after: String, $before: String, $filter: AuditEntryFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { auditEntries(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...AuditEntryFields } pageInfo { endCursor hasNextPage } } } fragment AuditEntryFields on AuditEntry { actor { id } actorId archivedAt countryCode createdAt id ip metadata organization { id } requestInformation type updatedAt }", "field": "auditEntries", "optype": "query", "page": { "cursor": "pageInfo.endCursor", "more": "pageInfo.hasNextPage", "nodes": "nodes", "style": "relay" }, "vars": [{ "from": "after", "gqltype": "String", "name": "after" }, { "from": "before", "gqltype": "String", "name": "before" }, { "from": "", "gqltype": "AuditEntryFilter", "name": "filter" }, { "from": "first", "gqltype": "Int", "name": "first" }, { "from": "includeArchived", "gqltype": "Boolean", "name": "includeArchived" }, { "from": "last", "gqltype": "Int", "name": "last" }, { "from": "orderBy", "gqltype": "PaginationOrderBy", "name": "orderBy" }] }, "k": "graphql", "m": "POST", "o": "auditEntries", "q": {}, "r": {}, "s": [], "t": { "req": "`reqdata`", "res": "`body.data.auditEntries.nodes`" }, "index$": 0 }], "key$": "list" } }, "relations": { "ancestors": [] }, "key$": "audit_entry", "name__orig": "audit_entry", "Name": "AuditEntry", "name_": "audit_entry", "name-": "audit-entry", "NAME": "AUDIT_ENTRY", "index$": 7 }, { "active": true, "entity": "audit_entry", "key$": "BasicAuditEntryFlow", "kind": "basic", "name": "BasicAuditEntryFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": {}, "m": { "after": "after01", "before": "before01", "first": "first01", "include_archived": "include_archived01", "last": "last01", "order_by": "order_by01" }, "o": "list", "s": [], "v": [{ "apply": "ItemExists", "def": { "ref": "audit_entry_ref01" } }], "index$": 0 }] }, 'AuditEntry', { "POST auditEntries": { "protocol": "graphql" } }, { strict: LIVE_STRICT, t });
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -81,6 +128,11 @@ const utility_1 = require("../../utility");
         const audit_entry_ref01_list = (await audit_entry_ref01_ent.list(audit_entry_ref01_match)).map((e) => e.data());
     });
 });
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true;
 function basicSetup(extra) {
     // TODO: fix test def options
     const options = {}; // null

@@ -2765,7 +2765,6 @@ class IssueListMatch
     public ?bool $include_archived = null;
     public ?int $last = null;
     public mixed $order_by = null;
-    public ?string $query = null;
 }
 
 /** Request payload for Issue#create. */

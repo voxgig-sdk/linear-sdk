@@ -9,8 +9,39 @@ require_once __DIR__ . '/Runner.php';
 use PHPUnit\Framework\TestCase;
 use Voxgig\Struct\Struct as Vs;
 
+class IntegrationEntityTestFailHook extends LinearBaseFeature
+{
+    public int $unexpected = 0;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->name = 'failhook';
+    }
+
+    public function init(LinearContext $ctx, array $options): void
+    {
+    }
+
+    public function PreSpec(LinearContext $ctx): void
+    {
+        throw new \RuntimeException('integration hook failed');
+    }
+
+    public function PreUnexpected(LinearContext $ctx): void
+    {
+        $this->unexpected++;
+    }
+}
+
 class IntegrationEntityTest extends TestCase
 {
+    // main.kit.test.live.strict is true (the default is true): a live
+    // request that fails, or a live test missing an input it needs,
+    // fails the test.
+    // An account with no record for a test to read skips it either way.
+    private const LIVE_STRICT = true;
+
     public function test_create_instance(): void
     {
         $testsdk = LinearSDK::test(null, null);
@@ -57,65 +88,141 @@ class IntegrationEntityTest extends TestCase
         }
     }
 
+    public function test_stream_error(): void
+    {
+        $offline = ["net" => ["offline" => true]];
+        $streamerr = null;
+        try {
+            iterator_to_array(LinearSDK::test($offline, null)->Integration(null)
+                ->stream("list", null, null), false);
+        } catch (\Throwable $e) {
+            $streamerr = $e;
+        }
+        $this->assertNotNull($streamerr, 'the stream should raise the transport failure');
+        $this->assertStringContainsString('offline', $streamerr->getMessage());
+
+        iterator_to_array(LinearSDK::test($offline, null)->Integration(null)
+            ->stream("list", null, ["ctrl" => ["throw" => false]]), false);
+
+        $cfg = LinearConfig::shared_config();
+        if (isset($cfg["feature"]["rbac"])) {
+            $denied = LinearSDK::test(null, ["feature" => ["rbac" => ["active" => true, "deny" => true]]]);
+            $denyerr = null;
+            try {
+                iterator_to_array($denied->Integration(null)->stream("list", null, null), false);
+            } catch (\Throwable $e) {
+                $denyerr = $e;
+            }
+            $this->assertSame('rbac_denied', $denyerr->sdk_code ?? null);
+        }
+    }
+
+    public function test_stream_ctrl(): void
+    {
+        $ctrl = ["explain" => []];
+        iterator_to_array(LinearSDK::test(null, null)->Integration(null)
+            ->stream("list", null, ["ctrl" => $ctrl]), false);
+        $this->assertSame(["explain"], array_keys($ctrl));
+    }
+
+    public function test_unexpected(): void
+    {
+        $hook = new IntegrationEntityTestFailHook();
+        $client = new LinearSDK(["feature" => ["test" => ["active" => true]], "extend" => [$hook]]);
+
+        $err = null;
+        try {
+            $client->Integration(null)->list(null, null);
+        } catch (\Throwable $e) {
+            $err = $e;
+        }
+        $this->assertNotNull($err, 'the throwing hook should fail the operation');
+        $this->assertStringContainsString('hook failed', $err->getMessage());
+        $this->assertGreaterThan(0, $hook->unexpected, 'PreUnexpected did not fire');
+
+        $fired = $hook->unexpected;
+        $this->assertNull($client->Integration(null)->list(null, ["throw" => false]));
+        $this->assertGreaterThan($fired, $hook->unexpected, 'PreUnexpected did not fire');
+    }
+
+    public function test_cost_commits_a_throwing_transport(): void
+    {
+        $cfg = LinearConfig::shared_config();
+        if (!isset($cfg["feature"]["cost"])) {
+            $this->markTestSkipped('feature not present in this SDK: cost');
+        }
+        $client = new LinearSDK([
+            "test" => ["active" => true],
+            "feature" => ["cost" => ["active" => true, "unit" => 1]],
+            "utility" => ["fetcher" => function ($ctx, $url, $fetchdef) {
+                throw new \RuntimeException('integration transport failed');
+            }],
+        ]);
+
+        $err = null;
+        try {
+            $client->Integration(null)->list(null, null);
+        } catch (\Throwable $e) {
+            $err = $e;
+        }
+        $this->assertInstanceOf(LinearError::class, $err);
+        $this->assertStringContainsString('transport failed', $err->getMessage());
+
+        $client->Integration(null)->list(null, ["throw" => false]);
+        $this->assertSame(2, $client->_cost["total"]["calls"]);
+        $this->assertSame(2, $client->_cost["total"]["attempts"]);
+    }
+
+    public function test_validate(): void
+    {
+        $cfg = LinearConfig::shared_config();
+        if (!isset($cfg["feature"]["validate"])) {
+            $this->markTestSkipped('feature not present in this SDK: validate');
+        }
+        $client = LinearSDK::test(null, ["feature" => ["validate" => ["active" => true]]]);
+        $err = null;
+        try {
+            $client->Integration(null)->list(["after" => 1], null);
+        } catch (\Throwable $e) {
+            $err = $e;
+        }
+        $this->assertSame('validate_failed', $err->sdk_code ?? null);
+    }
+
     public function test_basic_flow(): void
     {
         $setup = integration_basic_setup(null);
         // Per-op sdk-test-control.json skip.
         $_live = !empty($setup["live"]);
-        foreach (["create", "list", "update", "load", "remove"] as $_op) {
+        foreach (["list", "update", "load", "remove"] as $_op) {
             [$_shouldSkip, $_reason] = Runner::is_control_skipped("entityOp", "integration." . $_op, $_live ? "live" : "unit");
             if ($_shouldSkip) {
                 $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
                 return;
             }
         }
-        // The basic flow consumes synthetic IDs from the fixture. In live mode
-        // without an *_ENTID env override, those IDs hit the live API and 4xx.
-        if (!empty($setup["synthetic_only"])) {
-            $this->markTestSkipped("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_INTEGRATION_ENTID JSON to run live");
-            return;
+        if (!empty($setup["live"])) {
+            foreach (["after01", "before01", "first01", "include_archived01", "last01", "order_by01"] as $_liveKey) {
+                if (!empty($setup["synthetic_only"]) || null === ($setup["idmap"][$_liveKey] ?? null)) {
+                    Runner::live_miss(self::LIVE_STRICT, "Live entity test blocked: needs " . $_liveKey . " via LINEAR_TEST_INTEGRATION_ENTID");
+                }
+            }
+        }
+        if (!empty($setup["live"])) {
+            Runner::live_miss(self::LIVE_STRICT, "Live entity test blocked: " . "the flow updates a integration record it did not create");
         }
         $client = $setup["client"];
 
-        // CREATE
-        $integration_ref01_ent = $client->Integration(null);
-        $integration_ref01_data = Helpers::to_map(Vs::getprop(
-            Vs::getpath($setup["data"], "new.integration"), "integration_ref01"));
-        $integration_ref01_data["after"] = $setup["idmap"]["after01"];
-        $integration_ref01_data["api_key"] = $setup["idmap"]["api_key01"];
-        $integration_ref01_data["application_key"] = $setup["idmap"]["application_key01"];
-        $integration_ref01_data["before"] = $setup["idmap"]["before01"];
-        $integration_ref01_data["channel_id"] = $setup["idmap"]["channel01"];
-        $integration_ref01_data["channel_name"] = $setup["idmap"]["channel_name01"];
-        $integration_ref01_data["code"] = $setup["idmap"]["code01"];
-        $integration_ref01_data["code_access"] = $setup["idmap"]["code_access01"];
-        $integration_ref01_data["confirm_replace"] = $setup["idmap"]["confirm_replace01"];
-        $integration_ref01_data["enabled"] = $setup["idmap"]["enabled01"];
-        $integration_ref01_data["environment_id"] = $setup["idmap"]["environment01"];
-        $integration_ref01_data["first"] = $setup["idmap"]["first01"];
-        $integration_ref01_data["github_host"] = $setup["idmap"]["github_host01"];
-        $integration_ref01_data["include_archived"] = $setup["idmap"]["include_archived01"];
-        $integration_ref01_data["installation_id"] = $setup["idmap"]["installation01"];
-        $integration_ref01_data["integration_id"] = $setup["idmap"]["integration01"];
-        $integration_ref01_data["last"] = $setup["idmap"]["last01"];
-        $integration_ref01_data["membership_type"] = $setup["idmap"]["membership_type01"];
-        $integration_ref01_data["order_by"] = $setup["idmap"]["order_by01"];
-        $integration_ref01_data["organization_slug"] = $setup["idmap"]["organization_slug01"];
-        $integration_ref01_data["project_id"] = $setup["idmap"]["project01"];
-        $integration_ref01_data["redirect_uri"] = $setup["idmap"]["redirect_uri01"];
-        $integration_ref01_data["requested_scope"] = $setup["idmap"]["requested_scope01"];
-        $integration_ref01_data["site"] = $setup["idmap"]["site01"];
-        $integration_ref01_data["skip_installation_deletion"] = $setup["idmap"]["skip_installation_deletion01"];
-        $integration_ref01_data["team_id"] = $setup["idmap"]["team01"];
-        $integration_ref01_data["team_name"] = $setup["idmap"]["team_name01"];
-        $integration_ref01_data["type"] = $setup["idmap"]["type01"];
-
-        $integration_ref01_data_result = $integration_ref01_ent->create($integration_ref01_data, null);
-        $integration_ref01_data = Helpers::to_map(is_object($integration_ref01_data_result) && method_exists($integration_ref01_data_result, 'data_get') ? $integration_ref01_data_result->data_get() : $integration_ref01_data_result);
-        $this->assertNotNull($integration_ref01_data);
-        $this->assertNotNull($integration_ref01_data["id"]);
+        // Bootstrap entity data from existing test data.
+        $integration_ref01_data_raw = Vs::items(Helpers::to_map(
+            Vs::getpath($setup["data"], "existing.integration")));
+        $integration_ref01_data = null;
+        if (count($integration_ref01_data_raw) > 0) {
+            $integration_ref01_data = Helpers::to_map($integration_ref01_data_raw[0][1]);
+        }
 
         // LIST
+        $integration_ref01_ent = $client->Integration(null);
         $integration_ref01_match = [
             "after" => $setup["idmap"]["after01"],
             "before" => $setup["idmap"]["before01"],
@@ -127,11 +234,6 @@ class IntegrationEntityTest extends TestCase
 
         $integration_ref01_list_result = $integration_ref01_ent->list($integration_ref01_match, null);
         $this->assertIsArray($integration_ref01_list_result);
-
-        $found_item = sdk_select(
-            Runner::entity_list_to_data($integration_ref01_list_result),
-            ["id" => $integration_ref01_data["id"]]);
-        $this->assertNotEmpty($found_item);
 
         // UPDATE
         $integration_ref01_data_up0_up = [
@@ -157,30 +259,6 @@ class IntegrationEntityTest extends TestCase
         $this->assertNotNull($integration_ref01_data_dt0_load_result);
         $this->assertEquals($integration_ref01_data_dt0_load_result["id"], $integration_ref01_data["id"]);
 
-        // REMOVE
-        $integration_ref01_match_rm0 = [
-            "id" => $integration_ref01_data["id"],
-        ];
-        $integration_ref01_ent->remove($integration_ref01_match_rm0, null);
-
-        // LIST
-        $integration_ref01_match_rt0 = [
-            "after" => $setup["idmap"]["after01"],
-            "before" => $setup["idmap"]["before01"],
-            "first" => $setup["idmap"]["first01"],
-            "include_archived" => $setup["idmap"]["include_archived01"],
-            "last" => $setup["idmap"]["last01"],
-            "order_by" => $setup["idmap"]["order_by01"],
-        ];
-
-        $integration_ref01_list_rt0_result = $integration_ref01_ent->list($integration_ref01_match_rt0, null);
-        $this->assertIsArray($integration_ref01_list_rt0_result);
-
-        $not_found_item = sdk_select(
-            Runner::entity_list_to_data($integration_ref01_list_rt0_result),
-            ["id" => $integration_ref01_data["id"]]);
-        $this->assertEmpty($not_found_item);
-
     }
 }
 
@@ -199,13 +277,12 @@ function integration_basic_setup($extra)
 
     // Generate idmap.
     $idmap = [];
-    foreach (["integration01", "integration02", "integration03", "after01", "api_key01", "application_key01", "before01", "channel01", "channel_name01", "code01", "code_access01", "confirm_replace01", "enabled01", "environment01", "first01", "github_host01", "include_archived01", "installation01", "last01", "membership_type01", "order_by01", "organization_slug01", "project01", "redirect_uri01", "requested_scope01", "site01", "skip_installation_deletion01", "team01", "team_name01", "type01"] as $k) {
+    foreach (["integration01", "integration02", "integration03", "after01", "before01", "first01", "include_archived01", "last01", "order_by01", "skip_installation_deletion01"] as $k) {
         $idmap[$k] = strtoupper($k);
     }
 
-    // Detect ENTID env override before envOverride consumes it. When live
-    // mode is on without a real override, the basic test runs against synthetic
-    // IDs from the fixture and 4xx's. Surface this so the test can skip.
+    // Whether *_ENTID supplied the idmap, read before env_override consumes
+    // it: without it, the ids a live flow binds are the fixture's synthetic ones.
     $entid_env_raw = getenv("LINEAR_TEST_INTEGRATION_ENTID");
     $idmap_overridden = $entid_env_raw !== false && str_starts_with(trim($entid_env_raw), "{");
 

@@ -2,7 +2,6 @@ package sdktest
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -16,6 +15,13 @@ import (
 	vs "github.com/voxgig-sdk/linear-sdk/go/utility/struct"
 )
 
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const git_hub_integration_connect_detailEntityLiveStrict = true
+
+
 func TestGitHubIntegrationConnectDetailEntity(t *testing.T) {
 	t.Run("instance", func(t *testing.T) {
 		testsdk := sdk.TestSDK(nil, nil)
@@ -25,7 +31,8 @@ func TestGitHubIntegrationConnectDetailEntity(t *testing.T) {
 		}
 	})
 
-	t.Run("basic", func(t *testing.T) {
+	t.Run("basic", func(tt *testing.T) {
+		var t testing.TB = tt
 		setup := git_hub_integration_connect_detailBasicSetup(nil)
 		// Per-op sdk-test-control.json skip — basic test exercises a flow
 		// with multiple ops; skipping any op skips the whole flow.
@@ -33,7 +40,7 @@ func TestGitHubIntegrationConnectDetailEntity(t *testing.T) {
 		if setup.live {
 			_mode = "live"
 		}
-		for _, _op := range []string{"create", "update"} {
+		for _, _op := range []string{} {
 			if _shouldSkip, _reason := isControlSkipped("entityOp", "git_hub_integration_connect_detail." + _op, _mode); _shouldSkip {
 				if _reason == "" {
 					_reason = "skipped via sdk-test-control.json"
@@ -42,57 +49,15 @@ func TestGitHubIntegrationConnectDetailEntity(t *testing.T) {
 				return
 			}
 		}
-		// The basic flow consumes synthetic IDs from the fixture. In live mode
-		// without an *_ENTID env override, those IDs hit the live API and 4xx.
-		if setup.syntheticOnly {
-			t.Skip("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_GIT_HUB_INTEGRATION_CONNECT_DETAIL_ENTID JSON to run live")
-			return
+		// Bootstrap entity data from existing test data (no create step in flow).
+		gitHubIntegrationConnectDetailRef01DataRaw := vs.Items(core.ToMapAny(vs.GetPath(setup.data, "existing.git_hub_integration_connect_detail")))
+		var gitHubIntegrationConnectDetailRef01Data map[string]any
+		if len(gitHubIntegrationConnectDetailRef01DataRaw) > 0 {
+			gitHubIntegrationConnectDetailRef01Data = core.ToMapAny(gitHubIntegrationConnectDetailRef01DataRaw[0][1])
 		}
-		client := setup.client
-
-		// CREATE
-		gitHubIntegrationConnectDetailRef01Ent := client.GitHubIntegrationConnectDetail(nil)
-		gitHubIntegrationConnectDetailRef01Data := core.ToMapAny(vs.GetProp(
-			vs.GetPath(setup.data, []any{"new", "git_hub_integration_connect_detail"}), "git_hub_integration_connect_detail_ref01"))
-		gitHubIntegrationConnectDetailRef01Data["code"] = setup.idmap["code01"]
-		gitHubIntegrationConnectDetailRef01Data["custom_view_id"] = setup.idmap["custom_view01"]
-		gitHubIntegrationConnectDetailRef01Data["initiative_id"] = setup.idmap["initiative01"]
-		gitHubIntegrationConnectDetailRef01Data["integration_id"] = setup.idmap["integration01"]
-		gitHubIntegrationConnectDetailRef01Data["project_id"] = setup.idmap["project01"]
-		gitHubIntegrationConnectDetailRef01Data["redirect_uri"] = setup.idmap["redirect_uri01"]
-		gitHubIntegrationConnectDetailRef01Data["service"] = setup.idmap["service01"]
-		gitHubIntegrationConnectDetailRef01Data["should_use_v2_auth"] = setup.idmap["should_use_v2_auth01"]
-		gitHubIntegrationConnectDetailRef01Data["team_id"] = setup.idmap["team01"]
-
-		gitHubIntegrationConnectDetailRef01DataResult, err := gitHubIntegrationConnectDetailRef01Ent.Create(gitHubIntegrationConnectDetailRef01Data, nil)
-		if err != nil {
-			t.Fatalf("create failed: %v", err)
-		}
-		gitHubIntegrationConnectDetailRef01Data = core.ToMapAny(entityData(gitHubIntegrationConnectDetailRef01DataResult))
-		if gitHubIntegrationConnectDetailRef01Data == nil {
-			t.Fatal("expected create result to be a map")
-		}
-
-		// UPDATE
-		gitHubIntegrationConnectDetailRef01DataUp0Up := map[string]any{
-			"integration_id": setup.idmap["integration_id"],
-		}
-
-		gitHubIntegrationConnectDetailRef01MarkdefUp0Name := "lostRepositoryNames"
-		gitHubIntegrationConnectDetailRef01MarkdefUp0Value := fmt.Sprintf("Mark01-git_hub_integration_connect_detail_ref01_%d", setup.now)
-		gitHubIntegrationConnectDetailRef01DataUp0Up[gitHubIntegrationConnectDetailRef01MarkdefUp0Name] = gitHubIntegrationConnectDetailRef01MarkdefUp0Value
-
-		gitHubIntegrationConnectDetailRef01ResdataUp0Result, err := gitHubIntegrationConnectDetailRef01Ent.Update(gitHubIntegrationConnectDetailRef01DataUp0Up, nil)
-		if err != nil {
-			t.Fatalf("update failed: %v", err)
-		}
-		gitHubIntegrationConnectDetailRef01ResdataUp0 := core.ToMapAny(entityData(gitHubIntegrationConnectDetailRef01ResdataUp0Result))
-		if gitHubIntegrationConnectDetailRef01ResdataUp0 == nil {
-			t.Fatal("expected update result to be a map")
-		}
-		if gitHubIntegrationConnectDetailRef01ResdataUp0[gitHubIntegrationConnectDetailRef01MarkdefUp0Name] != gitHubIntegrationConnectDetailRef01MarkdefUp0Value {
-			t.Fatalf("expected %s to be updated, got %v", gitHubIntegrationConnectDetailRef01MarkdefUp0Name, gitHubIntegrationConnectDetailRef01ResdataUp0[gitHubIntegrationConnectDetailRef01MarkdefUp0Name])
-		}
+		// Discard guards against Go's unused-var check when the flow's steps
+		// happen not to consume the bootstrap data (e.g. list-only flows).
+		_ = gitHubIntegrationConnectDetailRef01Data
 
 	})
 }
@@ -122,7 +87,7 @@ func git_hub_integration_connect_detailBasicSetup(extra map[string]any) *entityT
 
 	// Generate idmap via transform, matching TS pattern.
 	idmap, _ := vs.Transform(
-		[]any{"git_hub_integration_connect_detail01", "git_hub_integration_connect_detail02", "git_hub_integration_connect_detail03", "code01", "custom_view01", "initiative01", "integration01", "project01", "redirect_uri01", "service01", "should_use_v2_auth01", "team01"},
+		[]any{"git_hub_integration_connect_detail01", "git_hub_integration_connect_detail02", "git_hub_integration_connect_detail03"},
 		map[string]any{
 			"`$PACK`": []any{"", map[string]any{
 				"`$KEY`": "`$COPY`",
@@ -131,9 +96,8 @@ func git_hub_integration_connect_detailBasicSetup(extra map[string]any) *entityT
 		},
 	)
 
-	// Detect ENTID env override before envOverride consumes it. When live
-	// mode is on without a real override, the basic test runs against synthetic
-	// IDs from the fixture and 4xx's. Surface this so the test can skip.
+	// Whether *_ENTID supplied the idmap, read before envOverride consumes it:
+	// without it, the ids a live flow binds are the fixture's synthetic ones.
 	entidEnvRaw := os.Getenv("LINEAR_TEST_GIT_HUB_INTEGRATION_CONNECT_DETAIL_ENTID")
 	idmapOverridden := entidEnvRaw != "" && strings.HasPrefix(strings.TrimSpace(entidEnvRaw), "{")
 
@@ -147,10 +111,6 @@ func git_hub_integration_connect_detailBasicSetup(extra map[string]any) *entityT
 	idmapResolved := core.ToMapAny(env["LINEAR_TEST_GIT_HUB_INTEGRATION_CONNECT_DETAIL_ENTID"])
 	if idmapResolved == nil {
 		idmapResolved = core.ToMapAny(idmap)
-	}
-	// Add integration_id alias for update test.
-	if idmapResolved["integration_id"] == nil {
-		idmapResolved["integration_id"] = idmapResolved["integration01"]
 	}
 
 	if env["LINEAR_TEST_LIVE"] == "TRUE" {

@@ -1,15 +1,6 @@
 {
-  "NAME": "LINEAR",
-  "Name": "Linear",
   "def": "linear-schema.graphql",
   "main": {
-    "api": {
-      "entity": {},
-      "guide": {}
-    },
-    "custom": {
-      "plurals": {}
-    },
     "def": {
       "desc": ""
     },
@@ -53,7 +44,7 @@
         },
         "edition": {
           "github-pages": {
-            "active": true,
+            "active": false,
             "base": "node_modules/@voxgig/docgen/project/.sdk",
             "brand": {},
             "filter": {
@@ -698,7 +689,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -714,7 +705,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -1152,7 +1143,7 @@
                         "a": true,
                         "k": "param",
                         "n": "pull_request_id",
-                        "or": "pull_request_id",
+                        "or": "pullRequestId",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -1295,7 +1286,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -1311,7 +1302,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -1821,7 +1812,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -1837,7 +1828,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -2156,7 +2147,7 @@
                         "a": true,
                         "k": "param",
                         "n": "client_id",
-                        "or": "client_id",
+                        "or": "clientId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -2415,7 +2406,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -2431,7 +2422,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       },
@@ -2545,7 +2536,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -2561,7 +2552,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -2749,7 +2740,7 @@
                         "a": true,
                         "k": "param",
                         "n": "channel_id",
-                        "or": "channel_id",
+                        "or": "channelId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -2757,7 +2748,7 @@
                         "a": true,
                         "k": "param",
                         "n": "create_as_user",
-                        "or": "create_as_user",
+                        "or": "createAsUser",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -2765,7 +2756,7 @@
                         "a": true,
                         "k": "param",
                         "n": "display_icon_url",
-                        "or": "display_icon_url",
+                        "or": "displayIconUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -2781,7 +2772,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_id",
-                        "or": "issue_id",
+                        "or": "issueId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -2789,7 +2780,7 @@
                         "a": true,
                         "k": "param",
                         "n": "message_id",
-                        "or": "message_id",
+                        "or": "messageId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -2890,7 +2881,7 @@
                         "a": true,
                         "k": "param",
                         "n": "create_as_user",
-                        "or": "create_as_user",
+                        "or": "createAsUser",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -2898,7 +2889,7 @@
                         "a": true,
                         "k": "param",
                         "n": "display_icon_url",
-                        "or": "display_icon_url",
+                        "or": "displayIconUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -2914,7 +2905,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_id",
-                        "or": "issue_id",
+                        "or": "issueId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -2930,7 +2921,7 @@
                         "a": true,
                         "k": "param",
                         "n": "project_path_with_namespace",
-                        "or": "project_path_with_namespace",
+                        "or": "projectPathWithNamespace",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -3031,7 +3022,7 @@
                         "a": true,
                         "k": "param",
                         "n": "conversation_id",
-                        "or": "conversation_id",
+                        "or": "conversationId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -3039,7 +3030,7 @@
                         "a": true,
                         "k": "param",
                         "n": "create_as_user",
-                        "or": "create_as_user",
+                        "or": "createAsUser",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3047,7 +3038,7 @@
                         "a": true,
                         "k": "param",
                         "n": "display_icon_url",
-                        "or": "display_icon_url",
+                        "or": "displayIconUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3063,7 +3054,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_id",
-                        "or": "issue_id",
+                        "or": "issueId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -3144,7 +3135,7 @@
                         "a": true,
                         "k": "param",
                         "n": "create_as_user",
-                        "or": "create_as_user",
+                        "or": "createAsUser",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3152,7 +3143,7 @@
                         "a": true,
                         "k": "param",
                         "n": "display_icon_url",
-                        "or": "display_icon_url",
+                        "or": "displayIconUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3168,7 +3159,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_id",
-                        "or": "issue_id",
+                        "or": "issueId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -3257,7 +3248,7 @@
                         "a": true,
                         "k": "param",
                         "n": "create_as_user",
-                        "or": "create_as_user",
+                        "or": "createAsUser",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3265,7 +3256,7 @@
                         "a": true,
                         "k": "param",
                         "n": "display_icon_url",
-                        "or": "display_icon_url",
+                        "or": "displayIconUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3281,7 +3272,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_id",
-                        "or": "issue_id",
+                        "or": "issueId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -3289,7 +3280,7 @@
                         "a": true,
                         "k": "param",
                         "n": "link_kind",
-                        "or": "link_kind",
+                        "or": "linkKind",
                         "r": false,
                         "t": "`$ANY`"
                       },
@@ -3383,7 +3374,7 @@
                         "a": true,
                         "k": "param",
                         "n": "conversation_id",
-                        "or": "conversation_id",
+                        "or": "conversationId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -3391,7 +3382,7 @@
                         "a": true,
                         "k": "param",
                         "n": "create_as_user",
-                        "or": "create_as_user",
+                        "or": "createAsUser",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3399,7 +3390,7 @@
                         "a": true,
                         "k": "param",
                         "n": "display_icon_url",
-                        "or": "display_icon_url",
+                        "or": "displayIconUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3415,7 +3406,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_id",
-                        "or": "issue_id",
+                        "or": "issueId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -3423,7 +3414,7 @@
                         "a": true,
                         "k": "param",
                         "n": "part_id",
-                        "or": "part_id",
+                        "or": "partId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3509,7 +3500,7 @@
                         "a": true,
                         "k": "param",
                         "n": "create_as_user",
-                        "or": "create_as_user",
+                        "or": "createAsUser",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3517,7 +3508,7 @@
                         "a": true,
                         "k": "param",
                         "n": "display_icon_url",
-                        "or": "display_icon_url",
+                        "or": "displayIconUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3533,7 +3524,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_id",
-                        "or": "issue_id",
+                        "or": "issueId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -3541,7 +3532,7 @@
                         "a": true,
                         "k": "param",
                         "n": "jira_issue_id",
-                        "or": "jira_issue_id",
+                        "or": "jiraIssueId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -3635,7 +3626,7 @@
                         "a": true,
                         "k": "param",
                         "n": "create_as_user",
-                        "or": "create_as_user",
+                        "or": "createAsUser",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3643,7 +3634,7 @@
                         "a": true,
                         "k": "param",
                         "n": "display_icon_url",
-                        "or": "display_icon_url",
+                        "or": "displayIconUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3659,7 +3650,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_id",
-                        "or": "issue_id",
+                        "or": "issueId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -3748,7 +3739,7 @@
                         "a": true,
                         "k": "param",
                         "n": "create_as_user",
-                        "or": "create_as_user",
+                        "or": "createAsUser",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3756,7 +3747,7 @@
                         "a": true,
                         "k": "param",
                         "n": "display_icon_url",
-                        "or": "display_icon_url",
+                        "or": "displayIconUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3772,7 +3763,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_id",
-                        "or": "issue_id",
+                        "or": "issueId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -3780,7 +3771,7 @@
                         "a": true,
                         "k": "param",
                         "n": "sync_to_comment_thread",
-                        "or": "sync_to_comment_thread",
+                        "or": "syncToCommentThread",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -3874,7 +3865,7 @@
                         "a": true,
                         "k": "param",
                         "n": "create_as_user",
-                        "or": "create_as_user",
+                        "or": "createAsUser",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3882,7 +3873,7 @@
                         "a": true,
                         "k": "param",
                         "n": "display_icon_url",
-                        "or": "display_icon_url",
+                        "or": "displayIconUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3898,7 +3889,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_id",
-                        "or": "issue_id",
+                        "or": "issueId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -3987,7 +3978,7 @@
                         "a": true,
                         "k": "param",
                         "n": "create_as_user",
-                        "or": "create_as_user",
+                        "or": "createAsUser",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -3995,7 +3986,7 @@
                         "a": true,
                         "k": "param",
                         "n": "display_icon_url",
-                        "or": "display_icon_url",
+                        "or": "displayIconUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -4011,7 +4002,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_id",
-                        "or": "issue_id",
+                        "or": "issueId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -4019,7 +4010,7 @@
                         "a": true,
                         "k": "param",
                         "n": "ticket_id",
-                        "or": "ticket_id",
+                        "or": "ticketId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -4355,7 +4346,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -4371,7 +4362,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -4710,7 +4701,7 @@
                         "a": true,
                         "k": "param",
                         "n": "auth_id",
-                        "or": "auth_id",
+                        "or": "authId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -5414,7 +5405,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -5430,7 +5421,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -5635,7 +5626,7 @@
                         "a": true,
                         "k": "param",
                         "n": "resolving_comment_id",
-                        "or": "resolving_comment_id",
+                        "or": "resolvingCommentId",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -5742,7 +5733,7 @@
                         "a": true,
                         "k": "param",
                         "n": "skip_edited_at",
-                        "or": "skip_edited_at",
+                        "or": "skipEditedAt",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       }
@@ -5834,7 +5825,7 @@
                         "a": true,
                         "k": "param",
                         "n": "partner_offer_token",
-                        "or": "partner_offer_token",
+                        "or": "partnerOfferToken",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -5842,7 +5833,7 @@
                         "a": true,
                         "k": "param",
                         "n": "session_id",
-                        "or": "session_id",
+                        "or": "sessionId",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -5940,7 +5931,7 @@
                         "a": true,
                         "k": "param",
                         "n": "organization_id",
-                        "or": "organization_id",
+                        "or": "organizationId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -6256,7 +6247,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -6272,7 +6263,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -6786,7 +6777,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -6802,7 +6793,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -6995,7 +6986,7 @@
                         "a": true,
                         "k": "param",
                         "n": "source_customer_id",
-                        "or": "source_customer_id",
+                        "or": "sourceCustomerId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -7003,7 +6994,7 @@
                         "a": true,
                         "k": "param",
                         "n": "target_customer_id",
-                        "or": "target_customer_id",
+                        "or": "targetCustomerId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -7408,7 +7399,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -7424,7 +7415,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -7577,7 +7568,7 @@
                         "a": true,
                         "k": "param",
                         "n": "keep_attachment",
-                        "or": "keep_attachment",
+                        "or": "keepAttachment",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       }
@@ -7728,7 +7719,7 @@
                         "a": true,
                         "k": "param",
                         "n": "clear_attachment",
-                        "or": "clear_attachment",
+                        "or": "clearAttachment",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -7949,7 +7940,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -7965,7 +7956,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -8356,7 +8347,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -8372,7 +8363,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -8932,7 +8923,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -8948,7 +8939,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -9704,7 +9695,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -9720,7 +9711,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -10275,7 +10266,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -10283,7 +10274,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_comment",
-                        "or": "include_comment",
+                        "or": "includeComments",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -10299,7 +10290,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       },
@@ -10307,7 +10298,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_id",
-                        "or": "team_id",
+                        "or": "teamId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -11096,7 +11087,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -11112,7 +11103,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -11723,7 +11714,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -11739,7 +11730,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -12285,7 +12276,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -12301,7 +12292,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -13019,7 +13010,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -13072,7 +13063,7 @@
                         "a": true,
                         "k": "param",
                         "n": "github_url",
-                        "or": "github_url",
+                        "or": "githubUrl",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -13080,7 +13071,7 @@
                         "a": true,
                         "k": "param",
                         "n": "organization_name",
-                        "or": "organization_name",
+                        "or": "organizationName",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -13133,7 +13124,7 @@
                         "a": true,
                         "k": "param",
                         "n": "access_token",
-                        "or": "access_token",
+                        "or": "accessToken",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -13141,7 +13132,7 @@
                         "a": true,
                         "k": "param",
                         "n": "expires_at",
-                        "or": "expires_at",
+                        "or": "expiresAt",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -13149,7 +13140,7 @@
                         "a": true,
                         "k": "param",
                         "n": "gitlab_url",
-                        "or": "gitlab_url",
+                        "or": "gitlabUrl",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -13165,7 +13156,7 @@
                         "a": true,
                         "k": "param",
                         "n": "validation_project_path",
-                        "or": "validation_project_path",
+                        "or": "validationProjectPath",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -13241,7 +13232,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -13302,7 +13293,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -13429,7 +13420,7 @@
                         "a": true,
                         "k": "param",
                         "n": "project_id",
-                        "or": "project_id",
+                        "or": "projectId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -13437,7 +13428,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -13518,7 +13509,7 @@
                         "a": true,
                         "k": "param",
                         "n": "custom_view_id",
-                        "or": "custom_view_id",
+                        "or": "customViewId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -13526,7 +13517,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -13593,7 +13584,7 @@
                         "a": true,
                         "k": "param",
                         "n": "initiative_id",
-                        "or": "initiative_id",
+                        "or": "initiativeId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -13601,7 +13592,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -13668,7 +13659,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -13676,7 +13667,7 @@
                         "a": true,
                         "k": "param",
                         "n": "should_use_v2_auth",
-                        "or": "should_use_v2_auth",
+                        "or": "shouldUseV2Auth",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -13684,7 +13675,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_id",
-                        "or": "team_id",
+                        "or": "teamId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -13748,7 +13739,7 @@
                         "a": true,
                         "k": "param",
                         "n": "integration_id",
-                        "or": "integration_id",
+                        "or": "integrationId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -14200,7 +14191,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -14216,7 +14207,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -14417,7 +14408,7 @@
                         "a": true,
                         "k": "param",
                         "n": "label_id",
-                        "or": "label_id",
+                        "or": "labelId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -14478,7 +14469,7 @@
                         "a": true,
                         "k": "param",
                         "n": "label_id",
-                        "or": "label_id",
+                        "or": "labelId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -14586,7 +14577,7 @@
                         "a": true,
                         "k": "param",
                         "n": "lead_team_id",
-                        "or": "lead_team_id",
+                        "or": "leadTeamId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -14946,7 +14937,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -14962,7 +14953,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -15350,7 +15341,7 @@
                         "a": true,
                         "k": "param",
                         "n": "lead_team_id",
-                        "or": "lead_team_id",
+                        "or": "leadTeamId",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -15550,7 +15541,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -15566,7 +15557,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -15941,7 +15932,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -15957,7 +15948,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -16428,7 +16419,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -16444,7 +16435,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -16821,7 +16812,7 @@
                         "a": true,
                         "k": "param",
                         "n": "code_verifier",
-                        "or": "code_verifier",
+                        "or": "codeVerifier",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -16829,7 +16820,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -16918,7 +16909,7 @@
                         "a": true,
                         "k": "param",
                         "n": "project_key",
-                        "or": "project_key",
+                        "or": "projectKey",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -16985,7 +16976,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -17046,7 +17037,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -17107,7 +17098,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -17168,7 +17159,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -17229,7 +17220,7 @@
                         "a": true,
                         "k": "param",
                         "n": "domain_url",
-                        "or": "domain_url",
+                        "or": "domainUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -17237,7 +17228,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -17303,7 +17294,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -17364,7 +17355,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -17425,7 +17416,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -17486,7 +17477,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -17494,7 +17485,7 @@
                         "a": true,
                         "k": "param",
                         "n": "requested_scope",
-                        "or": "requested_scope",
+                        "or": "requestedScopes",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -17502,7 +17493,7 @@
                         "a": true,
                         "k": "param",
                         "n": "should_use_v2_auth",
-                        "or": "should_use_v2_auth",
+                        "or": "shouldUseV2Auth",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       }
@@ -17573,7 +17564,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -17581,7 +17572,7 @@
                         "a": true,
                         "k": "param",
                         "n": "requested_scope",
-                        "or": "requested_scope",
+                        "or": "requestedScopes",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -17647,7 +17638,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -17708,7 +17699,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -17769,7 +17760,7 @@
                         "a": true,
                         "k": "param",
                         "n": "code_access",
-                        "or": "code_access",
+                        "or": "codeAccess",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -17777,7 +17768,7 @@
                         "a": true,
                         "k": "param",
                         "n": "enterprise_url",
-                        "or": "enterprise_url",
+                        "or": "enterpriseUrl",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -17975,7 +17966,7 @@
                         "a": true,
                         "k": "param",
                         "n": "mcp_server_definition_id",
-                        "or": "mcp_server_definition_id",
+                        "or": "mcpServerDefinitionId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -17983,7 +17974,7 @@
                         "a": true,
                         "k": "param",
                         "n": "server_url",
-                        "or": "server_url",
+                        "or": "serverUrl",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -17991,7 +17982,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_id",
-                        "or": "team_id",
+                        "or": "teamId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -17999,7 +17990,7 @@
                         "a": true,
                         "k": "param",
                         "n": "workflow_definition_draft_id",
-                        "or": "workflow_definition_draft_id",
+                        "or": "workflowDefinitionDraftId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -18007,7 +17998,7 @@
                         "a": true,
                         "k": "param",
                         "n": "workflow_definition_id",
-                        "or": "workflow_definition_id",
+                        "or": "workflowDefinitionId",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -18079,7 +18070,7 @@
                         "a": true,
                         "k": "param",
                         "n": "mcp_server_definition_id",
-                        "or": "mcp_server_definition_id",
+                        "or": "mcpServerDefinitionId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -18087,7 +18078,7 @@
                         "a": true,
                         "k": "param",
                         "n": "server_url",
-                        "or": "server_url",
+                        "or": "serverUrl",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -18144,7 +18135,7 @@
                         "a": true,
                         "k": "param",
                         "n": "api_key",
-                        "or": "api_key",
+                        "or": "apiKey",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -18191,7 +18182,7 @@
                         "a": true,
                         "k": "param",
                         "n": "access_token",
-                        "or": "access_token",
+                        "or": "accessToken",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -18199,7 +18190,7 @@
                         "a": true,
                         "k": "param",
                         "n": "bot_user_role",
-                        "or": "bot_user_role",
+                        "or": "botUserRole",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -18215,7 +18206,7 @@
                         "a": true,
                         "k": "param",
                         "n": "custom_api_url",
-                        "or": "custom_api_url",
+                        "or": "customApiUrl",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -18223,7 +18214,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -18475,7 +18466,7 @@
                         "a": true,
                         "k": "param",
                         "n": "access_token",
-                        "or": "access_token",
+                        "or": "accessToken",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -18676,7 +18667,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -18692,7 +18683,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -18831,7 +18822,7 @@
                         "a": true,
                         "k": "param",
                         "n": "skip_installation_deletion",
-                        "or": "skip_installation_deletion",
+                        "or": "skipInstallationDeletion",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       }
@@ -18888,7 +18879,7 @@
                         "a": true,
                         "k": "param",
                         "n": "channel_id",
-                        "or": "channel_id",
+                        "or": "channelId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -18896,7 +18887,7 @@
                         "a": true,
                         "k": "param",
                         "n": "channel_name",
-                        "or": "channel_name",
+                        "or": "channelName",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -18904,7 +18895,7 @@
                         "a": true,
                         "k": "param",
                         "n": "membership_type",
-                        "or": "membership_type",
+                        "or": "membershipType",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -18912,7 +18903,7 @@
                         "a": true,
                         "k": "param",
                         "n": "project_id",
-                        "or": "project_id",
+                        "or": "projectId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -18920,7 +18911,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_id",
-                        "or": "team_id",
+                        "or": "teamId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -18928,7 +18919,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_name",
-                        "or": "team_name",
+                        "or": "teamName",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -19005,7 +18996,7 @@
                         "a": true,
                         "k": "param",
                         "n": "api_key",
-                        "or": "api_key",
+                        "or": "apiKey",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -19013,7 +19004,7 @@
                         "a": true,
                         "k": "param",
                         "n": "application_key",
-                        "or": "application_key",
+                        "or": "applicationKey",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -19021,7 +19012,7 @@
                         "a": true,
                         "k": "param",
                         "n": "environment_id",
-                        "or": "environment_id",
+                        "or": "environmentId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -19102,7 +19093,7 @@
                         "a": true,
                         "k": "param",
                         "n": "installation_id",
-                        "or": "installation_id",
+                        "or": "installationId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -19110,7 +19101,7 @@
                         "a": true,
                         "k": "param",
                         "n": "organization_slug",
-                        "or": "organization_slug",
+                        "or": "organizationSlug",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -19177,7 +19168,7 @@
                         "a": true,
                         "k": "param",
                         "n": "integration_id",
-                        "or": "integration_id",
+                        "or": "integrationId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -19185,7 +19176,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -19193,7 +19184,7 @@
                         "a": true,
                         "k": "param",
                         "n": "requested_scope",
-                        "or": "requested_scope",
+                        "or": "requestedScopes",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -19265,7 +19256,7 @@
                         "a": true,
                         "k": "param",
                         "n": "code_access",
-                        "or": "code_access",
+                        "or": "codeAccess",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -19273,7 +19264,7 @@
                         "a": true,
                         "k": "param",
                         "n": "confirm_replace",
-                        "or": "confirm_replace",
+                        "or": "confirmReplace",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -19281,7 +19272,7 @@
                         "a": true,
                         "k": "param",
                         "n": "github_host",
-                        "or": "github_host",
+                        "or": "githubHost",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -19289,7 +19280,7 @@
                         "a": true,
                         "k": "param",
                         "n": "installation_id",
-                        "or": "installation_id",
+                        "or": "installationId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -19365,7 +19356,7 @@
                         "a": true,
                         "k": "param",
                         "n": "installation_id",
-                        "or": "installation_id",
+                        "or": "installationId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -19426,7 +19417,7 @@
                         "a": true,
                         "k": "param",
                         "n": "integration_id",
-                        "or": "integration_id",
+                        "or": "integrationId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -19924,7 +19915,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -19940,7 +19931,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -21030,7 +21021,7 @@
                         "a": true,
                         "k": "param",
                         "n": "file_key",
-                        "or": "file_key",
+                        "or": "fileKey",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -21046,7 +21037,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -21062,7 +21053,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -21134,137 +21125,6 @@
                 {
                   "a": true,
                   "co": {
-                    "id": "POST issueSearch",
-                    "source": "graphql",
-                    "version": 2
-                  },
-                  "g": {
-                    "params": [
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "after",
-                        "or": "after",
-                        "r": false,
-                        "t": "`$STRING`"
-                      },
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "before",
-                        "or": "before",
-                        "r": false,
-                        "t": "`$STRING`"
-                      },
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "first",
-                        "or": "first",
-                        "r": false,
-                        "t": "`$INTEGER`"
-                      },
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "include_archived",
-                        "or": "include_archived",
-                        "r": false,
-                        "t": "`$BOOLEAN`"
-                      },
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "last",
-                        "or": "last",
-                        "r": false,
-                        "t": "`$INTEGER`"
-                      },
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "order_by",
-                        "or": "order_by",
-                        "r": false,
-                        "t": "`$ANY`"
-                      },
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "query",
-                        "or": "query",
-                        "r": false,
-                        "t": "`$STRING`"
-                      }
-                    ]
-                  },
-                  "gq": {
-                    "doc": "query IssueList($after: String, $before: String, $filter: IssueFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy, $query: String) { issueSearch(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy, query: $query) { nodes { ...IssueFields } pageInfo { endCursor hasNextPage } } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }",
-                    "field": "issueSearch",
-                    "optype": "query",
-                    "page": {
-                      "cursor": "pageInfo.endCursor",
-                      "more": "pageInfo.hasNextPage",
-                      "nodes": "nodes",
-                      "style": "relay"
-                    },
-                    "vars": [
-                      {
-                        "from": "after",
-                        "gqltype": "String",
-                        "name": "after"
-                      },
-                      {
-                        "from": "before",
-                        "gqltype": "String",
-                        "name": "before"
-                      },
-                      {
-                        "from": "",
-                        "gqltype": "IssueFilter",
-                        "name": "filter"
-                      },
-                      {
-                        "from": "first",
-                        "gqltype": "Int",
-                        "name": "first"
-                      },
-                      {
-                        "from": "includeArchived",
-                        "gqltype": "Boolean",
-                        "name": "includeArchived"
-                      },
-                      {
-                        "from": "last",
-                        "gqltype": "Int",
-                        "name": "last"
-                      },
-                      {
-                        "from": "orderBy",
-                        "gqltype": "PaginationOrderBy",
-                        "name": "orderBy"
-                      },
-                      {
-                        "from": "query",
-                        "gqltype": "String",
-                        "name": "query"
-                      }
-                    ]
-                  },
-                  "k": "graphql",
-                  "m": "POST",
-                  "o": "issueSearch",
-                  "q": {},
-                  "r": {},
-                  "s": [],
-                  "t": {
-                    "req": "`reqdata`",
-                    "res": "`body.data.issueSearch.nodes`"
-                  }
-                },
-                {
-                  "a": true,
-                  "co": {
                     "id": "POST issues",
                     "source": "graphql",
                     "version": 2
@@ -21299,7 +21159,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -21315,7 +21175,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -21404,7 +21264,7 @@
                         "a": true,
                         "k": "param",
                         "n": "branch_name",
-                        "or": "branch_name",
+                        "or": "branchName",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -21435,52 +21295,6 @@
                   "t": {
                     "req": "`reqdata`",
                     "res": "`body.data.issueVcsBranchSearch`"
-                  }
-                },
-                {
-                  "a": true,
-                  "co": {
-                    "id": "POST attachmentIssue",
-                    "source": "graphql",
-                    "version": 2
-                  },
-                  "g": {
-                    "params": [
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "id",
-                        "or": "id",
-                        "r": true,
-                        "t": "`$STRING`"
-                      }
-                    ]
-                  },
-                  "gq": {
-                    "doc": "query IssueLoad($id: String!) { attachmentIssue(id: $id) { ...IssueFields } } fragment IssueFields on Issue { activitySummary addedToCycleAt addedToProjectAt addedToTeamAt archivedAt asksExternalUserRequester { id } asksRequester { id } assignee { id } autoArchivedAt autoClosedAt botActor { id } branchName canceledAt completedAt createdAt creator { id } customerTicketCount cycle { id } delegate { id } description descriptionState documentContent { id } dueDate estimate externalUserCreator { id } favorite { id } id identifier inheritsSharedAccess integrationSourceType labelIds lastAppliedTemplate { id } number parent { id } previousIdentifiers priority priorityLabel prioritySortOrder project { id } projectMilestone { id } reactionData recurringIssueTemplate { id } slaBreachesAt slaHighRiskAt slaMediumRiskAt slaStartedAt slaType snoozedBy { id } snoozedUntilAt sortOrder sourceComment { id } startedAt startedTriageAt state { id } subIssueSortOrder suggestionsGeneratedAt summary { id } team { id } title trashed triagedAt trusted updatedAt url }",
-                    "field": "attachmentIssue",
-                    "optype": "query",
-                    "vars": [
-                      {
-                        "from": "id",
-                        "gqltype": "String!",
-                        "name": "id"
-                      }
-                    ]
-                  },
-                  "k": "graphql",
-                  "m": "POST",
-                  "o": "attachmentIssue",
-                  "q": {
-                    "exist": [
-                      "id"
-                    ]
-                  },
-                  "r": {},
-                  "s": [],
-                  "t": {
-                    "req": "`reqdata`",
-                    "res": "`body.data.attachmentIssue`"
                   }
                 },
                 {
@@ -21556,7 +21370,7 @@
                         "a": true,
                         "k": "param",
                         "n": "permanently_delete",
-                        "or": "permanently_delete",
+                        "or": "permanentlyDelete",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       }
@@ -21621,7 +21435,7 @@
                         "a": true,
                         "k": "param",
                         "n": "label_id",
-                        "or": "label_id",
+                        "or": "labelId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -21743,7 +21557,7 @@
                         "a": true,
                         "k": "param",
                         "n": "reminder_at",
-                        "or": "reminder_at",
+                        "or": "reminderAt",
                         "r": true,
                         "t": "`$ANY`"
                       }
@@ -21804,7 +21618,7 @@
                         "a": true,
                         "k": "param",
                         "n": "label_id",
-                        "or": "label_id",
+                        "or": "labelId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -21865,7 +21679,7 @@
                         "a": true,
                         "k": "param",
                         "n": "user_id",
-                        "or": "user_id",
+                        "or": "userId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -21926,7 +21740,7 @@
                         "a": true,
                         "k": "param",
                         "n": "user_id",
-                        "or": "user_id",
+                        "or": "userId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -22039,7 +21853,7 @@
                         "a": true,
                         "k": "param",
                         "n": "attachment_id",
-                        "or": "attachment_id",
+                        "or": "attachmentId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -22094,7 +21908,7 @@
                         "a": true,
                         "k": "param",
                         "n": "user_email",
-                        "or": "user_email",
+                        "or": "userEmail",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -22102,7 +21916,7 @@
                         "a": true,
                         "k": "param",
                         "n": "user_id",
-                        "or": "user_id",
+                        "or": "userId",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -22214,7 +22028,7 @@
                         "a": true,
                         "k": "param",
                         "n": "user_email",
-                        "or": "user_email",
+                        "or": "userEmail",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -22222,7 +22036,7 @@
                         "a": true,
                         "k": "param",
                         "n": "user_id",
-                        "or": "user_id",
+                        "or": "userId",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -22482,7 +22296,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_closed_issue",
-                        "or": "include_closed_issue",
+                        "or": "includeClosedIssues",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -22490,7 +22304,7 @@
                         "a": true,
                         "k": "param",
                         "n": "instant_process",
-                        "or": "instant_process",
+                        "or": "instantProcess",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -22498,7 +22312,7 @@
                         "a": true,
                         "k": "param",
                         "n": "jira_email",
-                        "or": "jira_email",
+                        "or": "jiraEmail",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -22506,7 +22320,7 @@
                         "a": true,
                         "k": "param",
                         "n": "jira_hostname",
-                        "or": "jira_hostname",
+                        "or": "jiraHostname",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -22514,7 +22328,7 @@
                         "a": true,
                         "k": "param",
                         "n": "jira_project",
-                        "or": "jira_project",
+                        "or": "jiraProject",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -22522,7 +22336,7 @@
                         "a": true,
                         "k": "param",
                         "n": "jira_token",
-                        "or": "jira_token",
+                        "or": "jiraToken",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -22538,7 +22352,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_id",
-                        "or": "team_id",
+                        "or": "teamId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -22546,7 +22360,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_name",
-                        "or": "team_name",
+                        "or": "teamName",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -22641,7 +22455,7 @@
                         "a": true,
                         "k": "param",
                         "n": "asana_team_name",
-                        "or": "asana_team_name",
+                        "or": "asanaTeamName",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -22649,7 +22463,7 @@
                         "a": true,
                         "k": "param",
                         "n": "asana_token",
-                        "or": "asana_token",
+                        "or": "asanaToken",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -22665,7 +22479,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_closed_issue",
-                        "or": "include_closed_issue",
+                        "or": "includeClosedIssues",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -22673,7 +22487,7 @@
                         "a": true,
                         "k": "param",
                         "n": "instant_process",
-                        "or": "instant_process",
+                        "or": "instantProcess",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -22681,7 +22495,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_id",
-                        "or": "team_id",
+                        "or": "teamId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -22689,7 +22503,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_name",
-                        "or": "team_name",
+                        "or": "teamName",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -22767,7 +22581,7 @@
                         "a": true,
                         "k": "param",
                         "n": "clubhouse_group_name",
-                        "or": "clubhouse_group_name",
+                        "or": "clubhouseGroupName",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -22775,7 +22589,7 @@
                         "a": true,
                         "k": "param",
                         "n": "clubhouse_token",
-                        "or": "clubhouse_token",
+                        "or": "clubhouseToken",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -22791,7 +22605,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_closed_issue",
-                        "or": "include_closed_issue",
+                        "or": "includeClosedIssues",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -22799,7 +22613,7 @@
                         "a": true,
                         "k": "param",
                         "n": "instant_process",
-                        "or": "instant_process",
+                        "or": "instantProcess",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -22807,7 +22621,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_id",
-                        "or": "team_id",
+                        "or": "teamId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -22815,7 +22629,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_name",
-                        "or": "team_name",
+                        "or": "teamName",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -22893,7 +22707,7 @@
                         "a": true,
                         "k": "param",
                         "n": "csv_url",
-                        "or": "csv_url",
+                        "or": "csvUrl",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -22901,7 +22715,7 @@
                         "a": true,
                         "k": "param",
                         "n": "jira_email",
-                        "or": "jira_email",
+                        "or": "jiraEmail",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -22909,7 +22723,7 @@
                         "a": true,
                         "k": "param",
                         "n": "jira_hostname",
-                        "or": "jira_hostname",
+                        "or": "jiraHostname",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -22917,7 +22731,7 @@
                         "a": true,
                         "k": "param",
                         "n": "jira_token",
-                        "or": "jira_token",
+                        "or": "jiraToken",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -22925,7 +22739,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_id",
-                        "or": "team_id",
+                        "or": "teamId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -22933,7 +22747,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_name",
-                        "or": "team_name",
+                        "or": "teamName",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -23005,7 +22819,7 @@
                         "a": true,
                         "k": "param",
                         "n": "github_label",
-                        "or": "github_label",
+                        "or": "githubLabels",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -23013,7 +22827,7 @@
                         "a": true,
                         "k": "param",
                         "n": "github_repo_id",
-                        "or": "github_repo_id",
+                        "or": "githubRepoIds",
                         "r": false,
                         "t": "`$INTEGER`"
                       },
@@ -23021,7 +22835,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_closed_issue",
-                        "or": "include_closed_issue",
+                        "or": "includeClosedIssues",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -23029,7 +22843,7 @@
                         "a": true,
                         "k": "param",
                         "n": "instant_process",
-                        "or": "instant_process",
+                        "or": "instantProcess",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -23037,7 +22851,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_id",
-                        "or": "team_id",
+                        "or": "teamId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -23045,7 +22859,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_name",
-                        "or": "team_name",
+                        "or": "teamName",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -23120,7 +22934,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_import_id",
-                        "or": "issue_import_id",
+                        "or": "issueImportId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -23172,7 +22986,7 @@
                         "a": true,
                         "k": "param",
                         "n": "issue_import_id",
-                        "or": "issue_import_id",
+                        "or": "issueImportId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -23292,7 +23106,7 @@
                         "a": true,
                         "k": "param",
                         "n": "linear_source_organization_id",
-                        "or": "linear_source_organization_id",
+                        "or": "linearSourceOrganizationId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -23496,7 +23310,7 @@
                         "a": true,
                         "k": "param",
                         "n": "replace_team_label",
-                        "or": "replace_team_label",
+                        "or": "replaceTeamLabels",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       }
@@ -23573,7 +23387,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -23589,7 +23403,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -23879,7 +23693,7 @@
                         "a": true,
                         "k": "param",
                         "n": "replace_team_label",
-                        "or": "replace_team_label",
+                        "or": "replaceTeamLabels",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       }
@@ -24076,7 +23890,7 @@
                         "a": true,
                         "k": "param",
                         "n": "override_created_at",
-                        "or": "override_created_at",
+                        "or": "overrideCreatedAt",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -24153,7 +23967,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -24169,7 +23983,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -24971,7 +24785,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -24979,7 +24793,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_comment",
-                        "or": "include_comment",
+                        "or": "includeComments",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -24995,7 +24809,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       },
@@ -25003,7 +24817,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_id",
-                        "or": "team_id",
+                        "or": "teamId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -25241,7 +25055,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -25257,7 +25071,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -25600,7 +25414,7 @@
                         "a": true,
                         "k": "param",
                         "n": "session_id",
-                        "or": "session_id",
+                        "or": "sessionId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -25911,7 +25725,7 @@
                         "a": true,
                         "k": "param",
                         "n": "unread_only",
-                        "or": "unread_only",
+                        "or": "unreadOnly",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       }
@@ -25993,7 +25807,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -26009,7 +25823,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -26315,7 +26129,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -26331,7 +26145,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -27542,7 +27356,7 @@
                         "a": true,
                         "k": "param",
                         "n": "trigger_email_verification",
-                        "or": "trigger_email_verification",
+                        "or": "triggerEmailVerification",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       }
@@ -27920,7 +27734,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -27936,7 +27750,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -28206,7 +28020,7 @@
                         "a": true,
                         "k": "param",
                         "n": "url_key",
-                        "or": "url_key",
+                        "or": "urlKey",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -28288,7 +28102,7 @@
                         "a": true,
                         "k": "param",
                         "n": "auth_id",
-                        "or": "auth_id",
+                        "or": "authId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -28823,7 +28637,7 @@
                         "a": true,
                         "k": "param",
                         "n": "ai_conversation_id",
-                        "or": "ai_conversation_id",
+                        "or": "aiConversationId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -28831,7 +28645,7 @@
                         "a": true,
                         "k": "param",
                         "n": "project_draft_id",
-                        "or": "project_draft_id",
+                        "or": "projectDraftId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -28839,7 +28653,7 @@
                         "a": true,
                         "k": "param",
                         "n": "slack_channel_name",
-                        "or": "slack_channel_name",
+                        "or": "slackChannelName",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -28926,7 +28740,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -28942,7 +28756,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -29143,7 +28957,7 @@
                         "a": true,
                         "k": "param",
                         "n": "label_id",
-                        "or": "label_id",
+                        "or": "labelId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -29204,7 +29018,7 @@
                         "a": true,
                         "k": "param",
                         "n": "integration_id",
-                        "or": "integration_id",
+                        "or": "integrationId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -29212,7 +29026,7 @@
                         "a": true,
                         "k": "param",
                         "n": "slack_channel_name",
-                        "or": "slack_channel_name",
+                        "or": "slackChannelName",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -29270,7 +29084,7 @@
                         "a": true,
                         "k": "param",
                         "n": "project_id",
-                        "or": "project_id",
+                        "or": "projectId",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -29278,7 +29092,7 @@
                         "a": true,
                         "k": "param",
                         "n": "sync_source",
-                        "or": "sync_source",
+                        "or": "syncSource",
                         "r": true,
                         "t": "`$ANY`"
                       }
@@ -29339,7 +29153,7 @@
                         "a": true,
                         "k": "param",
                         "n": "label_id",
-                        "or": "label_id",
+                        "or": "labelId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -29749,7 +29563,7 @@
                         "a": true,
                         "k": "param",
                         "n": "replace_team_label",
-                        "or": "replace_team_label",
+                        "or": "replaceTeamLabels",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       }
@@ -29826,7 +29640,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -29842,7 +29656,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -30132,7 +29946,7 @@
                         "a": true,
                         "k": "param",
                         "n": "replace_team_label",
-                        "or": "replace_team_label",
+                        "or": "replaceTeamLabels",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       }
@@ -30393,7 +30207,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -30409,7 +30223,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -30928,7 +30742,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -30944,7 +30758,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -31698,7 +31512,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -31706,7 +31520,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_comment",
-                        "or": "include_comment",
+                        "or": "includeComments",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -31722,7 +31536,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       },
@@ -31730,7 +31544,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_id",
-                        "or": "team_id",
+                        "or": "teamId",
                         "r": false,
                         "t": "`$STRING`"
                       },
@@ -32011,7 +31825,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -32027,7 +31841,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -32548,7 +32362,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -32564,7 +32378,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -32656,7 +32470,7 @@
                         "a": true,
                         "k": "param",
                         "n": "project_id",
-                        "or": "project_id",
+                        "or": "projectId",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -33688,7 +33502,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -33704,7 +33518,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -34231,7 +34045,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -34247,7 +34061,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -34699,7 +34513,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -34715,7 +34529,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -35218,7 +35032,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -35234,7 +35048,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -35704,7 +35518,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -35720,7 +35534,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -36189,7 +36003,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -36205,7 +36019,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -36519,7 +36333,7 @@
                         "a": true,
                         "k": "param",
                         "n": "team_id",
-                        "or": "team_id",
+                        "or": "teamId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -36609,7 +36423,7 @@
                         "a": true,
                         "k": "param",
                         "n": "is_desktop",
-                        "or": "is_desktop",
+                        "or": "isDesktop",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -37210,7 +37024,7 @@
                         "a": true,
                         "k": "param",
                         "n": "copy_settings_from_team_id",
-                        "or": "copy_settings_from_team_id",
+                        "or": "copySettingsFromTeamId",
                         "r": false,
                         "t": "`$STRING`"
                       }
@@ -37253,149 +37067,6 @@
                 {
                   "a": true,
                   "co": {
-                    "id": "POST administrableTeams",
-                    "source": "graphql",
-                    "version": 2
-                  },
-                  "g": {
-                    "params": [
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "after",
-                        "or": "after",
-                        "r": false,
-                        "t": "`$STRING`"
-                      },
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "before",
-                        "or": "before",
-                        "r": false,
-                        "t": "`$STRING`"
-                      },
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "first",
-                        "or": "first",
-                        "r": false,
-                        "t": "`$INTEGER`"
-                      },
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "include_archived",
-                        "or": "include_archived",
-                        "r": false,
-                        "t": "`$BOOLEAN`"
-                      },
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "last",
-                        "or": "last",
-                        "r": false,
-                        "t": "`$INTEGER`"
-                      },
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "order_by",
-                        "or": "order_by",
-                        "r": false,
-                        "t": "`$ANY`"
-                      }
-                    ]
-                  },
-                  "gq": {
-                    "doc": "query TeamList($after: String, $before: String, $filter: TeamFilter, $first: Int, $includeArchived: Boolean, $last: Int, $orderBy: PaginationOrderBy) { administrableTeams(after: $after, before: $before, filter: $filter, first: $first, includeArchived: $includeArchived, last: $last, orderBy: $orderBy) { nodes { ...TeamFields } pageInfo { endCursor hasNextPage } } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }",
-                    "field": "administrableTeams",
-                    "optype": "query",
-                    "page": {
-                      "cursor": "pageInfo.endCursor",
-                      "more": "pageInfo.hasNextPage",
-                      "nodes": "nodes",
-                      "style": "relay"
-                    },
-                    "vars": [
-                      {
-                        "from": "after",
-                        "gqltype": "String",
-                        "name": "after"
-                      },
-                      {
-                        "from": "before",
-                        "gqltype": "String",
-                        "name": "before"
-                      },
-                      {
-                        "from": "",
-                        "gqltype": "TeamFilter",
-                        "name": "filter"
-                      },
-                      {
-                        "from": "first",
-                        "gqltype": "Int",
-                        "name": "first"
-                      },
-                      {
-                        "from": "includeArchived",
-                        "gqltype": "Boolean",
-                        "name": "includeArchived"
-                      },
-                      {
-                        "from": "last",
-                        "gqltype": "Int",
-                        "name": "last"
-                      },
-                      {
-                        "from": "orderBy",
-                        "gqltype": "PaginationOrderBy",
-                        "name": "orderBy"
-                      }
-                    ]
-                  },
-                  "k": "graphql",
-                  "m": "POST",
-                  "o": "administrableTeams",
-                  "q": {},
-                  "r": {},
-                  "s": [],
-                  "t": {
-                    "req": "`reqdata`",
-                    "res": "`body.data.administrableTeams.nodes`"
-                  }
-                },
-                {
-                  "a": true,
-                  "co": {
-                    "id": "POST archivedTeams",
-                    "source": "graphql",
-                    "version": 2
-                  },
-                  "g": {},
-                  "gq": {
-                    "doc": "query TeamList { archivedTeams { ...TeamFields } } fragment TeamFields on Team { activeCycle { id } aiDiscussionSummariesEnabled aiThreadSummariesEnabled allMembersCanJoin archivedAt autoArchivePeriod autoCloseChildIssues autoCloseParentIssues autoClosePeriod autoCloseStateId color createdAt currentProgress cycleCalenderUrl cycleCooldownTime cycleDuration cycleIssueAutoAssignCompleted cycleIssueAutoAssignStarted cycleLockToActive cycleStartDay cyclesEnabled defaultIssueEstimate defaultIssueState { id } defaultProjectTemplate { id } defaultTemplateForMembers { id } defaultTemplateForNonMembers { id } description displayName groupIssueHistory icon id inheritIssueEstimation inheritProjectStatuses inheritSlackAutoCreateProjectChannel inheritWorkflowStatuses initiativesEnabled integrationsSettings { id } issueCount issueEstimationAllowZero issueEstimationExtended issueEstimationType joinByDefault key ledInitiativeCount name organization { id } parent { id } progressHistory requirePriorityToLeaveTriage restrictedBy { id } restrictedById retiredAt scimGroupName scimManaged securitySettings setIssueSortOrderOnStateChange slackAutoCreateProjectChannel timezone triageEnabled triageIssueState { id } triageResponsibility { id } upcomingCycleCount updatedAt visibility }",
-                    "field": "archivedTeams",
-                    "optype": "query",
-                    "vars": []
-                  },
-                  "k": "graphql",
-                  "m": "POST",
-                  "o": "archivedTeams",
-                  "q": {},
-                  "r": {},
-                  "s": [],
-                  "t": {
-                    "req": "`reqdata`",
-                    "res": "`body.data.archivedTeams`"
-                  }
-                },
-                {
-                  "a": true,
-                  "co": {
                     "id": "POST teams",
                     "source": "graphql",
                     "version": 2
@@ -37430,7 +37101,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -37446,7 +37117,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -37933,7 +37604,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -37949,7 +37620,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -38080,7 +37751,7 @@
                         "a": true,
                         "k": "param",
                         "n": "also_leave_parent_team",
-                        "or": "also_leave_parent_team",
+                        "or": "alsoLeaveParentTeams",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -38417,7 +38088,7 @@
                         "a": true,
                         "k": "param",
                         "n": "integration_type",
-                        "or": "integration_type",
+                        "or": "integrationType",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -38471,7 +38142,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       }
@@ -38866,7 +38537,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -38882,7 +38553,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -39065,7 +38736,7 @@
                         "a": true,
                         "k": "param",
                         "n": "external_id",
-                        "or": "external_id",
+                        "or": "externalId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -39363,7 +39034,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -39379,7 +39050,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -39681,7 +39352,7 @@
                         "a": true,
                         "k": "param",
                         "n": "content_type",
-                        "or": "content_type",
+                        "or": "contentType",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -39697,7 +39368,7 @@
                         "a": true,
                         "k": "param",
                         "n": "make_public",
-                        "or": "make_public",
+                        "or": "makePublic",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -39705,7 +39376,7 @@
                         "a": true,
                         "k": "param",
                         "n": "meta_data",
-                        "or": "meta_data",
+                        "or": "metaData",
                         "r": false,
                         "t": "`$ANY`"
                       },
@@ -39782,7 +39453,7 @@
                         "a": true,
                         "k": "param",
                         "n": "content_type",
-                        "or": "content_type",
+                        "or": "contentType",
                         "r": true,
                         "t": "`$STRING`"
                       },
@@ -39798,7 +39469,7 @@
                         "a": true,
                         "k": "param",
                         "n": "meta_data",
-                        "or": "meta_data",
+                        "or": "metaData",
                         "r": false,
                         "t": "`$ANY`"
                       },
@@ -39974,7 +39645,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -39990,7 +39661,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -40432,7 +40103,7 @@
                         "a": true,
                         "k": "param",
                         "n": "redirect_uri",
-                        "or": "redirect_uri",
+                        "or": "redirectUri",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -40562,7 +40233,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -40570,7 +40241,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_disabled",
-                        "or": "include_disabled",
+                        "or": "includeDisabled",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -40586,7 +40257,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -41224,7 +40895,7 @@
                         "a": true,
                         "k": "param",
                         "n": "view_type",
-                        "or": "view_type",
+                        "or": "viewType",
                         "r": true,
                         "t": "`$ANY`"
                       }
@@ -41568,7 +41239,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -41584,7 +41255,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -41898,7 +41569,7 @@
                         "a": true,
                         "k": "param",
                         "n": "oauth_client_id",
-                        "or": "oauth_client_id",
+                        "or": "oauthClientId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -41944,7 +41615,7 @@
                         "a": true,
                         "k": "param",
                         "n": "webhook_id",
-                        "or": "webhook_id",
+                        "or": "webhookId",
                         "r": true,
                         "t": "`$STRING`"
                       }
@@ -42163,7 +41834,7 @@
                         "a": true,
                         "k": "param",
                         "n": "include_archived",
-                        "or": "include_archived",
+                        "or": "includeArchived",
                         "r": false,
                         "t": "`$BOOLEAN`"
                       },
@@ -42179,7 +41850,7 @@
                         "a": true,
                         "k": "param",
                         "n": "order_by",
-                        "or": "order_by",
+                        "or": "orderBy",
                         "r": false,
                         "t": "`$ANY`"
                       }
@@ -43064,6 +42735,214 @@
           "transport": "wrap",
           "version": "0.0.1"
         },
+        "station": {
+          "active": true,
+          "base": "node_modules/@voxgig/sdkgen-station/.sdk",
+          "config": {
+            "options": {
+              "active": false,
+              "capture": "meta",
+              "fromEnv": true,
+              "instance": "",
+              "profile": "",
+              "register": true,
+              "secret": "",
+              "url": ""
+            },
+            "optspec": {},
+            "strict": false
+          },
+          "deps": {
+            "csharp": {
+              "Voxgig.Station": {
+                "active": true,
+                "kind": "prod",
+                "version": "0.0.1"
+              }
+            },
+            "dart": {
+              "voxgig_station": {
+                "active": true,
+                "kind": "prod",
+                "version": ">=0.0.1"
+              }
+            },
+            "elixir": {
+              "voxgig_station": {
+                "active": true,
+                "kind": "prod",
+                "version": ">=0.0.1"
+              }
+            },
+            "go": {
+              "github.com/voxgig/station/go": {
+                "active": true,
+                "kind": "prod",
+                "version": "v0.0.1"
+              }
+            },
+            "java": {
+              "com.voxgig:station": {
+                "active": true,
+                "kind": "prod",
+                "version": "0.0.1"
+              }
+            },
+            "js": {
+              "@voxgig/station-js": {
+                "active": true,
+                "kind": "peer",
+                "version": ">=0.0.1"
+              }
+            },
+            "kotlin": {
+              "com.voxgig:station": {
+                "active": true,
+                "kind": "prod",
+                "version": "0.0.1"
+              }
+            },
+            "php": {
+              "voxgig/station": {
+                "active": true,
+                "kind": "prod",
+                "version": "0.0.1"
+              }
+            },
+            "py": {
+              "voxgig-station": {
+                "active": true,
+                "kind": "prod",
+                "version": "0.0.1"
+              }
+            },
+            "rb": {
+              "voxgig_station": {
+                "active": true,
+                "kind": "prod",
+                "version": "0.0.1"
+              }
+            },
+            "rust": {
+              "voxgig_station": {
+                "active": true,
+                "kind": "prod",
+                "version": ">=0.0.1"
+              }
+            },
+            "swift": {
+              "VoxgigStation": {
+                "active": true,
+                "kind": "prod",
+                "url": "https://github.com/voxgig/station-swift",
+                "version": "0.0.1"
+              }
+            },
+            "ts": {
+              "@voxgig/station": {
+                "active": true,
+                "kind": "peer",
+                "version": ">=0.0.1"
+              }
+            }
+          },
+          "hook": {
+            "GetData": {
+              "active": false,
+              "await": false
+            },
+            "GetMatch": {
+              "active": false,
+              "await": false
+            },
+            "PostConstruct": {
+              "active": true,
+              "await": false
+            },
+            "PostConstructEntity": {
+              "active": false,
+              "await": false
+            },
+            "PostOperation": {
+              "active": false,
+              "await": false
+            },
+            "PreDone": {
+              "active": true,
+              "await": false
+            },
+            "PrePoint": {
+              "active": true,
+              "await": false
+            },
+            "PreRequest": {
+              "active": false,
+              "await": false
+            },
+            "PreResponse": {
+              "active": false,
+              "await": false
+            },
+            "PreResult": {
+              "active": false,
+              "await": false
+            },
+            "PreSpec": {
+              "active": false,
+              "await": false
+            },
+            "PreTarget": {
+              "active": false,
+              "await": false
+            },
+            "PreUnexpected": {
+              "active": true,
+              "await": false
+            },
+            "SetData": {
+              "active": false,
+              "await": false
+            }
+          },
+          "name": "station",
+          "needs": {},
+          "origname": "",
+          "package": "@voxgig/sdkgen-station",
+          "plugin": {},
+          "spec": {},
+          "target": {
+            "c": {
+              "deps": {}
+            },
+            "go": {
+              "deps": {}
+            },
+            "go-cli": {
+              "deps": {}
+            },
+            "go-mcp": {
+              "deps": {}
+            },
+            "lua": {
+              "deps": {}
+            },
+            "php": {
+              "deps": {}
+            },
+            "py": {
+              "deps": {}
+            },
+            "rb": {
+              "deps": {}
+            },
+            "ts": {
+              "deps": {}
+            }
+          },
+          "title": "Station control surface binding for outbound integrations",
+          "transport": "wrap",
+          "version": "0.0.1"
+        },
         "test": {
           "active": true,
           "base": "node_modules/@voxgig/sdkgen/project/.sdk",
@@ -43181,6 +43060,7 @@
             },
             "optspec": {
               "clearTimer": "`$FUNCTION`",
+              "now": "`$FUNCTION`",
               "setTimer": "`$FUNCTION`"
             },
             "strict": false
@@ -46834,7 +46714,6 @@
                 "last": "last01",
                 "order_by": "order_by01",
                 "permanently_delete": "permanently_delete01",
-                "query": "query01",
                 "reminder_at": "reminder_at01",
                 "trash": "trash01",
                 "user_email": "user_email01",
@@ -50986,7 +50865,7 @@
       "optspec": {
         "allow": {
           "method": "GET,PUT,POST,PATCH,DELETE,OPTIONS",
-          "op": "create,update,load,list,remove,command,direct,graphql"
+          "op": "create,update,patch,load,list,remove,command,direct,graphql"
         },
         "apikey": "",
         "auth": {
@@ -50997,7 +50876,12 @@
         },
         "base": "http://localhost:8000",
         "clean": {
-          "keys": "key,token,id"
+          "active": true,
+          "hint": "0",
+          "keys": "key,secret,token,password,passwd,authorization,cookie,credential,signature",
+          "mask": "[redacted]",
+          "min": "4",
+          "values": ""
         },
         "entity": {
           "`$CHILD`": {
@@ -51034,6 +50918,11 @@
         "top": {
           "active": true
         }
+      },
+      "publisher": {
+        "name": "",
+        "security": "",
+        "url": ""
       },
       "repo": {
         "host": "github.com",
@@ -51334,7 +51223,10 @@
             "version": "0.0.1"
           },
           "superseded": [],
-          "title": "Go MCP server"
+          "title": "Go MCP server",
+          "tool": {
+            "write": false
+          }
         },
         "lua": {
           "active": true,
@@ -51711,12 +51603,20 @@
           "base": "",
           "strict": true
         }
+      },
+      "text": {
+        "about_md": "",
+        "docs_url": "",
+        "entity_desc": {},
+        "homepage": "",
+        "meta_source": "",
+        "summary": "",
+        "tagline": "",
+        "title": "",
+        "website": ""
       }
     }
   },
   "name": "linear",
-  "name-": "linear",
-  "name_": "linear",
-  "name__orig": "linear",
   "origin": "voxgig-sdk"
 }

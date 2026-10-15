@@ -15,6 +15,13 @@ import (
 	vs "github.com/voxgig-sdk/linear-sdk/go/utility/struct"
 )
 
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const upload_fileEntityLiveStrict = true
+
+
 func TestUploadFileEntity(t *testing.T) {
 	t.Run("instance", func(t *testing.T) {
 		testsdk := sdk.TestSDK(nil, nil)
@@ -24,7 +31,8 @@ func TestUploadFileEntity(t *testing.T) {
 		}
 	})
 
-	t.Run("basic", func(t *testing.T) {
+	t.Run("basic", func(tt *testing.T) {
+		var t testing.TB = tt
 		setup := upload_fileBasicSetup(nil)
 		// Per-op sdk-test-control.json skip — basic test exercises a flow
 		// with multiple ops; skipping any op skips the whole flow.
@@ -32,7 +40,7 @@ func TestUploadFileEntity(t *testing.T) {
 		if setup.live {
 			_mode = "live"
 		}
-		for _, _op := range []string{"create"} {
+		for _, _op := range []string{} {
 			if _shouldSkip, _reason := isControlSkipped("entityOp", "upload_file." + _op, _mode); _shouldSkip {
 				if _reason == "" {
 					_reason = "skipped via sdk-test-control.json"
@@ -41,31 +49,15 @@ func TestUploadFileEntity(t *testing.T) {
 				return
 			}
 		}
-		// The basic flow consumes synthetic IDs from the fixture. In live mode
-		// without an *_ENTID env override, those IDs hit the live API and 4xx.
-		if setup.syntheticOnly {
-			t.Skip("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_UPLOAD_FILE_ENTID JSON to run live")
-			return
+		// Bootstrap entity data from existing test data (no create step in flow).
+		uploadFileRef01DataRaw := vs.Items(core.ToMapAny(vs.GetPath(setup.data, "existing.upload_file")))
+		var uploadFileRef01Data map[string]any
+		if len(uploadFileRef01DataRaw) > 0 {
+			uploadFileRef01Data = core.ToMapAny(uploadFileRef01DataRaw[0][1])
 		}
-		client := setup.client
-
-		// CREATE
-		uploadFileRef01Ent := client.UploadFile(nil)
-		uploadFileRef01Data := core.ToMapAny(vs.GetProp(
-			vs.GetPath(setup.data, []any{"new", "upload_file"}), "upload_file_ref01"))
-		uploadFileRef01Data["content_type"] = setup.idmap["content_type01"]
-		uploadFileRef01Data["filename"] = setup.idmap["filename01"]
-		uploadFileRef01Data["meta_data"] = setup.idmap["meta_data01"]
-		uploadFileRef01Data["size"] = setup.idmap["size01"]
-
-		uploadFileRef01DataResult, err := uploadFileRef01Ent.Create(uploadFileRef01Data, nil)
-		if err != nil {
-			t.Fatalf("create failed: %v", err)
-		}
-		uploadFileRef01Data = core.ToMapAny(entityData(uploadFileRef01DataResult))
-		if uploadFileRef01Data == nil {
-			t.Fatal("expected create result to be a map")
-		}
+		// Discard guards against Go's unused-var check when the flow's steps
+		// happen not to consume the bootstrap data (e.g. list-only flows).
+		_ = uploadFileRef01Data
 
 	})
 }
@@ -95,7 +87,7 @@ func upload_fileBasicSetup(extra map[string]any) *entityTestSetup {
 
 	// Generate idmap via transform, matching TS pattern.
 	idmap, _ := vs.Transform(
-		[]any{"upload_file01", "upload_file02", "upload_file03", "content_type01", "filename01", "meta_data01", "size01"},
+		[]any{"upload_file01", "upload_file02", "upload_file03"},
 		map[string]any{
 			"`$PACK`": []any{"", map[string]any{
 				"`$KEY`": "`$COPY`",
@@ -104,9 +96,8 @@ func upload_fileBasicSetup(extra map[string]any) *entityTestSetup {
 		},
 	)
 
-	// Detect ENTID env override before envOverride consumes it. When live
-	// mode is on without a real override, the basic test runs against synthetic
-	// IDs from the fixture and 4xx's. Surface this so the test can skip.
+	// Whether *_ENTID supplied the idmap, read before envOverride consumes it:
+	// without it, the ids a live flow binds are the fixture's synthetic ones.
 	entidEnvRaw := os.Getenv("LINEAR_TEST_UPLOAD_FILE_ENTID")
 	idmapOverridden := entidEnvRaw != "" && strings.HasPrefix(strings.TrimSpace(entidEnvRaw), "{")
 

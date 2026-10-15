@@ -8317,9 +8317,6 @@ IssueLoadMatch = Struct.new(
 #
 # @!attribute [rw] order_by
 #   @return [Object, nil]
-#
-# @!attribute [rw] query
-#   @return [String, nil]
 IssueListMatch = Struct.new(
   :after,
   :before,
@@ -8328,7 +8325,6 @@ IssueListMatch = Struct.new(
   :include_archived,
   :last,
   :order_by,
-  :query,
   keyword_init: true
 )
 

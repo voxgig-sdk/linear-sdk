@@ -16,6 +16,13 @@ import (
 	vs "github.com/voxgig-sdk/linear-sdk/go/utility/struct"
 )
 
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const issue_importEntityLiveStrict = true
+
+
 func TestIssueImportEntity(t *testing.T) {
 	t.Run("instance", func(t *testing.T) {
 		testsdk := sdk.TestSDK(nil, nil)
@@ -25,7 +32,21 @@ func TestIssueImportEntity(t *testing.T) {
 		}
 	})
 
-	t.Run("basic", func(t *testing.T) {
+	t.Run("validate", func(t *testing.T) {
+		if !fhHasFeature("validate") {
+			t.Skip("feature not present in this SDK: validate")
+		}
+		client := sdk.TestSDK(nil, map[string]any{
+			"feature": map[string]any{"validate": map[string]any{"active": true}},
+		})
+		_, err := client.IssueImport(nil).Update(map[string]any{"id": 1}, nil)
+		if sdkerr, ok := err.(*core.LinearError); !ok || "validate_failed" != sdkerr.Code {
+			t.Fatalf("expected validate_failed, got %v", err)
+		}
+	})
+
+	t.Run("basic", func(tt *testing.T) {
+		var t testing.TB = tt
 		setup := issue_importBasicSetup(nil)
 		// Per-op sdk-test-control.json skip — basic test exercises a flow
 		// with multiple ops; skipping any op skips the whole flow.
@@ -33,7 +54,7 @@ func TestIssueImportEntity(t *testing.T) {
 		if setup.live {
 			_mode = "live"
 		}
-		for _, _op := range []string{"create", "update", "remove"} {
+		for _, _op := range []string{"update", "remove"} {
 			if _shouldSkip, _reason := isControlSkipped("entityOp", "issue_import." + _op, _mode); _shouldSkip {
 				if _reason == "" {
 					_reason = "skipped via sdk-test-control.json"
@@ -42,41 +63,31 @@ func TestIssueImportEntity(t *testing.T) {
 				return
 			}
 		}
-		// The basic flow consumes synthetic IDs from the fixture. In live mode
-		// without an *_ENTID env override, those IDs hit the live API and 4xx.
-		if setup.syntheticOnly {
-			t.Skip("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_ISSUE_IMPORT_ENTID JSON to run live")
-			return
+		if setup.live {
+			for _, _liveKey := range []string{"linear_source_organization01"} {
+				if setup.syntheticOnly || setup.idmap[_liveKey] == nil {
+					liveMiss(t, issue_importEntityLiveStrict, "Live entity test blocked: needs %s via LINEAR_TEST_ISSUE_IMPORT_ENTID", _liveKey)
+				}
+			}
+		}
+		if setup.live {
+			liveMiss(t, issue_importEntityLiveStrict, "Live entity test blocked: %s", "the flow updates a issue_import record it did not create")
 		}
 		client := setup.client
+		_ = client
 
-		// CREATE
-		issueImportRef01Ent := client.IssueImport(nil)
-		issueImportRef01Data := core.ToMapAny(vs.GetProp(
-			vs.GetPath(setup.data, []any{"new", "issue_import"}), "issue_import_ref01"))
-		issueImportRef01Data["github_label"] = setup.idmap["github_label01"]
-		issueImportRef01Data["github_repo_id"] = setup.idmap["github_repo01"]
-		issueImportRef01Data["include_closed_issue"] = setup.idmap["include_closed_issue01"]
-		issueImportRef01Data["instant_process"] = setup.idmap["instant_process01"]
-		issueImportRef01Data["issue_import_id"] = setup.idmap["issue_import01"]
-		issueImportRef01Data["linear_source_organization_id"] = setup.idmap["linear_source_organization01"]
-		issueImportRef01Data["mapping"] = setup.idmap["mapping01"]
-		issueImportRef01Data["team_id"] = setup.idmap["team01"]
-		issueImportRef01Data["team_name"] = setup.idmap["team_name01"]
-
-		issueImportRef01DataResult, err := issueImportRef01Ent.Create(issueImportRef01Data, nil)
-		if err != nil {
-			t.Fatalf("create failed: %v", err)
+		// Bootstrap entity data from existing test data (no create step in flow).
+		issueImportRef01DataRaw := vs.Items(core.ToMapAny(vs.GetPath(setup.data, "existing.issue_import")))
+		var issueImportRef01Data map[string]any
+		if len(issueImportRef01DataRaw) > 0 {
+			issueImportRef01Data = core.ToMapAny(issueImportRef01DataRaw[0][1])
 		}
-		issueImportRef01Data = core.ToMapAny(entityData(issueImportRef01DataResult))
-		if issueImportRef01Data == nil {
-			t.Fatal("expected create result to be a map")
-		}
-		if issueImportRef01Data["id"] == nil {
-			t.Fatal("expected created entity to have an id")
-		}
+		// Discard guards against Go's unused-var check when the flow's steps
+		// happen not to consume the bootstrap data (e.g. list-only flows).
+		_ = issueImportRef01Data
 
 		// UPDATE
+		issueImportRef01Ent := client.IssueImport(nil)
 		issueImportRef01DataUp0Up := map[string]any{
 			"id": issueImportRef01Data["id"],
 			"linear_source_organization_id": setup.idmap["linear_source_organization_id"],
@@ -99,15 +110,6 @@ func TestIssueImportEntity(t *testing.T) {
 		}
 		if issueImportRef01ResdataUp0[issueImportRef01MarkdefUp0Name] != issueImportRef01MarkdefUp0Value {
 			t.Fatalf("expected %s to be updated, got %v", issueImportRef01MarkdefUp0Name, issueImportRef01ResdataUp0[issueImportRef01MarkdefUp0Name])
-		}
-
-		// REMOVE
-		issueImportRef01MatchRm0 := map[string]any{
-			"id": issueImportRef01Data["id"],
-		}
-		_, err = issueImportRef01Ent.Remove(issueImportRef01MatchRm0, nil)
-		if err != nil {
-			t.Fatalf("remove failed: %v", err)
 		}
 
 	})
@@ -138,7 +140,7 @@ func issue_importBasicSetup(extra map[string]any) *entityTestSetup {
 
 	// Generate idmap via transform, matching TS pattern.
 	idmap, _ := vs.Transform(
-		[]any{"issue_import01", "issue_import02", "issue_import03", "github_label01", "github_repo01", "include_closed_issue01", "instant_process01", "linear_source_organization01", "mapping01", "team01", "team_name01"},
+		[]any{"issue_import01", "issue_import02", "issue_import03", "linear_source_organization01"},
 		map[string]any{
 			"`$PACK`": []any{"", map[string]any{
 				"`$KEY`": "`$COPY`",
@@ -147,9 +149,8 @@ func issue_importBasicSetup(extra map[string]any) *entityTestSetup {
 		},
 	)
 
-	// Detect ENTID env override before envOverride consumes it. When live
-	// mode is on without a real override, the basic test runs against synthetic
-	// IDs from the fixture and 4xx's. Surface this so the test can skip.
+	// Whether *_ENTID supplied the idmap, read before envOverride consumes it:
+	// without it, the ids a live flow binds are the fixture's synthetic ones.
 	entidEnvRaw := os.Getenv("LINEAR_TEST_ISSUE_IMPORT_ENTID")
 	idmapOverridden := entidEnvRaw != "" && strings.HasPrefix(strings.TrimSpace(entidEnvRaw), "{")
 

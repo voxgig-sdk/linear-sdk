@@ -8,6 +8,13 @@ local runner = require("test.runner")
 
 local _test_dir = debug.getinfo(1, "S").source:match("^@(.+/)")  or "./"
 
+-- main.kit.test.live.strict is true (the default is true): a live
+-- request that fails, or a live test missing an input it needs,
+-- fails the test.
+-- An account with no record for a test to read skips it either way.
+local LIVE_STRICT = true
+
+
 describe("UploadFileEntity", function()
   it("should create instance", function()
     local testsdk = sdk.test(nil, nil)
@@ -19,34 +26,22 @@ describe("UploadFileEntity", function()
     local setup = upload_file_basic_setup(nil)
     -- Per-op sdk-test-control.json skip.
     local _live = setup.live or false
-    for _, _op in ipairs({"create"}) do
+    for _, _op in ipairs({}) do
       local _should_skip, _reason = runner.is_control_skipped("entityOp", "upload_file." .. _op, _live and "live" or "unit")
       if _should_skip then
         pending(_reason or "skipped via sdk-test-control.json")
         return
       end
     end
-    -- The basic flow consumes synthetic IDs from the fixture. In live mode
-    -- without an *_ENTID env override, those IDs hit the live API and 4xx.
-    if setup.synthetic_only then
-      pending("live entity test uses synthetic IDs from fixture — set LINEAR_TEST_UPLOAD_FILE_ENTID JSON to run live")
-      return
-    end
     local client = setup.client
 
-    -- CREATE
-    local upload_file_ref01_ent = client:UploadFile(nil)
-    local upload_file_ref01_data = helpers.to_map(vs.getprop(
-      vs.getpath(setup.data, "new.upload_file"), "upload_file_ref01"))
-    upload_file_ref01_data["content_type"] = setup.idmap["content_type01"]
-    upload_file_ref01_data["filename"] = setup.idmap["filename01"]
-    upload_file_ref01_data["meta_data"] = setup.idmap["meta_data01"]
-    upload_file_ref01_data["size"] = setup.idmap["size01"]
-
-    local upload_file_ref01_data_result, err = upload_file_ref01_ent:create(upload_file_ref01_data, nil)
-    assert.is_nil(err)
-    upload_file_ref01_data = helpers.to_map(type(upload_file_ref01_data_result) == 'table' and upload_file_ref01_data_result.data_get and upload_file_ref01_data_result:data_get() or upload_file_ref01_data_result)
-    assert.is_not_nil(upload_file_ref01_data)
+    -- Bootstrap entity data from existing test data.
+    local upload_file_ref01_data_raw = vs.items(helpers.to_map(
+      vs.getpath(setup.data, "existing.upload_file")))
+    local upload_file_ref01_data = nil
+    if #upload_file_ref01_data_raw > 0 then
+      upload_file_ref01_data = helpers.to_map(upload_file_ref01_data_raw[1][2])
+    end
 
   end)
 end)
@@ -71,7 +66,7 @@ function upload_file_basic_setup(extra)
 
   -- Generate idmap via transform.
   local idmap = vs.transform(
-    { "upload_file01", "upload_file02", "upload_file03", "content_type01", "filename01", "meta_data01", "size01" },
+    { "upload_file01", "upload_file02", "upload_file03" },
     {
       ["`$PACK`"] = { "", {
         ["`$KEY`"] = "`$COPY`",
@@ -80,9 +75,8 @@ function upload_file_basic_setup(extra)
     }
   )
 
-  -- Detect ENTID env override before envOverride consumes it. When live
-  -- mode is on without a real override, the basic test runs against synthetic
-  -- IDs from the fixture and 4xx's. Surface this so the test can skip.
+  -- Whether *_ENTID supplied the idmap, read before env_override consumes
+  -- it: without it, the ids a live flow binds are the fixture's synthetic ones.
   local entid_env_raw = os.getenv("LINEAR_TEST_UPLOAD_FILE_ENTID")
   local idmap_overridden = entid_env_raw ~= nil and entid_env_raw:match("^%s*{") ~= nil
 

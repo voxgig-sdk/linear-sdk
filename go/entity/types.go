@@ -1943,7 +1943,6 @@ type IssueListMatch struct {
 	IncludeArchived *bool `json:"include_archived,omitempty"`
 	Last *int `json:"last,omitempty"`
 	OrderBy *any `json:"order_by,omitempty"`
-	Query *string `json:"query,omitempty"`
 }
 
 // IssueCreateData is the typed request payload for Issue.CreateTyped.

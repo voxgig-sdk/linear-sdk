@@ -91,3 +91,42 @@
   ]
 
 }
+
+
+{
+  point: "warning"
+  note: "Points POST inboxNotifications and POST notifications on entity=notification op=list have the same selector (exist: none), so only POST inboxNotifications is ever chosen. An action or another entity in guide.aontu tells them apart."
+  entity: "notification"
+  op: "list"
+  points: [
+    "POST inboxNotifications"
+    "POST notifications"
+  ]
+
+}
+
+
+{
+  point: "warning"
+  note: "Points POST releaseSearch and POST releases on entity=release op=list have the same selector (exist: none), so only POST releaseSearch is ever chosen. An action or another entity in guide.aontu tells them apart."
+  entity: "release"
+  op: "list"
+  points: [
+    "POST releaseSearch"
+    "POST releases"
+  ]
+
+}
+
+
+{
+  point: "warning"
+  note: "Points POST templateSearch and POST templates on entity=template op=list have the same selector (exist: none), so only POST templateSearch is ever chosen. An action or another entity in guide.aontu tells them apart."
+  entity: "template"
+  op: "list"
+  points: [
+    "POST templateSearch"
+    "POST templates"
+  ]
+
+}

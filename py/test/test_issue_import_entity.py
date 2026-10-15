@@ -9,9 +9,19 @@ import pytest
 from linear_sdk.utility.voxgig_struct import voxgig_struct as vs
 from linear_sdk import LinearSDK
 from linear_sdk.core import helpers
+from linear_sdk.config import shared_config
+from linear_sdk.feature.base_feature import LinearBaseFeature
 
 _TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 from test import runner
+
+
+
+# main.kit.test.live.strict is true (the default is true): a live
+# request that fails, or a live test missing an input it needs,
+# fails the test.
+# An account with no record for a test to read skips it either way.
+LIVE_STRICT = True
 
 
 class TestIssueImportEntity:
@@ -21,43 +31,43 @@ class TestIssueImportEntity:
         ent = testsdk.IssueImport(None)
         assert ent is not None
 
+    def test_should_refuse_an_invalid_request(self):
+        if "validate" not in (shared_config().get("feature") or {}):
+            pytest.skip("feature not present in this SDK: validate")
+        client = LinearSDK.test(
+            None, {"feature": {"validate": {"active": True}}})
+        with pytest.raises(Exception) as err:
+            client.IssueImport(None).update({"id": 1}, None)
+        assert "validate_failed" == getattr(err.value, "code", None)
+
     def test_should_run_basic_flow(self):
         setup = _issue_import_basic_setup(None)
         # Per-op sdk-test-control.json skip — basic test exercises a flow with
         # multiple ops; skipping any one skips the whole flow (steps depend
         # on each other).
         _live = setup.get("live", False)
-        for _op in ["create", "update", "remove"]:
+        for _op in ["update", "remove"]:
             _skip, _reason = runner.is_control_skipped("entityOp", "issue_import." + _op, "live" if _live else "unit")
             if _skip:
                 pytest.skip(_reason or "skipped via sdk-test-control.json")
                 return
-        # The basic flow consumes synthetic IDs from the fixture. In live mode
-        # without an *_ENTID env override, those IDs hit the live API and 4xx.
-        if setup.get("synthetic_only"):
-            pytest.skip("live entity test uses synthetic IDs from fixture — "
-                        "set LINEAR_TEST_ISSUE_IMPORT_ENTID JSON to run live")
+        if setup["live"]:
+            for _live_key in ["linear_source_organization01"]:
+                if setup.get("synthetic_only") or setup["idmap"].get(_live_key) is None:
+                    runner.live_miss(LIVE_STRICT, f"Live entity test blocked: needs {_live_key} via LINEAR_TEST_ISSUE_IMPORT_ENTID")
+        if setup["live"]:
+            runner.live_miss(LIVE_STRICT, "Live entity test blocked: " + "the flow updates a issue_import record it did not create")
         client = setup["client"]
 
-        # CREATE
-        issue_import_ref01_ent = client.IssueImport(None)
-        issue_import_ref01_data = helpers.to_map(vs.getprop(
-            vs.getpath(setup["data"], "new.issue_import"), "issue_import_ref01"))
-        issue_import_ref01_data["github_label"] = setup["idmap"]["github_label01"]
-        issue_import_ref01_data["github_repo_id"] = setup["idmap"]["github_repo01"]
-        issue_import_ref01_data["include_closed_issue"] = setup["idmap"]["include_closed_issue01"]
-        issue_import_ref01_data["instant_process"] = setup["idmap"]["instant_process01"]
-        issue_import_ref01_data["issue_import_id"] = setup["idmap"]["issue_import01"]
-        issue_import_ref01_data["linear_source_organization_id"] = setup["idmap"]["linear_source_organization01"]
-        issue_import_ref01_data["mapping"] = setup["idmap"]["mapping01"]
-        issue_import_ref01_data["team_id"] = setup["idmap"]["team01"]
-        issue_import_ref01_data["team_name"] = setup["idmap"]["team_name01"]
-
-        issue_import_ref01_data = helpers.to_map(runner.entity_data(issue_import_ref01_ent.create(issue_import_ref01_data, None)))
-        assert issue_import_ref01_data is not None
-        assert issue_import_ref01_data["id"] is not None
+        # Bootstrap entity data from existing test data.
+        issue_import_ref01_data_raw = vs.items(helpers.to_map(
+            vs.getpath(setup["data"], "existing.issue_import")))
+        issue_import_ref01_data = None
+        if len(issue_import_ref01_data_raw) > 0:
+            issue_import_ref01_data = helpers.to_map(issue_import_ref01_data_raw[0][1])
 
         # UPDATE
+        issue_import_ref01_ent = client.IssueImport(None)
         issue_import_ref01_data_up0_up = {
             "id": issue_import_ref01_data["id"],
             "linear_source_organization_id": setup["idmap"]["linear_source_organization_id"],
@@ -72,19 +82,13 @@ class TestIssueImportEntity:
         assert issue_import_ref01_resdata_up0["id"] == issue_import_ref01_data_up0_up["id"]
         assert issue_import_ref01_resdata_up0[issue_import_ref01_markdef_up0_name] == issue_import_ref01_markdef_up0_value
 
-        # REMOVE
-        issue_import_ref01_match_rm0 = {
-            "id": issue_import_ref01_data["id"],
-        }
-        issue_import_ref01_ent.remove(issue_import_ref01_match_rm0, None)
-
 
 
 def _issue_import_basic_setup(extra):
     runner.load_env_local()
 
     entity_data_file = os.path.join(_TEST_DIR, "../../.sdk/test/entity/issue_import/IssueImportTestData.json")
-    with open(entity_data_file, "r") as f:
+    with open(entity_data_file, "r", encoding="utf-8") as f:
         entity_data_source = f.read()
 
     entity_data = json.loads(entity_data_source)
@@ -96,7 +100,7 @@ def _issue_import_basic_setup(extra):
 
     # Generate idmap via transform.
     idmap = vs.transform(
-        ["issue_import01", "issue_import02", "issue_import03", "github_label01", "github_repo01", "include_closed_issue01", "instant_process01", "linear_source_organization01", "mapping01", "team01", "team_name01"],
+        ["issue_import01", "issue_import02", "issue_import03", "linear_source_organization01"],
         {
             "`$PACK`": ["", {
                 "`$KEY`": "`$COPY`",
@@ -105,9 +109,8 @@ def _issue_import_basic_setup(extra):
         }
     )
 
-    # Detect ENTID env override before envOverride consumes it. When live
-    # mode is on without a real override, the basic test runs against synthetic
-    # IDs from the fixture and 4xx's. We surface this so the test can skip.
+    # Whether *_ENTID supplied the idmap, read before env_override consumes
+    # it: without it, the ids a live flow binds are the fixture's synthetic ones.
     _entid_env_raw = os.environ.get(
         "LINEAR_TEST_ISSUE_IMPORT_ENTID")
     _idmap_overridden = _entid_env_raw is not None and _entid_env_raw.strip().startswith("{")
