@@ -6,7 +6,7 @@ The linear API.
 
 This guide introduces the API, the client libraries, and the companion tools in this repository. Start with the API capabilities, choose a client for your application, and use the linked reference when you need exact request and response details.
 
-The selected API surface contains 87 entities and 464 HTTP routes. There are 7 SDK targets and 2 companion tools.
+The selected API surface contains 87 entities and 460 HTTP routes. There are 7 SDK targets and 2 companion tools.
 
 An entity groups related API operations. An operation can have several routes with different inputs or authentication requirements. The SDK exposes the entity and its operations using the conventions of the selected language.
 
@@ -1262,10 +1262,8 @@ Use this map to locate a capability. Consult the entity reference before supplyi
 | IntegrationsSetting | `update` | `POST integrationsSettingsUpdate` | See reference |
 | Issue | `create` | `POST issueCreate` | See reference |
 | Issue | `list` | `POST issueFigmaFileKeySearch` | See reference |
-| Issue | `list` | `POST issueSearch` | See reference |
 | Issue | `list` | `POST issues` | See reference |
 | Issue | `load` | `POST issueVcsBranchSearch` | See reference |
-| Issue | `load` | `POST attachmentIssue` | See reference |
 | Issue | `load` | `POST issue` | See reference |
 | Issue | `remove` | `POST issueDelete` | See reference |
 | Issue | `update` | `POST issueAddLabel` | See reference |
@@ -1426,8 +1424,6 @@ Use this map to locate a capability. Consult the entity reference before supplyi
 | SlaConfiguration | `list` | `POST slaConfigurations` | See reference |
 | SsoUrlFromEmailResponse | `load` | `POST ssoUrlFromEmail` | See reference |
 | Team | `create` | `POST teamCreate` | See reference |
-| Team | `list` | `POST administrableTeams` | See reference |
-| Team | `list` | `POST archivedTeams` | See reference |
 | Team | `list` | `POST teams` | See reference |
 | Team | `load` | `POST team` | See reference |
 | Team | `remove` | `POST teamDelete` | See reference |

@@ -2587,7 +2587,6 @@ typedef struct {
   bool include_archived;  // optional
   int64_t last;  // optional
   voxgig_value*order_by;  // optional
-  char*query;  // optional
 } IssueListMatch;
 
 // IssueCreateData is the typed request payload for Issue.create.

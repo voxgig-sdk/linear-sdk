@@ -24,7 +24,6 @@ main: kit: flow: BasicIssueFlow:
         last: "last01",
         order_by: "order_by01",
         permanently_delete: "permanently_delete01",
-        query: "query01",
         reminder_at: "reminder_at01",
         trash: "trash01",
         user_email: "user_email01",

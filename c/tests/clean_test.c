@@ -5182,7 +5182,7 @@ static const struct { const char* name; Drive fn; Streamer stream; const char* p
   { "integrations_setting.load", drive_integrations_setting_load, drive_integrations_setting_load_stream, { "id", NULL } },
   { "integrations_setting.create", drive_integrations_setting_create, drive_integrations_setting_create_stream, { NULL } },
   { "integrations_setting.update", drive_integrations_setting_update, drive_integrations_setting_update_stream, { "id", NULL } },
-  { "issue.list", drive_issue_list, drive_issue_list_stream, { "after", "before", "file_key", "first", "include_archived", "last", "order_by", "query", NULL } },
+  { "issue.list", drive_issue_list, drive_issue_list_stream, { "after", "before", "file_key", "first", "include_archived", "last", "order_by", NULL } },
   { "issue.load", drive_issue_load, drive_issue_load_stream, { "branch_name", "id", NULL } },
   { "issue.create", drive_issue_create, drive_issue_create_stream, { NULL } },
   { "issue.update", drive_issue_update, drive_issue_update_stream, { "id", "label_id", "description", "reminder_at", "user_id", "trash", "attachment_id", "user_email", NULL } },

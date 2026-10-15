@@ -155,7 +155,7 @@ describe("IssueEntity", function()
       end
     end
     if setup.live then
-      for _, _live_key in ipairs({"after01", "attachment01", "before01", "branch_name01", "description01", "file_key01", "first01", "include_archived01", "label01", "last01", "order_by01", "permanently_delete01", "query01", "reminder_at01", "trash01", "user_email01", "user01"}) do
+      for _, _live_key in ipairs({"after01", "attachment01", "before01", "branch_name01", "description01", "file_key01", "first01", "include_archived01", "label01", "last01", "order_by01", "permanently_delete01", "reminder_at01", "trash01", "user_email01", "user01"}) do
         if setup.synthetic_only or setup.idmap[_live_key] == nil then
           runner.live_miss(pending, LIVE_STRICT, "Live entity test blocked: needs " .. _live_key .. " via LINEAR_TEST_ISSUE_ENTID")
         end
@@ -179,7 +179,6 @@ describe("IssueEntity", function()
     issue_ref01_data["last"] = setup.idmap["last01"]
     issue_ref01_data["order_by"] = setup.idmap["order_by01"]
     issue_ref01_data["permanently_delete"] = setup.idmap["permanently_delete01"]
-    issue_ref01_data["query"] = setup.idmap["query01"]
     issue_ref01_data["reminder_at"] = setup.idmap["reminder_at01"]
     issue_ref01_data["trash"] = setup.idmap["trash01"]
     issue_ref01_data["user_email"] = setup.idmap["user_email01"]
@@ -286,7 +285,7 @@ function issue_basic_setup(extra)
 
   -- Generate idmap via transform.
   local idmap = vs.transform(
-    { "issue01", "issue02", "issue03", "after01", "attachment01", "before01", "branch_name01", "description01", "file_key01", "first01", "include_archived01", "label01", "last01", "order_by01", "permanently_delete01", "query01", "reminder_at01", "trash01", "user_email01", "user01" },
+    { "issue01", "issue02", "issue03", "after01", "attachment01", "before01", "branch_name01", "description01", "file_key01", "first01", "include_archived01", "label01", "last01", "order_by01", "permanently_delete01", "reminder_at01", "trash01", "user_email01", "user01" },
     {
       ["`$PACK`"] = { "", {
         ["`$KEY`"] = "`$COPY`",

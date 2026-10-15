@@ -201,7 +201,7 @@ func TestIssueEntity(t *testing.T) {
 			}
 		}
 		if setup.live {
-			for _, _liveKey := range []string{"after01", "attachment01", "before01", "branch_name01", "description01", "file_key01", "first01", "include_archived01", "label01", "last01", "order_by01", "permanently_delete01", "query01", "reminder_at01", "trash01", "user_email01", "user01"} {
+			for _, _liveKey := range []string{"after01", "attachment01", "before01", "branch_name01", "description01", "file_key01", "first01", "include_archived01", "label01", "last01", "order_by01", "permanently_delete01", "reminder_at01", "trash01", "user_email01", "user01"} {
 				if setup.syntheticOnly || setup.idmap[_liveKey] == nil {
 					liveMiss(t, issueEntityLiveStrict, "Live entity test blocked: needs %s via LINEAR_TEST_ISSUE_ENTID", _liveKey)
 				}
@@ -226,7 +226,6 @@ func TestIssueEntity(t *testing.T) {
 		issueRef01Data["last"] = setup.idmap["last01"]
 		issueRef01Data["order_by"] = setup.idmap["order_by01"]
 		issueRef01Data["permanently_delete"] = setup.idmap["permanently_delete01"]
-		issueRef01Data["query"] = setup.idmap["query01"]
 		issueRef01Data["reminder_at"] = setup.idmap["reminder_at01"]
 		issueRef01Data["trash"] = setup.idmap["trash01"]
 		issueRef01Data["user_email"] = setup.idmap["user_email01"]
@@ -374,7 +373,7 @@ func issueBasicSetup(extra map[string]any) *entityTestSetup {
 
 	// Generate idmap via transform, matching TS pattern.
 	idmap, _ := vs.Transform(
-		[]any{"issue01", "issue02", "issue03", "after01", "attachment01", "before01", "branch_name01", "description01", "file_key01", "first01", "include_archived01", "label01", "last01", "order_by01", "permanently_delete01", "query01", "reminder_at01", "trash01", "user_email01", "user01"},
+		[]any{"issue01", "issue02", "issue03", "after01", "attachment01", "before01", "branch_name01", "description01", "file_key01", "first01", "include_archived01", "label01", "last01", "order_by01", "permanently_delete01", "reminder_at01", "trash01", "user_email01", "user01"},
 		map[string]any{
 			"`$PACK`": []any{"", map[string]any{
 				"`$KEY`": "`$COPY`",

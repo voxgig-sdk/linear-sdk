@@ -297,16 +297,6 @@
       "version": 2,
       "source": "graphql"
     },
-    "POST administrableTeams": {
-      "provenance": "operation-contract",
-      "version": 2,
-      "source": "graphql"
-    },
-    "POST archivedTeams": {
-      "provenance": "operation-contract",
-      "version": 2,
-      "source": "graphql"
-    },
     "POST teams": {
       "provenance": "operation-contract",
       "version": 2,

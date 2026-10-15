@@ -2266,7 +2266,6 @@ export interface IssueListMatch {
     include_archived?: boolean;
     last?: number;
     order_by?: any;
-    query?: string;
 }
 export interface IssueCreateData {
     activitySummary?: any;

@@ -2220,7 +2220,6 @@
 ---@field include_archived? boolean
 ---@field last? number
 ---@field order_by? any
----@field query? string
 
 ---@class IssueCreateData
 ---@field activitySummary? any

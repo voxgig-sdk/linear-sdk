@@ -255,7 +255,7 @@ The API exposes 87 entities:
 | **RoadmapToProject** | The RoadmapToProject entity (create, list, load, remove, update). | `roadmapToProjects` |
 | **SlaConfiguration** | The SlaConfiguration entity (list). | `slaConfigurations` |
 | **SsoUrlFromEmailResponse** | The SsoUrlFromEmailResponse entity (load). | `ssoUrlFromEmail` |
-| **Team** | The Team entity (create, list, load, remove, update). | `administrableTeams` |
+| **Team** | The Team entity (create, list, load, remove, update). | `teams` |
 | **TeamMembership** | The TeamMembership entity (create, list, load, remove, update). | `teamMemberships` |
 | **Template** | The Template entity (create, list, load, remove, update). | `templatesForIntegration` |
 | **TimeSchedule** | The TimeSchedule entity (create, list, load, remove, update). | `timeSchedules` |

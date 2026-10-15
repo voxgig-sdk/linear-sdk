@@ -95,32 +95,6 @@
 
 {
   point: "warning"
-  note: "Points POST issueSearch and POST issues on entity=issue op=list have the same selector (exist: none), so only POST issueSearch is ever chosen. An action or another entity in guide.aontu tells them apart."
-  entity: "issue"
-  op: "list"
-  points: [
-    "POST issueSearch"
-    "POST issues"
-  ]
-
-}
-
-
-{
-  point: "warning"
-  note: "Points POST attachmentIssue and POST issue on entity=issue op=load have the same selector (exist: id), so only POST attachmentIssue is ever chosen. An action or another entity in guide.aontu tells them apart."
-  entity: "issue"
-  op: "load"
-  points: [
-    "POST attachmentIssue"
-    "POST issue"
-  ]
-
-}
-
-
-{
-  point: "warning"
   note: "Points POST inboxNotifications and POST notifications on entity=notification op=list have the same selector (exist: none), so only POST inboxNotifications is ever chosen. An action or another entity in guide.aontu tells them apart."
   entity: "notification"
   op: "list"
@@ -140,20 +114,6 @@
   points: [
     "POST releaseSearch"
     "POST releases"
-  ]
-
-}
-
-
-{
-  point: "warning"
-  note: "Points POST administrableTeams, POST archivedTeams and POST teams on entity=team op=list have the same selector (exist: none), so only POST administrableTeams is ever chosen. An action or another entity in guide.aontu tells them apart."
-  entity: "team"
-  op: "list"
-  points: [
-    "POST administrableTeams"
-    "POST archivedTeams"
-    "POST teams"
   ]
 
 }
